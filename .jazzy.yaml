@@ -8,7 +8,7 @@ author: Ubique
 author_url: http://ubique.ch
 copyright: '© 2019 [Ubique](http://ubique.ch)'
 
-theme: apple
+theme: fullwidth
 
 # Make sure we clean the repository
 clean: true
@@ -21,16 +21,15 @@ min_acl: public
 # xcodebuild_arguments:
   # - '-dry-run'
 
-readme: "README.md"
+readme: "documentation/Getting Started.md"
 
 # Add more documentation
 documentation:
   - "CHANGELOG.md"
   - "documentation/CodeReviewProcess.md"
-  - "documentation/Globals.md"
   - "fastlane/README.md"
   - "LICENSE.md"
-  - "documentation/Summary.md"
+  - "README.md"
 
 # Exclude some files
 exclude:

@@ -1,6 +1,11 @@
 # UBFoundation
 The UBFoundation framework provides a set of useful tools and helpers to make building apps faster and safer.
 
+## Requirments
+- iOS 11.0+ / Mac OS X 10.12+ / tvOS 12.0+ / watchOS 5.0+
+- Xcode 10.0+
+- Swift 4.2+
+
 ## Project Setup
 ### Installation
 We use [Fastlane](https://fastlane.tools) to do all the automation.

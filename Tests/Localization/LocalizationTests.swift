@@ -19,7 +19,7 @@ class LocalizationTests: XCTestCase {
 
     func testPreferredLanguages() {
         let frenchCHLocalization = Localization(locale: Locale(identifier: "fr_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        XCTAssertNil(frenchCHLocalization.bundle)
+        XCTAssertNil(frenchCHLocalization.localizedBundle)
 
         let test1 = frenchCHLocalization.preferredLanguages(stripRegionInformation: true, preferredLanguages: ["en", "fr", "it"])
         XCTAssertEqual(test1.map({ $0.identifier }), ["fr", "en", "it"])
@@ -30,7 +30,7 @@ class LocalizationTests: XCTestCase {
 
     func testPreferredLanguagesEdgeCases() {
         let localization = Localization(locale: Locale(identifier: "-"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        XCTAssertNil(localization.bundle)
+        XCTAssertNil(localization.localizedBundle)
 
         let test1 = localization.preferredLanguages(stripRegionInformation: true, preferredLanguages: ["_", "@"])
         XCTAssertEqual(test1.map({ $0.identifier }), ["-", "_", "@"])
@@ -46,28 +46,28 @@ class LocalizationTests: XCTestCase {
 
     func testBundleLoadFromIdentifier() {
         let englishIndian = Localization(locale: Locale(identifier: "en_IN"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        XCTAssertNotNil(englishIndian.bundle)
+        XCTAssertNotNil(englishIndian.localizedBundle)
 
         let english = Localization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        XCTAssertNotNil(english.bundle)
+        XCTAssertNotNil(english.localizedBundle)
     }
 
     func testBundleLoadFromLanguageOnly() {
         let englishIndian = Localization(locale: Locale(identifier: "en_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        XCTAssertNotNil(englishIndian.bundle)
+        XCTAssertNotNil(englishIndian.localizedBundle)
     }
 
     func testCoding() {
         do {
             let jsonEncoder = JSONEncoder()
             let english = Localization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-            XCTAssertNotNil(english.bundle)
+            XCTAssertNotNil(english.localizedBundle)
             let data = try jsonEncoder.encode(english)
             let jsonDecoder = JSONDecoder()
             let decodedEnglish = try jsonDecoder.decode(Localization.self, from: data)
-            XCTAssertNotNil(decodedEnglish.bundle)
+            XCTAssertNotNil(decodedEnglish.localizedBundle)
             XCTAssertEqual(english.locale.identifier, decodedEnglish.locale.identifier)
-            XCTAssertEqual(english.bundle?.bundlePath, decodedEnglish.bundle?.bundlePath)
+            XCTAssertEqual(english.localizedBundle?.bundlePath, decodedEnglish.localizedBundle?.bundlePath)
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -77,11 +77,11 @@ class LocalizationTests: XCTestCase {
         do {
             let jsonEncoder = JSONEncoder()
             let french = Localization(locale: Locale(identifier: "fr"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-            XCTAssertNil(french.bundle)
+            XCTAssertNil(french.localizedBundle)
             let data = try jsonEncoder.encode(french)
             let jsonDecoder = JSONDecoder()
             let decodedEnglish = try jsonDecoder.decode(Localization.self, from: data)
-            XCTAssertNil(decodedEnglish.bundle)
+            XCTAssertNil(decodedEnglish.localizedBundle)
             XCTAssertEqual(french.locale.identifier, decodedEnglish.locale.identifier)
         } catch {
             XCTFail(error.localizedDescription)
@@ -90,15 +90,15 @@ class LocalizationTests: XCTestCase {
 
     func testSetLanguage() {
         let localization = Localization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        let initialBundlePath = localization.bundle?.bundlePath
-        XCTAssertNotNil(localization.bundle)
+        let initialBundlePath = localization.localizedBundle?.bundlePath
+        XCTAssertNotNil(localization.localizedBundle)
         XCTAssertNoThrow(try localization.setLanguage(languageCode: "en", regionCode: "IN", baseLocale: localization.locale, baseBundle: testBundle))
         XCTAssertEqual(localization.locale.identifier, "en_IN")
         XCTAssertEqual(localization.locale.languageCode, "en")
-        XCTAssertNotNil(localization.bundle)
-        XCTAssertNotEqual(localization.bundle?.bundlePath, initialBundlePath)
+        XCTAssertNotNil(localization.localizedBundle)
+        XCTAssertNotEqual(localization.localizedBundle?.bundlePath, initialBundlePath)
         XCTAssertNoThrow(try localization.setLanguage(languageCode: "fr", regionCode: nil, baseLocale: localization.locale, baseBundle: testBundle))
-        XCTAssertNil(localization.bundle)
+        XCTAssertNil(localization.localizedBundle)
         XCTAssertEqual(localization.locale.identifier, "fr")
     }
 

@@ -20,10 +20,23 @@ extension String {
     /// - Throws: `LocalizationError` if there is no bundle in the localization
     public func localized(localization: Localization) throws -> String {
         let comment: String = ""
-        guard let bundle = localization.bundle else {
+        guard let bundle = localization.localizedBundle else {
             Localization.logger.error("Bundle not found for \(localization.debugDescription)")
             throw LocalizationError.bundelNotFound
         }
         return NSLocalizedString(self, tableName: nil, bundle: bundle, value: self, comment: comment)
+    }
+
+    /// Returns a localized version of the string using the AppLocalization object.
+    ///
+    /// If no localization is found the string is returned.
+    ///
+    /// - Note:Use it only for apps as it uses the main bundle to get localizations. In case of a framework please refer to the function `func localized(localization:)` and pass in your framework localization.
+    public var localized: String {
+        do {
+            return try localized(localization: AppLocalization)
+        } catch {
+            return self
+        }
     }
 }

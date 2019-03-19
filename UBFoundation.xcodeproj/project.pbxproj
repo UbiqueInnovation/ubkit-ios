@@ -28,6 +28,10 @@
 		8E278666224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
 		8E278667224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
 		8E278668224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
+		8E27866A224174DC00430D34 /* Getting Started.md in Resources */ = {isa = PBXBuildFile; fileRef = 8E278669224174DC00430D34 /* Getting Started.md */; };
+		8E27866B224174DC00430D34 /* Getting Started.md in Resources */ = {isa = PBXBuildFile; fileRef = 8E278669224174DC00430D34 /* Getting Started.md */; };
+		8E27866C224174DC00430D34 /* Getting Started.md in Resources */ = {isa = PBXBuildFile; fileRef = 8E278669224174DC00430D34 /* Getting Started.md */; };
+		8E27866D224174DC00430D34 /* Getting Started.md in Resources */ = {isa = PBXBuildFile; fileRef = 8E278669224174DC00430D34 /* Getting Started.md */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -145,6 +149,7 @@
 		8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalNotificationCenter.swift; sourceTree = "<group>"; };
 		8E2786602241269200430D34 /* Localization+Locale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Locale.swift"; sourceTree = "<group>"; };
 		8E278665224144C900430D34 /* GlobalLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLocalizationTests.swift; sourceTree = "<group>"; };
+		8E278669224174DC00430D34 /* Getting Started.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Getting Started.md"; path = "Documentation/Getting Started.md"; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -369,6 +374,7 @@
 		8EBD4833224082CD00CD2639 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				8E278669224174DC00430D34 /* Getting Started.md */,
 				8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */,
 				8EBD48422240FB2700CD2639 /* Summary.md */,
 				8EBD48372240866800CD2639 /* Globals.md */,
@@ -624,6 +630,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E27866A224174DC00430D34 /* Getting Started.md in Resources */,
 				8EBD47AA22406CBF00CD2639 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -632,6 +639,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E27866B224174DC00430D34 /* Getting Started.md in Resources */,
 				8EBD47AB22406CBF00CD2639 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -640,6 +648,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E27866C224174DC00430D34 /* Getting Started.md in Resources */,
 				8EBD47AC22406CBF00CD2639 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -648,6 +657,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E27866D224174DC00430D34 /* Getting Started.md in Resources */,
 				8EBD47AD22406CBF00CD2639 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

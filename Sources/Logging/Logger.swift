@@ -20,7 +20,13 @@ public class Logger {
     // MARK: - Properties
 
     /// The backing value of the log level
-    private var _logLevel: LogLevel = .default
+    private var _logLevel: LogLevel = {
+        #if DEBUG
+            return .verbose
+        #else
+            return .default
+        #endif
+    }()
 
     /// The log level of the logger
     public var logLevel: LogLevel {

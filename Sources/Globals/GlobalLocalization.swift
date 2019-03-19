@@ -18,7 +18,7 @@ public func setLanguage(languageCode: String, regionCode: String? = nil) throws 
 }
 
 /// The localization object to be used by the app
-public var appLocalization: Localization {
+public var AppLocalization: Localization {
     return globalLocalization.appLocalization
 }
 
