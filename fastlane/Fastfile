@@ -1,0 +1,149 @@
+# This file contains the fastlane.tools configuration
+
+desc "Setup the project."
+lane :setup do
+	# Run the unit tests and UI tests
+    tests
+    # Generate and open the documentation
+    documentation(generate: true)
+end
+
+desc "Deploy the framework."
+lane :release do
+    fastlane_require 'fastlane-plugin-changelog'
+
+    # Verify the repo is clean
+    ensure_git_status_clean
+
+    # Check that we are on the master branch.
+    ensure_git_branch(
+        branch: 'master'
+    )
+
+    # Verify tests pass
+    tests
+
+    # Pull the tags
+    git_pull(only_tags: true)
+
+    begin
+        # Bump the CFBundleVersion
+        build_number = increment_build_number
+
+        # Bump Version
+        version_number = update_version
+
+        # Stamp the changelog
+        stamp_changelog(
+            section_identifier: "#{version_number} (#{build_number})"
+        )
+
+        # Commit the version bump
+        commit_version_bump(
+            xcodeproj: "./UBFoundation.xcodeproj",
+            message: "Incremented version and build number for deployment.",
+            include: "CHANGELOG.md"
+        )
+
+        # Add tag
+        add_git_tag(
+            grouping: "builds",
+            prefix: "v",
+            build_number: build_number
+        )
+
+        # Push tag
+        push_git_tags
+
+        # Post notification
+        notification(subtitle: "UBFoundation deployed", message: "The new framework was successfully deployed.")
+
+    rescue => e
+        # If any error occurrs then reset the git repo
+        reset_git_repo
+        raise ex
+    end
+end
+
+desc "Opens the documentation. Option `generate:true` to generates it also."
+lane :documentation do |options|
+    if !options[:generate]
+        # Generate Documentation
+        jazzy
+    end
+    # Open the documentation file
+    open_file(path: "file://$PWD/../Documentation/html/index.html")
+end
+
+desc "Update the version of the project."
+lane :update_version do |options|
+    if options[:bump_type]
+        # Check if options contain a bump_type and uses that
+        case options[:bump_type]
+        when "patch"
+            increment_version_number(bump_type: "patch")
+        when "minor"
+            increment_version_number(bump_type: "minor")
+        when "major"
+            increment_version_number(bump_type: "major")
+        else
+            UI.user_error!("Unknown bump_type #{options[:bump_type]}! Use [patch | minor | major]")
+        end
+    elsif options[:version]
+        # Check if no bump_type was provided but instead a litteral version
+        increment_version_number(version_number: options[:version])
+        next
+    else
+        # If no options are specified, then ask the user for an input
+        current_version_number = get_version_number
+        UI.message("Changing the version number:")
+        UI.message("The current version is: #{current_version_number}")
+        bump_type = UI.select("Select an action: ", ["Bump Patch", "Bump Minor", "Bump Major", "Manual Input", "Cancel"])
+        case bump_type
+        when "Bump Patch"
+            increment_version_number(bump_type: "patch")
+        when "Bump Minor"
+            increment_version_number(bump_type: "minor")
+        when "Bump Major"
+            increment_version_number(bump_type: "major")
+        when "Manual Input"
+            new_version_number = UI.input("Enter the new version number:")
+            if UI.confirm("Confirm version change from '#{current_version_number}' to #{new_version_number}?")
+                increment_version_number(version_number: new_version_number)
+            else
+                UI.user_error!("User cancelled!")
+                next
+            end
+        else
+            UI.user_error!("User cancelled!")
+            next
+        end
+        version_number = get_version_number
+        version_number
+    end
+end
+
+desc "Run the unit tests. show_results:true to open the result page"
+lane :tests do |options|
+    # Run tests
+    run_tests(
+        code_coverage: true
+    )
+    if options[:show_results]
+        # Show the results
+        open_file(path: "file://$PWD/test_output/report.html")
+    end
+end
+
+desc "Opens the changelog file."
+private_lane :open_changelog do
+    # Open the changelog file
+    open_file(path: "file://$PWD/../CHANGELOG.md")
+end
+
+desc "Opens a file if present on disk"
+private_lane :open_file do |options|
+    if (options[:path])
+        sh("$PWD/scripts/openFile.sh --path "+options[:path])
+    end
+end

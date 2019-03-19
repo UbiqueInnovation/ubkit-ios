@@ -1,0 +1,151 @@
+//
+//  Logger.swift
+//  UBFoundation
+//
+//  Created by Joseph El Mallah on 17.03.19.
+//  Copyright © 2019 Ubique. All rights reserved.
+//
+
+import Foundation
+import os.log
+
+/// A logger wrapper for the OSLog that provide an easy way to log. The Logger is thread safe.
+public class Logger {
+    /// The logger to use
+    private let logger: OSLog
+
+    /// Thread safety
+    private let logLevelDispatchQueue: DispatchQueue
+
+    // MARK: - Properties
+
+    /// The backing value of the log level
+    private var _logLevel: LogLevel = .default
+
+    /// The log level of the logger
+    public var logLevel: LogLevel {
+        var result: LogLevel?
+        logLevelDispatchQueue.sync {
+            result = _logLevel
+        }
+        return result!
+    }
+
+    /// Set the log level of the logger
+    ///
+    /// - Parameter newLogLevel: The new log level
+    public func setLogLevel(_ newLogLevel: LogLevel) {
+        logLevelDispatchQueue.async(flags: .barrier) { [weak self] in
+            self?._logLevel = newLogLevel
+        }
+    }
+
+    // MARK: - Initializers
+
+    /// Initalizes the logger with a OSLog
+    ///
+    /// - Parameter logger: The OSLog to use
+    public init(_ logger: OSLog) {
+        self.logger = logger
+        logLevelDispatchQueue = DispatchQueue(label: "Logger")
+    }
+
+    // MARK: - Log a message
+
+    /// Logs a message
+    ///
+    /// - Parameters:
+    ///   - message: The message to log
+    ///   - type: The type of the message
+    ///   - accessLevel: The access level of the message
+    ///   - fileName: The file from where the log was called
+    ///   - functionName: The function from where the log was called
+    ///   - lineNumber: The line from where the log was called
+    private func log(message: String, type: OSLogType, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
+        // Get the name of the file
+        let file = URL(fileURLWithPath: fileName).lastPathComponent
+        // Get the line number
+        let line = String(lineNumber)
+        // Get the thread name
+        let threadName = Thread.current.isMainThread ? "main" : (Thread.current.name ?? "Unnamed Thread")
+
+        switch (accessLevel, logLevel) {
+        case (_, .none):
+            // No logs
+            break
+        case (.private, .verbose):
+            // Log the message and extra information
+            os_log("[%{private}@] [%{private}@:%{private}@ %{private}@] > %{private}@", log: logger, type: type, threadName, file, line, functionName, message)
+        case (.private, .default):
+            // Log only the message
+            os_log("%{private}@", log: logger, type: type, message)
+        case (.public, .verbose):
+            // Log the message and extra information
+            os_log("[%{public}@] [%{public}@:%{public}@ %{public}@] > %{public}@", log: logger, type: type, threadName, file, line, functionName, message)
+        case (.public, .default):
+            // Log only the message
+            os_log("%{public}@", log: logger, type: type, message)
+        }
+    }
+
+    /// Log an info level message.
+    ///
+    /// - Parameters:
+    ///   - subject: The subject to log
+    ///   - accessLevel: The sensitivity of the information logged
+    ///   - fileName: The file from where the log was called
+    ///   - functionName: The function from where the log was called
+    ///   - lineNumber: The line from where the log was called
+    public func info<Subject>(_ subject: Subject, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
+        log(message: String(describing: subject), type: .info, accessLevel: accessLevel, fileName: fileName, functionName: functionName, lineNumber: lineNumber)
+    }
+
+    /// Log an error level message.
+    ///
+    /// - Parameters:
+    ///   - subject: The subject to log
+    ///   - accessLevel: The sensitivity of the information logged
+    ///   - fileName: The file from where the log was called
+    ///   - functionName: The function from where the log was called
+    ///   - lineNumber: The line from where the log was called
+    public func error<Subject>(_ subject: Subject, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
+        log(message: String(describing: subject), type: .error, accessLevel: accessLevel, fileName: fileName, functionName: functionName, lineNumber: lineNumber)
+    }
+
+    /// Log an debug level message.
+    ///
+    /// - Parameters:
+    ///   - subject: The subject to log
+    ///   - accessLevel: The sensitivity of the information logged
+    ///   - fileName: The file from where the log was called
+    ///   - functionName: The function from where the log was called
+    ///   - lineNumber: The line from where the log was called
+    public func debug<Subject>(_ subject: Subject, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
+        log(message: String(describing: subject), type: .debug, accessLevel: accessLevel, fileName: fileName, functionName: functionName, lineNumber: lineNumber)
+    }
+}
+
+extension Logger {
+
+    // MARK: - Access Level
+
+    /// The access level of the log
+    public enum AccessLevel {
+        /// Use public for no sensitive data
+        case `public`
+        /// Use private for sensitive data
+        case `private`
+    }
+
+    // MARK: - Log Level
+
+    /// The log level
+    public enum LogLevel {
+        /// This will ensure a minimum log. Only the message is logged
+        case `default`
+        /// This will log extra information about the thread, file, method and line number of each log
+        case verbose
+        /// No logs at all
+        case none
+    }
+}
