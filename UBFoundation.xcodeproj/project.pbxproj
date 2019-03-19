@@ -43,10 +43,6 @@
 		8EBD47B722406F8900CD2639 /* UBFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBD476A224063B400CD2639 /* UBFoundation.framework */; };
 		8EBD47C622406FB400CD2639 /* UBFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBD4785224063FD00CD2639 /* UBFoundation.framework */; };
 		8EBD47D522406FC200CD2639 /* UBFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBD47922240642300CD2639 /* UBFoundation.framework */; };
-		8EBD47E12240765200CD2639 /* OSLog+Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD47DE2240765200CD2639 /* OSLog+Categories.swift */; };
-		8EBD47E22240765200CD2639 /* OSLog+Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD47DE2240765200CD2639 /* OSLog+Categories.swift */; };
-		8EBD47E32240765200CD2639 /* OSLog+Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD47DE2240765200CD2639 /* OSLog+Categories.swift */; };
-		8EBD47E42240765200CD2639 /* OSLog+Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD47DE2240765200CD2639 /* OSLog+Categories.swift */; };
 		8EBD47E52240765200CD2639 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD47DF2240765200CD2639 /* Logger.swift */; };
 		8EBD47E62240765200CD2639 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD47DF2240765200CD2639 /* Logger.swift */; };
 		8EBD47E72240765200CD2639 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD47DF2240765200CD2639 /* Logger.swift */; };
@@ -100,9 +96,6 @@
 		8EBD483E2240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
 		8EBD483F2240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
 		8EBD48402240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
-		8EBD48432240FB2700CD2639 /* Summary.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48422240FB2700CD2639 /* Summary.md */; };
-		8EBD48442240FB2700CD2639 /* Summary.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48422240FB2700CD2639 /* Summary.md */; };
-		8EBD48452240FB2700CD2639 /* Summary.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48422240FB2700CD2639 /* Summary.md */; };
 		8EBD48472240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
 		8EBD48482240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
 		8EBD48492240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
@@ -161,7 +154,6 @@
 		8EBD47B622406F8900CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8EBD47C122406FB400CD2639 /* UBFoundation tvOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UBFoundation tvOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD47D022406FC200CD2639 /* UBFoundation macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UBFoundation macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8EBD47DE2240765200CD2639 /* OSLog+Categories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OSLog+Categories.swift"; sourceTree = "<group>"; };
 		8EBD47DF2240765200CD2639 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		8EBD47E02240765200CD2639 /* LoggerGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerGroup.swift; sourceTree = "<group>"; };
 		8EBD47EE2240770000CD2639 /* Localization+Formatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Localization+Formatter.swift"; sourceTree = "<group>"; };
@@ -177,10 +169,8 @@
 		8EBD4834224082E400CD2639 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		8EBD4835224082E400CD2639 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8EBD48362240863F00CD2639 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
-		8EBD48372240866800CD2639 /* Globals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = Globals.md; path = Documentation/Globals.md; sourceTree = "<group>"; };
 		8EBD483922408E1000CD2639 /* LocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationTests.swift; sourceTree = "<group>"; };
 		8EBD483D2240937E00CD2639 /* LocalizationTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LocalizationTestBundle; sourceTree = "<group>"; };
-		8EBD48422240FB2700CD2639 /* Summary.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Summary.md; path = Documentation/Summary.md; sourceTree = "<group>"; };
 		8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CodeReviewProcess.md; path = Documentation/CodeReviewProcess.md; sourceTree = "<group>"; };
 		8EBD484A2240FFE200CD2639 /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		8EBD484E22410F6300CD2639 /* LoggerGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerGroupTests.swift; sourceTree = "<group>"; };
@@ -330,7 +320,6 @@
 				8EBD47DF2240765200CD2639 /* Logger.swift */,
 				8EBD48522241188B00CD2639 /* Logger+Error.swift */,
 				8EBD47E02240765200CD2639 /* LoggerGroup.swift */,
-				8EBD47DE2240765200CD2639 /* OSLog+Categories.swift */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -376,8 +365,6 @@
 			children = (
 				8E278669224174DC00430D34 /* Getting Started.md */,
 				8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */,
-				8EBD48422240FB2700CD2639 /* Summary.md */,
-				8EBD48372240866800CD2639 /* Globals.md */,
 				8EBD4834224082E400CD2639 /* CHANGELOG.md */,
 				8EBD4835224082E400CD2639 /* README.md */,
 				8EBD48362240863F00CD2639 /* LICENSE.md */,
@@ -669,7 +656,6 @@
 				8EBD48472240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD483E2240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864922411CC600430D34 /* LoggingTestBundle in Resources */,
-				8EBD48432240FB2700CD2639 /* Summary.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,7 +666,6 @@
 				8EBD48482240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD483F2240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */,
-				8EBD48442240FB2700CD2639 /* Summary.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -691,7 +676,6 @@
 				8EBD48492240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD48402240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */,
-				8EBD48452240FB2700CD2639 /* Summary.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,7 +839,6 @@
 				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48022240770000CD2639 /* Localization.swift in Sources */,
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
-				8EBD47E12240765200CD2639 /* OSLog+Categories.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786612241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FE2240770000CD2639 /* Language.swift in Sources */,
@@ -878,7 +861,6 @@
 				8EBD4858224119AE00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48032240770000CD2639 /* Localization.swift in Sources */,
 				8EBD48132240770000CD2639 /* Localization+Error.swift in Sources */,
-				8EBD47E22240765200CD2639 /* OSLog+Categories.swift in Sources */,
 				8EBD480F2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786622241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FF2240770000CD2639 /* Language.swift in Sources */,
@@ -901,7 +883,6 @@
 				8EBD4857224119AD00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48042240770000CD2639 /* Localization.swift in Sources */,
 				8EBD48142240770000CD2639 /* Localization+Error.swift in Sources */,
-				8EBD47E32240765200CD2639 /* OSLog+Categories.swift in Sources */,
 				8EBD48102240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786632241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD48002240770000CD2639 /* Language.swift in Sources */,
@@ -924,7 +905,6 @@
 				8EBD4856224119AD00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48052240770000CD2639 /* Localization.swift in Sources */,
 				8EBD48152240770000CD2639 /* Localization+Error.swift in Sources */,
-				8EBD47E42240765200CD2639 /* OSLog+Categories.swift in Sources */,
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,

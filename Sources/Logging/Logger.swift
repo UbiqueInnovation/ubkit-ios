@@ -20,13 +20,7 @@ public class Logger {
     // MARK: - Properties
 
     /// The backing value of the log level
-    private var _logLevel: LogLevel = {
-        #if DEBUG
-            return .verbose
-        #else
-            return .default
-        #endif
-    }()
+    private var _logLevel: LogLevel = .default
 
     /// The log level of the logger
     public var logLevel: LogLevel {
@@ -54,6 +48,20 @@ public class Logger {
     public init(_ logger: OSLog) {
         self.logger = logger
         logLevelDispatchQueue = DispatchQueue(label: "Logger")
+    }
+
+    /// Initalizes the logger with category and bundle
+    ///
+    /// - Parameters:
+    ///   - category: The category to log. _Example: use Networking as a category for all networking activity logging_
+    ///   - bundle: The bundle to use
+    /// - Throws: `LoggingError` in case of failure
+    public convenience init(category: String, bundle: Bundle = .main) throws {
+        guard let bundleIdentifier = bundle.bundleIdentifier else {
+            throw LoggingError.bundelIdentifierNotFound
+        }
+        let osLog = OSLog(subsystem: bundleIdentifier, category: category)
+        self.init(osLog)
     }
 
     // MARK: - Log a message

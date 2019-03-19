@@ -23,7 +23,7 @@ To integrate UBFoundation into your Xcode project using Carthage, specify it in 
 git "git@bitbucket.org:ubique-innovation/ubfoundation-swift.git" "master"
 ```
 
-Run carthage update to build the framework and drag the built UBFoundation.framework into your Xcode project.
+Run `carthage update` to build the framework and drag the built UBFoundation.framework into your Xcode project.
 
 ### Manually
 If you prefer not to use __Carthage__ as a dependency managers, you can integrate SnapKit into your project manually by checking out the source code and draging the project into your xCode project.
@@ -71,7 +71,7 @@ try UBFoundation.setLanguage(languageCode: "en", regionCode: "CH")
 
 ### Logging
 Logging is a wrapper module around Appel's unifide log API. It provides on top of the normal logging a set of useful control, like the log level and privacy.
-The logging module is thread safe. By default loggers will be verbose in debug, but switch to default in production.
+The logging module is thread safe.
 
 > We recommend that you creat a logger and have it accessible from all the app to make logging easier.
 > You can delare many loggers with different categories to refine more the logs. But most apps will be fine with one.
@@ -82,13 +82,7 @@ The logging module is thread safe. By default loggers will be verbose in debug, 
 // File: Logging.swift
 
 let logger: Logger? = {
-    do {
-        let osLog = try OSLog(category: "MyApp")
-        let logger = Logger(osLog)
-        return logger
-    } catch {
-        return nil
-    }
+    return try? Logger(category: "MyApp")
 }()
 
 ```
@@ -97,8 +91,7 @@ let logger: Logger? = {
 
 ```swift
 do {
-    let osLog = try OSLog(category: "Database")
-    let logger = Logger(osLog)
+    let logger = try Logger(category: "Database")
     logger.setLogLevel(.default)
     // You can save a reference for the logger for further use
     try database.open()

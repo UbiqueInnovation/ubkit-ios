@@ -11,7 +11,7 @@ import XCTest
 
 class LoggerTests: XCTestCase {
     func testLogFromMain() {
-        let logger = Logger(try! OSLog(category: "Tests", bundle: Bundle(for: LoggerTests.self)))
+        let logger = try! Logger(category: "Tests", bundle: Bundle(for: LoggerTests.self))
         for level in [Logger.LogLevel.default, Logger.LogLevel.verbose, Logger.LogLevel.none] {
             logger.setLogLevel(level)
             for access in [Logger.AccessLevel.public, Logger.AccessLevel.private] {
@@ -24,7 +24,7 @@ class LoggerTests: XCTestCase {
 
     func testLogFromThread() {
         let operationQueue = OperationQueue()
-        let logger = Logger(try! OSLog(category: "Tests", bundle: Bundle(for: LoggerTests.self)))
+        let logger = try! Logger(category: "Tests", bundle: Bundle(for: LoggerTests.self))
         let expectation = XCTestExpectation(description: "Wait for log")
         operationQueue.addOperation {
             logger.info("Test Info from thread")
@@ -34,7 +34,7 @@ class LoggerTests: XCTestCase {
     }
 
     func testMultiThreadingLog() {
-        let logger = Logger(try! OSLog(category: "Tests", bundle: Bundle(for: LoggerTests.self)))
+        let logger = try! Logger(category: "Tests", bundle: Bundle(for: LoggerTests.self))
         let expectation1 = XCTestExpectation(description: "Wait for log 1")
         let expectation2 = XCTestExpectation(description: "Wait for log 2")
         let operationQueue1 = OperationQueue()
@@ -56,13 +56,13 @@ class LoggerTests: XCTestCase {
     func testNoBundleIdentifier() {
         let testBundlePath = Bundle(for: LoggerTests.self).path(forResource: "LoggingTestBundle", ofType: nil)!
         let testBundle = Bundle(path: testBundlePath)!
-        XCTAssertThrowsError(try OSLog(category: "Failing", bundle: testBundle), "Should have failed because of missing bundle identifier") { error in
+        XCTAssertThrowsError(try Logger(category: "Failing", bundle: testBundle), "Should have failed because of missing bundle identifier") { error in
             XCTAssertEqual(error as? LoggingError, LoggingError.bundelIdentifierNotFound)
         }
     }
 
     func testPerformanceACLDefault() {
-        let logger = Logger(try! OSLog(category: "Tests", bundle: Bundle(for: LoggerTests.self)))
+        let logger = try! Logger(category: "Tests", bundle: Bundle(for: LoggerTests.self))
         logger.setLogLevel(.default)
         measure {
             for _ in 1 ... 1000 {
@@ -72,7 +72,7 @@ class LoggerTests: XCTestCase {
     }
 
     func testPerformanceACLNone() {
-        let logger = Logger(try! OSLog(category: "Tests", bundle: Bundle(for: LoggerTests.self)))
+        let logger = try! Logger(category: "Tests", bundle: Bundle(for: LoggerTests.self))
         logger.setLogLevel(.none)
         measure {
             for _ in 1 ... 1000 {
@@ -82,7 +82,7 @@ class LoggerTests: XCTestCase {
     }
 
     func testPerformanceACLVerbose() {
-        let logger = Logger(try! OSLog(category: "Tests", bundle: Bundle(for: LoggerTests.self)))
+        let logger = try! Logger(category: "Tests", bundle: Bundle(for: LoggerTests.self))
         logger.setLogLevel(.verbose)
         measure {
             for _ in 1 ... 1000 {

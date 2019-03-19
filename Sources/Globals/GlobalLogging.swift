@@ -37,8 +37,7 @@ public enum Logging {
     /// - Returns: A logger for the framework use
     internal static func frameworkLoggerFactory(category: String) -> Logger {
         do {
-            let osLog = try OSLog(category: category, bundle: Bundle(for: Logger.self))
-            let logger = Logger(osLog)
+            let logger = try Logger(category: category, bundle: Bundle(for: Logger.self))
             addLogger(logger)
             return logger
         } catch {
