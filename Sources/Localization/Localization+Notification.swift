@@ -16,9 +16,9 @@ public enum LocalizationNotification {
     /// The locale did change notification name
     public static var localeDidChange = Notification.Name("UBFoundation_LocalizationNotification_localeDidChange")
 
-    /// The old identifier key in the user info dictionary
-    public static var oldIdentifierKey = "oldIdentifierKey"
+    /// The old locale key in the user info dictionary
+    public static var oldLocaleKey = "oldLocaleKey"
 
-    /// The new identifier key in the user info dictionary
-    public static var newIdentifierKey = "newIdentifierKey"
+    /// The new loacle key in the user info dictionary
+    public static var newLocaleKey = "newLocaleKey"
 }

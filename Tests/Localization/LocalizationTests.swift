@@ -92,12 +92,12 @@ class LocalizationTests: XCTestCase {
         let localization = Localization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: NotificationCenter())
         let initialBundlePath = localization.bundle?.bundlePath
         XCTAssertNotNil(localization.bundle)
-        XCTAssertNoThrow(try localization.setLanguage("en", regionCode: "IN", baseLocale: localization.locale, baseBundle: testBundle))
+        XCTAssertNoThrow(try localization.setLanguage(languageCode: "en", regionCode: "IN", baseLocale: localization.locale, baseBundle: testBundle))
         XCTAssertEqual(localization.locale.identifier, "en_IN")
         XCTAssertEqual(localization.locale.languageCode, "en")
         XCTAssertNotNil(localization.bundle)
         XCTAssertNotEqual(localization.bundle?.bundlePath, initialBundlePath)
-        XCTAssertNoThrow(try localization.setLanguage("fr", regionCode: nil, baseLocale: localization.locale, baseBundle: testBundle))
+        XCTAssertNoThrow(try localization.setLanguage(languageCode: "fr", regionCode: nil, baseLocale: localization.locale, baseBundle: testBundle))
         XCTAssertNil(localization.bundle)
         XCTAssertEqual(localization.locale.identifier, "fr")
     }
@@ -128,18 +128,18 @@ class LocalizationTests: XCTestCase {
     func testNotifications() {
         let localization = Localization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: .default)
         expectation(forNotification: LocalizationNotification.localeWillChange, object: localization) { (notification) -> Bool in
-            let old = notification.userInfo?[LocalizationNotification.oldIdentifierKey] as? String
-            let new = notification.userInfo?[LocalizationNotification.newIdentifierKey] as? String
-            return old == "en" && new == "fr"
+            let old = notification.userInfo?[LocalizationNotification.oldLocaleKey] as? Locale
+            let new = notification.userInfo?[LocalizationNotification.newLocaleKey] as? Locale
+            return old?.identifier == "en" && new?.identifier == "fr"
         }
 
         expectation(forNotification: LocalizationNotification.localeDidChange, object: localization) { (notification) -> Bool in
-            let old = notification.userInfo?[LocalizationNotification.oldIdentifierKey] as? String
-            let new = notification.userInfo?[LocalizationNotification.newIdentifierKey] as? String
-            return old == "en" && new == "fr"
+            let old = notification.userInfo?[LocalizationNotification.oldLocaleKey] as? Locale
+            let new = notification.userInfo?[LocalizationNotification.newLocaleKey] as? Locale
+            return old?.identifier == "en" && new?.identifier == "fr"
         }
 
-        XCTAssertNoThrow(try localization.setLanguage("fr", regionCode: nil, baseLocale: localization.locale, baseBundle: testBundle))
+        XCTAssertNoThrow(try localization.setLanguage(languageCode: "fr", regionCode: nil, baseLocale: localization.locale, baseBundle: testBundle))
         waitForExpectations(timeout: 0.1, handler: nil)
     }
 
@@ -161,5 +161,19 @@ class LocalizationTests: XCTestCase {
         XCTAssertThrowsError(try "lang".localized(localization: french), "Expected error thrown") { error in
             XCTAssertEqual(error as? LocalizationError, LocalizationError.bundelNotFound)
         }
+    }
+
+    func testLocaleIsCurrent() {
+        let currentLocale = Locale.current
+        XCTAssertTrue(currentLocale.isCurrent)
+        let aLocale = Locale(identifier: "fr")
+        XCTAssertFalse(aLocale.isCurrent)
+    }
+
+    func testResetLocale() {
+        let localization = Localization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: NotificationCenter())
+        XCTAssertFalse(localization.locale.isCurrent)
+        localization.resetLocaleToCurrent()
+        XCTAssertTrue(localization.locale.isCurrent)
     }
 }

@@ -77,6 +77,8 @@ You can either:
 - hit `Cmd+U` in Xcode to run the unit tests
 - use Fastlane by running `fastlane tests show_results:true`. Set `show_results` is `true` if you want to see the Summary HTML generated.
 
+Check the results of the [latest local tests](../../fastlane/test_output/report.html)
+
 ### Code Sanity
 We chose to have our code formatted and it's style checked programmatically to avoid any issues and conflicts. Ont top of making the code look better and consistant, it avoid possible bugs. We went for SwiftFormat as a formatter for the code and SwiftLint for the linting part. Both scripts run on every build correctling automatically all the layouts and code style.
 1. [__SwiftFormat__](https://github.com/nicklockwood/SwiftFormat)

@@ -13,6 +13,21 @@
 		8E27865322411E5600430D34 /* GlobalLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865222411E5600430D34 /* GlobalLoggingTests.swift */; };
 		8E27865422411E5600430D34 /* GlobalLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865222411E5600430D34 /* GlobalLoggingTests.swift */; };
 		8E27865522411E5600430D34 /* GlobalLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865222411E5600430D34 /* GlobalLoggingTests.swift */; };
+		8E2786572241227A00430D34 /* GlobalLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2786562241227A00430D34 /* GlobalLocalization.swift */; };
+		8E2786582241227A00430D34 /* GlobalLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2786562241227A00430D34 /* GlobalLocalization.swift */; };
+		8E2786592241227A00430D34 /* GlobalLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2786562241227A00430D34 /* GlobalLocalization.swift */; };
+		8E27865A2241227A00430D34 /* GlobalLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2786562241227A00430D34 /* GlobalLocalization.swift */; };
+		8E27865C2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */; };
+		8E27865D2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */; };
+		8E27865E2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */; };
+		8E27865F2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */; };
+		8E2786612241269200430D34 /* Localization+Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2786602241269200430D34 /* Localization+Locale.swift */; };
+		8E2786622241269200430D34 /* Localization+Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2786602241269200430D34 /* Localization+Locale.swift */; };
+		8E2786632241269200430D34 /* Localization+Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2786602241269200430D34 /* Localization+Locale.swift */; };
+		8E2786642241269200430D34 /* Localization+Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2786602241269200430D34 /* Localization+Locale.swift */; };
+		8E278666224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
+		8E278667224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
+		8E278668224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -126,6 +141,10 @@
 /* Begin PBXFileReference section */
 		8E27864822411CC600430D34 /* LoggingTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoggingTestBundle; sourceTree = "<group>"; };
 		8E27865222411E5600430D34 /* GlobalLoggingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLoggingTests.swift; sourceTree = "<group>"; };
+		8E2786562241227A00430D34 /* GlobalLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLocalization.swift; sourceTree = "<group>"; };
+		8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalNotificationCenter.swift; sourceTree = "<group>"; };
+		8E2786602241269200430D34 /* Localization+Locale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Locale.swift"; sourceTree = "<group>"; };
+		8E278665224144C900430D34 /* GlobalLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLocalizationTests.swift; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -222,6 +241,7 @@
 		8E27864C22411DE300430D34 /* Globals */ = {
 			isa = PBXGroup;
 			children = (
+				8E278665224144C900430D34 /* GlobalLocalizationTests.swift */,
 				8E27865222411E5600430D34 /* GlobalLoggingTests.swift */,
 			);
 			path = Globals;
@@ -321,6 +341,7 @@
 				8EBD47EE2240770000CD2639 /* Localization+Formatter.swift */,
 				8EBD47EF2240770000CD2639 /* Localization+Notification.swift */,
 				8EBD47F22240770000CD2639 /* Localization+String.swift */,
+				8E2786602241269200430D34 /* Localization+Locale.swift */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -328,7 +349,9 @@
 		8EBD48162240773900CD2639 /* Globals */ = {
 			isa = PBXGroup;
 			children = (
+				8E2786562241227A00430D34 /* GlobalLocalization.swift */,
 				8EBD48172240773900CD2639 /* GlobalLogging.swift */,
+				8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */,
 			);
 			path = Globals;
 			sourceTree = "<group>";
@@ -336,8 +359,8 @@
 		8EBD481E2240779300CD2639 /* Localization */ = {
 			isa = PBXGroup;
 			children = (
-				8EBD483D2240937E00CD2639 /* LocalizationTestBundle */,
 				8EBD482722407A6F00CD2639 /* LanguageTests.swift */,
+				8EBD483D2240937E00CD2639 /* LocalizationTestBundle */,
 				8EBD483922408E1000CD2639 /* LocalizationTests.swift */,
 			);
 			path = Localization;
@@ -359,9 +382,9 @@
 		8EBD48412240F6C900CD2639 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				8E27864822411CC600430D34 /* LoggingTestBundle */,
-				8EBD484A2240FFE200CD2639 /* LoggerTests.swift */,
 				8EBD484E22410F6300CD2639 /* LoggerGroupTests.swift */,
+				8EBD484A2240FFE200CD2639 /* LoggerTests.swift */,
+				8E27864822411CC600430D34 /* LoggingTestBundle */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -824,11 +847,14 @@
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD47E12240765200CD2639 /* OSLog+Categories.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
+				8E2786612241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FE2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E52240765200CD2639 /* Logger.swift in Sources */,
 				8EBD480A2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F62240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EBD48062240770000CD2639 /* Localization+String.swift in Sources */,
+				8E27865C2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
+				8E2786572241227A00430D34 /* GlobalLocalization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,11 +870,14 @@
 				8EBD48132240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD47E22240765200CD2639 /* OSLog+Categories.swift in Sources */,
 				8EBD480F2240770000CD2639 /* Localization+Languages.swift in Sources */,
+				8E2786622241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FF2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E62240765200CD2639 /* Logger.swift in Sources */,
 				8EBD480B2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F72240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EBD48072240770000CD2639 /* Localization+String.swift in Sources */,
+				8E27865D2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
+				8E2786582241227A00430D34 /* GlobalLocalization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -864,11 +893,14 @@
 				8EBD48142240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD47E32240765200CD2639 /* OSLog+Categories.swift in Sources */,
 				8EBD48102240770000CD2639 /* Localization+Languages.swift in Sources */,
+				8E2786632241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD48002240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E72240765200CD2639 /* Logger.swift in Sources */,
 				8EBD480C2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F82240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EBD48082240770000CD2639 /* Localization+String.swift in Sources */,
+				8E27865E2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
+				8E2786592241227A00430D34 /* GlobalLocalization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,11 +916,14 @@
 				8EBD48152240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD47E42240765200CD2639 /* OSLog+Categories.swift in Sources */,
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
+				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E82240765200CD2639 /* Logger.swift in Sources */,
 				8EBD480D2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F92240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EBD48092240770000CD2639 /* Localization+String.swift in Sources */,
+				8E27865F2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
+				8E27865A2241227A00430D34 /* GlobalLocalization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -899,6 +934,7 @@
 				8EBD483A22408E1000CD2639 /* LocalizationTests.swift in Sources */,
 				8EBD484F22410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
 				8EBD484B2240FFE200CD2639 /* LoggerTests.swift in Sources */,
+				8E278666224144C900430D34 /* GlobalLocalizationTests.swift in Sources */,
 				8E27865322411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EBD482822407A6F00CD2639 /* LanguageTests.swift in Sources */,
 			);
@@ -911,6 +947,7 @@
 				8EBD483B22408E1000CD2639 /* LocalizationTests.swift in Sources */,
 				8EBD485022410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
 				8EBD484C2240FFE200CD2639 /* LoggerTests.swift in Sources */,
+				8E278667224144C900430D34 /* GlobalLocalizationTests.swift in Sources */,
 				8E27865422411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EBD482922407A6F00CD2639 /* LanguageTests.swift in Sources */,
 			);
@@ -923,6 +960,7 @@
 				8EBD483C22408E1000CD2639 /* LocalizationTests.swift in Sources */,
 				8EBD485122410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
 				8EBD484D2240FFE200CD2639 /* LoggerTests.swift in Sources */,
+				8E278668224144C900430D34 /* GlobalLocalizationTests.swift in Sources */,
 				8E27865522411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EBD482A22407A6F00CD2639 /* LanguageTests.swift in Sources */,
 			);

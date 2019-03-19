@@ -64,6 +64,13 @@ public final class Localization: Codable {
 // MARK: - Setting the locale
 
 extension Localization {
+    /// Resets the locale to the current locale
+    ///
+    /// - Parameter baseBundle: The bundle to use
+    public func resetLocaleToCurrent(baseBundle: Bundle = .main) {
+        setLocale(.current, baseBundle: baseBundle)
+    }
+
     /// Sets the language and region of the localization.
     ///
     /// - Parameters:
@@ -72,7 +79,7 @@ extension Localization {
     ///   - baseLocale: The base locale to change. All attribute will be copied except the language and region. _Default: current_.
     ///   - baseBundle: The bundle to use
     /// - Throws: A `LocalizationError` if the language, region or the combination is not available.
-    public func setLanguage(_ languageCode: String, regionCode: String? = nil, baseLocale: Locale = .current, baseBundle: Bundle = .main) throws {
+    public func setLanguage(languageCode: String, regionCode: String? = nil, baseLocale: Locale = .current, baseBundle: Bundle = .main) throws {
         var localeComponents: [String: String] = Locale.components(fromIdentifier: baseLocale.identifier)
         localeComponents[NSLocale.Key.languageCode.rawValue] = languageCode
 
@@ -108,11 +115,15 @@ extension Localization {
         setLocale(newLocale, baseBundle: baseBundle)
     }
 
-    /// :nodoc:
-    private func setLocale(_ locale: Locale, baseBundle: Bundle) {
+    /// Sets the locale
+    ///
+    /// - Parameters:
+    ///   - locale: The new locale
+    ///   - baseBundle: The bundle to use
+    public func setLocale(_ locale: Locale, baseBundle: Bundle) {
         let oldIdentifier = self.locale.identifier
         let newIdentifier = locale.identifier
-        let userInfo = [LocalizationNotification.oldIdentifierKey: oldIdentifier, LocalizationNotification.newIdentifierKey: newIdentifier]
+        let userInfo = [LocalizationNotification.oldLocaleKey: self.locale, LocalizationNotification.newLocaleKey: locale]
 
         Localization.logger.debug("Locale will change from [\(oldIdentifier)] to [\(newIdentifier)]")
         notificationCenter.post(name: LocalizationNotification.localeWillChange, object: self, userInfo: userInfo)

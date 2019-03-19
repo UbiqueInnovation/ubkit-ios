@@ -10,7 +10,7 @@ import Foundation
 import os.log
 
 /// Internal logger group that holds all loggers
-internal var loggerGroup: LoggerGroup = LoggerGroup()
+private var loggerGroup: LoggerGroup = LoggerGroup()
 
 /// A domain for framework logging manipulation
 public enum Logging {
