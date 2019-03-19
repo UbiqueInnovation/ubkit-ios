@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E27864922411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
+		8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
+		8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
+		8E27865322411E5600430D34 /* GlobalLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865222411E5600430D34 /* GlobalLoggingTests.swift */; };
+		8E27865422411E5600430D34 /* GlobalLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865222411E5600430D34 /* GlobalLoggingTests.swift */; };
+		8E27865522411E5600430D34 /* GlobalLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E27865222411E5600430D34 /* GlobalLoggingTests.swift */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -75,6 +81,22 @@
 		8EBD483E2240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
 		8EBD483F2240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
 		8EBD48402240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
+		8EBD48432240FB2700CD2639 /* Summary.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48422240FB2700CD2639 /* Summary.md */; };
+		8EBD48442240FB2700CD2639 /* Summary.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48422240FB2700CD2639 /* Summary.md */; };
+		8EBD48452240FB2700CD2639 /* Summary.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48422240FB2700CD2639 /* Summary.md */; };
+		8EBD48472240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
+		8EBD48482240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
+		8EBD48492240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
+		8EBD484B2240FFE200CD2639 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484A2240FFE200CD2639 /* LoggerTests.swift */; };
+		8EBD484C2240FFE200CD2639 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484A2240FFE200CD2639 /* LoggerTests.swift */; };
+		8EBD484D2240FFE200CD2639 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484A2240FFE200CD2639 /* LoggerTests.swift */; };
+		8EBD484F22410F6300CD2639 /* LoggerGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484E22410F6300CD2639 /* LoggerGroupTests.swift */; };
+		8EBD485022410F6300CD2639 /* LoggerGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484E22410F6300CD2639 /* LoggerGroupTests.swift */; };
+		8EBD485122410F6300CD2639 /* LoggerGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484E22410F6300CD2639 /* LoggerGroupTests.swift */; };
+		8EBD4856224119AD00CD2639 /* Logger+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD48522241188B00CD2639 /* Logger+Error.swift */; };
+		8EBD4857224119AD00CD2639 /* Logger+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD48522241188B00CD2639 /* Logger+Error.swift */; };
+		8EBD4858224119AE00CD2639 /* Logger+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD48522241188B00CD2639 /* Logger+Error.swift */; };
+		8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD48522241188B00CD2639 /* Logger+Error.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +124,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8E27864822411CC600430D34 /* LoggingTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoggingTestBundle; sourceTree = "<group>"; };
+		8E27865222411E5600430D34 /* GlobalLoggingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLoggingTests.swift; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -130,9 +154,13 @@
 		8EBD4835224082E400CD2639 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8EBD48362240863F00CD2639 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		8EBD48372240866800CD2639 /* Globals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = Globals.md; path = Documentation/Globals.md; sourceTree = "<group>"; };
-		8EBD48382240866900CD2639 /* CodeReviewProcess.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CodeReviewProcess.md; path = Documentation/CodeReviewProcess.md; sourceTree = "<group>"; };
 		8EBD483922408E1000CD2639 /* LocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationTests.swift; sourceTree = "<group>"; };
 		8EBD483D2240937E00CD2639 /* LocalizationTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LocalizationTestBundle; sourceTree = "<group>"; };
+		8EBD48422240FB2700CD2639 /* Summary.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Summary.md; path = Documentation/Summary.md; sourceTree = "<group>"; };
+		8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CodeReviewProcess.md; path = Documentation/CodeReviewProcess.md; sourceTree = "<group>"; };
+		8EBD484A2240FFE200CD2639 /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
+		8EBD484E22410F6300CD2639 /* LoggerGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerGroupTests.swift; sourceTree = "<group>"; };
+		8EBD48522241188B00CD2639 /* Logger+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logger+Error.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +219,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E27864C22411DE300430D34 /* Globals */ = {
+			isa = PBXGroup;
+			children = (
+				8E27865222411E5600430D34 /* GlobalLoggingTests.swift */,
+			);
+			path = Globals;
+			sourceTree = "<group>";
+		};
 		8EBD475E2240636A00CD2639 = {
 			isa = PBXGroup;
 			children = (
@@ -247,7 +283,9 @@
 		8EBD47DB2240715500CD2639 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				8E27864C22411DE300430D34 /* Globals */,
 				8EBD481E2240779300CD2639 /* Localization */,
+				8EBD48412240F6C900CD2639 /* Logging */,
 				8EBD47DC2240746800CD2639 /* Supporting Files */,
 			);
 			path = Tests;
@@ -265,6 +303,7 @@
 			isa = PBXGroup;
 			children = (
 				8EBD47DF2240765200CD2639 /* Logger.swift */,
+				8EBD48522241188B00CD2639 /* Logger+Error.swift */,
 				8EBD47E02240765200CD2639 /* LoggerGroup.swift */,
 				8EBD47DE2240765200CD2639 /* OSLog+Categories.swift */,
 			);
@@ -307,13 +346,24 @@
 		8EBD4833224082CD00CD2639 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */,
+				8EBD48422240FB2700CD2639 /* Summary.md */,
 				8EBD48372240866800CD2639 /* Globals.md */,
-				8EBD48382240866900CD2639 /* CodeReviewProcess.md */,
 				8EBD4834224082E400CD2639 /* CHANGELOG.md */,
 				8EBD4835224082E400CD2639 /* README.md */,
 				8EBD48362240863F00CD2639 /* LICENSE.md */,
 			);
 			name = Metadata;
+			sourceTree = "<group>";
+		};
+		8EBD48412240F6C900CD2639 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				8E27864822411CC600430D34 /* LoggingTestBundle */,
+				8EBD484A2240FFE200CD2639 /* LoggerTests.swift */,
+				8EBD484E22410F6300CD2639 /* LoggerGroupTests.swift */,
+			);
+			path = Logging;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -583,7 +633,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EBD48472240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD483E2240937E00CD2639 /* LocalizationTestBundle in Resources */,
+				8E27864922411CC600430D34 /* LoggingTestBundle in Resources */,
+				8EBD48432240FB2700CD2639 /* Summary.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,7 +644,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EBD48482240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD483F2240937E00CD2639 /* LocalizationTestBundle in Resources */,
+				8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */,
+				8EBD48442240FB2700CD2639 /* Summary.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,7 +655,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EBD48492240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD48402240937E00CD2639 /* LocalizationTestBundle in Resources */,
+				8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */,
+				8EBD48452240FB2700CD2639 /* Summary.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -760,6 +819,7 @@
 				8EBD47FA2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EBD47E92240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EBD48182240773900CD2639 /* GlobalLogging.swift in Sources */,
+				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48022240770000CD2639 /* Localization.swift in Sources */,
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD47E12240765200CD2639 /* OSLog+Categories.swift in Sources */,
@@ -779,6 +839,7 @@
 				8EBD47FB2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EBD47EA2240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EBD48192240773900CD2639 /* GlobalLogging.swift in Sources */,
+				8EBD4858224119AE00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48032240770000CD2639 /* Localization.swift in Sources */,
 				8EBD48132240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD47E22240765200CD2639 /* OSLog+Categories.swift in Sources */,
@@ -798,6 +859,7 @@
 				8EBD47FC2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EBD47EB2240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EBD481A2240773900CD2639 /* GlobalLogging.swift in Sources */,
+				8EBD4857224119AD00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48042240770000CD2639 /* Localization.swift in Sources */,
 				8EBD48142240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD47E32240765200CD2639 /* OSLog+Categories.swift in Sources */,
@@ -817,6 +879,7 @@
 				8EBD47FD2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EBD47EC2240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EBD481B2240773900CD2639 /* GlobalLogging.swift in Sources */,
+				8EBD4856224119AD00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48052240770000CD2639 /* Localization.swift in Sources */,
 				8EBD48152240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD47E42240765200CD2639 /* OSLog+Categories.swift in Sources */,
@@ -834,6 +897,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EBD483A22408E1000CD2639 /* LocalizationTests.swift in Sources */,
+				8EBD484F22410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
+				8EBD484B2240FFE200CD2639 /* LoggerTests.swift in Sources */,
+				8E27865322411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EBD482822407A6F00CD2639 /* LanguageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -843,6 +909,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EBD483B22408E1000CD2639 /* LocalizationTests.swift in Sources */,
+				8EBD485022410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
+				8EBD484C2240FFE200CD2639 /* LoggerTests.swift in Sources */,
+				8E27865422411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EBD482922407A6F00CD2639 /* LanguageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -852,6 +921,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EBD483C22408E1000CD2639 /* LocalizationTests.swift in Sources */,
+				8EBD485122410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
+				8EBD484D2240FFE200CD2639 /* LoggerTests.swift in Sources */,
+				8E27865522411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EBD482A22407A6F00CD2639 /* LanguageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

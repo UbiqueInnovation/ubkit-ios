@@ -22,7 +22,7 @@ public class LoggerGroup {
     /// Initialize a group of loggers
     ///
     /// - Parameter loggers: The initial loggers
-    init(loggers: [Logger] = []) {
+    public init(loggers: [Logger] = []) {
         _loggers = loggers
         loggersDispatchQueue = DispatchQueue(label: "LoggerGroup")
     }

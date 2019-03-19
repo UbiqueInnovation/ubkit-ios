@@ -36,9 +36,13 @@ public enum Logging {
     /// - Parameter category: The category of the logger
     /// - Returns: A logger for the framework use
     internal static func frameworkLoggerFactory(category: String) -> Logger {
-        let osLog = OSLog(category: category, bundle: Bundle(for: Logger.self))
-        let logger = Logger(osLog)
-        addLogger(logger)
-        return logger
+        do {
+            let osLog = try OSLog(category: category, bundle: Bundle(for: Logger.self))
+            let logger = Logger(osLog)
+            addLogger(logger)
+            return logger
+        } catch {
+            fatalError("The bundle of the framework has no identifier.")
+        }
     }
 }

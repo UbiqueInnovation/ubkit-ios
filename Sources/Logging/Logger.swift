@@ -62,24 +62,29 @@ public class Logger {
     ///   - functionName: The function from where the log was called
     ///   - lineNumber: The line from where the log was called
     private func log(message: String, type: OSLogType, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
-        // Get the name of the file
-        let file = URL(fileURLWithPath: fileName).lastPathComponent
-        // Get the line number
-        let line = String(lineNumber)
-        // Get the thread name
-        let threadName = Thread.current.isMainThread ? "main" : (Thread.current.name ?? "Unnamed Thread")
-
         switch (accessLevel, logLevel) {
         case (_, .none):
             // No logs
             break
         case (.private, .verbose):
+            // Get the name of the file
+            let file = URL(fileURLWithPath: fileName).lastPathComponent
+            // Get the line number
+            let line = String(lineNumber)
+            // Get the thread name
+            let threadName = getCurrentThreadDescription()
             // Log the message and extra information
             os_log("[%{private}@] [%{private}@:%{private}@ %{private}@] > %{private}@", log: logger, type: type, threadName, file, line, functionName, message)
         case (.private, .default):
             // Log only the message
             os_log("%{private}@", log: logger, type: type, message)
         case (.public, .verbose):
+            // Get the name of the file
+            let file = URL(fileURLWithPath: fileName).lastPathComponent
+            // Get the line number
+            let line = String(lineNumber)
+            // Get the thread name
+            let threadName = getCurrentThreadDescription()
             // Log the message and extra information
             os_log("[%{public}@] [%{public}@:%{public}@ %{public}@] > %{public}@", log: logger, type: type, threadName, file, line, functionName, message)
         case (.public, .default):
@@ -147,5 +152,31 @@ extension Logger {
         case verbose
         /// No logs at all
         case none
+    }
+}
+
+extension Logger {
+    /// :nodoc:
+    private func getCurrentThreadDescription() -> String {
+        if Thread.current.isMainThread {
+            return "main"
+        }
+        if let name = Thread.current.name, name.isEmpty == false {
+            return name
+        }
+        do {
+            // A thread description is as follow: <NSThread: 0x7fa67851c660>{number = 2, name = (null)}
+            // We use a regex to match the number and extract it
+            let desc = String(describing: Thread.current)
+            let regex = try NSRegularExpression(pattern: "number = [0-9]+")
+            let results = regex.matches(in: desc, range: NSRange(desc.startIndex..., in: desc))
+            guard let first = results.first, let range = Range(first.range, in: desc) else {
+                return "Unknown"
+            }
+            let threadNumber = String(desc[range].replacingOccurrences(of: "number = ", with: ""))
+            return "Thread \(threadNumber)"
+        } catch {
+            return "Unknown"
+        }
     }
 }
