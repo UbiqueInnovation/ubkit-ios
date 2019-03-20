@@ -6,100 +6,117 @@ The UBFoundation framework provides a set of useful tools and helpers to make bu
 - Xcode 10.0+
 - Swift 4.2+
 
-## Project Setup
-### Installation
-We use [Fastlane](https://fastlane.tools) to do all the automation.
-You can setup the project by opening a Terminal and navigating to the project root folder, then run:
+## Installation
+### Carthage
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
+
+You can install Carthage with [Homebrew](https://brew.sh) using the following command:
+
 ```bash
-fastlane setup
+$ brew update
+$ brew install carthage
 ```
 
-> If you don't have fastlane installed and do not want to get insane trying 
-> to solve all the issues that comes with it, you can follow this [guide](https://hackernoon.com/the-only-sane-way-to-setup-fastlane-on-a-mac-4a14cb8549c8):
-> 1. Install `brew` from [Homebrew](http://brew.sh/)
-> 2. Install `rbenv` (a ruby environment) by running `brew install rbenv ruby-build`
-> 3. Add `if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi` to your Bash environment
-> 4. Install __Ruby__ by running `rbenv install 2.4.1` then `rbenv global 2.4.1`
-> 5. Install __Fastlane__ by running `gem install fastlane`
-> Congratulation you keept your sanity without missing on anything.
+To integrate UBFoundation into your Xcode project using Carthage, specify it in your Cartfile:
 
-## Project Organization
-### Version Control
-We use `git` as our version control and we host our code on a private repository in [Bitbucket Cloud](https://bitbucket.org/).
-
-### Dependency Management
-So far the need did not arise for 3rd party libraries or dependencies.
-In case it is needed, we would advise to uses `carthage` as a dependency manager. [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks. We chose it because it is transparent and keeps our project clean.
-
-### Documentation
-Documentation is really important, so we created a script that will generate an Apple like documentation style called [Jazzy](https://github.com/realm/jazzy).
-
-To open the documentation run the `documentation` lane:
 ```bash
-fastlane documentation
-```
-To skip generating the documentation use the option `generate=false`
-```bash
-fastlane documentation generate=false
+git "git@bitbucket.org:ubique-innovation/ubfoundation-swift.git" "master"
 ```
 
-### Changelog
-Documenting the significant changes between version is essential to keep a clear overview and an easier way to communicate withing the project.
+Run `carthage update` to build the framework and drag the built UBFoundation.framework into your Xcode project.
 
-Therefore we have a `CHANGELOG.md` file that contains all the changes between versions.
-This document adhere to the format specified in [keepachangelog](https://keepachangelog.com/en/1.0.0/):
-- Maintain a `## [Unreleased]` section at the top to add all new changes as we go
-- Structure each release with subsections named: 
-`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed` and `Security`
+### Manually
+If you prefer not to use __Carthage__ as a dependency managers, you can integrate SnapKit into your project manually by checking out the source code and draging the project into your xCode project.
 
-To read the changelog you can run
-```bash
-fastlane open_changelog
+## Contribution
+If you want to contribute to the framework, please check the contribution guide.
+
+## Documentation
+The framework is fully documented and easy to navigate on your own. You can consult the [online documentation](https://ubique.ch/ubFoundation/documentation). Or build it yourself by checking out the project and running the fastlane command `fastlane documentation`.
+
+## Usage
+### Localization
+The localization module is a wrapper around Appel's Bundle system and Local. It gives the caller control over the language and let it be specified at runtime. `UBFoundation` comes with a `Localization` object. Most formatters also accept a `Localization` object as initialization argument.
+
+- You can localize your strings by using the extension property `localized` directly on a key.
+
+```swift
+headerLabel.text = "balance_header_label".localized
+```
+_NB: To react to language changes you can observe one of the two `LocalizationNotification` notifications name on the default notification center._
+
+- You can access the current `Localization` object by calling `UBFoundation.AppLocalization` 
+
+```swift
+// Creating a date picker with the correct locale
+
+let datePicker = UIDatePicker(frame: .zero)
+datePicker.locale = UBFoundation.AppLocalization.locale
+
+// Fetching a file from the localized bundle 
+
+let aboutHTMLFilePath = AppLocalization.localizedBundle?.path(forResource: "about", ofType: "html")
+self.webview.load(aboutHTMLFilePath)
 ```
 
-### Versionning
-Versioning is key to keep track of software releases and dependencies. Maintaining a comprehensive and coherent versioning standard will avoid any confusion later.
+- To get all the available languages that app offers:
 
-#### Versioning conventions
-In summary a version consists of three positive non-null integers separated by a dot: `MAJOR.MINOR.PATCH` (_Ex: 2.5.3_).
-Exception to this rule is major version `0` that is considered development phase and not stable (_Ex: 0.3.6_).
+```swift
+let allLanguages = Localization.availableLanguages()
+print(allLanguages.map({ $0.displayNameInNativeLanguage }))
+```
 
-You can read more about the logic on [Sementic Versioning 2.0.0](https://semver.org).
+- To change the language:
 
-In addition to the version a build number can be provided to separate different builds of the same version, specially during development. It should always follow the version and be placed between parenthisis. _Ex: 2.5.3 (1472)_
-
-#### Versionning tools
-##### Version bump
-To avoid any human error, we use fastlane to update our version. 
-Just run `fastlane update_version` and follow the instructions.
-Or provide a `bump_type:[patch | minor | major]` to automatically increase the number.
-For advanced usage an option `version` can be used to pass in directly the number.
-
-### Testing
-Unit tests are key in a good continuous integration environment. This is why we have plenty. 
-
-You can either:
-- hit `Cmd+U` in Xcode to run the unit tests
-- use Fastlane by running `fastlane tests show_results:true`. Set `show_results` is `true` if you want to see the Summary HTML generated.
-
-Check the results of the [latest local tests](../../fastlane/test_output/report.html)
-
-### Code Sanity
-We chose to have our code formatted and it's style checked programmatically to avoid any issues and conflicts. Ont top of making the code look better and consistant, it avoid possible bugs. We went for SwiftFormat as a formatter for the code and SwiftLint for the linting part. Both scripts run on every build correctling automatically all the layouts and code style.
-1. [__SwiftFormat__](https://github.com/nicklockwood/SwiftFormat)
-2. [__SwiftLint__](https://github.com/realm/SwiftLint): 
-
-We enabled custom opt-in rules that can be found in the configuration file `.swiftlint.yml`
+```swift
+try UBFoundation.setLanguage(languageCode: "en", regionCode: "CH")
+```
 
 ### Logging
-To achieve logging we chose to go with the unified logging system offered by Apple through the OS.Log framework.
+Logging is a wrapper module around Appel's unifide log API. It provides on top of the normal logging a set of useful control, like the log level and privacy.
+The logging module is thread safe.
 
-We wrote our own wrapper around the os_log C like function to make it Swift friendly.
+> We recommend that you creat a logger and have it accessible from all the app to make logging easier.
+> You can delare many loggers with different categories to refine more the logs. But most apps will be fine with one.
+> The logs can be seen in the xCode console if you are debugging the app, otherwise they will show up in the Console app.
+> A nice place to store all you loggers is in a separate file, where you can declare static let property in the global scope.
 
-We separate 3 log levels: __Info__, __Error__, __Debug__.
+```swift
+// File: Logging.swift
 
-## Roadmap
-Here is a list of features that will be coming in the future:
-- Keychain wrapper
-- Future and Promises
+let logger: Logger? = {
+return try? Logger(category: "MyApp")
+}()
 
+```
+
+- To create a logger and start logging you can
+
+```swift
+do {
+let logger = try Logger(category: "Database")
+logger.setLogLevel(.default)
+// You can save a reference for the logger for further use
+try database.open()
+logger.debug("Connection to DB successfully open", accessLevel: .public)
+try database.save(age: person.age, person: person)
+logger.info("Saved age \(person.age) to contact \(person.name)", accessLevel: .private)
+database.close()
+logger.debug("Connection to DB closed", accessLevel: .public)
+} catch {
+logger.error("An error occurred while accessing the database \(error.localizedDescription)", accessLevel: .public)
+}
+```
+
+
+- Setting the framework log Level
+In case you want to change the log level of the framewotk you can do so by calling
+
+```swift
+// Turn off all framework logging
+UBFoundation.Logging.setGlobalLogLevel(.none)
+```
+
+## License
+
+Copyright (c) 2019-present Ubique Innovation AG
