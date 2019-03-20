@@ -7,6 +7,6 @@
 
 import Foundation
 
+/// Networking errors
 public enum NetworkingError: Error {
-    case couldNotCreateBody(message: String?)
 }

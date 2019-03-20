@@ -65,7 +65,7 @@ public struct HTTPRequestHeaderField {
     public init(contentLength value: String?) {
         self.init(key: "Content-Length", value: value)
     }
-    
+
     /// Content type header field
     ///
     /// - Parameter value: The value of the field. `Nil` to remove the field

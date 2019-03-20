@@ -1,5 +1,5 @@
 //
-//  HTTPContentType.swift
+//  HTTPMIMEType.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 20.03.19.
@@ -19,6 +19,18 @@ public struct HTTPMIMEType: CustomStringConvertible {
     /// An optional parameter, made of a key and a value
     public let parameter: Parameter?
 
+    /// Initializes a HTTP MIME type
+    ///
+    /// - Parameters:
+    ///   - type: The type of the MIME
+    ///   - subtype: The subtype of the MIME
+    ///   - parameter: The parameter of the MIME
+    public init(type: String, subtype: String? = nil, parameter: Parameter? = nil) {
+        self.type = type
+        self.subtype = subtype
+        self.parameter = parameter
+    }
+
     /// :nodoc:
     public var description: String {
         var resultString: String = type.lowercased()
@@ -26,7 +38,7 @@ public struct HTTPMIMEType: CustomStringConvertible {
             resultString += "/\(subtype.lowercased())"
         }
         if let parameter = parameter {
-            resultString += " ;\(parameter.key)=\(parameter.value)"
+            resultString += "; \(parameter.key)=\(parameter.value)"
         }
         return resultString
     }

@@ -10,9 +10,9 @@ import Foundation
 /// An encapsulation of a HTTP request body
 public struct HTTPRequestBody {
     /// The data of the body
-    let data: Data
+    public let data: Data
     /// The mime type of the body
-    let mimeType: HTTPMIMEType
+    public let mimeType: HTTPMIMEType
 }
 
 /// Conforming to the protocol allows the conformant to be used as a Body in an HTTP request

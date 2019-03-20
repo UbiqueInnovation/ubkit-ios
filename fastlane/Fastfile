@@ -67,7 +67,7 @@ end
 
 desc "Opens the documentation. Option `generate:true` to generates it also."
 lane :documentation do |options|
-    if !options[:generate]
+    if options[:generate]
         # Generate Documentation
         jazzy
     end

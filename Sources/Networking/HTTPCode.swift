@@ -11,12 +11,12 @@ import Foundation
 
 extension Int {
     /// Get the http category
-    var httpCodeCategory: HTTPCodeCategory {
+    public var httpCodeCategory: HTTPCodeCategory {
         return HTTPCodeCategory(code: self)
     }
 
     /// Get the standard http code
-    var standardHTTPCode: StandardHTTPCode? {
+    public var standardHTTPCode: StandardHTTPCode? {
         return StandardHTTPCode(rawValue: self)
     }
 }
