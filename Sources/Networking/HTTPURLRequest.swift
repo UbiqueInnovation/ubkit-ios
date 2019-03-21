@@ -101,10 +101,12 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
     ///
     /// - Parameters:
     ///   - url: The URL for the request.
+    ///   - method: The HTTP Method to use. Default to GET.
     ///   - cachePolicy: The cache policy for the request. The default is `NSURLRequest.CachePolicy.useProtocolCachePolicy`.
     ///   - timeoutInterval: The timeout interval for the request. The default is 60.0.
-    public init(url: URL, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, timeoutInterval: TimeInterval = 60.0) {
+    public init(url: URL, method: HTTPMethod = .get, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, timeoutInterval: TimeInterval = 60.0) {
         self.init(request: URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval))
+        httpMethod = method
     }
 
     /// Initializes a HTTPURLRequest request from a URLRequest
@@ -174,6 +176,56 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
     /// - Returns: The value associated with the header field field, or nil if there is no corresponding header field.
     public func value(forHTTPHeaderField field: String) -> String? {
         return _request.value(forHTTPHeaderField: field)
+    }
+
+    // MARK: - URL Parameter
+
+    /// Sets the query parameters
+    ///
+    /// - Parameter parameters: A dictionary containing the query paramters
+    /// - Throws: `NetworkingError` in case of missing or malformed URL
+    public mutating func setQueryParameters(_ parameters: [String: String?]) throws {
+        try setQueryParameters(parameters.map({ URLQueryItem(name: $0.key, value: $0.value) }))
+    }
+
+    /// Sets the query parameter
+    ///
+    /// - Parameter parameter: A query item
+    /// - Throws: `NetworkingError` in case of missing or malformed URL
+    public mutating func setQueryParameters(_ parameter: URLQueryItem) throws {
+        try setQueryParameters([parameter])
+    }
+
+    /// Sets the query parameters
+    ///
+    /// - Parameter parameters: An array containing the query paramters
+    /// - Throws: `NetworkingError` in case of missing or malformed URL
+    public mutating func setQueryParameters(_ parameters: [URLQueryItem]) throws {
+        guard let url = url else {
+            throw NetworkingError.missingURL
+        }
+        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            throw NetworkingError.malformedURL(url: url)
+        }
+        urlComponents.queryItems = parameters
+        guard let newURL = urlComponents.url else {
+            throw NetworkingError.couldNotCreateURL
+        }
+        self.url = newURL
+    }
+
+    /// Get all query paramters
+    ///
+    /// - Returns: All query paramters
+    /// - Throws: `NetworkingError` in case of missing or malformed URL
+    public func allQueryParameters() throws -> [URLQueryItem] {
+        guard let url = url else {
+            throw NetworkingError.missingURL
+        }
+        guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            throw NetworkingError.malformedURL(url: url)
+        }
+        return urlComponents.queryItems ?? []
     }
 
     // MARK: - Other methods

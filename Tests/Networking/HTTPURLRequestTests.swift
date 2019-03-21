@@ -52,5 +52,32 @@ class HTTPURLRequestTests: XCTestCase {
         let value = "xcd"
         request.setHTTPHeaderField(HTTPRequestHeaderField(key: key, value: value))
         XCTAssertEqual(request.value(forHTTPHeaderField: key), value)
+        request.addToHTTPHeaderField(HTTPRequestHeaderField(contentType: "text"))
+        XCTAssertEqual(request.value(forHTTPHeaderField: key), value)
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "text")
+        let all = request.allHTTPHeaderFields
+        XCTAssertNotNil(all)
+        XCTAssertEqual(all?[key], value)
+    }
+
+    func testQueryParameters() {
+        let testData = ["a": "1", "b": "2"]
+        var request = HTTPURLRequest(url: url)
+        XCTAssertNoThrow(try request.setQueryParameters(testData))
+        // The order of the parameters is arbitrary when it comes to dictionary
+        XCTAssertTrue(request.url?.absoluteString == "http://ubique.ch?a=1&b=2" ? true : request.url?.absoluteString == "http://ubique.ch?b=2&a=1")
+        XCTAssertNoThrow(try request.setQueryParameters(URLQueryItem(name: "a", value: "1")))
+        XCTAssertEqual(request.url?.absoluteString, "http://ubique.ch?a=1")
+
+        do {
+            let all = try request.allQueryParameters()
+            XCTAssertEqual(all.count, 1)
+            let first = all.first
+            XCTAssertNotNil(first)
+            XCTAssertEqual(first?.name, "a")
+            XCTAssertEqual(first?.value, "1")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
     }
 }

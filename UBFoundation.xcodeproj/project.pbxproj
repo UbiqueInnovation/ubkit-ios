@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E0DB2B42243088000D5E01E /* Networking+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2B32243088000D5E01E /* Networking+Error.swift */; };
+		8E0DB2B52243088000D5E01E /* Networking+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2B32243088000D5E01E /* Networking+Error.swift */; };
+		8E0DB2B62243088000D5E01E /* Networking+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2B32243088000D5E01E /* Networking+Error.swift */; };
+		8E0DB2B72243088000D5E01E /* Networking+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2B32243088000D5E01E /* Networking+Error.swift */; };
 		8E27864922411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
 		8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
 		8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
@@ -176,6 +180,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8E0DB2B32243088000D5E01E /* Networking+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Error.swift"; sourceTree = "<group>"; };
 		8E27864822411CC600430D34 /* LoggingTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoggingTestBundle; sourceTree = "<group>"; };
 		8E27865222411E5600430D34 /* GlobalLoggingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLoggingTests.swift; sourceTree = "<group>"; };
 		8E2786562241227A00430D34 /* GlobalLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLocalization.swift; sourceTree = "<group>"; };
@@ -439,10 +444,11 @@
 			isa = PBXGroup;
 			children = (
 				8EC484632241C65A00AC8E44 /* HTTPCode.swift */,
-				8EC484782242821300AC8E44 /* HTTPMIMEType.swift */,
 				8EC4846E22427BE500AC8E44 /* HTTPMethod.swift */,
+				8EC484782242821300AC8E44 /* HTTPMIMEType.swift */,
 				8EC484732242813200AC8E44 /* HTTPRequestBodyProvider.swift */,
 				8EC4848222428AC500AC8E44 /* HTTPRequestHeaderField.swift */,
+				8E0DB2B32243088000D5E01E /* Networking+Error.swift */,
 				8EC4846922427B9700AC8E44 /* HTTPURLRequest.swift */,
 				8EC4845E2241C1BC00AC8E44 /* URLSessionProtocol.swift */,
 			);
@@ -927,6 +933,7 @@
 				8EBD480A2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F62240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EC484742242813200AC8E44 /* HTTPRequestBodyProvider.swift in Sources */,
+				8E0DB2B42243088000D5E01E /* Networking+Error.swift in Sources */,
 				8EC4845F2241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
 				8EC484792242821300AC8E44 /* HTTPMIMEType.swift in Sources */,
 				8EBD48062240770000CD2639 /* Localization+String.swift in Sources */,
@@ -956,6 +963,7 @@
 				8EBD480B2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F72240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EC484752242813200AC8E44 /* HTTPRequestBodyProvider.swift in Sources */,
+				8E0DB2B52243088000D5E01E /* Networking+Error.swift in Sources */,
 				8EC484602241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
 				8EC4847A2242821300AC8E44 /* HTTPMIMEType.swift in Sources */,
 				8EBD48072240770000CD2639 /* Localization+String.swift in Sources */,
@@ -985,6 +993,7 @@
 				8EBD480C2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F82240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EC484762242813200AC8E44 /* HTTPRequestBodyProvider.swift in Sources */,
+				8E0DB2B62243088000D5E01E /* Networking+Error.swift in Sources */,
 				8EC484612241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
 				8EC4847B2242821300AC8E44 /* HTTPMIMEType.swift in Sources */,
 				8EBD48082240770000CD2639 /* Localization+String.swift in Sources */,
@@ -1014,6 +1023,7 @@
 				8EBD480D2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F92240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EC484772242813200AC8E44 /* HTTPRequestBodyProvider.swift in Sources */,
+				8E0DB2B72243088000D5E01E /* Networking+Error.swift in Sources */,
 				8EC484622241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
 				8EC4847C2242821300AC8E44 /* HTTPMIMEType.swift in Sources */,
 				8EBD48092240770000CD2639 /* Localization+String.swift in Sources */,
