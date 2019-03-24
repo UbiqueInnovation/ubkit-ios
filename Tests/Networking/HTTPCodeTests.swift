@@ -11,7 +11,7 @@ import XCTest
 class HTTPCodeTests: XCTestCase {
     func testStandardHTTPCode() {
         let testData: [(status: Int, standard: StandardHTTPCode?)] = [
-            (200, .OK),
+            (200, .ok),
             (404, .notFound),
             (2000, nil)
         ]

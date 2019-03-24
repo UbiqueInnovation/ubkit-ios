@@ -45,7 +45,7 @@ public protocol URLSessionProtocol {
     /// - Returns: The new session download task.
     func downloadTask(with request: HTTPURLRequest, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask
 
-    /// Creates a download task to resume a previously canceled or failed download and calls a handler upon completion.
+    /// Creates a download task to resume a previously cancelled or failed download and calls a handler upon completion.
     ///
     /// - Parameters:
     ///   - resumeData: A data object that provides the data necessary to resume the download.

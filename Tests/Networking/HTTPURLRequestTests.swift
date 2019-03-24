@@ -38,7 +38,7 @@ class HTTPURLRequestTests: XCTestCase {
         let str = "Hello test"
         let body = try! str.httpRequestBody()
         XCTAssertNoThrow(try request.setHTTPBody(str))
-        XCTAssertEqual(body.mimeType.description, request.value(forHTTPHeaderField: "Content-Type"))
+        XCTAssertEqual(body.mimeType.stringValue, request.value(forHTTPHeaderField: "Content-Type"))
         XCTAssertEqual(request.httpBody, body.data)
 
         request.clearHTTPBody()
@@ -50,11 +50,11 @@ class HTTPURLRequestTests: XCTestCase {
         var request = HTTPURLRequest(url: url)
         let key = "Hi"
         let value = "xcd"
-        request.setHTTPHeaderField(HTTPRequestHeaderField(key: key, value: value))
+        request.setHTTPHeaderField(HTTPHeaderField(key: key, value: value))
         XCTAssertEqual(request.value(forHTTPHeaderField: key), value)
-        request.addToHTTPHeaderField(HTTPRequestHeaderField(contentType: "text"))
+        request.addToHTTPHeaderField(HTTPHeaderField(key: .contentType, value: "text/plain"))
         XCTAssertEqual(request.value(forHTTPHeaderField: key), value)
-        XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "text")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "text/plain")
         let all = request.allHTTPHeaderFields
         XCTAssertNotNil(all)
         XCTAssertEqual(all?[key], value)
@@ -78,6 +78,19 @@ class HTTPURLRequestTests: XCTestCase {
             XCTAssertEqual(first?.value, "1")
         } catch {
             XCTFail(error.localizedDescription)
+        }
+    }
+
+    func testJSONBody() {
+        struct T: Encodable {
+            let a: String
+        }
+        var request = HTTPURLRequest(url: url)
+        XCTAssertNoThrow(try request.setHTTPJSONBody(T(a: "Hello")))
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/json; charset=utf-8")
+        XCTAssertNotNil(request.httpBody)
+        if let data = request.httpBody {
+            XCTAssertEqual(String(data: data, encoding: .utf8), "{\"a\":\"Hello\"}")
         }
     }
 }

@@ -128,7 +128,18 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
         _request.httpBody = nil
         // According to Apple docs, the content-length is set automatically for us.
         // https://developer.apple.com/documentation/foundation/urlrequest/2011502-allhttpheaderfields
-        setHTTPHeaderField(HTTPRequestHeaderField(contentType: nil))
+        setHTTPHeaderField(HTTPHeaderField(key: .contentType, value: nil))
+    }
+
+    /// Sets an HTTP body
+    ///
+    /// - Parameters:
+    ///   - body: The body
+    public mutating func setHTTPBody(_ body: HTTPRequestBody) {
+        _request.httpBody = body.data
+        // According to Apple docs, the content-length is set automatically for us.
+        // https://developer.apple.com/documentation/foundation/urlrequest/2011502-allhttpheaderfields
+        setHTTPHeaderField(HTTPHeaderField(key: .contentType, value: body.mimeType.stringValue))
     }
 
     /// Sets an HTTP body
@@ -136,12 +147,19 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
     /// - Parameters:
     ///   - bodyProvider: The body provider
     /// - Throws: Rethrow the error throws by the request body provider
-    public mutating func setHTTPBody(_ bodyProvider: HTTPRequestBodyProvider) throws {
-        let body = try bodyProvider.httpRequestBody()
-        _request.httpBody = body.data
-        // According to Apple docs, the content-length is set automatically for us.
-        // https://developer.apple.com/documentation/foundation/urlrequest/2011502-allhttpheaderfields
-        setHTTPHeaderField(HTTPRequestHeaderField(contentType: body.mimeType.description))
+    public mutating func setHTTPBody(_ bodyProvider: HTTPRequestBodyConvertible) throws {
+        setHTTPBody(try bodyProvider.httpRequestBody())
+    }
+
+    /// Sets a JSON body
+    ///
+    /// - Parameters:
+    ///   - object: The object to encode
+    ///   - encoder: The encoder
+    /// - Throws: incase the ecoder could not encode
+    public mutating func setHTTPJSONBody<T: Encodable>(_ object: T, encoder: JSONEncoder = JSONEncoder()) throws {
+        let body = HTTPRequestBody(data: try encoder.encode(object), mimeType: .json())
+        setHTTPBody(body)
     }
 
     // MARK: - Managing the Headers of the request
@@ -154,14 +172,14 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
     /// Sets a value for a header field.
     ///
     /// - Parameter field: The new value for the header field.
-    public mutating func setHTTPHeaderField(_ field: HTTPRequestHeaderField) {
+    public mutating func setHTTPHeaderField(_ field: HTTPHeaderField) {
         _request.setValue(field.value, forHTTPHeaderField: field.key)
     }
 
     /// Adds one value to the header field.
     ///
     /// - Parameter field: The value for the header field.
-    public mutating func addToHTTPHeaderField(_ field: HTTPRequestHeaderField) {
+    public mutating func addToHTTPHeaderField(_ field: HTTPHeaderField) {
         guard let value = field.value else {
             return
         }
