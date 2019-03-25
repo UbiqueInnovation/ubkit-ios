@@ -29,9 +29,7 @@ documentation:
   - "Documentation/CodeReviewProcess.md"
   - "fastlane/README.md"
   - "LICENSE.md"
-  - "README.md"
-  - "Documentation/roadmap.md"
-  - "documentation/Contribution Guide.md"
+  - "Documentation/Contribution Guide.md"
 
 # Exclude some files
 exclude:

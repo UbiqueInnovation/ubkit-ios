@@ -18,9 +18,6 @@ fastlane setup
 > 5. Install __Fastlane__ by running `gem install fastlane`
 > Congratulation you keept your sanity without missing on anything.
 
-## What to do?
-You can checkout the Roadmap document to see what the Framework need and develop something accordingly
-
 ## Creating and Submitting changes
 For each change that needs to be introduces to the framework, start by creating a branch from `develop` and commit your changes there. Once ready, create a pull request to see your changes merged. You cannot push changes directly to `develop` or `master`.
 
@@ -101,3 +98,34 @@ To achieve logging we chose to go with the unified logging system offered by App
 We wrote our own wrapper around the os_log C like function to make it Swift friendly.
 
 We separate 3 log levels: __Info__, __Error__, __Debug__.
+
+# Roadmap
+
+## Networking
+
+### Caching
+
+### Security
+- Limit redirection
+- Security challenges
+- Certificates pinning
+
+### Adapting and Retrying Requests
+- Create pre-hooks
+- Create post-hooks and retryal blocks
+- Support basic authentication and OAUTH
+
+### Error handling
+- Offer base error handling
+- Offer extention for error handling
+
+### Reachability
+- Network reachability
+- Auto-retry on reachability
+
+### CRON Jobs
+
+## UI
+
+### Color helpers
+- To and from HEX string

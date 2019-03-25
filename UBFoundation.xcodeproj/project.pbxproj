@@ -257,7 +257,6 @@
 		8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalNotificationCenter.swift; sourceTree = "<group>"; };
 		8E2786602241269200430D34 /* Localization+Locale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Locale.swift"; sourceTree = "<group>"; };
 		8E278665224144C900430D34 /* GlobalLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLocalizationTests.swift; sourceTree = "<group>"; };
-		8E278669224174DC00430D34 /* Getting Started.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Getting Started.md"; path = "Documentation/Getting Started.md"; sourceTree = "<group>"; };
 		8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPDataTaskTests.swift; sourceTree = "<group>"; };
 		8E7F746A22452F8300582E57 /* DataTaskSessionMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTaskSessionMock.swift; sourceTree = "<group>"; };
 		8E7F746E2245303A00582E57 /* URLSessionDataTaskMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionDataTaskMock.swift; sourceTree = "<group>"; };
@@ -270,7 +269,6 @@
 		8E7F74962247F50200582E57 /* HTTPResponseValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponseValidatorTests.swift; sourceTree = "<group>"; };
 		8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPDataDecoderTests.swift; sourceTree = "<group>"; };
 		8E7F749F224859A100582E57 /* Networking+Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Logger.swift"; sourceTree = "<group>"; };
-		8E7F74A42249543400582E57 /* Roadmap.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Roadmap.md; path = Documentation/Roadmap.md; sourceTree = "<group>"; };
 		8E7F74A9224955F700582E57 /* Contribution Guide.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Contribution Guide.md"; path = "Documentation/Contribution Guide.md"; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
@@ -578,8 +576,6 @@
 			isa = PBXGroup;
 			children = (
 				8E7F74A9224955F700582E57 /* Contribution Guide.md */,
-				8E7F74A42249543400582E57 /* Roadmap.md */,
-				8E278669224174DC00430D34 /* Getting Started.md */,
 				8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */,
 				8EBD4834224082E400CD2639 /* CHANGELOG.md */,
 				8EBD4835224082E400CD2639 /* README.md */,
