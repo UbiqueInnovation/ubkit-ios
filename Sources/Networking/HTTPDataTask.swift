@@ -5,13 +5,13 @@
 //  Created by Joseph El Mallah on 21.03.19.
 //
 
+// - check caching
 // - redirection
+// - Certificate pinning
 // - hooks for request changing
 // - authentication: basic / OAUTH
-// - check caching
 // - Adapting and Retrying Requests
 // - Error handling
-// - Certificates
 // - Network Reachability
 // - CRON jobs
 
@@ -291,7 +291,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter observationBlock: The block to execute when the state changes
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addStateTransitionObserver(_ observationBlock: @escaping StateTransitionObservationBlock) -> HTTPDataTask {
+    public func addStateTransitionObserver(_ observationBlock: @escaping StateTransitionObservationBlock) -> Self {
         stateTransitionObservers.append(observationBlock)
         return self
     }
@@ -320,7 +320,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter observationBlock: The observer block
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addProgressObserver(_ observationBlock: @escaping ProgressObservationBlock) -> HTTPDataTask {
+    public func addProgressObserver(_ observationBlock: @escaping ProgressObservationBlock) -> Self {
         progressObservers.append(observationBlock)
         return self
     }
@@ -367,7 +367,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter completionHandler: A completion handler
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingBlock<Data>) -> HTTPDataTask {
+    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingBlock<Data>) -> Self {
         let wrapper = CompletionHandlerWrapper(decoder: HTTPPassThroughDecoder(), completion: completionHandler)
         completionHandlers.append(wrapper)
         return self
@@ -380,7 +380,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     ///   - completionHandler: A completion handler
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addCompletionHandler<T>(decoder: HTTPDataDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) -> HTTPDataTask {
+    public func addCompletionHandler<T>(decoder: HTTPDataDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) -> Self {
         let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
         completionHandlers.append(wrapper)
         return self
@@ -405,7 +405,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter validator: The validator
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addResponseValidator(_ validator: HTTPResponseValidator) -> HTTPDataTask {
+    public func addResponseValidator(_ validator: HTTPResponseValidator) -> Self {
         responseValidators.append(validator)
         return self
     }
@@ -418,7 +418,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter validationBlock: The validator block
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addResponseValidator(_ validationBlock: @escaping HTTPResponseValidatorBlock.ValidationBlock) -> HTTPDataTask {
+    public func addResponseValidator(_ validationBlock: @escaping HTTPResponseValidatorBlock.ValidationBlock) -> Self {
         addResponseValidator(HTTPResponseValidatorBlock(validationBlock))
         return self
     }
@@ -431,7 +431,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter validators: An array of validators
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addResponseValidator(_ validators: [HTTPResponseValidator]) -> HTTPDataTask {
+    public func addResponseValidator(_ validators: [HTTPResponseValidator]) -> Self {
         responseValidators.append(contentsOf: validators)
         return self
     }
