@@ -5,8 +5,10 @@
 //  Created by Joseph El Mallah on 21.03.19.
 //
 
+// - Move to Dispatch queue
 // - check caching
 // - redirection
+// - Create wrapping session
 // - Certificate pinning
 // - hooks for request changing
 // - authentication: basic / OAUTH
@@ -67,7 +69,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     private var dataTask: URLSessionDataTask?
 
     /// A queue for parsing and validating data
-    private let workOperationQueue: OperationQueue
+    private let underlyingQueue: OperationQueue
 
     /// The callback queue where all callbacks take place
     private let callbackQueue: OperationQueue
@@ -91,10 +93,10 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
         progress = Progress(totalUnitCount: 0)
         state = .initial
 
-        workOperationQueue = OperationQueue()
-        workOperationQueue.name = "HTTPDataTask \(taskDescription ?? "<no description>")"
-        workOperationQueue.qualityOfService = .userInitiated
-        workOperationQueue.maxConcurrentOperationCount = 1
+        underlyingQueue = OperationQueue()
+        underlyingQueue.name = "HTTPDataTask \(taskDescription ?? "<no description>")"
+        underlyingQueue.qualityOfService = .userInitiated
+        underlyingQueue.maxConcurrentOperationCount = 1
 
         progress.isCancellable = true
         progress.cancellationHandler = { [weak self] in
@@ -105,7 +107,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// :nodoc:
     deinit {
         dataTask?.cancel()
-        workOperationQueue.cancelAllOperations()
+        underlyingQueue.cancelAllOperations()
         callbackQueue.cancelAllOperations()
     }
 
@@ -114,7 +116,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// Start the task with the given request
     public func start() {
         // Synchronize the start to avoid internal state conflicts
-        workOperationQueue.addOperation { [weak self] in
+        underlyingQueue.addOperation { [weak self] in
             guard let self = self else {
                 return
             }
@@ -133,7 +135,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
             // Create a new task from the preferences
             let dataTask = self.session.dataTask(with: self.request, completionHandler: { [weak self] data, response, error in
-                self?.workOperationQueue.addOperation { [weak self] in
+                self?.underlyingQueue.addOperation { [weak self] in
                     self?.dataTaskCompleted(data: data, response: response, error: error)
                 }
             })
@@ -173,7 +175,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
     /// Cancel the current request
     public func cancel() {
-        workOperationQueue.addOperation { [weak self] in
+        underlyingQueue.addOperation { [weak self] in
             Networking.logger.debug("Canceling task for \(self?.description ?? "-")")
             self?.dataTask?.cancel()
         }

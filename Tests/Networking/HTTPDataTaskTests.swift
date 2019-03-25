@@ -58,6 +58,32 @@ class HTTPDataTaskTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
 
+    func testCompletionJSONData() {
+        let ex1 = expectation(description: "Request")
+        let request = HTTPURLRequest(url: url)
+        let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+        let expectedData = "{\"value\":\"A\"}".data(using: .utf8)
+
+        struct TestStruct: Codable {
+            let value: String
+        }
+
+        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+            return URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
+        }
+        let dataTask = HTTPDataTask(request: request, session: mockSession)
+        dataTask.addCompletionHandler(decoder: HTTPJSONDecoder<TestStruct>()) { result, _ in
+            switch result {
+            case let .success(test):
+                XCTAssertEqual(test.value, "A")
+            default:
+                XCTFail("Should have returned success with empty")
+            }
+            ex1.fulfill()
+        }.start()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
     func testCompletion() {
         let ex1 = expectation(description: "Request")
         let ex2 = expectation(description: "Request")
