@@ -21,15 +21,16 @@ min_acl: public
 # xcodebuild_arguments:
   # - '-dry-run'
 
-readme: "documentation/Getting Started.md"
+readme: "Documentation/Getting Started.md"
 
 # Add more documentation
 documentation:
   - "CHANGELOG.md"
-  - "documentation/CodeReviewProcess.md"
+  - "Documentation/CodeReviewProcess.md"
   - "fastlane/README.md"
   - "LICENSE.md"
   - "README.md"
+  - "Documentation/roadmap.md"
 
 # Exclude some files
 exclude:

@@ -430,13 +430,13 @@ class HTTPDataTaskTests: XCTestCase {
         }
 
         dataTask.addResponseValidator { _ in
-            XCTAssertNotEqual(queue, OperationQueue.current!)
+            XCTAssertNotEqual(queue, OperationQueue.current)
             XCTAssertNotEqual(queue, OperationQueue.main)
             ex3.fulfill()
         }
 
         let decoder = HTTPDataDecoder { (data, _) -> Data in
-            XCTAssertNotEqual(queue, OperationQueue.current!)
+            XCTAssertNotEqual(queue, OperationQueue.current)
             XCTAssertNotEqual(queue, OperationQueue.main)
             ex4.fulfill()
             return data

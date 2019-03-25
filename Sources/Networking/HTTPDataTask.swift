@@ -5,18 +5,6 @@
 //  Created by Joseph El Mallah on 21.03.19.
 //
 
-// - Move to Dispatch queue
-// - check caching
-// - redirection
-// - Create wrapping session
-// - Certificate pinning
-// - hooks for request changing
-// - authentication: basic / OAUTH
-// - Adapting and Retrying Requests
-// - Error handling
-// - Network Reachability
-// - CRON jobs
-
 import Foundation
 
 /// A data task that returns downloaded data directly to the app in memory.
@@ -69,7 +57,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     private var dataTask: URLSessionDataTask?
 
     /// A queue for parsing and validating data
-    private let underlyingQueue: OperationQueue
+    private let underlyingQueue: DispatchQueue
 
     /// The callback queue where all callbacks take place
     private let callbackQueue: OperationQueue
@@ -93,10 +81,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
         progress = Progress(totalUnitCount: 0)
         state = .initial
 
-        underlyingQueue = OperationQueue()
-        underlyingQueue.name = "HTTPDataTask \(taskDescription ?? "<no description>")"
-        underlyingQueue.qualityOfService = .userInitiated
-        underlyingQueue.maxConcurrentOperationCount = 1
+        underlyingQueue = DispatchQueue(label: "HTTPDataTask \(taskDescription ?? "<no description>")", qos: DispatchQoS.userInitiated)
 
         progress.isCancellable = true
         progress.cancellationHandler = { [weak self] in
@@ -107,8 +92,6 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// :nodoc:
     deinit {
         dataTask?.cancel()
-        underlyingQueue.cancelAllOperations()
-        callbackQueue.cancelAllOperations()
     }
 
     // MARK: - Startin and stopping
@@ -116,11 +99,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// Start the task with the given request
     public func start() {
         // Synchronize the start to avoid internal state conflicts
-        underlyingQueue.addOperation { [weak self] in
-            guard let self = self else {
-                return
-            }
-
+        underlyingQueue.sync {
             switch Networking.logger.logLevel {
             case .default:
                 Networking.logger.debug("Starting task for \(self.description)")
@@ -135,7 +114,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
             // Create a new task from the preferences
             let dataTask = self.session.dataTask(with: self.request, completionHandler: { [weak self] data, response, error in
-                self?.underlyingQueue.addOperation { [weak self] in
+                self?.underlyingQueue.async { [weak self] in
                     self?.dataTaskCompleted(data: data, response: response, error: error)
                 }
             })
@@ -175,9 +154,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
     /// Cancel the current request
     public func cancel() {
-        underlyingQueue.addOperation { [weak self] in
-            Networking.logger.debug("Canceling task for \(self?.description ?? "-")")
-            self?.dataTask?.cancel()
+        underlyingQueue.sync {
+            Networking.logger.debug("Canceling task for \(self.description)")
+            dataTask?.cancel()
         }
     }
 
@@ -294,7 +273,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addStateTransitionObserver(_ observationBlock: @escaping StateTransitionObservationBlock) -> Self {
-        stateTransitionObservers.append(observationBlock)
+        underlyingQueue.sync {
+            stateTransitionObservers.append(observationBlock)
+        }
         return self
     }
 
@@ -323,7 +304,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addProgressObserver(_ observationBlock: @escaping ProgressObservationBlock) -> Self {
-        progressObservers.append(observationBlock)
+        underlyingQueue.sync {
+            progressObservers.append(observationBlock)
+        }
         return self
     }
 
@@ -363,7 +346,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
             break
         }
 
-        completionHandlers.forEach({ $0.parse(data: data, response: response, callbackQueue: callbackQueue) })
+        completionHandlers.forEach({ $0.parse(data: data, response: response, callbackQueue: self.callbackQueue) })
     }
 
     /// Adds a completion handler that gets the raw data as is.
@@ -372,8 +355,10 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingNullableDataBlock) -> Self {
-        let wrapper = CompletionHandlerWrapper(completion: completionHandler)
-        completionHandlers.append(wrapper)
+        underlyingQueue.sync {
+            let wrapper = CompletionHandlerWrapper(completion: completionHandler)
+            self.completionHandlers.append(wrapper)
+        }
         return self
     }
 
@@ -387,8 +372,10 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addCompletionHandler<T>(decoder: HTTPDataDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) -> Self {
-        let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
-        completionHandlers.append(wrapper)
+        underlyingQueue.sync {
+            let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
+            self.completionHandlers.append(wrapper)
+        }
         return self
     }
 
@@ -412,7 +399,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addResponseValidator(_ validator: HTTPResponseValidator) -> Self {
-        responseValidators.append(validator)
+        underlyingQueue.sync {
+            self.responseValidators.append(validator)
+        }
         return self
     }
 
@@ -438,7 +427,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addResponseValidator(_ validators: [HTTPResponseValidator]) -> Self {
-        responseValidators.append(contentsOf: validators)
+        underlyingQueue.sync {
+            self.responseValidators.append(contentsOf: validators)
+        }
         return self
     }
 }
