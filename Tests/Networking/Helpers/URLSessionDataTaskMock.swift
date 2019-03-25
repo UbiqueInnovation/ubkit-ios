@@ -66,7 +66,8 @@ class URLSessionDataTaskMock: URLSessionDataTask {
             return
         }
         waiting = true
-        let t = Timer(timeInterval: config.idleWaitTime, repeats: false) { [weak self] _ in
+
+        let exec: () -> Void = { [weak self] in
             guard let self = self else {
                 return
             }
@@ -74,8 +75,15 @@ class URLSessionDataTaskMock: URLSessionDataTask {
             self._state = .running
             self.simulateNetworking(config: self.config)
         }
-        activeTimer = t
-        RunLoop.main.add(t, forMode: RunLoop.Mode.common)
+        if let idleWaitTime = config.idleWaitTime {
+            let t = Timer(timeInterval: idleWaitTime, repeats: false) { _ in
+                exec()
+            }
+            activeTimer = t
+            RunLoop.main.add(t, forMode: RunLoop.Mode.common)
+        } else {
+            exec()
+        }
     }
 
     override func cancel() {
@@ -90,7 +98,8 @@ class URLSessionDataTaskMock: URLSessionDataTask {
     private var activeTimer: Timer?
     private func simulateNetworking(config: Configuration) {
         assert(_state == .running)
-        let t = Timer(timeInterval: 1, repeats: false) { [weak self] _ in
+
+        let exec: () -> Void = { [weak self] in
             guard config.error == nil else {
                 self?.completionHandler(nil, config.response, config.error)
                 self?._state = .completed
@@ -111,19 +120,37 @@ class URLSessionDataTaskMock: URLSessionDataTask {
             self?.activeTimer = m
             RunLoop.main.add(m, forMode: RunLoop.Mode.common)
         }
-        activeTimer = t
-        RunLoop.main.add(t, forMode: RunLoop.Mode.common)
+
+        if let latency = config.latency {
+            let t = Timer(timeInterval: latency, repeats: false) { _ in
+                exec()
+            }
+            activeTimer = t
+            RunLoop.main.add(t, forMode: RunLoop.Mode.common)
+        } else {
+            exec()
+        }
     }
 }
 
 extension URLSessionDataTaskMock {
     struct Configuration {
-        let idleWaitTime: TimeInterval
-        let latency: TimeInterval
+        let idleWaitTime: TimeInterval?
+        let latency: TimeInterval?
         let transferDuration: TimeInterval
         let progressUpdateCount: Int
         let data: Data?
         let response: URLResponse?
         let error: Error?
+
+        init(data: Data?, response: URLResponse?, error: Error?, idleWaitTime: TimeInterval? = nil, latency: TimeInterval? = nil, transferDuration: TimeInterval = 0.3, progressUpdateCount: Int = 5) {
+            self.data = data
+            self.response = response
+            self.error = error
+            self.idleWaitTime = idleWaitTime
+            self.latency = latency
+            self.transferDuration = transferDuration
+            self.progressUpdateCount = progressUpdateCount
+        }
     }
 }

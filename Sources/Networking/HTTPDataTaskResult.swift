@@ -16,6 +16,7 @@ public enum HTTPDataTaskResult<T>: CustomDebugStringConvertible {
     /// The data task succeeded but without any data
     case successEmptyBody
 
+    /// :nodoc:
     public var debugDescription: String {
         switch self {
         case let .failure(error):

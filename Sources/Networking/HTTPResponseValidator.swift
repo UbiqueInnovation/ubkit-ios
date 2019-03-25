@@ -83,22 +83,37 @@ public struct HTTPResponseStatusValidator: HTTPResponseValidator {
     /// The type of validation
     private let type: ValidationType
 
+    /// Initializes the validator
+    ///
+    /// - Parameter category: A category of status codes
     public init(_ category: HTTPCodeCategory) {
         type = .category(category)
     }
 
+    /// Initializes the validator
+    ///
+    /// - Parameter statusCode: A standard status code
     public init(_ statusCode: StandardHTTPCode) {
         self.init(statusCode.rawValue)
     }
 
+    /// Initializes the validator
+    ///
+    /// - Parameter statusCode: A status codes
     public init(_ statusCode: Int) {
         self.init([statusCode])
     }
 
+    /// Initializes the validator
+    ///
+    /// - Parameter statusCodes: An array of status codes
     public init(_ statusCodes: [StandardHTTPCode]) {
         self.init(statusCodes.map({ $0.rawValue }))
     }
 
+    /// Initializes the validator
+    ///
+    /// - Parameter statusCodes: An array of status codes
     public init(_ statusCodes: [Int]) {
         type = .multipleStatusCode(statusCodes)
     }

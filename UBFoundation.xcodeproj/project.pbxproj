@@ -444,6 +444,15 @@
 			name = "HTTP Code";
 			sourceTree = "<group>";
 		};
+		8E7F749E2248172300582E57 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8E7F746A22452F8300582E57 /* DataTaskSessionMock.swift */,
+				8E7F746E2245303A00582E57 /* URLSessionDataTaskMock.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		8EBD475E2240636A00CD2639 = {
 			isa = PBXGroup;
 			children = (
@@ -602,6 +611,7 @@
 		8EF90D54224298000055A362 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				8E7F749E2248172300582E57 /* Helpers */,
 				8EF90D55224298700055A362 /* HTTPCodeTests.swift */,
 				8EF90D5922429AA30055A362 /* MIMETypeTests.swift */,
 				8EF90D5D22429D300055A362 /* HTTPRequestBodyTests.swift */,
@@ -610,8 +620,6 @@
 				8E7F74962247F50200582E57 /* HTTPResponseValidatorTests.swift */,
 				8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */,
 				8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */,
-				8E7F746A22452F8300582E57 /* DataTaskSessionMock.swift */,
-				8E7F746E2245303A00582E57 /* URLSessionDataTaskMock.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";

@@ -10,8 +10,8 @@ import XCTest
 
 class MIMETypeTests: XCTestCase {
     func testCharacterEncoding() {
-        XCTAssertEqual(MIMEType.Parameter(charsetForEncoding: .utf8)?.stringValue, "; charset=utf-8")
-        XCTAssertEqual(MIMEType.Parameter(charsetForEncoding: .ascii)?.stringValue, "; charset=us-ascii")
+        XCTAssertEqual(MIMEType.Parameter(charsetForEncoding: .utf8)?.value, "utf-8")
+        XCTAssertEqual(MIMEType.Parameter(charsetForEncoding: .ascii)?.value, "us-ascii")
     }
 
     func testEquatable() {
@@ -28,8 +28,12 @@ class MIMETypeTests: XCTestCase {
         let successTestData: [String] = [
             "image/png",
             "text/plain",
+            "application/7zip",
             "application/json; charset=utf-8",
-            "application/json; charset=UTF-8"
+            "application/json; charset=UTF-8",
+            "application/vnd.omads-email+xml",
+            "application/clue_info+xml",
+            "audio/vnd.nuera.ecelp4800"
         ]
         // Test the successful standard format
         for test in successTestData {
@@ -43,26 +47,20 @@ class MIMETypeTests: XCTestCase {
             "image/", // Only type
             "mix[tape", // Only type
             "unknown/plain", // Unknow type
+            "application/.plain", // Invalid subtype
+            "application/+plain", // Invalid subtype
             "image/; charset=utf-8", // Missing subtype
             "image/ ; charset=utf-8", // Missing subtype
             "", // Missing Type
             "/", // Missing Type
-            ";" // Missing Type
-        ]
-        for test in failureTestData {
-            XCTAssertNil(MIMEType(string: test))
-        }
-
-        let failureParamterData: [String] = [
+            ";", // Missing Type
+            "application/clue@info+xml", // Not allowed character
             "application/json; charset", // Parameter malformatted
             "application/json; charset=", // Parameter malformatted
             "application/json; =utf-8" // Parameter malformatted
         ]
-
-        for test in failureParamterData {
-            let mime = MIMEType(string: test)
-            XCTAssertNotNil(mime)
-            XCTAssertNil(mime?.parameter)
+        for test in failureTestData {
+            XCTAssertNil(MIMEType(string: test))
         }
     }
 

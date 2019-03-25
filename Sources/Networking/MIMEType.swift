@@ -10,9 +10,6 @@ import Foundation
 /// A MIME type
 /// - seeAlso: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
 public struct MIMEType {
-    /// The separator used between type and subtype
-    public static let typeSubtypeSeparator = "/"
-
     /// The type of the MIME
     public var type: StandardType
     /// The subtype of the MIME
@@ -37,13 +34,13 @@ public struct MIMEType {
     /// - Parameter string: The string to parse
     public init?(string: String) {
         let desc = string.trimmingCharacters(in: .whitespaces)
-        let typeRegex = try! NSRegularExpression(pattern: "^([a-z]+)\(MIMEType.typeSubtypeSeparator)([a-z0-9\\p{Pd}]+)", options: .caseInsensitive)
+        let typeRegex = try! NSRegularExpression(pattern: "^([a-z]+)\\/([a-z0-9][a-z0-9\\p{Pd}.\\+_]*)(;\\s*([a-z0-9\\p{Pd}._]+)=([a-z0-9\\p{Pd}._]+))?$", options: .caseInsensitive)
 
         guard let typeResult = typeRegex.firstMatch(in: desc, range: NSRange(desc.startIndex..., in: desc)) else {
             return nil
         }
 
-        guard typeResult.numberOfRanges == 3,
+        guard typeResult.numberOfRanges >= 3,
             let typeCapturedRange = Range(typeResult.range(at: 1), in: desc),
             let subtypeCapturedRange = Range(typeResult.range(at: 2), in: desc) else {
             return nil
@@ -53,15 +50,25 @@ public struct MIMEType {
             return nil
         }
         let subtype = String(desc[subtypeCapturedRange])
-        let parameter = Parameter(string: string)
+
+        let parameter: Parameter?
+        if typeResult.numberOfRanges == 6, let keyCapturedRange = Range(typeResult.range(at: 4), in: desc),
+            let valueCapturedRange = Range(typeResult.range(at: 5), in: desc) {
+            let key = String(desc[keyCapturedRange])
+            let value = String(desc[valueCapturedRange])
+            parameter = Parameter(key: key, value: value)
+        } else {
+            parameter = nil
+        }
+
         self.init(type: type, subtype: subtype, parameter: parameter)
     }
 
     /// The MIME type formatted as a String
     public var stringValue: String {
-        var resultString: String = type.rawValue + MIMEType.typeSubtypeSeparator + subtype
+        var resultString: String = type.rawValue + "/" + subtype
         if let parameter = parameter {
-            resultString += parameter.stringValue
+            resultString += "; " + parameter.key + "=" + parameter.value
         }
         return resultString
     }
