@@ -34,16 +34,6 @@ open class HTTPDataDecoder<T> {
     }
 }
 
-/// This is a decoder that carry the data as so untouched. To be used if the data does not need to be decoded
-internal class HTTPPassThroughDecoder: HTTPDataDecoder<Data> {
-    /// :nodoc:
-    internal init() {
-        super.init { (data, _) -> Data in
-            data
-        }
-    }
-}
-
 /// A string decoder
 public class HTTPStringDecoder: HTTPDataDecoder<String> {
     /// Initializes the decoder

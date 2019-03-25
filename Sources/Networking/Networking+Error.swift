@@ -25,6 +25,8 @@ public enum NetworkingError: Error, Equatable {
     case responseMIMETypeValidationFailed
     /// The response received is not HTTP response
     case notHTTPResponse
-    /// The response body is empty. Expected not empty
+    /// The response body is empty. Expected it to not be empty
     case responseBodyIsEmpty
+    /// The response body is not empty. Expected it to be empty
+    case responseBodyIsNotEmpty
 }

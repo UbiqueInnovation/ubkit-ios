@@ -13,8 +13,6 @@ public enum HTTPDataTaskResult<T>: CustomDebugStringConvertible {
     case failure(Error)
     /// The data task succeeded
     case success(T)
-    /// The data task succeeded but without any data
-    case successEmptyBody
 
     /// :nodoc:
     public var debugDescription: String {
@@ -23,8 +21,28 @@ public enum HTTPDataTaskResult<T>: CustomDebugStringConvertible {
             return "Data task failed with error: \(error)"
         case let .success(data):
             return "Data task succeeded with \(T.self): \(String(describing: data))"
-        case .successEmptyBody:
-            return "Data task succeeded with no body"
+        }
+    }
+}
+
+/// An HTTP empty data result
+public enum HTTPDataTaskNullableResult: CustomDebugStringConvertible {
+    /// The data task failed
+    case failure(Error)
+    /// The data task succeeded
+    case success(Data?)
+
+    /// :nodoc:
+    public var debugDescription: String {
+        switch self {
+        case let .failure(error):
+            return "Data task failed with error: \(error)"
+        case let .success(data):
+            if let data = data {
+                return "Data task succeeded with Data: \(String(describing: data))"
+            } else {
+                return "Data task succeeded with empty Data"
+            }
         }
     }
 }

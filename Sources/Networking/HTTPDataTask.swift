@@ -331,6 +331,8 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
     /// A completion handling block called at the end of the task.
     public typealias CompletionHandlingBlock<T> = (HTTPDataTaskResult<T>, HTTPURLResponse?) -> Void
+    /// A completion handling block called at the end of the task.
+    public typealias CompletionHandlingNullableDataBlock = (HTTPDataTaskNullableResult, HTTPURLResponse?) -> Void
     /// The completion handlers
     private var completionHandlers: [CompletionHandlerWrapper] = []
 
@@ -369,13 +371,15 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter completionHandler: A completion handler
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingBlock<Data>) -> Self {
-        let wrapper = CompletionHandlerWrapper(decoder: HTTPPassThroughDecoder(), completion: completionHandler)
+    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingNullableDataBlock) -> Self {
+        let wrapper = CompletionHandlerWrapper(completion: completionHandler)
         completionHandlers.append(wrapper)
         return self
     }
 
     /// Adds a completion handler that gets the data decoded by the specified decoder.
+    ///
+    /// If no data is returned, there will be an error raised and the result will fail.
     ///
     /// - Parameters:
     ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
@@ -394,9 +398,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     private var responseValidators: [HTTPResponseValidator] = []
 
     /// :nodoc:
-    private func validate(response: HTTPURLResponse, data: Data?) throws {
+    private func validate(response: HTTPURLResponse, data _: Data?) throws {
         Networking.logger.debug("Validating response for \(description)")
-        try responseValidators.forEach({ try $0.validateHTTPResponse(response, data: data) })
+        try responseValidators.forEach({ try $0.validateHTTPResponse(response) })
     }
 
     /// Adds a response validator.
@@ -450,7 +454,7 @@ extension HTTPDataTask {
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, callbackQueue in
                 guard let data = data else {
-                    completion(HTTPDataTaskResult.successEmptyBody, response)
+                    completion(HTTPDataTaskResult.failure(NetworkingError.responseBodyIsEmpty), response)
                     return
                 }
                 do {
@@ -468,6 +472,20 @@ extension HTTPDataTask {
             // Create a block to be called on failure
             failureBlock = { error, response in
                 completion(HTTPDataTaskResult.failure(error), response)
+            }
+        }
+
+        /// :nodoc:
+        init(completion: @escaping CompletionHandlingNullableDataBlock) {
+            // Create the block that gets called when success
+            executionBlock = { data, response, callbackQueue in
+                callbackQueue.addOperation {
+                    completion(HTTPDataTaskNullableResult.success(data), response)
+                }
+            }
+            // Create a block to be called on failure
+            failureBlock = { error, response in
+                completion(HTTPDataTaskNullableResult.failure(error), response)
             }
         }
 

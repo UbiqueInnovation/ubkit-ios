@@ -13,13 +13,13 @@ public protocol HTTPResponseValidator {
     ///
     /// - Parameter response: The response to validate
     /// - Throws: In case the response is not valid
-    func validateHTTPResponse(_ response: HTTPURLResponse, data: Data?) throws
+    func validateHTTPResponse(_ response: HTTPURLResponse) throws
 }
 
 /// A response validator block
 public struct HTTPResponseValidatorBlock: HTTPResponseValidator {
     /// Validation Block
-    public typealias ValidationBlock = (HTTPURLResponse, Data?) throws -> Void
+    public typealias ValidationBlock = (HTTPURLResponse) throws -> Void
 
     /// :nodoc:
     private let block: ValidationBlock
@@ -32,21 +32,8 @@ public struct HTTPResponseValidatorBlock: HTTPResponseValidator {
     }
 
     /// :nodoc:
-    public func validateHTTPResponse(_ response: HTTPURLResponse, data: Data?) throws {
-        try block(response, data)
-    }
-}
-
-/// Validates the response body is not empty or null
-public struct HTTPResponseBodyNotEmptyValidator: HTTPResponseValidator {
-    /// Initalizes the validator
-    public init() {}
-
-    /// :nodoc:
-    public func validateHTTPResponse(_: HTTPURLResponse, data: Data?) throws {
-        guard let data = data, data.isEmpty == false else {
-            throw NetworkingError.responseBodyIsEmpty
-        }
+    public func validateHTTPResponse(_ response: HTTPURLResponse) throws {
+        try block(response)
     }
 }
 
@@ -63,7 +50,7 @@ public struct HTTPResponseContentTypeValidator: HTTPResponseValidator {
     }
 
     /// :nodoc:
-    public func validateHTTPResponse(_ response: HTTPURLResponse, data _: Data?) throws {
+    public func validateHTTPResponse(_ response: HTTPURLResponse) throws {
         guard let value = response.getHeaderField(key: .contentType), let receivedMIME = MIMEType(string: value), expectedMIMEType.isEqual(receivedMIME, ignoreParameter: true) else {
             throw NetworkingError.responseMIMETypeValidationFailed
         }
@@ -119,7 +106,7 @@ public struct HTTPResponseStatusValidator: HTTPResponseValidator {
     }
 
     /// :nodoc:
-    public func validateHTTPResponse(_ response: HTTPURLResponse, data _: Data?) throws {
+    public func validateHTTPResponse(_ response: HTTPURLResponse) throws {
         switch type {
         case let .category(category):
             guard category == response.statusCode.httpCodeCategory else {

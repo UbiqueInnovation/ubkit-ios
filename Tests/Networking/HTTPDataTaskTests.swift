@@ -29,7 +29,7 @@ class HTTPDataTaskTests: XCTestCase {
             switch result {
             case .failure:
                 break
-            default:
+            case .success:
                 XCTFail("Should have failed")
             }
             ex1.fulfill()
@@ -48,9 +48,9 @@ class HTTPDataTaskTests: XCTestCase {
         let dataTask = HTTPDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _ in
             switch result {
-            case .successEmptyBody:
+            case .success:
                 break
-            default:
+            case .failure:
                 XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
@@ -102,7 +102,7 @@ class HTTPDataTaskTests: XCTestCase {
             switch result {
             case .success:
                 break
-            default:
+            case .failure:
                 XCTFail("Should have returned data")
             }
             XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
@@ -137,13 +137,12 @@ class HTTPDataTaskTests: XCTestCase {
             return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = HTTPDataTask(request: request, session: mockSession)
-        dataTask.addResponseValidator(HTTPResponseBodyNotEmptyValidator())
         dataTask.addCompletionHandler { result, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual(error as? NetworkingError, NetworkingError.responseBodyIsEmpty)
-            default:
-                XCTFail("Should have returned success with empty")
+            case let .success(data):
+                XCTAssertNil(data)
+            case .failure:
+                XCTFail()
             }
             ex1.fulfill()
         }.start()
@@ -159,14 +158,14 @@ class HTTPDataTaskTests: XCTestCase {
             return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = HTTPDataTask(request: request, session: mockSession)
-        dataTask.addResponseValidator { _, _ in
+        dataTask.addResponseValidator { _ in
             throw NetworkingError.responseMIMETypeValidationFailed
         }
         dataTask.addCompletionHandler { result, _ in
             switch result {
             case let .failure(error):
                 XCTAssertEqual(error as? NetworkingError, NetworkingError.responseMIMETypeValidationFailed)
-            default:
+            case .success:
                 XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
@@ -184,7 +183,6 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = HTTPDataTask(request: request, session: mockSession)
         dataTask.addResponseValidator([
-            HTTPResponseBodyNotEmptyValidator(),
             HTTPResponseStatusValidator(.success),
             HTTPResponseContentTypeValidator(expectedMIMEType: .png)
         ])
@@ -192,7 +190,7 @@ class HTTPDataTaskTests: XCTestCase {
             switch result {
             case let .failure(error):
                 XCTAssertEqual(error as? NetworkingError, NetworkingError.responseMIMETypeValidationFailed)
-            default:
+            case .success:
                 XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
@@ -281,7 +279,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
 
-        dataTask.addResponseValidator { _, _ in
+        dataTask.addResponseValidator { _ in
             XCTFail()
         }
 
@@ -289,7 +287,7 @@ class HTTPDataTaskTests: XCTestCase {
             switch result {
             case let .failure(error):
                 XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
-            default:
+            case .success:
                 XCTFail()
             }
         }
@@ -336,7 +334,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
 
-        dataTask.addResponseValidator { _, _ in
+        dataTask.addResponseValidator { _ in
             XCTFail()
         }
 
@@ -353,7 +351,7 @@ class HTTPDataTaskTests: XCTestCase {
             switch result {
             case let .failure(error):
                 XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
-            default:
+            case .success:
                 XCTFail()
             }
         }
@@ -431,7 +429,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex2.fulfill()
         }
 
-        dataTask.addResponseValidator { _, _ in
+        dataTask.addResponseValidator { _ in
             XCTAssertNotEqual(queue, OperationQueue.current!)
             XCTAssertNotEqual(queue, OperationQueue.main)
             ex3.fulfill()

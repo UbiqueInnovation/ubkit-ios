@@ -14,14 +14,13 @@ class HTTPResponseValidatorTests: XCTestCase {
     func testBlockSuccess() {
         let ex = expectation(description: "validating")
 
-        let validator = HTTPResponseValidatorBlock { response, data in
+        let validator = HTTPResponseValidatorBlock { response in
             XCTAssertEqual(response.statusCode, 200)
-            XCTAssertNotNil(data)
             ex.fulfill()
         }
 
         let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
-        XCTAssertNoThrow(try validator.validateHTTPResponse(response, data: "1".data(using: .utf8)!))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(response))
 
         waitForExpectations(timeout: 1, handler: nil)
     }
@@ -29,23 +28,15 @@ class HTTPResponseValidatorTests: XCTestCase {
     func testBlockFail() {
         let ex = expectation(description: "validating")
 
-        let validator = HTTPResponseValidatorBlock { _, _ in
+        let validator = HTTPResponseValidatorBlock { _ in
             ex.fulfill()
             throw NetworkingError.missingURL
         }
 
         let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
-        XCTAssertThrowsError(try validator.validateHTTPResponse(response, data: "1".data(using: .utf8)!))
+        XCTAssertThrowsError(try validator.validateHTTPResponse(response))
 
         waitForExpectations(timeout: 1, handler: nil)
-    }
-
-    func testNoBody() {
-        let validator = HTTPResponseBodyNotEmptyValidator()
-        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
-        XCTAssertThrowsError(try validator.validateHTTPResponse(response, data: nil))
-        XCTAssertThrowsError(try validator.validateHTTPResponse(response, data: Data()))
-        XCTAssertNoThrow(try validator.validateHTTPResponse(response, data: "1".data(using: .utf8)!))
     }
 
     func testMIME() {
@@ -56,11 +47,11 @@ class HTTPResponseValidatorTests: XCTestCase {
         let responseYES3 = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: ["CONTENT-TYPE": "application/json"])!
         let responseYES4 = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: ["Content-type": "application/json"])!
 
-        XCTAssertThrowsError(try validator.validateHTTPResponse(responseNO, data: nil))
-        XCTAssertNoThrow(try validator.validateHTTPResponse(responseYES, data: nil))
-        XCTAssertNoThrow(try validator.validateHTTPResponse(responseYES2, data: nil))
-        XCTAssertNoThrow(try validator.validateHTTPResponse(responseYES3, data: nil))
-        XCTAssertNoThrow(try validator.validateHTTPResponse(responseYES4, data: nil))
+        XCTAssertThrowsError(try validator.validateHTTPResponse(responseNO))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(responseYES))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(responseYES2))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(responseYES3))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(responseYES4))
     }
 
     func testStatusCodeRange() {
@@ -70,11 +61,11 @@ class HTTPResponseValidatorTests: XCTestCase {
         let response201 = HTTPURLResponse(url: url, statusCode: 201, httpVersion: "1.1", headerFields: nil)!
         let response404 = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "1.1", headerFields: nil)!
 
-        XCTAssertThrowsError(try validator.validateHTTPResponse(response404, data: nil), "") { error in
+        XCTAssertThrowsError(try validator.validateHTTPResponse(response404), "") { error in
             XCTAssertEqual(error as? NetworkingError, NetworkingError.responseStatusValidationFailed(status: 404))
         }
-        XCTAssertNoThrow(try validator.validateHTTPResponse(response200, data: nil))
-        XCTAssertNoThrow(try validator.validateHTTPResponse(response201, data: nil))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(response200))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(response201))
     }
 
     func testStatusCodeSingleValue() {
@@ -83,10 +74,10 @@ class HTTPResponseValidatorTests: XCTestCase {
         let response200 = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
         let response500 = HTTPURLResponse(url: url, statusCode: 500, httpVersion: "1.1", headerFields: nil)!
 
-        XCTAssertThrowsError(try validator.validateHTTPResponse(response200, data: nil), "") { error in
+        XCTAssertThrowsError(try validator.validateHTTPResponse(response200), "") { error in
             XCTAssertEqual(error as? NetworkingError, NetworkingError.responseStatusValidationFailed(status: 200))
         }
-        XCTAssertNoThrow(try validator.validateHTTPResponse(response500, data: nil))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(response500))
     }
 
     func testStatusCodeMultipleValues() {
@@ -96,10 +87,10 @@ class HTTPResponseValidatorTests: XCTestCase {
         let response201 = HTTPURLResponse(url: url, statusCode: 201, httpVersion: "1.1", headerFields: nil)!
         let response404 = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "1.1", headerFields: nil)!
 
-        XCTAssertThrowsError(try validator.validateHTTPResponse(response404, data: nil), "") { error in
+        XCTAssertThrowsError(try validator.validateHTTPResponse(response404), "") { error in
             XCTAssertEqual(error as? NetworkingError, NetworkingError.responseStatusValidationFailed(status: 404))
         }
-        XCTAssertNoThrow(try validator.validateHTTPResponse(response200, data: nil))
-        XCTAssertNoThrow(try validator.validateHTTPResponse(response201, data: nil))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(response200))
+        XCTAssertNoThrow(try validator.validateHTTPResponse(response201))
     }
 }
