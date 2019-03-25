@@ -33,29 +33,29 @@ public struct MIMEType {
     ///
     /// - Parameter string: The string to parse
     public init?(string: String) {
-        let desc = string.trimmingCharacters(in: .whitespaces)
+        let input = string.trimmingCharacters(in: .whitespaces)
         let typeRegex = try! NSRegularExpression(pattern: "^([a-z]+)\\/([a-z0-9][a-z0-9\\p{Pd}.\\+_]*)(;\\s*([a-z0-9\\p{Pd}._]+)=([a-z0-9\\p{Pd}._]+))?$", options: .caseInsensitive)
 
-        guard let typeResult = typeRegex.firstMatch(in: desc, range: NSRange(desc.startIndex..., in: desc)) else {
+        guard let typeResult = typeRegex.firstMatch(in: input, range: NSRange(input.startIndex..., in: input)) else {
             return nil
         }
 
         guard typeResult.numberOfRanges >= 3,
-            let typeCapturedRange = Range(typeResult.range(at: 1), in: desc),
-            let subtypeCapturedRange = Range(typeResult.range(at: 2), in: desc) else {
+            let typeCapturedRange = Range(typeResult.range(at: 1), in: input),
+            let subtypeCapturedRange = Range(typeResult.range(at: 2), in: input) else {
             return nil
         }
 
-        guard let type = MIMEType.StandardType(rawValue: String(desc[typeCapturedRange])) else {
+        guard let type = MIMEType.StandardType(rawValue: String(input[typeCapturedRange])) else {
             return nil
         }
-        let subtype = String(desc[subtypeCapturedRange])
+        let subtype = String(input[subtypeCapturedRange])
 
         let parameter: Parameter?
-        if typeResult.numberOfRanges == 6, let keyCapturedRange = Range(typeResult.range(at: 4), in: desc),
-            let valueCapturedRange = Range(typeResult.range(at: 5), in: desc) {
-            let key = String(desc[keyCapturedRange])
-            let value = String(desc[valueCapturedRange])
+        if typeResult.numberOfRanges == 6, let keyCapturedRange = Range(typeResult.range(at: 4), in: input),
+            let valueCapturedRange = Range(typeResult.range(at: 5), in: input) {
+            let key = String(input[keyCapturedRange])
+            let value = String(input[valueCapturedRange])
             parameter = Parameter(key: key, value: value)
         } else {
             parameter = nil
