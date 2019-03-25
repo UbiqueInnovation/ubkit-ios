@@ -11,6 +11,10 @@ import XCTest
 class HTTPDataTaskTests: XCTestCase {
     let url = URL(string: "http://ubique.ch")!
 
+    override func setUp() {
+        UBFoundation.Logging.setGlobalLogLevel(.verbose)
+    }
+
     func testCompletionFailure() {
         let ex1 = expectation(description: "Request")
 
@@ -278,6 +282,7 @@ class HTTPDataTaskTests: XCTestCase {
 
     func testCancelWhileFetching() {
         let exProg = expectation(description: "Request")
+        exProg.assertForOverFulfill = false
         let ex1 = expectation(description: "Request")
         let ex2 = expectation(description: "Request")
         let ex3 = expectation(description: "Request")

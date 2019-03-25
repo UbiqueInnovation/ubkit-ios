@@ -255,7 +255,10 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
 
     /// A textual description of the request suitable for debugging.
     public var debugDescription: String {
-        return _request.debugDescription
+        let headers = String(describing: _request.allHTTPHeaderFields ?? [:])
+
+        let body = _request.httpBody != nil ? String(data: _request.httpBody!, encoding: .utf8) ?? "<Unparsable to UTF-8 Data>" : "<No Body>"
+        return _request.debugDescription + "\nHeader: " + headers + "\nBody: " + body
     }
 
     /// A mirror that reflects the request.

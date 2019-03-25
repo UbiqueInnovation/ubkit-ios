@@ -18,7 +18,7 @@
 import Foundation
 
 /// A data task that returns downloaded data directly to the app in memory.
-public final class HTTPDataTask {
+public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConvertible {
 
     // MARK: - Properties
 
@@ -48,6 +48,16 @@ public final class HTTPDataTask {
         willSet {
             dataTask?.priority = newValue
         }
+    }
+
+    /// :nodoc:
+    public var description: String {
+        return taskDescription ?? request.description
+    }
+
+    /// :nodoc:
+    public var debugDescription: String {
+        return request.debugDescription
     }
 
     /// A representation of the overall task progress.
@@ -109,6 +119,15 @@ public final class HTTPDataTask {
                 return
             }
 
+            switch Networking.logger.logLevel {
+            case .default:
+                Networking.logger.debug("Starting task for \(self.description)")
+            case .none:
+                break
+            case .verbose:
+                Networking.logger.debug("Starting task for request \(self.debugDescription)")
+            }
+
             // Cancel the previous task
             self.dataTask?.cancel()
 
@@ -155,6 +174,7 @@ public final class HTTPDataTask {
     /// Cancel the current request
     public func cancel() {
         workOperationQueue.addOperation { [weak self] in
+            Networking.logger.debug("Canceling task for \(self?.description ?? "-")")
             self?.dataTask?.cancel()
         }
     }
@@ -164,6 +184,7 @@ public final class HTTPDataTask {
         // Check for Task error
         guard error == nil else {
             if (error! as NSError).code == NSURLErrorCancelled {
+                Networking.logger.debug("Task canceled: \(description)")
                 // The caller cancelled the request
                 state = .cancelled
                 progress.completedUnitCount = 0
@@ -313,6 +334,7 @@ public final class HTTPDataTask {
 
     /// :nodoc:
     private func notifyCompletion(error: Error, response: HTTPURLResponse?) {
+        Networking.logger.debug("Task received error \(error) for \(description)")
         state = .finished
         callbackQueue.addOperation { [weak self] in
             self?.completionHandlers.forEach({ $0.fail(error: error, response: response) })
@@ -322,6 +344,21 @@ public final class HTTPDataTask {
     /// :nodoc:
     private func notifyCompletion(data: Data?, response: HTTPURLResponse) {
         state = .finished
+
+        // Do some logging
+        switch Networking.logger.logLevel {
+        case .verbose:
+            if let data = data {
+                Networking.logger.debug("Task completed for \(response.debugDescription)\nBody: \(String(data: data, encoding: .utf8) ?? "<Unparsable to UTF-8>")")
+            } else {
+                Networking.logger.debug("Task completed with empty body for \(response.debugDescription)")
+            }
+        case .default:
+            Networking.logger.debug("Task completed for \(description)")
+        default:
+            break
+        }
+
         completionHandlers.forEach({ $0.parse(data: data, response: response, callbackQueue: callbackQueue) })
     }
 
@@ -356,6 +393,7 @@ public final class HTTPDataTask {
 
     /// :nodoc:
     private func validate(response: HTTPURLResponse, data: Data?) throws {
+        Networking.logger.debug("Validating response for \(description)")
         try responseValidators.forEach({ try $0.validateHTTPResponse(response, data: data) })
     }
 
