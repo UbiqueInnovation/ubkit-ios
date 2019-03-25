@@ -26,9 +26,11 @@ readme: "README.md"
 # Add more documentation
 documentation:
   - "CHANGELOG.md"
-  - "documentation/CodeReviewProcess.md"
+  - "Documentation/CodeReviewProcess.md"
   - "fastlane/README.md"
   - "LICENSE.md"
+  - "README.md"
+  - "Documentation/roadmap.md"
   - "documentation/Contribution Guide.md"
 
 # Exclude some files
