@@ -102,6 +102,11 @@
 		8E7F74A1224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
 		8E7F74A2224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
 		8E7F74A3224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
+		8E7F74AE2249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
+		8E7F74AF2249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
+		8E7F74B02249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
+		8E7F74BB2249966D00582E57 /* UIColor+HEXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */; };
+		8E7F74BC2249966D00582E57 /* UIColor+HEXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -270,6 +275,9 @@
 		8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPDataDecoderTests.swift; sourceTree = "<group>"; };
 		8E7F749F224859A100582E57 /* Networking+Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Logger.swift"; sourceTree = "<group>"; };
 		8E7F74A9224955F700582E57 /* Contribution Guide.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Contribution Guide.md"; path = "Documentation/Contribution Guide.md"; sourceTree = "<group>"; };
+		8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEX.swift"; sourceTree = "<group>"; };
+		8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEXTests.swift"; sourceTree = "<group>"; };
+		8E7F74BD22499F2600582E57 /* Usage.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Usage.md; path = Documentation/Usage.md; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -452,6 +460,46 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		8E7F74AB2249892E00582E57 /* UI Elements */ = {
+			isa = PBXGroup;
+			children = (
+				8E7F74B22249910C00582E57 /* Common */,
+				8E7F74AC2249894000582E57 /* UIColor */,
+			);
+			path = "UI Elements";
+			sourceTree = "<group>";
+		};
+		8E7F74AC2249894000582E57 /* UIColor */ = {
+			isa = PBXGroup;
+			children = (
+				8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */,
+			);
+			path = UIColor;
+			sourceTree = "<group>";
+		};
+		8E7F74B22249910C00582E57 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		8E7F74B82249964800582E57 /* UI Elements */ = {
+			isa = PBXGroup;
+			children = (
+				8E7F74B92249965500582E57 /* UIColor */,
+			);
+			path = "UI Elements";
+			sourceTree = "<group>";
+		};
+		8E7F74B92249965500582E57 /* UIColor */ = {
+			isa = PBXGroup;
+			children = (
+				8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */,
+			);
+			path = UIColor;
+			sourceTree = "<group>";
+		};
 		8EBD475E2240636A00CD2639 = {
 			isa = PBXGroup;
 			children = (
@@ -480,6 +528,7 @@
 		8EBD479A2240646700CD2639 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				8E7F74AB2249892E00582E57 /* UI Elements */,
 				8EBD48162240773900CD2639 /* Globals */,
 				8EBD47ED2240770000CD2639 /* Localization */,
 				8EBD47DD2240765200CD2639 /* Logging */,
@@ -509,6 +558,7 @@
 		8EBD47DB2240715500CD2639 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				8E7F74B82249964800582E57 /* UI Elements */,
 				8E27864C22411DE300430D34 /* Globals */,
 				8EBD481E2240779300CD2639 /* Localization */,
 				8EBD48412240F6C900CD2639 /* Logging */,
@@ -575,6 +625,7 @@
 		8EBD4833224082CD00CD2639 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				8E7F74BD22499F2600582E57 /* Usage.md */,
 				8E7F74A9224955F700582E57 /* Contribution Guide.md */,
 				8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */,
 				8EBD4834224082E400CD2639 /* CHANGELOG.md */,
@@ -1069,6 +1120,7 @@
 			files = (
 				8E7F747422454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4846F22427BE500AC8E44 /* HTTPMethod.swift in Sources */,
+				8E7F74AE2249897B00582E57 /* UIColor+HEX.swift in Sources */,
 				8E7F747E2245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EBD47FA2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EBD47E92240765200CD2639 /* LoggerGroup.swift in Sources */,
@@ -1112,6 +1164,7 @@
 			files = (
 				8E7F747522454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4847022427BE500AC8E44 /* HTTPMethod.swift in Sources */,
+				8E7F74AF2249897B00582E57 /* UIColor+HEX.swift in Sources */,
 				8E7F747F2245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EBD47FB2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EBD47EA2240765200CD2639 /* LoggerGroup.swift in Sources */,
@@ -1155,6 +1208,7 @@
 			files = (
 				8E7F747622454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4847122427BE500AC8E44 /* HTTPMethod.swift in Sources */,
+				8E7F74B02249897B00582E57 /* UIColor+HEX.swift in Sources */,
 				8E7F74802245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EBD47FC2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EBD47EB2240765200CD2639 /* LoggerGroup.swift in Sources */,
@@ -1239,6 +1293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E7F74BB2249966D00582E57 /* UIColor+HEXTests.swift in Sources */,
 				8EBD483A22408E1000CD2639 /* LocalizationTests.swift in Sources */,
 				8E7F746B22452F8300582E57 /* DataTaskSessionMock.swift in Sources */,
 				8EF90D5E22429D300055A362 /* HTTPRequestBodyTests.swift in Sources */,
@@ -1262,6 +1317,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E7F74BC2249966D00582E57 /* UIColor+HEXTests.swift in Sources */,
 				8EBD483B22408E1000CD2639 /* LocalizationTests.swift in Sources */,
 				8E7F746C22452F8300582E57 /* DataTaskSessionMock.swift in Sources */,
 				8EF90D5F22429D300055A362 /* HTTPRequestBodyTests.swift in Sources */,

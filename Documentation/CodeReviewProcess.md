@@ -28,6 +28,8 @@ Verify that all methods have a correct level of access control. Only functions a
 - If a hack is done or a non-standard coding way is needed. A comment explaining the need and pointing the problem should be present.
 - Run `fastlane documentation` and check for missing documentation.
 - Update any outdated documentation when fuction or type changes.
+- Update the CHANGELOG.md file if needed
+- Update the Usage.md file if needed
 
 ## Logging
 - Logging should be by module. Each module should have a logger.

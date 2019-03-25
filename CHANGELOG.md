@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Localization Module
 - Logging Module
+- Base Networking Module
+- UIColor from HEX
 
 ### Changed
 
