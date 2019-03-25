@@ -124,8 +124,3 @@ We separate 3 log levels: __Info__, __Error__, __Debug__.
 - Auto-retry on reachability
 
 ### CRON Jobs
-
-## UI
-
-### Color helpers
-- To and from HEX string

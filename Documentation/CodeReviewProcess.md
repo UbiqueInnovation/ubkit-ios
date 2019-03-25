@@ -30,6 +30,7 @@ Verify that all methods have a correct level of access control. Only functions a
 - Update any outdated documentation when fuction or type changes.
 - Update the CHANGELOG.md file if needed
 - Update the Usage.md file if needed
+- Update the contribution guide
 
 ## Logging
 - Logging should be by module. Each module should have a logger.
