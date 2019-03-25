@@ -60,10 +60,6 @@
 		8E278666224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
 		8E278667224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
 		8E278668224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
-		8E27866A224174DC00430D34 /* Getting Started.md in Resources */ = {isa = PBXBuildFile; fileRef = 8E278669224174DC00430D34 /* Getting Started.md */; };
-		8E27866B224174DC00430D34 /* Getting Started.md in Resources */ = {isa = PBXBuildFile; fileRef = 8E278669224174DC00430D34 /* Getting Started.md */; };
-		8E27866C224174DC00430D34 /* Getting Started.md in Resources */ = {isa = PBXBuildFile; fileRef = 8E278669224174DC00430D34 /* Getting Started.md */; };
-		8E27866D224174DC00430D34 /* Getting Started.md in Resources */ = {isa = PBXBuildFile; fileRef = 8E278669224174DC00430D34 /* Getting Started.md */; };
 		8E7F7467224464F100582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
 		8E7F74682244650C00582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
 		8E7F74692244650C00582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
@@ -170,9 +166,6 @@
 		8EBD483E2240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
 		8EBD483F2240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
 		8EBD48402240937E00CD2639 /* LocalizationTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD483D2240937E00CD2639 /* LocalizationTestBundle */; };
-		8EBD48472240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
-		8EBD48482240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
-		8EBD48492240FB3400CD2639 /* CodeReviewProcess.md in Resources */ = {isa = PBXBuildFile; fileRef = 8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */; };
 		8EBD484B2240FFE200CD2639 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484A2240FFE200CD2639 /* LoggerTests.swift */; };
 		8EBD484C2240FFE200CD2639 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484A2240FFE200CD2639 /* LoggerTests.swift */; };
 		8EBD484D2240FFE200CD2639 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD484A2240FFE200CD2639 /* LoggerTests.swift */; };
@@ -277,6 +270,7 @@
 		8E7F74962247F50200582E57 /* HTTPResponseValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponseValidatorTests.swift; sourceTree = "<group>"; };
 		8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPDataDecoderTests.swift; sourceTree = "<group>"; };
 		8E7F749F224859A100582E57 /* Networking+Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Logger.swift"; sourceTree = "<group>"; };
+		8E7F74A42249543400582E57 /* Roadmap.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Roadmap.md; path = Documentation/Roadmap.md; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -582,6 +576,7 @@
 		8EBD4833224082CD00CD2639 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				8E7F74A42249543400582E57 /* Roadmap.md */,
 				8E278669224174DC00430D34 /* Getting Started.md */,
 				8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */,
 				8EBD4834224082E400CD2639 /* CHANGELOG.md */,
@@ -865,7 +860,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E27866A224174DC00430D34 /* Getting Started.md in Resources */,
 				8EBD47AA22406CBF00CD2639 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -874,7 +868,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E27866B224174DC00430D34 /* Getting Started.md in Resources */,
 				8EBD47AB22406CBF00CD2639 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -883,7 +876,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E27866C224174DC00430D34 /* Getting Started.md in Resources */,
 				8EBD47AC22406CBF00CD2639 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -892,7 +884,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E27866D224174DC00430D34 /* Getting Started.md in Resources */,
 				8EBD47AD22406CBF00CD2639 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -901,7 +892,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EBD48472240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD483E2240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864922411CC600430D34 /* LoggingTestBundle in Resources */,
 			);
@@ -911,7 +901,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EBD48482240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD483F2240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */,
 			);
@@ -921,7 +910,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EBD48492240FB3400CD2639 /* CodeReviewProcess.md in Resources */,
 				8EBD48402240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */,
 			);
