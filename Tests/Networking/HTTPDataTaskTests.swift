@@ -11,10 +11,6 @@ import XCTest
 class HTTPDataTaskTests: XCTestCase {
     let url = URL(string: "http://ubique.ch")!
 
-    override func setUp() {
-        UBFoundation.Logging.setGlobalLogLevel(.verbose)
-    }
-
     func testCompletionFailure() {
         let ex1 = expectation(description: "Request")
 

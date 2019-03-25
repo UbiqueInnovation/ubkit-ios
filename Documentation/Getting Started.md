@@ -31,8 +31,8 @@ If you prefer not to use __Carthage__ as a dependency managers, you can integrat
 ## Documentation
 The framework is fully documented and easy to navigate on your own. You can consult the [online documentation](https://ubique.ch/documentation). Or build it yourself by running the fastlane command `fastlane documentation` (See Readme.md for more details).
 
-## Usage
-### Localization
+# Usage
+## Localization
 The localization module is a wrapper around Appel's Bundle system and Local. It gives the caller control over the language and let it be specified at runtime. `UBFoundation` comes with a `Localization` object. Most formatters also accept a `Localization` object as initialization argument.
 
 - You can localize your strings by using the extension property `localized` directly on a key.
@@ -69,7 +69,7 @@ print(allLanguages.map({ $0.displayNameInNativeLanguage }))
 try UBFoundation.setLanguage(languageCode: "en", regionCode: "CH")
 ```
 
-### Logging
+## Logging
 Logging is a wrapper module around Appel's unifide log API. It provides on top of the normal logging a set of useful control, like the log level and privacy.
 The logging module is thread safe.
 
@@ -114,7 +114,54 @@ In case you want to change the log level of the framewotk you can do so by calli
 UBFoundation.Logging.setGlobalLogLevel(.none)
 ```
 
+## Networking
 
+Networking offers wrappers around the default iOS URLSession to make it eafer and easier to use.
+
+### Loading a resource encoded in JSON
+The Networking module offers a variaty of `HTTPDataDecoder` for decoding JSON or String but you can also create you own. Otherwise you can access the Data directly.
+```swift
+// Create a Data Task
+let url = URL(string: "http://example.com/books")!
+let request = HTTPURLRequest(url: url)
+let task = HTTPDataTask(request: request)
+task.addCompletionHandler(decoder: HTTPJSONDecoder<Books>()) { (result, _) in
+    switch result{
+    case .success(let books):
+        // Make something useful with the data
+        break
+    case .failure(let error):
+        // Show the error for the user
+        break
+    }
+}
+```
+
+### Tracking progress
+On some lengthy tasks showing the progress to the user is a good idea.
+```swift
+task.addProgressObserver { (_, progress) in
+    progressBar.progress = progress
+}
+```
+### Monitoring state
+You can monitor the state of the task and adapt the UI accordingly
+```swift
+task.addStateTransitionObserver { (_, new) in
+    switch new {
+    case .waitingExecution, .fetching:
+        activityIndicator.startAnimating()
+    default:
+        activityIndicator.stopAnimating()
+    }
+}
+```
+
+### Validation
+You can add validators to be executed after the response is received and check if we proceed to decode the data. Errors thrown will be available in the completion handler block.
+```swift
+task.addResponseValidator(HTTPResponseStatusValidator(.ok))
+```
 
 
 
