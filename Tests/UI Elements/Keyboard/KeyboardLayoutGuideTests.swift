@@ -41,7 +41,7 @@ class KeyboardLayoutGuideTests: XCTestCase {
 
         // Hide the keyboard
         notificationCenter.post(name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+
         // Cehck if the view returned to original position
         view.layoutIfNeeded()
         XCTAssertEqual(referenceView.frame.maxY, view.frame.height)
