@@ -69,9 +69,11 @@ public class KeyboardLayoutGuide: UILayoutGuide {
 extension KeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
-        guard let owningView = owningView else { return }
-        guard let window = owningView.window else { return }
-        guard let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else { return }
+        guard let owningView = owningView,
+            let window = owningView.window,
+            let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else {
+            return
+        }
 
         // convert own frame to window coordinates, frame is in superview's coordinates
         let owningViewFrame = window.convert(owningView.frame, from: owningView.superview)
@@ -80,8 +82,8 @@ extension KeyboardLayoutGuide {
         // might be rotated, so convert it back
         coveredFrame = window.convert(coveredFrame, to: owningView.superview)
 
+        topConstraint?.constant = coveredFrame.height
         keyboardInfo.animateAlongsideKeyboard {
-            self.topConstraint?.constant = coveredFrame.height
             owningView.layoutIfNeeded()
         }
     }
@@ -89,7 +91,6 @@ extension KeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillHide(_: Notification) {
         topConstraint?.constant = 0.0
-        owningView?.setNeedsLayout()
     }
 }
 
@@ -104,28 +105,32 @@ private struct KeyboardInfo {
 
     // :nodoc:
     init?(userInfo: [AnyHashable: Any]?) {
-        guard let userInfo = userInfo else { return nil }
-        guard let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return nil }
+        guard let userInfo = userInfo else {
+            return nil
+        }
+        guard let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return nil
+        }
 
         self.endFrame = endFrame
 
         // UIViewAnimationOption is shifted by 16 bit from UIViewAnimationCurve, which we get here:
         // http://stackoverflow.com/questions/18870447/how-to-use-the-default-ios7-uianimation-curve
         if let animationCurve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt {
-            self.animationOptions = UIView.AnimationOptions(rawValue: animationCurve << 16)
+            animationOptions = UIView.AnimationOptions(rawValue: animationCurve << 16)
         } else {
-            self.animationOptions = .curveEaseInOut
+            animationOptions = .curveEaseInOut
         }
 
         if let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
             self.animationDuration = animationDuration
         } else {
-            self.animationDuration = 0.25
+            animationDuration = 0.25
         }
     }
 
     // :nodoc:
     func animateAlongsideKeyboard(_ animations: @escaping () -> Void) {
-        UIView.animate(withDuration: self.animationDuration, delay: 0.0, options: self.animationOptions, animations: animations)
+        UIView.animate(withDuration: animationDuration, delay: 0.0, options: animationOptions, animations: animations)
     }
 }
