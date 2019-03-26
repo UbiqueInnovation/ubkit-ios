@@ -33,7 +33,7 @@ final class KeyboardLayoutGuide {
             self.topGuide.heightAnchor.constraint(equalToConstant: 0.0),
             parentView.leadingAnchor.constraint(equalTo: self.topGuide.leadingAnchor),
             parentView.trailingAnchor.constraint(equalTo: self.topGuide.trailingAnchor),
-            self.bottomConstraint,
+            self.bottomConstraint
         ])
 
         notificationCenter.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
