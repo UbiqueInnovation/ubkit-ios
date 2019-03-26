@@ -90,4 +90,8 @@ class LoggerTests: XCTestCase {
             }
         }
     }
+    
+    func testFailing() {
+        XCTFail("We did it!")
+    }
 }
