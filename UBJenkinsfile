@@ -15,14 +15,6 @@ pipeline {
 			}
 			steps {
 				sh "fastlane documentation"
-				publishHTML (target: [
-					allowMissing: false,
-					alwaysLinkToLastBuild: false,
-					keepAll: true, 
-					reportDir: 'Documentation/html',
-					reportFiles: 'index.html',
-					reportName: "Documentation"
-				])
 			}
 		}
 		stage("Run Tests") {
@@ -31,14 +23,7 @@ pipeline {
 			}
 			steps {
 				sh "fastlane tests"
-				publishHTML (target: [
-					allowMissing: false,
-					alwaysLinkToLastBuild: false,
-					keepAll: true, 
-					reportDir: 'fastlane/test_output',
-					reportFiles: 'report.html',
-					reportName: "Test Results"
-				])
+				junit "fastlane/test_output/report.junit"
 			}
 		}
 	}
