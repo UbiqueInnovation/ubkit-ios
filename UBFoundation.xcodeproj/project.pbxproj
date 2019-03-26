@@ -625,12 +625,12 @@
 		8EBD4833224082CD00CD2639 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				8E7F74BD22499F2600582E57 /* Usage.md */,
-				8E7F74A9224955F700582E57 /* Contribution Guide.md */,
-				8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */,
 				8EBD4834224082E400CD2639 /* CHANGELOG.md */,
-				8EBD4835224082E400CD2639 /* README.md */,
+				8EBD48462240FB3400CD2639 /* CodeReviewProcess.md */,
+				8E7F74A9224955F700582E57 /* Contribution Guide.md */,
 				8EBD48362240863F00CD2639 /* LICENSE.md */,
+				8EBD4835224082E400CD2639 /* README.md */,
+				8E7F74BD22499F2600582E57 /* Usage.md */,
 			);
 			name = Metadata;
 			sourceTree = "<group>";

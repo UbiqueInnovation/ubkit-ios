@@ -8,6 +8,29 @@ lane :setup do
     documentation
 end
 
+desc "Opens the documentation."
+lane :documentation do
+    jazzy
+end
+
+desc "Run the unit tests."
+lane :tests do
+    # Run tests tvOS
+    run_tests(
+        scheme: "UBFoundation tvOS",
+        code_coverage: false,
+        output_types: "junit",
+        output_files: "report-tvos.junit"
+    )
+    # Run tests iOS
+    run_tests(
+        scheme: "UBFoundation iOS",
+        code_coverage: false,
+        output_types: "junit",
+        output_files: "report-ios.junit"
+    )
+end
+
 desc "Deploy the framework."
 lane :release do
     fastlane_require 'fastlane-plugin-changelog'
@@ -65,13 +88,6 @@ lane :release do
     end
 end
 
-desc "Opens the documentation."
-lane :documentation do
-    jazzy
-    # Open the documentation file
-    # open_file(path: "file://$PWD/../Documentation/html/index.html")
-end
-
 desc "Update the version of the project."
 lane :update_version do |options|
     if options[:bump_type]
@@ -120,33 +136,4 @@ lane :update_version do |options|
     end
 end
 
-desc "Run the unit tests. show_results:true to open the result page"
-lane :tests do |options|
-    # Run tests tvOS
-    run_tests(
-        scheme: "UBFoundation tvOS",
-        code_coverage: true
-    )
-    # Run tests iOS
-    run_tests(
-        scheme: "UBFoundation iOS",
-        code_coverage: true
-    )
-    if options[:show_results]
-        # Show the results
-        open_file(path: "file://$PWD/test_output/report.html")
-    end
-end
 
-desc "Opens the changelog file."
-private_lane :open_changelog do
-    # Open the changelog file
-    open_file(path: "file://$PWD/../CHANGELOG.md")
-end
-
-desc "Opens a file if present on disk"
-private_lane :open_file do |options|
-    if (options[:path])
-        sh("$PWD/scripts/openFile.sh --path "+options[:path])
-    end
-end

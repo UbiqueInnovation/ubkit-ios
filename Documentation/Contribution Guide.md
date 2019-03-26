@@ -32,13 +32,9 @@ In case it is needed, we would advise to uses `carthage` as a dependency manager
 ### Documentation
 Documentation is really important, so we created a script that will generate an Apple like documentation style called [Jazzy](https://github.com/realm/jazzy).
 
-To open the documentation run the `documentation` lane:
+To generate the documentation locally run the `documentation` lane:
 ```bash
 fastlane documentation
-```
-To skip generating the documentation use the option `generate=false`
-```bash
-fastlane documentation generate=false
 ```
 
 ### Changelog
