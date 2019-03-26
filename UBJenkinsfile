@@ -14,7 +14,7 @@ pipeline {
 				label"ios"
 			}
 			steps {
-				sh "fastlane documentation generate:true"
+				sh "fastlane documentation"
 				publishHTML (target: [
 					allowMissing: false,
 					alwaysLinkToLastBuild: false,

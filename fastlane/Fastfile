@@ -5,7 +5,7 @@ lane :setup do
 	# Run the unit tests and UI tests
     tests
     # Generate and open the documentation
-    documentation(generate: true)
+    documentation
 end
 
 desc "Deploy the framework."
@@ -65,14 +65,11 @@ lane :release do
     end
 end
 
-desc "Opens the documentation. Option `generate:true` to generates it also."
-lane :documentation do |options|
-    if options[:generate]
-        # Generate Documentation
-        jazzy
-    end
+desc "Opens the documentation."
+lane :documentation do
+    jazzy
     # Open the documentation file
-    open_file(path: "file://$PWD/../Documentation/html/index.html")
+    # open_file(path: "file://$PWD/../Documentation/html/index.html")
 end
 
 desc "Update the version of the project."
