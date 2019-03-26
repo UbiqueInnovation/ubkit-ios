@@ -7,43 +7,40 @@
 
 import UIKit
 
-/// This code is highly inspiered by https://gist.github.com/u10int/bba52655942ea301ccad9f3978da6f32
+/// Some code was inspiered by https://gist.github.com/u10int/bba52655942ea301ccad9f3978da6f32
 
 /// A layout guid that follows the top of the keyboard in a view.
 /// - note: This class is only available for iOS
-public final class KeyboardLayoutGuide {
+public class KeyboardLayoutGuide: UILayoutGuide {
     /// :nodoc:
-    private let bottomConstraint: NSLayoutConstraint
-
-    /// The layout guide that follows the keyboard
-    public let topGuide: UILayoutGuide
+    private var topConstraint: NSLayoutConstraint?
 
     /// Creates a following layout guide for the keyboard in the specified view
     ///
     /// - Parameters:
     ///   - parentView: The parent view where the guide should belong.
     ///   - notificationCenter: The notification center to use for the keyboard notifications. The default notification will be used if not specified
-    public init(parentView: UIView, notificationCenter: NotificationCenter = .default) {
-        topGuide = UILayoutGuide()
-        topGuide.identifier = "Keyboard Layout Guide"
-        parentView.addLayoutGuide(topGuide)
+    public init(addToView parentView: UIView, notificationCenter: NotificationCenter = .default) {
+        super.init()
 
-        bottomConstraint = parentView.bottomAnchor.constraint(equalTo: topGuide.bottomAnchor)
+        identifier = "Keyboard Layout Guide"
+        parentView.addLayoutGuide(self)
+
+        topConstraint = parentView.bottomAnchor.constraint(equalTo: topAnchor)
         NSLayoutConstraint.activate([
-            self.topGuide.heightAnchor.constraint(equalToConstant: 0.0),
-            parentView.leadingAnchor.constraint(equalTo: self.topGuide.leadingAnchor),
-            parentView.trailingAnchor.constraint(equalTo: self.topGuide.trailingAnchor),
-            self.bottomConstraint
+            topConstraint!,
+            parentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            parentView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            parentView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
         notificationCenter.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
-    deinit {
-        let owningView = topGuide.owningView
-        owningView?.removeLayoutGuide(topGuide)
-        owningView?.setNeedsLayout()
+    /// :nodoc:
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -52,7 +49,7 @@ public final class KeyboardLayoutGuide {
 extension KeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
-        guard let owningView = self.topGuide.owningView else { return }
+        guard let owningView = owningView else { return }
         guard let window = owningView.window else { return }
         guard let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else { return }
 
@@ -64,15 +61,15 @@ extension KeyboardLayoutGuide {
         coveredFrame = window.convert(coveredFrame, to: owningView.superview)
 
         keyboardInfo.animateAlongsideKeyboard {
-            self.bottomConstraint.constant = coveredFrame.height
+            self.topConstraint?.constant = coveredFrame.height
             owningView.layoutIfNeeded()
         }
     }
 
     // :nodoc:
     @objc private func keyboardWillHide(_: Notification) {
-        bottomConstraint.constant = 0.0
-        topGuide.owningView?.setNeedsLayout()
+        topConstraint?.constant = 0.0
+        owningView?.setNeedsLayout()
     }
 }
 

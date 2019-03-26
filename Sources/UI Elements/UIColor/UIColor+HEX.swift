@@ -7,6 +7,8 @@
 
 import UIKit
 
+/// Some code was inspiered by https://github.com/yeahdongcn/UIColor-Hex-Swift
+
 // MARK: - HEX manipulation of UIColor
 
 extension UIColor {
