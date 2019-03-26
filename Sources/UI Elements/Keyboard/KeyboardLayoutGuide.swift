@@ -7,9 +7,26 @@
 
 import UIKit
 
+extension UIView {
+    /// The layout guide representing the portion of your view that is obscured by the keyboard.
+    ///
+    /// When the view is visible onscreen, this guide reflects the portion of the view that is covered by the keyboard. If the view is not currently installed in a view hierarchy, or is not yet visible onscreen, the layout guide edges are equal to the edges of the view.
+    ///
+    public var keyboardLayoutGuide: UILayoutGuide {
+        if let existingGuide = self.layoutGuides.first(where: { $0 is KeyboardLayoutGuide }) {
+            return existingGuide
+        }
+
+        let guide = KeyboardLayoutGuide()
+        guide.addToView(self)
+
+        return guide
+    }
+}
+
 /// Some code was inspiered by https://gist.github.com/u10int/bba52655942ea301ccad9f3978da6f32
 
-/// A layout guid that follows the top of the keyboard in a view.
+/// A layout guid that follows the top of the keyboard in a view. You still need to add the layout to the view with the call `addToView`
 /// - note: This class is only available for iOS
 public class KeyboardLayoutGuide: UILayoutGuide {
     /// :nodoc:
@@ -22,13 +39,9 @@ public class KeyboardLayoutGuide: UILayoutGuide {
     /// - Parameters:
     ///   - owningView: The view where the guide should belong.
     ///   - notificationCenter: The notification center to use for the keyboard notifications. The default notification will be used if not specified
-    public init(addToView owningView: UIView? = nil, notificationCenter: NotificationCenter = .default) {
+    public init(notificationCenter: NotificationCenter = .default) {
         super.init()
         identifier = "Keyboard Layout Guide"
-
-        if let owningView = owningView {
-            addToView(owningView)
-        }
 
         notificationCenter.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -99,7 +112,7 @@ private struct KeyboardInfo {
     // :nodoc:
     let endFrame: CGRect
     // :nodoc:
-    let animationOptions: UIView.AnimationOptions
+    let animationCurve: UIView.AnimationCurve
     // :nodoc:
     let animationDuration: TimeInterval
 
@@ -116,10 +129,10 @@ private struct KeyboardInfo {
 
         // UIViewAnimationOption is shifted by 16 bit from UIViewAnimationCurve, which we get here:
         // http://stackoverflow.com/questions/18870447/how-to-use-the-default-ios7-uianimation-curve
-        if let animationCurve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt {
-            animationOptions = UIView.AnimationOptions(rawValue: animationCurve << 16)
+        if let animationCurveRaw = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int, let animationCurve = UIView.AnimationCurve(rawValue: animationCurveRaw) {
+            self.animationCurve = animationCurve
         } else {
-            animationOptions = .curveEaseInOut
+            animationCurve = .linear
         }
 
         if let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
@@ -130,7 +143,13 @@ private struct KeyboardInfo {
     }
 
     // :nodoc:
-    func animateAlongsideKeyboard(_ animations: @escaping () -> Void) {
-        UIView.animate(withDuration: animationDuration, delay: 0.0, options: animationOptions, animations: animations)
+    func animateAlongsideKeyboard(_ animations: () -> Void) {
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDelay(0)
+        UIView.setAnimationDuration(animationDuration)
+        UIView.setAnimationCurve(animationCurve)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        animations()
+        UIView.commitAnimations()
     }
 }

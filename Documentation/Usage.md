@@ -132,8 +132,14 @@ task.addResponseValidator(HTTPResponseStatusValidator(.ok))
 ```
 
 ## UIColor from HEX
-If you need to instanciate a color from a HEX value or you need to output a color as a HEX string you can use
+If you need to instanciate a color from a HEX value or you need to output a color as a HEX string you can use.
 ```swift
 let mainColor = UIColor(hexString: "#FF00FF")
 print(mainColor?.hexString ?? "No color")
+```
+## Keyboard Layout Guide
+The keyboard layout guide of a view will represent the area of that view that is obstructed by the keyboard. Making constraints to the top of the keyboard layout guide ensures that the content is always visible when the keyboard shows
+```swift
+// Make sure that the input field is always above of the keyboard. Otherwise mapped to the bottom of the parent view.
+inputField.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
 ```
