@@ -11,7 +11,7 @@ import UIKit
 
 /// A layout guid that follows the top of the keyboard in a view.
 /// - note: This class is only available for iOS
-final class KeyboardLayoutGuide {
+public final class KeyboardLayoutGuide {
     /// :nodoc:
     private let bottomConstraint: NSLayoutConstraint
 
@@ -38,6 +38,12 @@ final class KeyboardLayoutGuide {
 
         notificationCenter.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    deinit {
+        let owningView = topGuide.owningView
+        owningView?.removeLayoutGuide(topGuide)
+        owningView?.setNeedsLayout()
     }
 }
 
@@ -66,7 +72,7 @@ extension KeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillHide(_: Notification) {
         bottomConstraint.constant = 0.0
-        topGuide.owningView?.layoutIfNeeded()
+        topGuide.owningView?.setNeedsLayout()
     }
 }
 
