@@ -5,7 +5,30 @@ lane :setup do
 	# Run the unit tests and UI tests
     tests
     # Generate and open the documentation
-    documentation(generate: true)
+    documentation
+end
+
+desc "Opens the documentation."
+lane :documentation do
+    jazzy
+end
+
+desc "Run the unit tests."
+lane :tests do
+    # Run tests tvOS
+    run_tests(
+        scheme: "UBFoundation tvOS",
+        code_coverage: false,
+        output_types: "junit",
+        output_files: "report-tvos.junit"
+    )
+    # Run tests iOS
+    run_tests(
+        scheme: "UBFoundation iOS",
+        code_coverage: false,
+        output_types: "junit",
+        output_files: "report-ios.junit"
+    )
 end
 
 desc "Deploy the framework."
@@ -65,16 +88,6 @@ lane :release do
     end
 end
 
-desc "Opens the documentation. Option `generate:true` to generates it also."
-lane :documentation do |options|
-    if options[:generate]
-        # Generate Documentation
-        jazzy
-    end
-    # Open the documentation file
-    open_file(path: "file://$PWD/../Documentation/html/index.html")
-end
-
 desc "Update the version of the project."
 lane :update_version do |options|
     if options[:bump_type]
@@ -123,38 +136,4 @@ lane :update_version do |options|
     end
 end
 
-desc "Run the unit tests. show_results:true to open the result page"
-lane :tests do |options|
-    # Run tests macOS. This should be the first
-    run_tests(
-        scheme: "UBFoundation macOS",
-        code_coverage: true
-    )
-    # Run tests iOS
-    run_tests(
-        scheme: "UBFoundation iOS",
-        code_coverage: true
-    )
-    # Run tests tvOS
-    run_tests(
-        scheme: "UBFoundation tvOS",
-        code_coverage: true
-    )
-    if options[:show_results]
-        # Show the results
-        open_file(path: "file://$PWD/test_output/report.html")
-    end
-end
 
-desc "Opens the changelog file."
-private_lane :open_changelog do
-    # Open the changelog file
-    open_file(path: "file://$PWD/../CHANGELOG.md")
-end
-
-desc "Opens a file if present on disk"
-private_lane :open_file do |options|
-    if (options[:path])
-        sh("$PWD/scripts/openFile.sh --path "+options[:path])
-    end
-end

@@ -1,0 +1,38 @@
+pipeline {
+	agent none
+	stages {
+		stage("Install dependencies") {
+			when { anyOf { branch 'master'; branch 'develop' } }
+			agent {
+				label"ios"
+			}
+			steps {
+				sh "gem install jazzy"
+			}
+		}
+		stage("Create Documentation") {
+			when { anyOf { branch 'master'; branch 'develop' } }
+			agent {
+				label"ios"
+			}
+			steps {
+				sh "fastlane documentation"
+			}
+		}
+		stage("Run Tests") {
+			when { anyOf { branch 'master'; branch 'develop' } }
+			agent {
+				label "ios"
+			}
+			steps {
+				sh "fastlane tests"
+			}
+			post {
+				always {
+					junit "fastlane/test_output/*.junit"
+				}
+			}
+		}
+	}
+}
+
