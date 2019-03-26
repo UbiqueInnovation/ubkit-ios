@@ -107,6 +107,7 @@
 		8E7F74B02249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
 		8E7F74BB2249966D00582E57 /* UIColor+HEXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */; };
 		8E7F74BC2249966D00582E57 /* UIColor+HEXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */; };
+		8E7F74C72249A52C00582E57 /* KeyboardLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -278,6 +279,7 @@
 		8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEX.swift"; sourceTree = "<group>"; };
 		8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEXTests.swift"; sourceTree = "<group>"; };
 		8E7F74BD22499F2600582E57 /* Usage.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Usage.md; path = Documentation/Usage.md; sourceTree = "<group>"; };
+		8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutGuide.swift; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 			children = (
 				8E7F74B22249910C00582E57 /* Common */,
 				8E7F74AC2249894000582E57 /* UIColor */,
+				8E7F74C52249A43200582E57 /* Keyboard */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -498,6 +501,14 @@
 				8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */,
 			);
 			path = UIColor;
+			sourceTree = "<group>";
+		};
+		8E7F74C52249A43200582E57 /* Keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */,
+			);
+			path = Keyboard;
 			sourceTree = "<group>";
 		};
 		8EBD475E2240636A00CD2639 = {
@@ -1127,6 +1138,7 @@
 				8EC484642241C65A00AC8E44 /* HTTPCode.swift in Sources */,
 				8E7F747922459D7700582E57 /* MIMEType+Parameter.swift in Sources */,
 				8E0DB2D02243EABB00D5E01E /* HTTPURLResponse+Networking.swift in Sources */,
+				8E7F74C72249A52C00582E57 /* KeyboardLayoutGuide.swift in Sources */,
 				8EBD48182240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				8E0DB2C52243D00E00D5E01E /* HTTPDataDecoder.swift in Sources */,
