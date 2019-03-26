@@ -17,25 +17,45 @@ public class KeyboardLayoutGuide: UILayoutGuide {
 
     /// Creates a following layout guide for the keyboard in the specified view
     ///
+    /// - Note: Use this method to initialize an set the layout guide. If the layout guide is removed from a view it needs to be added again via the `addToView` function, Adding it manually with `addLayoutGuide` won't allow it to change sizes with the keyboard
+    ///
     /// - Parameters:
-    ///   - parentView: The parent view where the guide should belong.
+    ///   - owningView: The view where the guide should belong.
     ///   - notificationCenter: The notification center to use for the keyboard notifications. The default notification will be used if not specified
-    public init(addToView parentView: UIView, notificationCenter: NotificationCenter = .default) {
+    public init(addToView owningView: UIView? = nil, notificationCenter: NotificationCenter = .default) {
         super.init()
-
         identifier = "Keyboard Layout Guide"
-        parentView.addLayoutGuide(self)
 
-        topConstraint = parentView.bottomAnchor.constraint(equalTo: topAnchor)
-        NSLayoutConstraint.activate([
-            topConstraint!,
-            parentView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            parentView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            parentView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        if let owningView = owningView {
+            addToView(owningView)
+        }
 
         notificationCenter.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    /// Adds the keyboard layout guide to a view
+    ///
+    /// - Parameter newOwningView: The new view
+    public func addToView(_ newOwningView: UIView) {
+        guard owningView != newOwningView else {
+            return
+        }
+
+        let oldView = owningView
+        oldView?.removeLayoutGuide(self)
+        oldView?.setNeedsLayout()
+
+        newOwningView.addLayoutGuide(self)
+
+        topConstraint = newOwningView.bottomAnchor.constraint(equalTo: topAnchor)
+        NSLayoutConstraint.activate([
+            topConstraint!,
+            newOwningView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            newOwningView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            newOwningView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        newOwningView.setNeedsLayout()
     }
 
     /// :nodoc:
