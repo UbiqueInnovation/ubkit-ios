@@ -1,0 +1,32 @@
+pipeline {
+    stages {
+        stage("Install dependencies") {
+            sh "gem install jazzy"
+        }
+        stage("Create Documentation") {
+            agent {
+                label  "ios"
+            }
+            steps {
+                sh "bundle exec fastlane documentation generate:true"
+               
+            }
+        }
+        stage("Run Tests") {
+            agent {
+                label "ios"
+            }
+            steps {
+                sh "bundle exec fastlane tests"
+               publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'fastlane/test_output',
+                reportFiles: 'report.html',
+                reportName: "Test Results"
+                ])
+            }
+        }
+    }
+}
