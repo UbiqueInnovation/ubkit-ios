@@ -29,7 +29,7 @@ Deploy the framework.
 ```
 fastlane documentation
 ```
-Opens the documentation. Option `generate:true` to generates it also.
+Opens the documentation.
 ### update_version
 ```
 fastlane update_version

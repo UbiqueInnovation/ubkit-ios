@@ -23,7 +23,11 @@ pipeline {
 			}
 			steps {
 				sh "fastlane tests"
-				junit "fastlane/test_output/report.junit"
+			}
+			post {
+				always {
+					junit "fastlane/test_output/report.junit"
+				}
 			}
 		}
 	}
