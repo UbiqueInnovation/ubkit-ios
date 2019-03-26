@@ -7,6 +7,8 @@
 
 import UIKit
 
+/// Some code was inspiered by https://github.com/yeahdongcn/UIColor-Hex-Swift
+
 // MARK: - HEX manipulation of UIColor
 
 extension UIColor {
@@ -52,6 +54,8 @@ extension UIColor {
     ///
     /// This function can take as input 3 Hex Color: __#F2B__, 4 Hex Color with alpha channel: __#F2B3__, 6 HEX: __#FFED12__ or 8 HEX with alpha channel: __#FF00FFAA__. The __#__ is optional.
     ///
+    /// - Note: Only available for iOS, watchOS and tvOS
+    ///
     /// - Parameter hex: The raw hex string
     public convenience init?(hexString hex: String) {
         let input = hex.trimmingCharacters(in: .whitespaces)
@@ -91,6 +95,8 @@ extension UIColor {
     /// Renders the color as a hex string
     ///
     /// This function will always return a format of 6 HEX: __#DEF212__ or if with alpha, a format of 8 HEX __#DECA23FF__
+    ///
+    /// - Note: Only available for iOS, watchOS and tvOS
     ///
     /// - Returns: A HEX string representing the color
     public var hexString: String? {
