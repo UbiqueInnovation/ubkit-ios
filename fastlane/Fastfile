@@ -125,19 +125,14 @@ end
 
 desc "Run the unit tests. show_results:true to open the result page"
 lane :tests do |options|
-    # Run tests macOS. This should be the first
+    # Run tests tvOS
     run_tests(
-        scheme: "UBFoundation macOS",
+        scheme: "UBFoundation tvOS",
         code_coverage: true
     )
     # Run tests iOS
     run_tests(
         scheme: "UBFoundation iOS",
-        code_coverage: true
-    )
-    # Run tests tvOS
-    run_tests(
-        scheme: "UBFoundation tvOS",
         code_coverage: true
     )
     if options[:show_results]

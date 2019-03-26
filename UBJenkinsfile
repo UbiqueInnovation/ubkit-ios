@@ -14,7 +14,15 @@ pipeline {
 				label"ios"
 			}
 			steps {
-				sh "bundle exec fastlane documentation generate:true"
+				sh "fastlane documentation generate:true"
+				publishHTML (target: [
+					allowMissing: false,
+					alwaysLinkToLastBuild: false,
+					keepAll: true, 
+					reportDir: 'Documentation/html',
+					reportFiles: 'index.html',
+					reportName: "Documentation"
+				])
 			}
 		}
 		stage("Run Tests") {
@@ -22,7 +30,7 @@ pipeline {
 				label "ios"
 			}
 			steps {
-				sh "bundle exec fastlane tests"
+				sh "fastlane tests"
 				publishHTML (target: [
 					allowMissing: false,
 					alwaysLinkToLastBuild: false,
