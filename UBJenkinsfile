@@ -17,6 +17,9 @@ pipeline {
 			}
 			steps {
 				sh "fastlane documentation"
+				sshagent(credentials: ['ub_docs']) {
+					sh "scp -r ./Documentation/html core@192.168.178.46:/data/html/doc.ubique.ch/ubfoundation/${env.BRANCH_NAME}"
+				}
 			}
 		}
 		stage("Run Tests") {
