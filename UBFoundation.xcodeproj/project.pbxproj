@@ -39,6 +39,10 @@
 		8E0DB2DB2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2D92243F3CD00D5E01E /* HTTPCode+Standard.swift */; };
 		8E0DB2DC2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2D92243F3CD00D5E01E /* HTTPCode+Standard.swift */; };
 		8E0DB2DD2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2D92243F3CD00D5E01E /* HTTPCode+Standard.swift */; };
+		8E101734224F5736006127DA /* CronRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E101733224F5736006127DA /* CronRule.swift */; };
+		8E101735224F5736006127DA /* CronRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E101733224F5736006127DA /* CronRule.swift */; };
+		8E101736224F5736006127DA /* CronRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E101733224F5736006127DA /* CronRule.swift */; };
+		8E101737224F5736006127DA /* CronRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E101733224F5736006127DA /* CronRule.swift */; };
 		8E27864922411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
 		8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
 		8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
@@ -60,6 +64,8 @@
 		8E278666224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
 		8E278667224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
 		8E278668224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
+		8E46FA41224DAECF00198321 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
+		8E46FA42224DAED000198321 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
 		8E7F7467224464F100582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
 		8E7F74682244650C00582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
 		8E7F74692244650C00582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
@@ -109,6 +115,10 @@
 		8E7F74BC2249966D00582E57 /* UIColor+HEXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */; };
 		8E7F74C72249A52C00582E57 /* KeyboardLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */; };
 		8E7F7507224A1FD000582E57 /* KeyboardLayoutGuideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7506224A1FD000582E57 /* KeyboardLayoutGuideTests.swift */; };
+		8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
+		8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
+		8E7F751A224AFD4400582E57 /* CronSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7519224AFD4400582E57 /* CronSchedulerTests.swift */; };
+		8E7F751B224AFD4400582E57 /* CronSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7519224AFD4400582E57 /* CronSchedulerTests.swift */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -258,6 +268,7 @@
 		8E0DB2CF2243EABB00D5E01E /* HTTPURLResponse+Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPURLResponse+Networking.swift"; sourceTree = "<group>"; };
 		8E0DB2D42243F3AF00D5E01E /* HTTPCode+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPCode+Category.swift"; sourceTree = "<group>"; };
 		8E0DB2D92243F3CD00D5E01E /* HTTPCode+Standard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPCode+Standard.swift"; sourceTree = "<group>"; };
+		8E101733224F5736006127DA /* CronRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronRule.swift; sourceTree = "<group>"; };
 		8E27864822411CC600430D34 /* LoggingTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoggingTestBundle; sourceTree = "<group>"; };
 		8E27865222411E5600430D34 /* GlobalLoggingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLoggingTests.swift; sourceTree = "<group>"; };
 		8E2786562241227A00430D34 /* GlobalLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLocalization.swift; sourceTree = "<group>"; };
@@ -282,6 +293,8 @@
 		8E7F74BD22499F2600582E57 /* Usage.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Usage.md; path = Documentation/Usage.md; sourceTree = "<group>"; };
 		8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutGuide.swift; sourceTree = "<group>"; };
 		8E7F7506224A1FD000582E57 /* KeyboardLayoutGuideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutGuideTests.swift; sourceTree = "<group>"; };
+		8E7F7512224AE4C300582E57 /* CronJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronJob.swift; sourceTree = "<group>"; };
+		8E7F7519224AFD4400582E57 /* CronSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronSchedulerTests.swift; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -467,7 +480,6 @@
 		8E7F74AB2249892E00582E57 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
-				8E7F74B22249910C00582E57 /* Common */,
 				8E7F74AC2249894000582E57 /* UIColor */,
 				8E7F74C52249A43200582E57 /* Keyboard */,
 			);
@@ -480,13 +492,6 @@
 				8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */,
 			);
 			path = UIColor;
-			sourceTree = "<group>";
-		};
-		8E7F74B22249910C00582E57 /* Common */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Common;
 			sourceTree = "<group>";
 		};
 		8E7F74B82249964800582E57 /* UI Elements */ = {
@@ -522,6 +527,23 @@
 			path = Keyboard;
 			sourceTree = "<group>";
 		};
+		8E7F750C224AE33100582E57 /* Cron */ = {
+			isa = PBXGroup;
+			children = (
+				8E7F7512224AE4C300582E57 /* CronJob.swift */,
+				8E101733224F5736006127DA /* CronRule.swift */,
+			);
+			path = Cron;
+			sourceTree = "<group>";
+		};
+		8E7F7518224AFD2200582E57 /* Cron */ = {
+			isa = PBXGroup;
+			children = (
+				8E7F7519224AFD4400582E57 /* CronSchedulerTests.swift */,
+			);
+			path = Cron;
+			sourceTree = "<group>";
+		};
 		8EBD475E2240636A00CD2639 = {
 			isa = PBXGroup;
 			children = (
@@ -555,6 +577,7 @@
 				8EBD47ED2240770000CD2639 /* Localization */,
 				8EBD47DD2240765200CD2639 /* Logging */,
 				8EC4845D2241C01B00AC8E44 /* Networking */,
+				8E7F750C224AE33100582E57 /* Cron */,
 				8EBD47A522406C5300CD2639 /* Supporting Files */,
 			);
 			path = Sources;
@@ -585,6 +608,7 @@
 				8EBD481E2240779300CD2639 /* Localization */,
 				8EBD48412240F6C900CD2639 /* Logging */,
 				8EF90D54224298000055A362 /* Networking */,
+				8E7F7518224AFD2200582E57 /* Cron */,
 				8EBD47DC2240746800CD2639 /* Supporting Files */,
 			);
 			path = Tests;
@@ -1154,6 +1178,7 @@
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				8E0DB2C52243D00E00D5E01E /* HTTPDataDecoder.swift in Sources */,
 				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,
+				8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */,
 				8EBD48022240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
@@ -1174,6 +1199,7 @@
 				8E0DB2AA2243049900D5E01E /* HTTPDataTask.swift in Sources */,
 				8EC484792242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48062240770000CD2639 /* Localization+String.swift in Sources */,
+				8E101734224F5736006127DA /* CronRule.swift in Sources */,
 				8E27865C2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
 				8E2786572241227A00430D34 /* GlobalLocalization.swift in Sources */,
 				8EC4846A22427B9700AC8E44 /* HTTPURLRequest.swift in Sources */,
@@ -1201,6 +1227,7 @@
 				8EBD48032240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D62243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DB2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				8E101735224F5736006127DA /* CronRule.swift in Sources */,
 				8EBD48132240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD480F2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E7F74A1224859A100582E57 /* Networking+Logger.swift in Sources */,
@@ -1218,6 +1245,7 @@
 				8E0DB2AB2243049900D5E01E /* HTTPDataTask.swift in Sources */,
 				8EC4847A2242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48072240770000CD2639 /* Localization+String.swift in Sources */,
+				8E46FA41224DAECF00198321 /* CronJob.swift in Sources */,
 				8E27865D2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
 				8E2786582241227A00430D34 /* GlobalLocalization.swift in Sources */,
 				8EC4846B22427B9700AC8E44 /* HTTPURLRequest.swift in Sources */,
@@ -1245,9 +1273,11 @@
 				8EBD48042240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D72243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DC2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				8E101736224F5736006127DA /* CronRule.swift in Sources */,
 				8EBD48142240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD48102240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E7F74A2224859A100582E57 /* Networking+Logger.swift in Sources */,
+				8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */,
 				8E2786632241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD48002240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E72240765200CD2639 /* Logger.swift in Sources */,
@@ -1274,6 +1304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E7F747722454F1900582E57 /* String+HeaderCharset.swift in Sources */,
+				8E101737224F5736006127DA /* CronRule.swift in Sources */,
 				8EC4847222427BE500AC8E44 /* HTTPMethod.swift in Sources */,
 				8E7F74812245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EBD47FD2240770000CD2639 /* Localization+Notification.swift in Sources */,
@@ -1292,6 +1323,7 @@
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E7F74A3224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
+				8E46FA42224DAED000198321 /* CronJob.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E82240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CD2243D95900D5E01E /* HTTPResponseValidator.swift in Sources */,
@@ -1334,6 +1366,7 @@
 				8EF90D5A22429AA30055A362 /* MIMETypeTests.swift in Sources */,
 				8E7F74932247ED0B00582E57 /* HTTPURLResponseTests.swift in Sources */,
 				8EF90D6222429E740055A362 /* HTTPURLRequestTests.swift in Sources */,
+				8E7F751A224AFD4400582E57 /* CronSchedulerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1356,6 +1389,7 @@
 				8E7F74702245303A00582E57 /* URLSessionDataTaskMock.swift in Sources */,
 				8EBD482922407A6F00CD2639 /* LanguageTests.swift in Sources */,
 				8EF90D5B22429AA30055A362 /* MIMETypeTests.swift in Sources */,
+				8E7F751B224AFD4400582E57 /* CronSchedulerTests.swift in Sources */,
 				8E7F74942247ED0B00582E57 /* HTTPURLResponseTests.swift in Sources */,
 				8EF90D6322429E740055A362 /* HTTPURLRequestTests.swift in Sources */,
 			);
