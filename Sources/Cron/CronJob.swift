@@ -7,62 +7,65 @@
 
 import Foundation
 
+/// A object that can schedule an invocation at a point in time.
 public class CronJob {
+
+    // MARK: - Definitions
+
     /// A cron execution block
     public typealias ExecutionBlock = () -> Void
+
+    /// The state of the cron job
+    public enum State: CustomDebugStringConvertible {
+        /// The cron job is initialized and ready to run
+        case initial
+        /// The job was paused
+        case paused
+        /// The job is running
+        case resumed
+        /// The job has finished running
+        case finished
+
+        /// :nodoc:
+        public var debugDescription: String {
+            switch self {
+            case .initial:
+                return "Initial"
+            case .resumed:
+                return "Resumed"
+            case .paused:
+                return "Paused"
+            case .finished:
+                return "Finished"
+            }
+        }
+    }
+
+    // MARK: - Properties
+
     /// Internal identifier
     private let identifier: UUID
     /// Dispatch queue
     private let dispatchQueue: DispatchQueue
     /// Syncronization
     private let serialQueue: DispatchQueue
-
     /// Internal GCD Timer with the corresponding fire mode
     private var timer: DispatchSourceTimer?
+    /// Current rule
     private var rule: CronRule?
-
-    /// The state
-    private var state: State = .initial {
+    /// The state of the Job
+    public private(set) var state: State = .initial {
         willSet {
             assert(state != newValue)
         }
     }
 
-    /// The block to be executed
-    public private(set) var executionBlock: ExecutionBlock
-
     /// The name of the task
     public var name: String?
 
-    public convenience init(fireAfter interval: TimeInterval, repeat isRepeating: Bool = false, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.init(rule: FireAtIntervalRule(interval, repeat: isRepeating), qos: qos, executionBlock: executionBlock)
-    }
-
-    public convenience init(fireAt date: Date, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.init(rule: FireAtDateRule(date), qos: qos, executionBlock: executionBlock)
-    }
-
-    public convenience init(rule: CronRule, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.init(qos: qos, executionBlock: executionBlock)
-        setRule(rule)
-        resume()
-    }
-
-    public init(qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.identifier = UUID()
-        self.executionBlock = executionBlock
-        self.dispatchQueue = DispatchQueue(label: "Cron Job Callback \(identifier.uuidString)", qos: qos)
-        self.serialQueue = DispatchQueue(label: "Cron Job Serial \(identifier.uuidString)", qos: qos)
-    }
-
-    deinit {
-        if state == .paused || state == .initial {
-            timer?.cancel()
-            timer?.resume()
-        }
-    }
-
+    /// The backing data for the callback queue
     private weak var _callbackQueue: OperationQueue?
+
     // The callback queue for the execution Block. If non is specified then it is executed on a secondary thread with the same Quality of service as the Cron Job.
     public var callbackQueue: OperationQueue? {
         get {
@@ -79,20 +82,102 @@ public class CronJob {
         }
     }
 
-    public func setExecutionBlock(_ newValue: @escaping ExecutionBlock) {
-        serialQueue.sync {
-            self.executionBlock = newValue
+    /// The backing execution block
+    private var _executionBlock: ExecutionBlock
+
+    /// The block to be executed by the job when fired
+    public var executionBlock: ExecutionBlock {
+        get {
+            var ex: ExecutionBlock?
+            serialQueue.sync {
+                ex = _executionBlock
+            }
+            return ex!
+        }
+        set {
+            serialQueue.sync {
+                _executionBlock = newValue
+            }
         }
     }
 
+    // MARK: - Initializers
+
+    /// Creates a cron job that will fire after the specified time interval. The job will start right away, no need to call resume.
+    ///
+    /// - Parameters:
+    ///   - interval: The time interval before the job fires
+    ///   - isRepeating: If the job is repeating
+    ///   - qos: The quality of service of the job
+    ///   - executionBlock: The block to be executed by the job
+    public convenience init(fireAfter interval: TimeInterval, repeat isRepeating: Bool = false, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
+        self.init(rule: FireAtIntervalRule(interval, repeat: isRepeating), qos: qos, executionBlock: executionBlock)
+    }
+
+    /// Creates a cron job that will fire at the specified date. The job will start right away, no need to call resume.
+    ///
+    /// - Parameters:
+    ///   - date: The date when the job will fire
+    ///   - qos: The quality of service of the job
+    ///   - executionBlock: The block to be executed by the job
+    public convenience init(fireAt date: Date, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
+        self.init(rule: FireAtDateRule(date), qos: qos, executionBlock: executionBlock)
+    }
+
+    /// Creates a cron job with a fire rule. The job will start right away, no need to call resume.
+    ///
+    /// - Parameters:
+    ///   - rule: The rule of firing
+    ///   - qos: The quality of service of the job
+    ///   - executionBlock: The block to be executed by the job
+    public convenience init(rule: CronRule, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
+        self.init(qos: qos, executionBlock: executionBlock)
+        setRule(rule)
+        resume()
+    }
+
+    /// Creates a cron job. The job will not start right away, you still need to call resume.
+    ///
+    /// - Parameters:
+    ///   - qos: The quality of service of the job
+    ///   - executionBlock: The block to be executed by the job
+    public init(qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
+        self.identifier = UUID()
+        _executionBlock = executionBlock
+        self.dispatchQueue = DispatchQueue(label: "Cron Job Callback \(identifier.uuidString)", qos: qos)
+        self.serialQueue = DispatchQueue(label: "Cron Job Serial \(identifier.uuidString)", qos: qos)
+    }
+
+    /// :nodoc:
+    deinit {
+        if state == .paused || state == .initial {
+            timer?.cancel()
+            // We need to call resume after cancel otherwise we will crash.
+            timer?.resume()
+        }
+    }
+
+    // - MARK: Manipulating the firing rule
+
+    /// Set the fire date
+    ///
+    /// - Parameter date: The new fire date
     public func setFireAt(_ date: Date) {
         setRule(FireAtDateRule(date))
     }
 
+    /// Set the fire interval
+    ///
+    /// - Parameters:
+    ///   - interval: The new interval
+    ///   - isRepeating: If the job should repeat
     public func setFireAfter(_ interval: TimeInterval, repeat isRepeating: Bool = false) {
         setRule(FireAtIntervalRule(interval, repeat: isRepeating))
     }
 
+    /// Sets the rule of the job
+    ///
+    /// - Parameter rule: The new rule to follow for firing
     public func setRule(_ rule: CronRule) {
         serialQueue.sync {
             let newTimer = createTimer(fireRule: rule)
@@ -106,6 +191,9 @@ public class CronJob {
         }
     }
 
+    // - MARK: Controling the job execution
+
+    /// Resume or start an initial or paused job
     public func resume() {
         serialQueue.sync {
             guard let timer = timer else {
@@ -118,6 +206,7 @@ public class CronJob {
         }
     }
 
+    /// Pauses a resumed job
     public func pause() {
         serialQueue.sync {
             if state == .resumed {
@@ -129,6 +218,7 @@ public class CronJob {
 }
 
 extension CronJob {
+    /// :nodoc:
     private func createTimer(fireRule: CronRule) -> DispatchSourceTimer {
         let timer = DispatchSource.makeTimerSource(queue: dispatchQueue)
         let deadline: DispatchWallTime = DispatchWallTime.now() + fireRule.deadlineFromNow
@@ -156,52 +246,35 @@ extension CronJob {
         return timer
     }
 
+    /// :nodoc:
     private func executeBlock() {
         if let rule = self.rule, rule.repeatRule == CronRepeatRule.never {
             self.state = .finished
         }
         if let callbackQueue = self._callbackQueue {
             callbackQueue.addOperation { [weak self] in
-                self?.executionBlock()
+                self?._executionBlock()
             }
         } else {
-            self.executionBlock()
-        }
-    }
-}
-
-extension CronJob {
-    private enum State: CustomDebugStringConvertible {
-        case initial
-        case paused
-        case resumed
-        case finished
-        var debugDescription: String {
-            switch self {
-            case .initial:
-                return "Initial"
-            case .resumed:
-                return "Resumed"
-            case .paused:
-                return "Paused"
-            case .finished:
-                return "Finished"
-            }
+            self._executionBlock()
         }
     }
 }
 
 extension CronJob: CustomDebugStringConvertible {
+    /// :nodoc:
     public var debugDescription: String {
         return "Cron Job <\(name ?? identifier.uuidString)> \(state)"
     }
 }
 
 extension CronJob: Hashable {
+    /// :nodoc:
     public static func == (lhs: CronJob, rhs: CronJob) -> Bool {
         return lhs.identifier == rhs.identifier
     }
 
+    /// :nodoc:
     public func hash(into hasher: inout Hasher) {
         hasher.combine(identifier)
     }

@@ -55,7 +55,7 @@ class CronSchedulerTests: XCTestCase {
             XCTFail("Should not have executed this block")
         }
         job.name = "Test Cron"
-        job.setExecutionBlock {
+        job.executionBlock = {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), testDuration * 0.9)
             ex.fulfill()
         }
