@@ -13,32 +13,33 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     // MARK: - Properties
 
     /// The session used to create tasks
-    public var session: URLSessionProtocol {
-        willSet {
-            dataTask?.cancel()
-        }
-    }
+    public let session: URLSessionProtocol
+
+    /// A queue for protecting the request
+    private let requestQueue: DispatchQueue = DispatchQueue(label: "Request Queue")
+    /// :nodoc:
+    private var _request: HTTPURLRequest
 
     /// The request to execute. Setting this property will cancel any ongoing requests
     public var request: HTTPURLRequest {
-        willSet {
+        get {
+            return requestQueue.sync {
+                _request
+            }
+        }
+        set {
             dataTask?.cancel()
+            requestQueue.sync {
+                _request = newValue
+            }
         }
     }
 
     /// An app-provided description of the current task.
-    public var taskDescription: String? {
-        willSet {
-            dataTask?.taskDescription = newValue
-        }
-    }
+    public let taskDescription: String?
 
     /// The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
-    public var priority: Float {
-        willSet {
-            dataTask?.priority = newValue
-        }
-    }
+    public let priority: Float
 
     /// :nodoc:
     public var description: String {
@@ -53,11 +54,22 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// A representation of the overall task progress.
     public let progress: Progress
 
+    /// A queue for protecting the data task
+    private let dataTaskQueue: DispatchQueue = DispatchQueue(label: "Data Task")
+    private var _dataTask: URLSessionDataTask?
     /// The underlaying data task
-    private var dataTask: URLSessionDataTask?
-
-    /// A queue for parsing and validating data
-    private let underlyingQueue: DispatchQueue
+    private var dataTask: URLSessionDataTask? {
+        get {
+            return dataTaskQueue.sync {
+                _dataTask
+            }
+        }
+        set {
+            dataTaskQueue.sync {
+                _dataTask = newValue
+            }
+        }
+    }
 
     /// The callback queue where all callbacks take place
     private let callbackQueue: OperationQueue
@@ -66,6 +78,10 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
     /// Initializes the data task.
     ///
+    /// The task data can fetch resources online and execute requests. It offers alarge base of helpers and is built on top of `URLSession`.
+    ///
+    /// - Note: Only the default session will add the created task automatically to the global networking state tracking object. If you wish to use your own session object, don't forget to add it manually using the `Networking` APIs.
+    ///
     /// - Parameters:
     ///   - request: A HTTP URL request object that provides request-specific information such as the URL, cache policy, request type, and body data or body stream.
     ///   - taskDescription: An app-provided description of the current task.
@@ -73,20 +89,34 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     ///   - session: The session for the task creation
     ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue
     public init(request: HTTPURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: URLSessionProtocol = URLSession.shared, callbackQueue: OperationQueue = .main) {
-        self.request = request
+        _request = request
         self.session = session
         self.taskDescription = taskDescription
         self.priority = priority
         self.callbackQueue = callbackQueue
         progress = Progress(totalUnitCount: 0)
-        state = .initial
-
-        underlyingQueue = DispatchQueue(label: "HTTPDataTask \(taskDescription ?? "<no description>")", qos: DispatchQoS.userInitiated)
+        _state = .initial
 
         progress.isCancellable = true
         progress.cancellationHandler = { [weak self] in
             self?.cancel()
         }
+    }
+
+    /// Initializes the data task.
+    ///
+    /// The task data can fetch resources online and execute requests. It offers alarge base of helpers and is built on top of `URLSession`.
+    ///
+    /// - Note: Only the default session will add the created task automatically to the global networking state tracking object. If you wish to use your own session object, don't forget to add it manually using the `Networking` APIs.
+    ///
+    /// - Parameters:
+    ///   - url: A URL that represents the request to execute.
+    ///   - taskDescription: An app-provided description of the current task.
+    ///   - priority: The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
+    ///   - session: The session for the task creation
+    ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue
+    public convenience init(url: URL, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: URLSessionProtocol = URLSession.shared, callbackQueue: OperationQueue = .main) {
+        self.init(request: HTTPURLRequest(url: url), taskDescription: taskDescription, priority: priority, session: session, callbackQueue: callbackQueue)
     }
 
     /// :nodoc:
@@ -98,66 +128,59 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
     /// Start the task with the given request
     public func start() {
-        // Synchronize the start to avoid internal state conflicts
-        underlyingQueue.sync {
-            switch Networking.logger.logLevel {
-            case .default:
-                Networking.logger.debug("Starting task for \(self.description)")
-            case .none:
-                break
-            case .verbose:
-                Networking.logger.debug("Starting task for request \(self.debugDescription)")
-            }
-
-            // Cancel the previous task
-            self.dataTask?.cancel()
-
-            // Create a new task from the preferences
-            let dataTask = self.session.dataTask(with: self.request, completionHandler: { [weak self] data, response, error in
-                self?.underlyingQueue.async { [weak self] in
-                    self?.dataTaskCompleted(data: data, response: response, error: error)
-                }
-            })
-
-            // Assign the new created task
-            self.dataTask = dataTask
-
-            // Observe the task progress
-            self.dataTaskProgressObservation = dataTask.progress.observe(\Progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] progress, _ in
-                guard let self = self else {
-                    return
-                }
-                self.progress.totalUnitCount = progress.totalUnitCount
-                self.progress.completedUnitCount = progress.completedUnitCount
-                self.notifyProgress(self.progress.fractionCompleted)
-            })
-
-            // Observe the task state
-            self.dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
-                switch task.state {
-                case .running:
-                    self?.state = .fetching
-                default:
-                    break
-                }
-            })
-
-            // Set priority and description
-            dataTask.priority = self.priority
-            dataTask.taskDescription = self.taskDescription
-
-            // Set the state to waiting execution and launch the task
-            self.state = .waitingExecution
-            dataTask.resume()
+        switch Networking.logger.logLevel {
+        case .default:
+            Networking.logger.debug("Starting task for \(description)")
+        case .none:
+            break
+        case .verbose:
+            Networking.logger.debug("Starting task for request \(debugDescription)")
         }
+
+        // Cancel the previous task
+        self.dataTask?.cancel()
+
+        // Create a new task from the preferences
+        let dataTask = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            self?.dataTaskCompleted(data: data, response: response, error: error)
+        })
+
+        // Observe the task progress
+        dataTaskProgressObservation = dataTask.progress.observe(\Progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] progress, _ in
+            guard let self = self else {
+                return
+            }
+            self.progress.totalUnitCount = progress.totalUnitCount
+            self.progress.completedUnitCount = progress.completedUnitCount
+            self.notifyProgress(self.progress.fractionCompleted)
+        })
+
+        // Observe the task state
+        dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
+            switch task.state {
+            case .running:
+                self?.state = .fetching
+            default:
+                break
+            }
+        })
+
+        // Set priority and description
+        dataTask.priority = priority
+        dataTask.taskDescription = taskDescription
+
+        // Assign the new created task
+        self.dataTask = dataTask
+
+        // Set the state to waiting execution and launch the task
+        state = .waitingExecution
+        dataTask.resume()
     }
 
     /// Cancel the current request
     public func cancel() {
-        underlyingQueue.sync {
-            Networking.logger.debug("Canceling task for \(self.description)")
-            dataTask?.cancel()
-        }
+        Networking.logger.debug("Canceling task for \(description)")
+        dataTask?.cancel()
     }
 
     /// :nodoc:
@@ -196,11 +219,19 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     // MARK: - State
 
     /// Called when the state of the task changed. First parameter is the old state, the second parameter is the new state
-    public typealias StateTransitionObservationBlock = (State, State) -> Void
+    public typealias StateTransitionObservationBlock = (State, State, HTTPDataTask) -> Void
     /// Holds the state observation
     private var dataTaskStateObservation: NSKeyValueObservation?
+    /// :nodoc:
+    private let stateTransitionObserversQueue = DispatchQueue(label: "State Observers")
+    /// :nodoc:
+    private var _stateTransitionObservers: [StateTransitionObservationBlock] = []
     /// Holds the state observers
-    private var stateTransitionObservers: [StateTransitionObservationBlock] = []
+    private var stateTransitionObservers: [StateTransitionObservationBlock] {
+        return stateTransitionObserversQueue.sync {
+            _stateTransitionObservers
+        }
+    }
 
     /// The state of the task
     public enum State: CustomDebugStringConvertible {
@@ -236,11 +267,13 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
         }
     }
 
-    /// The current state of the task
-    public private(set) var state: State {
+    /// :nodoc:
+    private let stateDispatchQueue = DispatchQueue(label: "State")
+    /// :nodoc:
+    private private(set) var _state: State {
         willSet {
             // Validate state machine
-            switch (state, newValue) {
+            switch (_state, newValue) {
             case (.initial, .waitingExecution), // Put the task in the queue
                  (.waitingExecution, .fetching), // Start task
                  (.waitingExecution, .cancelled), // Cancel task
@@ -252,18 +285,35 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
                  (.cancelled, .waitingExecution): // Restart task
                 break
             default:
-                fatalError("Invalid state transition from \(state) -> \(newValue)")
+                fatalError("Invalid state transition from \(_state) -> \(newValue)")
             }
         }
         didSet {
-            notifyStateTransition(old: oldValue, new: state)
+            notifyStateTransition(old: oldValue, new: _state)
+        }
+    }
+
+    /// The current state of the task
+    public private(set) var state: State {
+        get {
+            return stateDispatchQueue.sync {
+                _state
+            }
+        }
+        set {
+            stateDispatchQueue.sync {
+                _state = newValue
+            }
         }
     }
 
     /// :nodoc:
     private func notifyStateTransition(old: State, new: State) {
         callbackQueue.addOperation { [weak self] in
-            self?.stateTransitionObservers.forEach({ $0(old, new) })
+            guard let self = self else {
+                return
+            }
+            self.stateTransitionObservers.forEach({ $0(old, new, self) })
         }
     }
 
@@ -273,8 +323,8 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addStateTransitionObserver(_ observationBlock: @escaping StateTransitionObservationBlock) -> Self {
-        underlyingQueue.sync {
-            stateTransitionObservers.append(observationBlock)
+        stateDispatchQueue.sync {
+            _stateTransitionObservers.append(observationBlock)
         }
         return self
     }
@@ -285,8 +335,16 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     public typealias ProgressObservationBlock = (HTTPDataTask, Double) -> Void
     /// The progress observation holder
     private var dataTaskProgressObservation: NSKeyValueObservation?
+    /// :nodoc:
+    private let progressObserversDispatchQueue = DispatchQueue(label: "Progress Observers")
+    /// :nodoc:
+    private var _progressObservers: [ProgressObservationBlock] = []
     /// The progress observers
-    private var progressObservers: [ProgressObservationBlock] = []
+    private var progressObservers: [ProgressObservationBlock] {
+        return progressObserversDispatchQueue.sync {
+            _progressObservers
+        }
+    }
 
     /// :nodoc:
     private func notifyProgress(_ progress: Double) {
@@ -304,8 +362,8 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addProgressObserver(_ observationBlock: @escaping ProgressObservationBlock) -> Self {
-        underlyingQueue.sync {
-            progressObservers.append(observationBlock)
+        progressObserversDispatchQueue.sync {
+            _progressObservers.append(observationBlock)
         }
         return self
     }
@@ -313,25 +371,34 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     // MARK: - Completion
 
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingBlock<T> = (HTTPDataTaskResult<T>, HTTPURLResponse?) -> Void
+    public typealias CompletionHandlingBlock<T> = (HTTPDataTaskResult<T>, HTTPURLResponse?, HTTPDataTask) -> Void
     /// A completion handling block called at the end of the task.
     public typealias CompletionHandlingNullableDataBlock = (HTTPDataTaskNullableResult, HTTPURLResponse?) -> Void
+    /// :nodoc:
+    private let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
+    /// :nodoc:
+    private var _completionHandlers: [CompletionHandlerWrapper] = []
     /// The completion handlers
-    private var completionHandlers: [CompletionHandlerWrapper] = []
+    private var completionHandlers: [CompletionHandlerWrapper] {
+        return completionHandlersDispatchQueue.sync {
+            _completionHandlers
+        }
+    }
 
     /// :nodoc:
     private func notifyCompletion(error: Error, response: HTTPURLResponse?) {
         Networking.logger.debug("Task received error \(error) for \(description)")
         state = .finished
         callbackQueue.addOperation { [weak self] in
-            self?.completionHandlers.forEach({ $0.fail(error: error, response: response) })
+            guard let self = self else {
+                return
+            }
+            self.completionHandlers.forEach({ $0.fail(error: error, response: response, caller: self) })
         }
     }
 
     /// :nodoc:
     private func notifyCompletion(data: Data?, response: HTTPURLResponse) {
-        state = .finished
-
         // Do some logging
         switch Networking.logger.logLevel {
         case .verbose:
@@ -346,7 +413,8 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
             break
         }
 
-        completionHandlers.forEach({ $0.parse(data: data, response: response, callbackQueue: self.callbackQueue) })
+        state = .finished
+        completionHandlers.forEach({ $0.parse(data: data, response: response, callbackQueue: self.callbackQueue, caller: self) })
     }
 
     /// Adds a completion handler that gets the raw data as is.
@@ -355,9 +423,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingNullableDataBlock) -> Self {
-        underlyingQueue.sync {
-            let wrapper = CompletionHandlerWrapper(completion: completionHandler)
-            self.completionHandlers.append(wrapper)
+        let wrapper = CompletionHandlerWrapper(completion: completionHandler)
+        completionHandlersDispatchQueue.sync {
+            _completionHandlers.append(wrapper)
         }
         return self
     }
@@ -372,17 +440,25 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addCompletionHandler<T>(decoder: HTTPDataDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) -> Self {
-        underlyingQueue.sync {
-            let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
-            self.completionHandlers.append(wrapper)
+        let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
+        completionHandlersDispatchQueue.sync {
+            _completionHandlers.append(wrapper)
         }
         return self
     }
 
     // MARK: - Validation
 
+    /// :nodoc:
+    private let responseValidatorsDispatchQueue = DispatchQueue(label: "Response validators")
+    /// :nodoc:
+    private var _responseValidators: [HTTPResponseValidator] = []
     /// The validators
-    private var responseValidators: [HTTPResponseValidator] = []
+    private var responseValidators: [HTTPResponseValidator] {
+        return responseValidatorsDispatchQueue.sync {
+            _responseValidators
+        }
+    }
 
     /// :nodoc:
     private func validate(response: HTTPURLResponse, data _: Data?) throws {
@@ -399,8 +475,8 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addResponseValidator(_ validator: HTTPResponseValidator) -> Self {
-        underlyingQueue.sync {
-            self.responseValidators.append(validator)
+        responseValidatorsDispatchQueue.sync {
+            _responseValidators.append(validator)
         }
         return self
     }
@@ -427,8 +503,8 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Returns: The data task for call chaining
     @discardableResult
     public func addResponseValidator(_ validators: [HTTPResponseValidator]) -> Self {
-        underlyingQueue.sync {
-            self.responseValidators.append(contentsOf: validators)
+        responseValidatorsDispatchQueue.sync {
+            _responseValidators.append(contentsOf: validators)
         }
         return self
     }
@@ -437,57 +513,57 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 extension HTTPDataTask {
     /// This is a wrapper that holds reference for a completion handler
     private struct CompletionHandlerWrapper {
-        private let executionBlock: (Data?, HTTPURLResponse, OperationQueue) -> Void
-        private let failureBlock: (Error, HTTPURLResponse?) -> Void
+        private let executionBlock: (Data?, HTTPURLResponse, OperationQueue, HTTPDataTask) -> Void
+        private let failureBlock: (Error, HTTPURLResponse?, HTTPDataTask) -> Void
 
         /// :nodoc:
         init<T>(decoder: HTTPDataDecoder<T>, completion: @escaping CompletionHandlingBlock<T>) {
             // Create the block that gets called when decoding is ready
-            executionBlock = { data, response, callbackQueue in
+            executionBlock = { data, response, callbackQueue, caller in
                 guard let data = data else {
-                    completion(HTTPDataTaskResult.failure(NetworkingError.responseBodyIsEmpty), response)
+                    completion(HTTPDataTaskResult.failure(NetworkingError.responseBodyIsEmpty), response, caller)
                     return
                 }
                 do {
                     let decoded = try decoder.decode(data: data, response: response)
                     callbackQueue.addOperation {
-                        completion(HTTPDataTaskResult.success(decoded), response)
+                        completion(HTTPDataTaskResult.success(decoded), response, caller)
                     }
                 } catch {
                     callbackQueue.addOperation {
-                        completion(HTTPDataTaskResult.failure(error), response)
+                        completion(HTTPDataTaskResult.failure(error), response, caller)
                     }
                 }
             }
 
             // Create a block to be called on failure
-            failureBlock = { error, response in
-                completion(HTTPDataTaskResult.failure(error), response)
+            failureBlock = { error, response, caller in
+                completion(HTTPDataTaskResult.failure(error), response, caller)
             }
         }
 
         /// :nodoc:
         init(completion: @escaping CompletionHandlingNullableDataBlock) {
             // Create the block that gets called when success
-            executionBlock = { data, response, callbackQueue in
+            executionBlock = { data, response, callbackQueue, _ in
                 callbackQueue.addOperation {
                     completion(HTTPDataTaskNullableResult.success(data), response)
                 }
             }
             // Create a block to be called on failure
-            failureBlock = { error, response in
+            failureBlock = { error, response, _ in
                 completion(HTTPDataTaskNullableResult.failure(error), response)
             }
         }
 
         /// :nodoc:
-        func parse(data: Data?, response: HTTPURLResponse, callbackQueue: OperationQueue) {
-            executionBlock(data, response, callbackQueue)
+        func parse(data: Data?, response: HTTPURLResponse, callbackQueue: OperationQueue, caller: HTTPDataTask) {
+            executionBlock(data, response, callbackQueue, caller)
         }
 
         /// :nodoc:
-        func fail(error: Error, response: HTTPURLResponse?) {
-            failureBlock(error, response)
+        func fail(error: Error, response: HTTPURLResponse?, caller: HTTPDataTask) {
+            failureBlock(error, response, caller)
         }
     }
 }

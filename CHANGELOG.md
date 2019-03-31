@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Localization Module
 - Logging Module
 - Base Networking Module
+- Data Task status tracker
 - UIColor from HEX
 - Keyboard Layout Guide
 - Cron Jobs

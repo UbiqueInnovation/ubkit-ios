@@ -131,6 +131,15 @@ You can add validators to be executed after the response is received and check i
 task.addResponseValidator(HTTPResponseStatusValidator(.ok))
 ```
 
+### Network Activity
+It is important to show feedback to users when a network activity is running. There for the global methods available in `Networking` can help you add observers and adapt the UI accornigly. The callback will be fired each time the global network activity changes status (from idle to fetching or vis versa). Only the `HTTPDataTask` object created with the default session will be added automatically, otherwise you need to add them manually (more info in the `Networking` object)
+```swift
+Networking.addNetworkActivityStateObserver { (newState) in
+    // Change UI accordingly
+    UIApplication.shared.isNetworkActivityIndicatorVisible = (newState == .fetching)
+}
+```
+
 ## UIColor from HEX
 If you need to instanciate a color from a HEX value or you need to output a color as a HEX string you can use.
 ```swift

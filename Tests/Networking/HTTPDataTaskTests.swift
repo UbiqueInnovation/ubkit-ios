@@ -68,7 +68,7 @@ class HTTPDataTaskTests: XCTestCase {
             return URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
         }
         let dataTask = HTTPDataTask(request: request, session: mockSession)
-        dataTask.addCompletionHandler(decoder: HTTPJSONDecoder<TestStruct>()) { result, _ in
+        dataTask.addCompletionHandler(decoder: HTTPJSONDecoder<TestStruct>()) { result, _, _ in
             switch result {
             case let .success(test):
                 XCTAssertEqual(test.value, "A")
@@ -103,7 +103,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
             XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
             ex1.fulfill()
-        }.addCompletionHandler(decoder: HTTPStringDecoder(), completionHandler: { result, _ in
+        }.addCompletionHandler(decoder: HTTPStringDecoder(), completionHandler: { result, _, _ in
             switch result {
             case .failure:
                 break
@@ -111,7 +111,7 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have failed parsing")
             }
             ex2.fulfill()
-        }).addCompletionHandler(decoder: HTTPStringDecoder(encoding: .utf16), completionHandler: { result, _ in
+        }).addCompletionHandler(decoder: HTTPStringDecoder(encoding: .utf16), completionHandler: { result, _, _ in
             switch result {
             case let .success(data):
                 XCTAssertEqual(data, "Hello")
@@ -208,7 +208,7 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = HTTPDataTask(request: request, session: mockSession)
         XCTAssertEqual(dataTask.state, .initial)
-        dataTask.addStateTransitionObserver { _, new in
+        dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
             case .waitingExecution:
                 ex1.fulfill()
@@ -264,7 +264,7 @@ class HTTPDataTaskTests: XCTestCase {
         XCTAssertEqual(dataTask.state, .initial)
         XCTAssertEqual(dataTask.progress.fractionCompleted, 0)
 
-        dataTask.addStateTransitionObserver { _, new in
+        dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
             case .waitingExecution:
                 ex1.fulfill()
@@ -317,7 +317,7 @@ class HTTPDataTaskTests: XCTestCase {
         XCTAssertEqual(dataTask.state, .initial)
         XCTAssertEqual(dataTask.progress.fractionCompleted, 0)
 
-        dataTask.addStateTransitionObserver { _, new in
+        dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
             case .waitingExecution:
                 ex1.fulfill()
@@ -415,7 +415,7 @@ class HTTPDataTaskTests: XCTestCase {
 
         let dataTask = HTTPDataTask(request: request, taskDescription: "Hello", session: mockSession, callbackQueue: queue)
 
-        dataTask.addStateTransitionObserver { _, _ in
+        dataTask.addStateTransitionObserver { _, _, _ in
             XCTAssertEqual(queue, OperationQueue.current!)
             ex1.fulfill()
         }
@@ -438,7 +438,7 @@ class HTTPDataTaskTests: XCTestCase {
             return data
         }
 
-        dataTask.addCompletionHandler(decoder: decoder) { _, _ in
+        dataTask.addCompletionHandler(decoder: decoder) { _, _, _ in
             XCTAssertEqual(queue, OperationQueue.current!)
             ex5.fulfill()
         }

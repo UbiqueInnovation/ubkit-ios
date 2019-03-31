@@ -119,6 +119,10 @@
 		8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
 		8E7F751A224AFD4400582E57 /* CronJobTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7519224AFD4400582E57 /* CronJobTests.swift */; };
 		8E7F751B224AFD4400582E57 /* CronJobTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7519224AFD4400582E57 /* CronJobTests.swift */; };
+		8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */; };
+		8E80D60A2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */; };
+		8E80D60B2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */; };
+		8E80D60C2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -221,6 +225,13 @@
 		8EC4848422428AC500AC8E44 /* HTTPHeaderField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */; };
 		8EC4848522428AC500AC8E44 /* HTTPHeaderField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */; };
 		8EC4848622428AC500AC8E44 /* HTTPHeaderField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */; };
+		8EE058A52251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */; };
+		8EE058A62251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */; };
+		8EE058A72251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */; };
+		8EE058A922513A5400B2885B /* NetworkActivityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A822513A5400B2885B /* NetworkActivityTracker.swift */; };
+		8EE058AA22513A5400B2885B /* NetworkActivityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A822513A5400B2885B /* NetworkActivityTracker.swift */; };
+		8EE058AB22513A5400B2885B /* NetworkActivityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A822513A5400B2885B /* NetworkActivityTracker.swift */; };
+		8EE058AC22513A5400B2885B /* NetworkActivityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A822513A5400B2885B /* NetworkActivityTracker.swift */; };
 		8EF90D56224298700055A362 /* HTTPCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D55224298700055A362 /* HTTPCodeTests.swift */; };
 		8EF90D57224298700055A362 /* HTTPCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D55224298700055A362 /* HTTPCodeTests.swift */; };
 		8EF90D58224298700055A362 /* HTTPCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D55224298700055A362 /* HTTPCodeTests.swift */; };
@@ -295,6 +306,7 @@
 		8E7F7506224A1FD000582E57 /* KeyboardLayoutGuideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutGuideTests.swift; sourceTree = "<group>"; };
 		8E7F7512224AE4C300582E57 /* CronJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronJob.swift; sourceTree = "<group>"; };
 		8E7F7519224AFD4400582E57 /* CronJobTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronJobTests.swift; sourceTree = "<group>"; };
+		8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalNetworking.swift; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -334,6 +346,8 @@
 		8EC484732242813200AC8E44 /* HTTPRequestBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestBody.swift; sourceTree = "<group>"; };
 		8EC484782242821300AC8E44 /* MIMEType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIMEType.swift; sourceTree = "<group>"; };
 		8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderField.swift; sourceTree = "<group>"; };
+		8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkActivityTrackerTests.swift; sourceTree = "<group>"; };
+		8EE058A822513A5400B2885B /* NetworkActivityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkActivityTracker.swift; sourceTree = "<group>"; };
 		8EF90D55224298700055A362 /* HTTPCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPCodeTests.swift; sourceTree = "<group>"; };
 		8EF90D5922429AA30055A362 /* MIMETypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIMETypeTests.swift; sourceTree = "<group>"; };
 		8EF90D5D22429D300055A362 /* HTTPRequestBodyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestBodyTests.swift; sourceTree = "<group>"; };
@@ -654,6 +668,7 @@
 				8E2786562241227A00430D34 /* GlobalLocalization.swift */,
 				8EBD48172240773900CD2639 /* GlobalLogging.swift */,
 				8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */,
+				8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */,
 			);
 			path = Globals;
 			sourceTree = "<group>";
@@ -700,8 +715,17 @@
 				8E0DB2C22243BFE800D5E01E /* Request */,
 				8E0DB2CE2243EAA100D5E01E /* Response */,
 				8E0DB2C32243C0A300D5E01E /* DataTask */,
+				8EE058AD22513A5E00B2885B /* Network Activity Tracker */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		8EE058AD22513A5E00B2885B /* Network Activity Tracker */ = {
+			isa = PBXGroup;
+			children = (
+				8EE058A822513A5400B2885B /* NetworkActivityTracker.swift */,
+			);
+			name = "Network Activity Tracker";
 			sourceTree = "<group>";
 		};
 		8EF90D54224298000055A362 /* Networking */ = {
@@ -716,6 +740,7 @@
 				8E7F74962247F50200582E57 /* HTTPResponseValidatorTests.swift */,
 				8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */,
 				8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */,
+				8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -1183,12 +1208,14 @@
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
+				8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E7F74A0224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786612241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FE2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E52240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CA2243D95900D5E01E /* HTTPResponseValidator.swift in Sources */,
+				8EE058A922513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8EBD480A2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F62240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EC484742242813200AC8E44 /* HTTPRequestBody.swift in Sources */,
@@ -1237,6 +1264,7 @@
 				8E0DB2CB2243D95900D5E01E /* HTTPResponseValidator.swift in Sources */,
 				8EBD480B2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F72240770000CD2639 /* Localization+Formatter.swift in Sources */,
+				8E80D60A2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EC484752242813200AC8E44 /* HTTPRequestBody.swift in Sources */,
 				8E7F748B2247B4A300582E57 /* HTTPRequestBody+Convertible.swift in Sources */,
 				8E0DB2B52243088000D5E01E /* Networking+Error.swift in Sources */,
@@ -1244,6 +1272,7 @@
 				8E7F74862245B58D00582E57 /* HTTPRequestBody+Multipart.swift in Sources */,
 				8E0DB2AB2243049900D5E01E /* HTTPDataTask.swift in Sources */,
 				8EC4847A2242821300AC8E44 /* MIMEType.swift in Sources */,
+				8EE058AA22513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8EBD48072240770000CD2639 /* Localization+String.swift in Sources */,
 				8E46FA41224DAECF00198321 /* CronJob.swift in Sources */,
 				8E27865D2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
@@ -1283,6 +1312,7 @@
 				8EBD47E72240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CC2243D95900D5E01E /* HTTPResponseValidator.swift in Sources */,
 				8EBD480C2240770000CD2639 /* Localization+Bundle.swift in Sources */,
+				8E80D60B2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD47F82240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EC484762242813200AC8E44 /* HTTPRequestBody.swift in Sources */,
 				8E7F748C2247B4A300582E57 /* HTTPRequestBody+Convertible.swift in Sources */,
@@ -1290,6 +1320,7 @@
 				8EC484612241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
 				8E7F74872245B58D00582E57 /* HTTPRequestBody+Multipart.swift in Sources */,
 				8E0DB2AC2243049900D5E01E /* HTTPDataTask.swift in Sources */,
+				8EE058AB22513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8EC4847B2242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48082240770000CD2639 /* Localization+String.swift in Sources */,
 				8E27865E2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
@@ -1329,6 +1360,8 @@
 				8E0DB2CD2243D95900D5E01E /* HTTPResponseValidator.swift in Sources */,
 				8EBD480D2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F92240770000CD2639 /* Localization+Formatter.swift in Sources */,
+				8EE058AC22513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
+				8E80D60C2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EC484772242813200AC8E44 /* HTTPRequestBody.swift in Sources */,
 				8E7F748D2247B4A300582E57 /* HTTPRequestBody+Convertible.swift in Sources */,
 				8E0DB2B72243088000D5E01E /* Networking+Error.swift in Sources */,
@@ -1362,6 +1395,7 @@
 				8E7F7507224A1FD000582E57 /* KeyboardLayoutGuideTests.swift in Sources */,
 				8EF90D56224298700055A362 /* HTTPCodeTests.swift in Sources */,
 				8E7F746F2245303A00582E57 /* URLSessionDataTaskMock.swift in Sources */,
+				8EE058A52251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */,
 				8EBD482822407A6F00CD2639 /* LanguageTests.swift in Sources */,
 				8EF90D5A22429AA30055A362 /* MIMETypeTests.swift in Sources */,
 				8E7F74932247ED0B00582E57 /* HTTPURLResponseTests.swift in Sources */,
@@ -1376,6 +1410,7 @@
 			files = (
 				8E7F74BC2249966D00582E57 /* UIColor+HEXTests.swift in Sources */,
 				8EBD483B22408E1000CD2639 /* LocalizationTests.swift in Sources */,
+				8EE058A62251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */,
 				8E7F746C22452F8300582E57 /* DataTaskSessionMock.swift in Sources */,
 				8EF90D5F22429D300055A362 /* HTTPRequestBodyTests.swift in Sources */,
 				8E7F74682244650C00582E57 /* HTTPDataTaskTests.swift in Sources */,
@@ -1412,6 +1447,7 @@
 				8EF90D58224298700055A362 /* HTTPCodeTests.swift in Sources */,
 				8E7F74712245303A00582E57 /* URLSessionDataTaskMock.swift in Sources */,
 				8EBD482A22407A6F00CD2639 /* LanguageTests.swift in Sources */,
+				8EE058A72251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */,
 				8EF90D5C22429AA30055A362 /* MIMETypeTests.swift in Sources */,
 				8E7F74952247ED0B00582E57 /* HTTPURLResponseTests.swift in Sources */,
 				8EF90D6422429E740055A362 /* HTTPURLRequestTests.swift in Sources */,
@@ -1443,9 +1479,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 				WATCHOS_DEPLOYMENT_TARGET = 5.0;
 			};
@@ -1455,9 +1493,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 				WATCHOS_DEPLOYMENT_TARGET = 5.0;
 			};
