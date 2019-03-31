@@ -143,3 +143,12 @@ The keyboard layout guide of a view will represent the area of that view that is
 // Make sure that the input field is always above of the keyboard. Otherwise mapped to the bottom of the parent view.
 inputField.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
 ```
+## Cron Jobs
+A `CronJob` is a class that invoces a function at a specific point in time. It can repeat or not. If the deadline is passed and the code could not be executed due to app halt or sleep, then the function is invoked as soon as possible on system resume.
+> You should keep reference to the job object. If the job gets deallocated
+
+```swift
+let job = CronJob(fireAt: date) {
+    // The cron job to be executed
+}
+```
