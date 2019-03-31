@@ -1,5 +1,5 @@
 //
-//  CronSchedulerTests.swift
+//  CronJobTests.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 27.03.19.
@@ -8,7 +8,7 @@
 import UBFoundation
 import XCTest
 
-class CronSchedulerTests: XCTestCase {
+class CronJobTests: XCTestCase {
     func testCronInvocationAfterTimeInterval() {
         let ex = expectation(description: "Cron test")
         let date = Date()

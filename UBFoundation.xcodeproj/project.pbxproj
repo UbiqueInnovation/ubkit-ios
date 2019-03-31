@@ -117,8 +117,8 @@
 		8E7F7507224A1FD000582E57 /* KeyboardLayoutGuideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7506224A1FD000582E57 /* KeyboardLayoutGuideTests.swift */; };
 		8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
 		8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
-		8E7F751A224AFD4400582E57 /* CronSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7519224AFD4400582E57 /* CronSchedulerTests.swift */; };
-		8E7F751B224AFD4400582E57 /* CronSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7519224AFD4400582E57 /* CronSchedulerTests.swift */; };
+		8E7F751A224AFD4400582E57 /* CronJobTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7519224AFD4400582E57 /* CronJobTests.swift */; };
+		8E7F751B224AFD4400582E57 /* CronJobTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7519224AFD4400582E57 /* CronJobTests.swift */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -294,7 +294,7 @@
 		8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutGuide.swift; sourceTree = "<group>"; };
 		8E7F7506224A1FD000582E57 /* KeyboardLayoutGuideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutGuideTests.swift; sourceTree = "<group>"; };
 		8E7F7512224AE4C300582E57 /* CronJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronJob.swift; sourceTree = "<group>"; };
-		8E7F7519224AFD4400582E57 /* CronSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronSchedulerTests.swift; sourceTree = "<group>"; };
+		8E7F7519224AFD4400582E57 /* CronJobTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronJobTests.swift; sourceTree = "<group>"; };
 		8EBD476A224063B400CD2639 /* UBFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBD476D224063B400CD2639 /* UBFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBFoundation.h; sourceTree = "<group>"; };
 		8EBD476E224063B400CD2639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -539,7 +539,7 @@
 		8E7F7518224AFD2200582E57 /* Cron */ = {
 			isa = PBXGroup;
 			children = (
-				8E7F7519224AFD4400582E57 /* CronSchedulerTests.swift */,
+				8E7F7519224AFD4400582E57 /* CronJobTests.swift */,
 			);
 			path = Cron;
 			sourceTree = "<group>";
@@ -1366,7 +1366,7 @@
 				8EF90D5A22429AA30055A362 /* MIMETypeTests.swift in Sources */,
 				8E7F74932247ED0B00582E57 /* HTTPURLResponseTests.swift in Sources */,
 				8EF90D6222429E740055A362 /* HTTPURLRequestTests.swift in Sources */,
-				8E7F751A224AFD4400582E57 /* CronSchedulerTests.swift in Sources */,
+				8E7F751A224AFD4400582E57 /* CronJobTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1389,7 +1389,7 @@
 				8E7F74702245303A00582E57 /* URLSessionDataTaskMock.swift in Sources */,
 				8EBD482922407A6F00CD2639 /* LanguageTests.swift in Sources */,
 				8EF90D5B22429AA30055A362 /* MIMETypeTests.swift in Sources */,
-				8E7F751B224AFD4400582E57 /* CronSchedulerTests.swift in Sources */,
+				8E7F751B224AFD4400582E57 /* CronJobTests.swift in Sources */,
 				8E7F74942247ED0B00582E57 /* HTTPURLResponseTests.swift in Sources */,
 				8EF90D6322429E740055A362 /* HTTPURLRequestTests.swift in Sources */,
 			);

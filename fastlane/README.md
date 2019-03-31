@@ -20,26 +20,26 @@ or alternatively using `brew cask install fastlane`
 fastlane setup
 ```
 Setup the project.
-### release
-```
-fastlane release
-```
-Deploy the framework.
 ### documentation
 ```
 fastlane documentation
 ```
 Opens the documentation.
+### tests
+```
+fastlane tests
+```
+Run the unit tests.
+### release
+```
+fastlane release
+```
+Deploy the framework.
 ### update_version
 ```
 fastlane update_version
 ```
 Update the version of the project.
-### tests
-```
-fastlane tests
-```
-Run the unit tests. show_results:true to open the result page
 
 ----
 

@@ -120,5 +120,3 @@ We separate 3 log levels: __Info__, __Error__, __Debug__.
 ### Reachability
 - Network reachability
 - Auto-retry on reachability
-
-### CRON Jobs

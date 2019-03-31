@@ -66,7 +66,7 @@ public class CronJob {
     /// The backing data for the callback queue
     private weak var _callbackQueue: OperationQueue?
 
-    // The callback queue for the execution Block. If non is specified then it is executed on a secondary thread with the same Quality of service as the Cron Job.
+    /// The callback queue for the execution Block. If non is specified then it is executed on a secondary thread with the same Quality of service as the Cron Job.
     public var callbackQueue: OperationQueue? {
         get {
             var q: OperationQueue?
@@ -144,7 +144,7 @@ public class CronJob {
     public init(qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
         self.identifier = UUID()
         _executionBlock = executionBlock
-        self.dispatchQueue = DispatchQueue(label: "Cron Job Callback \(identifier.uuidString)", qos: qos)
+        self.dispatchQueue = DispatchQueue(label: "Cron Job Timer \(identifier.uuidString)", qos: qos)
         self.serialQueue = DispatchQueue(label: "Cron Job Serial \(identifier.uuidString)", qos: qos)
     }
 
