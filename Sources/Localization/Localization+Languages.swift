@@ -22,9 +22,10 @@ extension Localization {
     ///   - stripRegionInformation: If the list should not contain any region information. _Default: true_
     ///   - preferredLanguages: The list of prefered languages to check against. _Default: Bundle.main.preferredLocalizations_
     /// - Returns: The list of preferred languages
-    public func preferredLanguages(stripRegionInformation: Bool = true, preferredLanguages: [String] = Bundle.main.preferredLocalizations) -> [Language] {
+    public func preferredLanguages(stripRegionInformation: Bool = true, preferredLanguages: [String]? = nil) -> [Language] {
+        let bundle = baseBundle ?? .main
         // load the list of preferred languages as the user defined them in the OS
-        var mutablePreferredLanguages: [String] = preferredLanguages
+        var mutablePreferredLanguages: [String] = preferredLanguages ?? bundle.preferredLocalizations
 
         // This will hold the set language identifier according to the localization
         let currentLanguageIdentifier: String

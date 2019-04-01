@@ -73,7 +73,6 @@ do {
 }
 ```
 
-
 - Setting the framework log Level
 In case you want to change the log level of the framewotk you can do so by calling
 
@@ -92,8 +91,9 @@ The Networking module offers a variaty of `HTTPDataDecoder` for decoding JSON or
 // Create a Data Task
 let url = URL(string: "http://example.com/books")!
 let request = HTTPURLRequest(url: url)
-let task = HTTPDataTask(request: request)
-task.addCompletionHandler(decoder: HTTPJSONDecoder<Books>()) { (result, _) in
+// We should hold a strong reference to the task otherwise it gets deallocated
+self.task = HTTPDataTask(request: request)
+self.task.addCompletionHandler(decoder: HTTPJSONDecoder<Books>()) { (result, _) in
     switch result{
     case .success(let books):
         // Make something useful with the data
@@ -105,17 +105,23 @@ task.addCompletionHandler(decoder: HTTPJSONDecoder<Books>()) { (result, _) in
 }
 ```
 
+### Modifying the request
+Sometime we need to modify the request everytime before it is executed. That's where the `HTTPRequestModifier` comes in play. With the standard implementation you can add Basic authorization, Accepted language or add you own custom modifier.
+```swift
+self.task.addRequestModifier(HTTPRequestBasicAuthorization(login: "login", password: "password"))
+```
+
 ### Tracking progress
 On some lengthy tasks showing the progress to the user is a good idea.
 ```swift
-task.addProgressObserver { (_, progress) in
+self.task.addProgressObserver { (_, progress) in
     progressBar.progress = progress
 }
 ```
 ### Monitoring state
 You can monitor the state of the task and adapt the UI accordingly
 ```swift
-task.addStateTransitionObserver { (_, new) in
+self.task.addStateTransitionObserver { (_, new) in
     switch new {
     case .waitingExecution, .fetching:
         activityIndicator.startAnimating()
@@ -128,7 +134,7 @@ task.addStateTransitionObserver { (_, new) in
 ### Validation
 You can add validators to be executed after the response is received and check if we proceed to decode the data. Errors thrown will be available in the completion handler block.
 ```swift
-task.addResponseValidator(HTTPResponseStatusValidator(.ok))
+self.task.addResponseValidator(HTTPResponseStatusValidator(.ok))
 ```
 
 ### Network Activity

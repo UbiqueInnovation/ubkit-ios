@@ -28,6 +28,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
             }
         }
         set {
+            requestModifier.cancelCurrentModification()
             dataTask?.cancel()
             requestQueue.sync {
                 _request = newValue
@@ -128,6 +129,11 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
     /// Start the task with the given request
     public func start() {
+        // Cancel the previous task
+        requestModifier.cancelCurrentModification()
+        dataTask?.cancel()
+
+        // Logging
         switch Networking.logger.logLevel {
         case .default:
             Networking.logger.debug("Starting task for \(description)")
@@ -137,9 +143,24 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
             Networking.logger.debug("Starting task for request \(debugDescription)")
         }
 
-        // Cancel the previous task
-        self.dataTask?.cancel()
+        // Set the state to waiting execution and launch the task
+        state = .waitingExecution
 
+        // Apply all modification
+        requestModifier.modifyRequest(request) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            switch result {
+            case let .failure(error):
+                self.notifyCompletion(error: error, response: nil)
+            case let .success(modifiedRequest):
+                self.startRequest(request: modifiedRequest)
+            }
+        }
+    }
+
+    private func startRequest(request: HTTPURLRequest) {
         // Create a new task from the preferences
         let dataTask = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             self?.dataTaskCompleted(data: data, response: response, error: error)
@@ -172,14 +193,13 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
         // Assign the new created task
         self.dataTask = dataTask
 
-        // Set the state to waiting execution and launch the task
-        state = .waitingExecution
         dataTask.resume()
     }
 
     /// Cancel the current request
     public func cancel() {
         Networking.logger.debug("Canceling task for \(description)")
+        requestModifier.cancelCurrentModification()
         dataTask?.cancel()
     }
 
@@ -214,6 +234,21 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
         } catch {
             notifyCompletion(error: error, response: response)
         }
+    }
+
+    // MARK: - Request Modifier
+
+    /// All the request modifiers
+    private let requestModifier = HTTPRequestGroupModifier()
+    /// Adds a request modifier.
+    ///
+    /// This modifier will be called everytime before the request is sent, and it gets a chance to modify the request.
+    ///
+    /// - Parameter modifier: The request modifier to add
+    @discardableResult
+    public func addRequestModifier(_ modifier: HTTPRequestModifier) -> Self {
+        requestModifier.append(modifier)
+        return self
     }
 
     // MARK: - State
@@ -371,9 +406,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     // MARK: - Completion
 
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingBlock<T> = (HTTPDataTaskResult<T>, HTTPURLResponse?, HTTPDataTask) -> Void
+    public typealias CompletionHandlingBlock<T> = (Result<T>, HTTPURLResponse?, HTTPDataTask) -> Void
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingNullableDataBlock = (HTTPDataTaskNullableResult, HTTPURLResponse?) -> Void
+    public typealias CompletionHandlingNullableDataBlock = (Result<Data?>, HTTPURLResponse?) -> Void
     /// :nodoc:
     private let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
     /// :nodoc:
@@ -521,24 +556,24 @@ extension HTTPDataTask {
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, callbackQueue, caller in
                 guard let data = data else {
-                    completion(HTTPDataTaskResult.failure(NetworkingError.responseBodyIsEmpty), response, caller)
+                    completion(.failure(NetworkingError.responseBodyIsEmpty), response, caller)
                     return
                 }
                 do {
                     let decoded = try decoder.decode(data: data, response: response)
                     callbackQueue.addOperation {
-                        completion(HTTPDataTaskResult.success(decoded), response, caller)
+                        completion(.success(decoded), response, caller)
                     }
                 } catch {
                     callbackQueue.addOperation {
-                        completion(HTTPDataTaskResult.failure(error), response, caller)
+                        completion(.failure(error), response, caller)
                     }
                 }
             }
 
             // Create a block to be called on failure
             failureBlock = { error, response, caller in
-                completion(HTTPDataTaskResult.failure(error), response, caller)
+                completion(.failure(error), response, caller)
             }
         }
 
@@ -547,12 +582,12 @@ extension HTTPDataTask {
             // Create the block that gets called when success
             executionBlock = { data, response, callbackQueue, _ in
                 callbackQueue.addOperation {
-                    completion(HTTPDataTaskNullableResult.success(data), response)
+                    completion(.success(data), response)
                 }
             }
             // Create a block to be called on failure
             failureBlock = { error, response, _ in
-                completion(HTTPDataTaskNullableResult.failure(error), response)
+                completion(.failure(error), response)
             }
         }
 
