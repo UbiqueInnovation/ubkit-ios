@@ -118,3 +118,7 @@ We separate 3 log levels: __Info__, __Error__, __Debug__.
 ### Reachability
 - Network reachability
 - Auto-retry on reachability
+
+## UI
+### Empty Table and Collection view
+[https://github.com/dzenbot/DZNEmptyDataSet]
