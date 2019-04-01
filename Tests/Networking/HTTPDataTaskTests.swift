@@ -54,6 +54,23 @@ class HTTPDataTaskTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
 
+    func testCompletionRequestModifiers() {
+        let ex1 = expectation(description: "Request")
+        let request = HTTPURLRequest(url: url)
+        let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+
+        let mockSession = DataTaskSessionMock { (request) -> URLSessionDataTaskMock.Configuration in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Basic bG9naW46cGFzc3dvcmQ=")
+            return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
+        }
+        let dataTask = HTTPDataTask(request: request, session: mockSession)
+        dataTask.addRequestModifier(HTTPRequestBasicAuthorization(login: "login", password: "password"))
+        dataTask.addCompletionHandler { _, _ in
+            ex1.fulfill()
+        }.start()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
     func testCompletionJSONData() {
         let ex1 = expectation(description: "Request")
         let request = HTTPURLRequest(url: url)

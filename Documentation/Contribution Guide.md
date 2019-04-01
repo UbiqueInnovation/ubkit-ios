@@ -106,10 +106,8 @@ We separate 3 log levels: __Info__, __Error__, __Debug__.
 - Security challenges
 - Certificates pinning
 
-### Adapting and Retrying Requests
-- Create pre-hooks
+### Retrying Requests
 - Create post-hooks and retryal blocks
-- Support basic authentication and OAUTH
 
 ### Error handling
 - Offer base error handling
