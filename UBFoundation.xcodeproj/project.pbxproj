@@ -271,10 +271,6 @@
 		8EE058EC22535FF700B2885B /* UBNetworkingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */; };
 		8EE058ED22535FF700B2885B /* UBNetworkingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */; };
 		8EE058EE22535FF700B2885B /* UBNetworkingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */; };
-		8EE058F02253674E00B2885B /* NetworkTaskRecovery+OptionRetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EF2253674D00B2885B /* NetworkTaskRecovery+OptionRetry.swift */; };
-		8EE058F12253674E00B2885B /* NetworkTaskRecovery+OptionRetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EF2253674D00B2885B /* NetworkTaskRecovery+OptionRetry.swift */; };
-		8EE058F22253674E00B2885B /* NetworkTaskRecovery+OptionRetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EF2253674D00B2885B /* NetworkTaskRecovery+OptionRetry.swift */; };
-		8EE058F32253674E00B2885B /* NetworkTaskRecovery+OptionRetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EF2253674D00B2885B /* NetworkTaskRecovery+OptionRetry.swift */; };
 		8EE058F5225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
 		8EE058F6225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
 		8EE058F7225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
@@ -405,7 +401,6 @@
 		8EE058E02252E65D00B2885B /* NetworkTaskRecovery+Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+Group.swift"; sourceTree = "<group>"; };
 		8EE058E522535A7E00B2885B /* NetworkTaskRecovery+Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+Options.swift"; sourceTree = "<group>"; };
 		8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBNetworkingTask.swift; sourceTree = "<group>"; };
-		8EE058EF2253674D00B2885B /* NetworkTaskRecovery+OptionRetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+OptionRetry.swift"; sourceTree = "<group>"; };
 		8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+Option.swift"; sourceTree = "<group>"; };
 		8EF90D55224298700055A362 /* HTTPCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPCodeTests.swift; sourceTree = "<group>"; };
 		8EF90D5922429AA30055A362 /* MIMETypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIMETypeTests.swift; sourceTree = "<group>"; };
@@ -816,7 +811,6 @@
 				8EE058DB2252DAC400B2885B /* NetworkTaskRecovery.swift */,
 				8EE058E02252E65D00B2885B /* NetworkTaskRecovery+Group.swift */,
 				8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */,
-				8EE058EF2253674D00B2885B /* NetworkTaskRecovery+OptionRetry.swift */,
 				8EE058E522535A7E00B2885B /* NetworkTaskRecovery+Options.swift */,
 			);
 			name = "DataTask Recovery";
@@ -1307,7 +1301,6 @@
 				8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */,
 				8EBD48022240770000CD2639 /* Localization.swift in Sources */,
 				8EE058D02252744F00B2885B /* UBURLRequestModifier+AcceptedLanguage.swift in Sources */,
-				8EE058F02253674E00B2885B /* NetworkTaskRecovery+OptionRetry.swift in Sources */,
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
@@ -1361,7 +1354,6 @@
 				8EBD48192240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EC4848422428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				8E0DB2C62243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
-				8EE058F12253674E00B2885B /* NetworkTaskRecovery+OptionRetry.swift in Sources */,
 				8EBD4858224119AE00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48032240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D62243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
@@ -1420,7 +1412,6 @@
 				8EBD481A2240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EC4848522428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				8E0DB2C72243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
-				8EE058F22253674E00B2885B /* NetworkTaskRecovery+OptionRetry.swift in Sources */,
 				8EBD4857224119AD00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48042240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D72243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
@@ -1507,7 +1498,6 @@
 				8EBD48092240770000CD2639 /* Localization+String.swift in Sources */,
 				8E27865F2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
 				8E27865A2241227A00430D34 /* GlobalLocalization.swift in Sources */,
-				8EE058F32253674E00B2885B /* NetworkTaskRecovery+OptionRetry.swift in Sources */,
 				8EE058C422526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
 				8EC4846D22427B9700AC8E44 /* UBURLRequest.swift in Sources */,
 				8E0DB2B2224305F900D5E01E /* Result.swift in Sources */,
