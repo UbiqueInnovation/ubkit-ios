@@ -711,13 +711,13 @@
 			children = (
 				8EBD47F02240770000CD2639 /* Language.swift */,
 				8EBD47F12240770000CD2639 /* Localization.swift */,
-				8EBD47F52240770000CD2639 /* Localization+Error.swift */,
 				8EBD47F32240770000CD2639 /* Localization+Bundle.swift */,
-				8EBD47F42240770000CD2639 /* Localization+Languages.swift */,
+				8EBD47F52240770000CD2639 /* Localization+Error.swift */,
 				8EBD47EE2240770000CD2639 /* Localization+Formatter.swift */,
+				8EBD47F42240770000CD2639 /* Localization+Languages.swift */,
+				8E2786602241269200430D34 /* Localization+Locale.swift */,
 				8EBD47EF2240770000CD2639 /* Localization+Notification.swift */,
 				8EBD47F22240770000CD2639 /* Localization+String.swift */,
-				8E2786602241269200430D34 /* Localization+Locale.swift */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
