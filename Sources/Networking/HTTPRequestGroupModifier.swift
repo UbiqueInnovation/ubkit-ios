@@ -64,7 +64,7 @@ public class HTTPRequestGroupModifier: HTTPRequestModifier {
         var modifiers = ArraySlice<HTTPRequestModifier>()
         serialOperation.sync {
             currentModification = newModification
-            modifiers = ArraySlice<HTTPRequestModifier>(self.modifiers)
+            modifiers = ArraySlice(self.modifiers)
         }
         recursiveModifyRequest(originalRequest, modification: newModification, modifiers: modifiers, completion: completion)
     }

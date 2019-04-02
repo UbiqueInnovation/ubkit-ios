@@ -33,6 +33,48 @@ class HTTPDataTaskTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
 
+    func testFailureWithRecoveryRestart() {
+        let ex1 = expectation(description: "Request")
+        let ex2 = expectation(description: "Recovery")
+        ex2.expectedFulfillmentCount = 2
+
+        let request = HTTPURLRequest(url: url)
+        let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
+
+        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+            return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
+        }
+        let dataTask = HTTPDataTask(request: request, session: mockSession)
+
+        class MockRecovery: NetworkingTaskFailureRecoveryStrategy {
+            private var counter = 1
+            var ex: XCTestExpectation?
+            func recoverTask(_: HTTPDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (NetworkingTaskFailureRecoveryResult) -> Void) {
+                ex?.fulfill()
+                if counter == 1 {
+                    counter -= 1
+                    completion(.restartDataTask)
+                } else {
+                    completion(.cannotRecover)
+                }
+            }
+        }
+
+        let recovery = MockRecovery()
+        recovery.ex = ex2
+        dataTask.addFailureRecoveryStrategy(recovery)
+        dataTask.addCompletionHandler { result, _ in
+            switch result {
+            case .failure:
+                break
+            case .success:
+                XCTFail("Should have failed")
+            }
+            ex1.fulfill()
+        }.start()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
     func testCompletionNoData() {
         let ex1 = expectation(description: "Request")
         let request = HTTPURLRequest(url: url)

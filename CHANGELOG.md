@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Localization Module
 - Logging Module
-- Networking Module (Request, Response, DataTask, Modifiers)
+- Networking Module (Request, Response, DataTask, Modifiers, Recovery)
 - Data Task status tracker
 - UIColor from HEX
 - Keyboard Layout Guide

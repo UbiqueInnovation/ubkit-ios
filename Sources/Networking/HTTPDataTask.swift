@@ -28,8 +28,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
             }
         }
         set {
-            requestModifier.cancelCurrentModification()
-            dataTask?.cancel()
+            cancel()
             requestQueue.sync {
                 _request = newValue
             }
@@ -130,8 +129,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// Start the task with the given request
     public func start() {
         // Cancel the previous task
-        requestModifier.cancelCurrentModification()
-        dataTask?.cancel()
+        cancel()
 
         // Logging
         switch Networking.logger.logLevel {
@@ -153,7 +151,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
             }
             switch result {
             case let .failure(error):
-                self.notifyCompletion(error: error, response: nil)
+                self.attemptRecovery(data: nil, response: nil, error: error)
             case let .success(modifiedRequest):
                 self.startRequest(request: modifiedRequest)
             }
@@ -198,13 +196,16 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
 
     /// Cancel the current request
     public func cancel() {
-        Networking.logger.debug("Canceling task for \(description)")
         requestModifier.cancelCurrentModification()
-        dataTask?.cancel()
+        failureRecoveryStrategy.cancelCurrentRecovery()
+        if let dataTask = dataTask {
+            Networking.logger.debug("Canceling task for \(description)")
+            dataTask.cancel()
+        }
     }
 
     /// :nodoc:
-    private func dataTaskCompleted(data: Data?, response: URLResponse?, error: Error?) {
+    private func dataTaskCompleted(data: Data?, response rawResponse: URLResponse?, error: Error?) {
         // Check for Task error
         guard error == nil else {
             if (error! as NSError).code == NSURLErrorCancelled {
@@ -214,14 +215,14 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
                 progress.completedUnitCount = 0
                 progress.totalUnitCount = 0
             } else {
-                notifyCompletion(error: error!, response: nil)
+                attemptRecovery(data: data, response: rawResponse, error: error!)
             }
             return
         }
 
         // Check we have a HTTP Response
-        guard let response = response as? HTTPURLResponse else {
-            notifyCompletion(error: NetworkingError.notHTTPResponse, response: nil)
+        guard let response = rawResponse as? HTTPURLResponse else {
+            attemptRecovery(data: data, response: rawResponse, error: NetworkingError.notHTTPResponse)
             return
         }
 
@@ -232,7 +233,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
             try validate(response: response, data: data)
             notifyCompletion(data: data, response: response)
         } catch {
-            notifyCompletion(error: error, response: response)
+            attemptRecovery(data: data, response: response, error: error)
         }
     }
 
@@ -542,6 +543,38 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
             _responseValidators.append(contentsOf: validators)
         }
         return self
+    }
+
+    // MARK: - Failure Recovery
+
+    /// All the failure recovery strategies
+    private let failureRecoveryStrategy = NetworkTaskFailureRecoveryStrategyGroup()
+    /// Adds a failure recovery strategy.
+    ///
+    /// This failure recovery strategy will be called everytime if the request has failed. The recovery is not called when the failure occurs on the decoding level. But only before the decoding stage, after the validation.
+    ///
+    /// - Parameter strategy: The failure recovery strategy to add
+    @discardableResult
+    public func addFailureRecoveryStrategy(_ strategy: NetworkingTaskFailureRecoveryStrategy) -> Self {
+        failureRecoveryStrategy.append(strategy)
+        return self
+    }
+
+    /// :nodoc:
+    private func attemptRecovery(data: Data?, response: URLResponse?, error: Error) {
+        Networking.logger.debug("Attempting recovery of error \(error) for \(description)")
+        failureRecoveryStrategy.recoverTask(self, data: data, response: response, error: error) { [weak self] result in
+            switch result {
+            case .cannotRecover:
+                self?.notifyCompletion(error: error, response: response as? HTTPURLResponse)
+            case let .recoveryOptions(options: options):
+                self?.notifyCompletion(error: options, response: response as? HTTPURLResponse)
+            case let .recovered(data: data, response: response):
+                self?.notifyCompletion(data: data, response: response)
+            case .restartDataTask:
+                self?.start()
+            }
+        }
     }
 }
 
