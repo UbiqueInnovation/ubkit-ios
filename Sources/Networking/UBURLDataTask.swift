@@ -8,7 +8,7 @@
 import Foundation
 
 /// A data task that returns downloaded data directly to the app in memory.
-public final class UBURLDataTask: CustomStringConvertible, CustomDebugStringConvertible {
+public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, CustomDebugStringConvertible {
 
     // MARK: - Properties
 
@@ -240,7 +240,7 @@ public final class UBURLDataTask: CustomStringConvertible, CustomDebugStringConv
     // MARK: - Request Modifier
 
     /// All the request modifiers
-    private let requestModifier = UBURLRequestGroupModifier()
+    private let requestModifier = UBURLRequestModifierGroup()
     /// Adds a request modifier.
     ///
     /// This modifier will be called everytime before the request is sent, and it gets a chance to modify the request.
@@ -548,14 +548,14 @@ public final class UBURLDataTask: CustomStringConvertible, CustomDebugStringConv
     // MARK: - Failure Recovery
 
     /// All the failure recovery strategies
-    private let failureRecoveryStrategy = NetworkTaskFailureRecoveryStrategyGroup()
+    private let failureRecoveryStrategy = NetworkTaskRecoveryGroup()
     /// Adds a failure recovery strategy.
     ///
     /// This failure recovery strategy will be called everytime if the request has failed. The recovery is not called when the failure occurs on the decoding level. But only before the decoding stage, after the validation.
     ///
     /// - Parameter strategy: The failure recovery strategy to add
     @discardableResult
-    public func addFailureRecoveryStrategy(_ strategy: NetworkingTaskFailureRecoveryStrategy) -> Self {
+    public func addFailureRecoveryStrategy(_ strategy: NetworkingTaskRecoveryStrategy) -> Self {
         failureRecoveryStrategy.append(strategy)
         return self
     }

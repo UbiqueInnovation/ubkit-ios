@@ -1,5 +1,5 @@
 //
-//  UBURLRequestAcceptedLanguageModifier.swift
+//  UBURLRequestModifier+AcceptedLanguage.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 01.04.19.

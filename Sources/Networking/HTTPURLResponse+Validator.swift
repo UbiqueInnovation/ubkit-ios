@@ -1,5 +1,5 @@
 //
-//  HTTPURLResponseValidator.swift
+//  HTTPURLResponse+Validator.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 21.03.19.

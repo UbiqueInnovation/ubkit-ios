@@ -15,7 +15,7 @@ class HTTPRequestModifierTests: XCTestCase {
         let ex = expectation(description: "Request Modification")
         let ba1 = UBURLRequestBasicAuthorization(login: "login1", password: "password")
         let ba2 = UBURLRequestBasicAuthorization(login: "login", password: "password")
-        let group = UBURLRequestGroupModifier(modifiers: [ba1, ba2])
+        let group = UBURLRequestModifierGroup(modifiers: [ba1, ba2])
         group.modifyRequest(request) { result in
             switch result {
             case let .failure(error):
@@ -32,7 +32,7 @@ class HTTPRequestModifierTests: XCTestCase {
 
     func testGroupModifiersEmpty() {
         let ex = expectation(description: "Request Modification")
-        let group = UBURLRequestGroupModifier()
+        let group = UBURLRequestModifierGroup()
         group.modifyRequest(request) { result in
             switch result {
             case let .failure(error):
@@ -48,7 +48,7 @@ class HTTPRequestModifierTests: XCTestCase {
     func testGroupModifiersFailure() {
         let ex = expectation(description: "Request Modification")
         let m1 = UBURLRequestBasicAuthorization(login: "login1", password: "password")
-        let group = UBURLRequestGroupModifier(modifiers: [m1])
+        let group = UBURLRequestModifierGroup(modifiers: [m1])
         let m2 = FailureModifier()
         group.append(m2)
         group.modifyRequest(request) { result in
@@ -67,7 +67,7 @@ class HTTPRequestModifierTests: XCTestCase {
         let ex = expectation(description: "Request Modification")
         let m1 = SleeperModifier(duration: 0.3)
         let m2 = UBURLRequestBasicAuthorization(login: "login", password: "password")
-        let group = UBURLRequestGroupModifier(modifiers: [m1, m2])
+        let group = UBURLRequestModifierGroup(modifiers: [m1, m2])
         group.modifyRequest(request) { _ in
             XCTFail()
         }

@@ -1,5 +1,5 @@
 //
-//  UBURLRequestBody+Multipart.swift
+//  UBURLRequest+BodyMultipart.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 23.03.19.

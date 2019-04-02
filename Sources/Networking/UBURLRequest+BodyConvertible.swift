@@ -1,5 +1,5 @@
 //
-//  UBURLRequestBody+Convertible.swift
+//  UBURLRequest+BodyConvertible.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 24.03.19.

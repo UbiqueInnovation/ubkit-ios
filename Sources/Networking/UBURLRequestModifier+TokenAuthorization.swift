@@ -1,5 +1,5 @@
 //
-//  UBURLRequestTokenAuthorization.swift
+//  UBURLRequestModifier+TokenAuthorization.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 01.04.19.

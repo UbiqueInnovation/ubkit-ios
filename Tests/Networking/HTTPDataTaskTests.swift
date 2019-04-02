@@ -46,10 +46,10 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
 
-        class MockRecovery: NetworkingTaskFailureRecoveryStrategy {
+        class MockRecovery: NetworkingTaskRecoveryStrategy {
             private var counter = 1
             var ex: XCTestExpectation?
-            func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (NetworkingTaskFailureRecoveryResult) -> Void) {
+            func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (NetworkingTaskRecoveryResult) -> Void) {
                 ex?.fulfill()
                 if counter == 1 {
                     counter -= 1

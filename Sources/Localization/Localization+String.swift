@@ -39,4 +39,13 @@ extension String {
             return self
         }
     }
+
+    /// Localizes a string using the framework localization
+    internal var frameworkLocalized: String {
+        do {
+            return try localized(localization: frameworkLocalization)
+        } catch {
+            return self
+        }
+    }
 }

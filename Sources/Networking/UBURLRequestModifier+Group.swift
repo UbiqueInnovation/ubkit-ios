@@ -1,5 +1,5 @@
 //
-//  UBURLRequestGroupModifier.swift
+//  UBURLRequestModifier+Group.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 01.04.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// A group of request modifiers
-public class UBURLRequestGroupModifier: UBURLRequestModifier {
+public class UBURLRequestModifierGroup: UBURLRequestModifier {
     // - MARK: Properties
 
     /// :nodoc:
@@ -90,7 +90,7 @@ public class UBURLRequestGroupModifier: UBURLRequestModifier {
     }
 }
 
-extension UBURLRequestGroupModifier {
+extension UBURLRequestModifierGroup {
     /// This is used to convey cancellation information to the running task
     private class Modification {
         /// :nodoc
