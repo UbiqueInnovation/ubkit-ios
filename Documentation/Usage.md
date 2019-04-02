@@ -138,7 +138,7 @@ self.task.addResponseValidator(HTTPResponseStatusValidator(.ok))
 ```
 
 ### Failure Recovery
-Each data task offers a way to add logic to recover from failures. A `DataTaskFailureRecoveryStrategy` gets called after the data task fails and not in case of a success. You can conform to this protocol and create your own recovery strategies and chose to not recover, recover and pass data/response, fail but offer recovery option or finally recover and request a restart of the task.
+Each data task offers a way to add logic to recover from failures. A `NetworkingTaskRecoveryStrategy` gets called after the data task fails and not in case of a success. You can conform to this protocol and create your own recovery strategies and chose to not recover, recover and pass data/response, fail but offer recovery option or finally recover and request a restart of the task.
 ```swift
 let recovery = NoNetworkFailureRecovery()
 dataTask.addFailureRecoveryStrategy(recovery)
