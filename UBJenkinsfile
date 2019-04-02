@@ -18,6 +18,7 @@ pipeline {
 			steps {
 				sh "fastlane documentation"
 				sshagent(credentials: ['ub_docs']) {
+					sh "ssh -o StrictHostKeyChecking=no core@192.168.178.46 'rm -fr /data/html/doc.ubique.ch/ubfoundation/${env.BRANCH_NAME}'"
 					sh "scp -o StrictHostKeyChecking=no -r ./Documentation/html core@192.168.178.46:/data/html/doc.ubique.ch/ubfoundation/${env.BRANCH_NAME}"
 				}
 			}
