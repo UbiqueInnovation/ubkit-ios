@@ -13,21 +13,21 @@ public struct RetryNeworkTaskRecoveryOption: NetworkTaskRecoveryOption {
     public var localizedDisplayName: String {
         return "Networking_Recovery_Retry_DisplayName".frameworkLocalized
     }
-    
+
     /// :nodoc:
     private weak var networkTask: UBNetworkingTask?
-    
+
     /// :nodoc:
     init(networkTask: UBNetworkingTask) {
         self.networkTask = networkTask
     }
-    
+
     /// :nodoc:
     public func attemptRecovery(resultHandler: @escaping (Bool) -> Void) {
         networkTask?.start()
         resultHandler(true)
     }
-    
+
     /// :nodoc:
     public func cancelOngoingRecovery() {
         networkTask?.cancel()

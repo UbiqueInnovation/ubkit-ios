@@ -75,6 +75,60 @@ class HTTPDataTaskTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
 
+    func testFailureWithRecoveryOptions() {
+        let ex1 = expectation(description: "Request")
+        let ex2 = expectation(description: "Recovery")
+
+        let request = UBURLRequest(url: url)
+        let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
+
+        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+            return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
+        }
+        let dataTask = UBURLDataTask(request: request, session: mockSession)
+
+        enum Err: Error {
+            case x
+        }
+
+        class MockRecoveryOption: NetworkTaskRecoveryOption {
+            var localizedDisplayName: String = "Test"
+            func attemptRecovery(resultHandler handler: @escaping (Bool) -> Void) {
+                handler(true)
+            }
+
+            func cancelOngoingRecovery() {}
+        }
+
+        class MockRecovery: NetworkingTaskRecoveryStrategy {
+            func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (NetworkingTaskRecoveryResult) -> Void) {
+                let options = NetworkTaskRecoveryOptions(recoveringFrom: Err.x, recoveryOptions: [MockRecoveryOption()])
+                completion(.recoveryOptions(options: options))
+            }
+        }
+
+        let recovery = MockRecovery()
+        dataTask.addFailureRecoveryStrategy(recovery)
+        dataTask.addCompletionHandler { result, _ in
+            switch result {
+            case let .failure(error):
+                if let recovery = error as? RecoverableError {
+                    XCTAssertFalse(recovery.recoveryOptions.isEmpty)
+                    recovery.attemptRecovery(optionIndex: 0, resultHandler: { success in
+                        XCTAssertTrue(success)
+                        ex2.fulfill()
+                    })
+                } else {
+                    XCTFail()
+                }
+            case .success:
+                XCTFail("Should have failed")
+            }
+            ex1.fulfill()
+        }.start()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
     func testCompletionNoData() {
         let ex1 = expectation(description: "Request")
         let request = UBURLRequest(url: url)
