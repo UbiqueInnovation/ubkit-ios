@@ -1,5 +1,5 @@
 //
-//  HTTPRequestAcceptedLanguage.swift
+//  UBURLRequestModifier+AcceptedLanguage.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 01.04.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Adds the accepted languages to a request
-public class HTTPRequestAcceptedLanguage: HTTPRequestModifier {
+public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
     /// :nodoc:
     private let serial = DispatchQueue(label: "Accepted Language")
 
@@ -55,7 +55,7 @@ public class HTTPRequestAcceptedLanguage: HTTPRequestModifier {
     }
 
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: HTTPURLRequest, completion: @escaping (Result<HTTPURLRequest>) -> Void) {
+    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
         // Standard: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language
 
         let languages = localization.preferredLanguages(stripRegionInformation: !includeRegion)

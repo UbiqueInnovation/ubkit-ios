@@ -1,5 +1,5 @@
 //
-//  HTTPResponseValidator.swift
+//  HTTPURLResponse+Validator.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 21.03.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object capable of validating an HTTP response
-public protocol HTTPResponseValidator {
+public protocol HTTPURLResponseValidator {
     /// Validates a HTTP response
     ///
     /// - Parameter response: The response to validate
@@ -17,7 +17,7 @@ public protocol HTTPResponseValidator {
 }
 
 /// A response validator block
-public struct HTTPResponseValidatorBlock: HTTPResponseValidator {
+public struct HTTPResponseValidatorBlock: HTTPURLResponseValidator {
     /// Validation Block
     public typealias ValidationBlock = (HTTPURLResponse) throws -> Void
 
@@ -38,7 +38,7 @@ public struct HTTPResponseValidatorBlock: HTTPResponseValidator {
 }
 
 /// Validates the content type of the response
-public struct HTTPResponseContentTypeValidator: HTTPResponseValidator {
+public struct HTTPResponseContentTypeValidator: HTTPURLResponseValidator {
     /// The expected MIME Type
     let expectedMIMEType: MIMEType
 
@@ -58,7 +58,7 @@ public struct HTTPResponseContentTypeValidator: HTTPResponseValidator {
 }
 
 /// Validates the Status code of a response
-public struct HTTPResponseStatusValidator: HTTPResponseValidator {
+public struct HTTPResponseStatusValidator: HTTPURLResponseValidator {
     /// A validation type
     private enum ValidationType {
         /// Validate a range of status codes

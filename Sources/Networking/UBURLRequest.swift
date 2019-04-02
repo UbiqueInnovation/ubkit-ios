@@ -1,5 +1,5 @@
 //
-//  HTTPURLRequest.swift
+//  UBURLRequest.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 20.03.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// A URL load request that is independent of protocol or URL scheme.
-public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStringConvertible, CustomDebugStringConvertible {
+public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomStringConvertible, CustomDebugStringConvertible {
 
     // MARK: - Properties
 
@@ -90,7 +90,7 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
         }
     }
 
-    /// A URLRequest representation of the HTTPURLRequest
+    /// A URLRequest representation of the UBURLRequest
     public func getRequest() -> URLRequest {
         return _request
     }
@@ -109,7 +109,7 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
         httpMethod = method
     }
 
-    /// Initializes a HTTPURLRequest request from a URLRequest
+    /// Initializes a UBURLRequest request from a URLRequest
     ///
     /// - Parameter request: The request to replicate
     public init(request: URLRequest) {
@@ -135,7 +135,7 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
     ///
     /// - Parameters:
     ///   - body: The body
-    public mutating func setHTTPBody(_ body: HTTPRequestBody) {
+    public mutating func setHTTPBody(_ body: UBURLRequestBody) {
         _request.httpBody = body.data
         // According to Apple docs, the content-length is set automatically for us.
         // https://developer.apple.com/documentation/foundation/urlrequest/2011502-allhttpheaderfields
@@ -147,7 +147,7 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
     /// - Parameters:
     ///   - bodyProvider: The body provider
     /// - Throws: Rethrow the error throws by the request body provider
-    public mutating func setHTTPBody(_ bodyProvider: HTTPRequestBodyConvertible) throws {
+    public mutating func setHTTPBody(_ bodyProvider: URLRequestBodyConvertible) throws {
         setHTTPBody(try bodyProvider.httpRequestBody())
     }
 
@@ -158,7 +158,7 @@ public struct HTTPURLRequest: Equatable, Hashable, CustomReflectable, CustomStri
     ///   - encoder: The encoder
     /// - Throws: incase the ecoder could not encode
     public mutating func setHTTPJSONBody<T: Encodable>(_ object: T, encoder: JSONEncoder = JSONEncoder()) throws {
-        let body = HTTPRequestBody(data: try encoder.encode(object), mimeType: .json())
+        let body = UBURLRequestBody(data: try encoder.encode(object), mimeType: .json())
         setHTTPBody(body)
     }
 

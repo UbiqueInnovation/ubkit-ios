@@ -14,7 +14,7 @@ class HTTPURLRequestTests: XCTestCase {
     func testIntialization() {
         let cache = URLRequest.CachePolicy.reloadIgnoringCacheData
         let timeout: TimeInterval = 34
-        var request = HTTPURLRequest(url: url, cachePolicy: cache, timeoutInterval: timeout)
+        var request = UBURLRequest(url: url, cachePolicy: cache, timeoutInterval: timeout)
         XCTAssertEqual(url, request.url)
         XCTAssertEqual(cache, request.cachePolicy)
         XCTAssertEqual(timeout, request.timeoutInterval)
@@ -31,7 +31,7 @@ class HTTPURLRequestTests: XCTestCase {
     }
 
     func testBody() {
-        var request = HTTPURLRequest(url: url)
+        var request = UBURLRequest(url: url)
         XCTAssertNil(request.httpBody)
         XCTAssertNil(request.value(forHTTPHeaderField: "Content-Type"))
 
@@ -47,7 +47,7 @@ class HTTPURLRequestTests: XCTestCase {
     }
 
     func testSetHTTPHeader() {
-        var request = HTTPURLRequest(url: url)
+        var request = UBURLRequest(url: url)
         let key = "Hi"
         let value = "xcd"
         request.setHTTPHeaderField(HTTPHeaderField(key: key, value: value))
@@ -62,7 +62,7 @@ class HTTPURLRequestTests: XCTestCase {
 
     func testQueryParameters() {
         let testData = ["a": "1", "b": "2"]
-        var request = HTTPURLRequest(url: url)
+        var request = UBURLRequest(url: url)
         XCTAssertNoThrow(try request.setQueryParameters(testData))
         // The order of the parameters is arbitrary when it comes to dictionary
         XCTAssertTrue(request.url?.absoluteString == "http://ubique.ch?a=1&b=2" ? true : request.url?.absoluteString == "http://ubique.ch?b=2&a=1")
@@ -85,7 +85,7 @@ class HTTPURLRequestTests: XCTestCase {
         struct T: Encodable {
             let a: String
         }
-        var request = HTTPURLRequest(url: url)
+        var request = UBURLRequest(url: url)
         XCTAssertNoThrow(try request.setHTTPJSONBody(T(a: "Hello")))
         XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/json; charset=utf-8")
         XCTAssertNotNil(request.httpBody)

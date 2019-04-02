@@ -137,6 +137,13 @@ You can add validators to be executed after the response is received and check i
 self.task.addResponseValidator(HTTPResponseStatusValidator(.ok))
 ```
 
+### Failure Recovery
+Each data task offers a way to add logic to recover from failures. A `DataTaskFailureRecoveryStrategy` gets called after the data task fails and not in case of a success. You can conform to this protocol and create your own recovery strategies and chose to not recover, recover and pass data/response, fail but offer recovery option or finally recover and request a restart of the task.
+```swift
+let recovery = NoNetworkFailureRecovery()
+dataTask.addFailureRecoveryStrategy(recovery)
+```
+
 ### Network Activity
 It is important to show feedback to users when a network activity is running. There for the global methods available in `Networking` can help you add observers and adapt the UI accornigly. The callback will be fired each time the global network activity changes status (from idle to fetching or vis versa). Only the `HTTPDataTask` object created with the default session will be added automatically, otherwise you need to add them manually (more info in the `Networking` object)
 ```swift

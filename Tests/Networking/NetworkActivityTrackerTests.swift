@@ -13,7 +13,7 @@ class NetworkActivityTrackerTests: XCTestCase {
 
     func testGlobalStateOneRunningOneDone() {
         let ex = expectation(description: "Network activity")
-        let request = HTTPURLRequest(url: url)
+        let request = UBURLRequest(url: url)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
             return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.3)
@@ -21,8 +21,8 @@ class NetworkActivityTrackerTests: XCTestCase {
         let mockSession2 = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
             return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.7)
         }
-        let dataTask = HTTPDataTask(request: request, session: mockSession)
-        let dataTask2 = HTTPDataTask(request: request, session: mockSession2)
+        let dataTask = UBURLDataTask(request: request, session: mockSession)
+        let dataTask2 = UBURLDataTask(request: request, session: mockSession2)
 
         let date = Date()
         var sequence: [NetworkActivityTracker.NetworkActivityState] = [.idle, .fetching, .idle]

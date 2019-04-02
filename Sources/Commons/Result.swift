@@ -24,21 +24,3 @@ public enum Result<T>: CustomDebugStringConvertible {
         }
     }
 }
-
-/// A generic result element
-public enum VoidResult: CustomDebugStringConvertible {
-    /// Failure result with an error
-    case failure(Error)
-    /// Successful result
-    case success
-
-    /// :nodoc:
-    public var debugDescription: String {
-        switch self {
-        case let .failure(error):
-            return "Failure with error: \(error)"
-        case .success:
-            return "Success"
-        }
-    }
-}

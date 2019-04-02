@@ -1,5 +1,5 @@
 //
-//  HTTPRequestGroupModifier.swift
+//  UBURLRequestModifier+Group.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 01.04.19.
@@ -8,15 +8,15 @@
 import Foundation
 
 /// A group of request modifiers
-public class HTTPRequestGroupModifier: HTTPRequestModifier {
+public class UBURLRequestModifierGroup: UBURLRequestModifier {
     // - MARK: Properties
 
     /// :nodoc:
     private let serialModifiers = DispatchQueue(label: "Group Modifiers")
     /// :nodoc:
-    private var _modifiers: [HTTPRequestModifier]
+    private var _modifiers: [UBURLRequestModifier]
     /// The list of modifier in the group
-    public var modifiers: [HTTPRequestModifier] {
+    public var modifiers: [UBURLRequestModifier] {
         return serialModifiers.sync {
             _modifiers
         }
@@ -27,7 +27,7 @@ public class HTTPRequestGroupModifier: HTTPRequestModifier {
     /// Initializes the group with modifiers
     ///
     /// - Parameter modifiers: The list of modifiers to add in the group. Default to nothing
-    public init(modifiers: [HTTPRequestModifier] = []) {
+    public init(modifiers: [UBURLRequestModifier] = []) {
         _modifiers = modifiers
     }
 
@@ -39,7 +39,7 @@ public class HTTPRequestGroupModifier: HTTPRequestModifier {
     /// Add a modifier to the group
     ///
     /// - Parameter modifier: The modifier to add
-    public func append(_ modifier: HTTPRequestModifier) {
+    public func append(_ modifier: UBURLRequestModifier) {
         serialModifiers.sync {
             _modifiers.append(modifier)
         }
@@ -57,20 +57,20 @@ public class HTTPRequestGroupModifier: HTTPRequestModifier {
     }
 
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: HTTPURLRequest, completion: @escaping (Result<HTTPURLRequest>) -> Void) {
+    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
         cancelCurrentModification()
 
         let newModification = Modification()
-        var modifiers = ArraySlice<HTTPRequestModifier>()
+        var modifiers = ArraySlice<UBURLRequestModifier>()
         serialOperation.sync {
             currentModification = newModification
-            modifiers = ArraySlice<HTTPRequestModifier>(self.modifiers)
+            modifiers = ArraySlice(self.modifiers)
         }
         recursiveModifyRequest(originalRequest, modification: newModification, modifiers: modifiers, completion: completion)
     }
 
     /// :nodoc:
-    private func recursiveModifyRequest(_ originalRequest: HTTPURLRequest, modification: Modification, modifiers: ArraySlice<HTTPRequestModifier>, completion: @escaping (Result<HTTPURLRequest>) -> Void) {
+    private func recursiveModifyRequest(_ originalRequest: UBURLRequest, modification: Modification, modifiers: ArraySlice<UBURLRequestModifier>, completion: @escaping (Result<UBURLRequest>) -> Void) {
         guard modification.cancelled == false else {
             return
         }
@@ -90,7 +90,7 @@ public class HTTPRequestGroupModifier: HTTPRequestModifier {
     }
 }
 
-extension HTTPRequestGroupModifier {
+extension UBURLRequestModifierGroup {
     /// This is used to convey cancellation information to the running task
     private class Modification {
         /// :nodoc

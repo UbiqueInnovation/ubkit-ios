@@ -107,7 +107,7 @@ We separate 3 log levels: __Info__, __Error__, __Debug__.
 - Certificates pinning
 
 ### Retrying Requests
-- Create post-hooks and retryal blocks
+- No network retry
 
 ### Error handling
 - Offer base error handling

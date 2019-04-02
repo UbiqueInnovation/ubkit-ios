@@ -26,7 +26,7 @@ public class NetworkActivityTracker {
     // MARK: - Properties
 
     /// :nodoc:
-    private var trackedTasks: NSHashTable<HTTPDataTask>
+    private var trackedTasks: NSHashTable<UBURLDataTask>
     /// :nodoc:
     private let serialQueue: DispatchQueue
     /// :nodoc:
@@ -51,7 +51,7 @@ public class NetworkActivityTracker {
     public init() {
         serialQueue = DispatchQueue(label: "Network Activity Tracker")
         stateObservers = []
-        trackedTasks = NSHashTable<HTTPDataTask>(options: [.weakMemory])
+        trackedTasks = NSHashTable<UBURLDataTask>(options: [.weakMemory])
     }
 
     // MARK: - Task addition and removal
@@ -59,7 +59,7 @@ public class NetworkActivityTracker {
     /// Add a task to be monitored for network activity.
     ///
     /// - Parameter task: The task to be monitored.
-    public func add(_ task: HTTPDataTask) {
+    public func add(_ task: UBURLDataTask) {
         trackedTasks.add(task)
         updateState()
         task.addStateTransitionObserver { [weak self] _, _, _ in
@@ -70,7 +70,7 @@ public class NetworkActivityTracker {
     /// Removes a task from contributing to the network activity.
     ///
     /// - Parameter task: The task to be removed.
-    public func remove(_ task: HTTPDataTask) {
+    public func remove(_ task: UBURLDataTask) {
         trackedTasks.remove(task)
         updateState()
     }

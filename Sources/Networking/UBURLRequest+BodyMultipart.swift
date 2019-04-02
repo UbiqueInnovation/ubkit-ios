@@ -1,5 +1,5 @@
 //
-//  HTTPRequestBody+Multipart.swift
+//  UBURLRequest+BodyMultipart.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 23.03.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// A multipart body
-public struct HTTPRequestBodyMultipart: HTTPRequestBodyConvertible {
+public struct URLRequestBodyMultipart: URLRequestBodyConvertible {
     /// The encoding to use for strings
     public var encoding: String.Encoding
     /// The parameters to send
@@ -32,7 +32,7 @@ public struct HTTPRequestBodyMultipart: HTTPRequestBodyConvertible {
     }
 
     /// :nodoc:
-    public func httpRequestBody() throws -> HTTPRequestBody {
+    public func httpRequestBody() throws -> UBURLRequestBody {
         guard parameters.isEmpty == false || payloads.isEmpty == false else {
             throw NetworkingError.couldNotEncodeBody
         }
@@ -70,13 +70,13 @@ public struct HTTPRequestBodyMultipart: HTTPRequestBodyConvertible {
         }
         data.append(ending)
 
-        return HTTPRequestBody(data: data, mimeType: .multipartFormData(boundary: boundary))
+        return UBURLRequestBody(data: data, mimeType: .multipartFormData(boundary: boundary))
     }
 }
 
 // MARK: - Parts
 
-extension HTTPRequestBodyMultipart {
+extension URLRequestBodyMultipart {
     /// Multipart parameter
     public struct Parameter {
         /// Name
@@ -127,7 +127,7 @@ extension HTTPRequestBodyMultipart {
         ///   - fileName: The file name of payload
         ///   - body: A request body convertible object to serve as a payload
         /// - Throws: Errors in case the data could not be extracted from the body
-        public init(name: String, fileName: String, body: HTTPRequestBodyConvertible) throws {
+        public init(name: String, fileName: String, body: URLRequestBodyConvertible) throws {
             let b = try body.httpRequestBody()
             self.init(name: name, fileName: fileName, data: b.data, mimeType: b.mimeType)
         }
