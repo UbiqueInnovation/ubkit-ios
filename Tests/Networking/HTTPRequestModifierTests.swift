@@ -9,13 +9,13 @@ import UBFoundation
 import XCTest
 
 class HTTPRequestModifierTests: XCTestCase {
-    let request = HTTPURLRequest(url: URL(string: "http://ubique.ch")!)
+    let request = UBURLRequest(url: URL(string: "http://ubique.ch")!)
 
     func testGroupModifiers() {
         let ex = expectation(description: "Request Modification")
-        let ba1 = HTTPRequestBasicAuthorization(login: "login1", password: "password")
-        let ba2 = HTTPRequestBasicAuthorization(login: "login", password: "password")
-        let group = HTTPRequestGroupModifier(modifiers: [ba1, ba2])
+        let ba1 = UBURLRequestBasicAuthorization(login: "login1", password: "password")
+        let ba2 = UBURLRequestBasicAuthorization(login: "login", password: "password")
+        let group = UBURLRequestGroupModifier(modifiers: [ba1, ba2])
         group.modifyRequest(request) { result in
             switch result {
             case let .failure(error):
@@ -32,7 +32,7 @@ class HTTPRequestModifierTests: XCTestCase {
 
     func testGroupModifiersEmpty() {
         let ex = expectation(description: "Request Modification")
-        let group = HTTPRequestGroupModifier()
+        let group = UBURLRequestGroupModifier()
         group.modifyRequest(request) { result in
             switch result {
             case let .failure(error):
@@ -47,8 +47,8 @@ class HTTPRequestModifierTests: XCTestCase {
 
     func testGroupModifiersFailure() {
         let ex = expectation(description: "Request Modification")
-        let m1 = HTTPRequestBasicAuthorization(login: "login1", password: "password")
-        let group = HTTPRequestGroupModifier(modifiers: [m1])
+        let m1 = UBURLRequestBasicAuthorization(login: "login1", password: "password")
+        let group = UBURLRequestGroupModifier(modifiers: [m1])
         let m2 = FailureModifier()
         group.append(m2)
         group.modifyRequest(request) { result in
@@ -66,8 +66,8 @@ class HTTPRequestModifierTests: XCTestCase {
     func testGroupModifiersCancel() {
         let ex = expectation(description: "Request Modification")
         let m1 = SleeperModifier(duration: 0.3)
-        let m2 = HTTPRequestBasicAuthorization(login: "login", password: "password")
-        let group = HTTPRequestGroupModifier(modifiers: [m1, m2])
+        let m2 = UBURLRequestBasicAuthorization(login: "login", password: "password")
+        let group = UBURLRequestGroupModifier(modifiers: [m1, m2])
         group.modifyRequest(request) { _ in
             XCTFail()
         }
@@ -80,7 +80,7 @@ class HTTPRequestModifierTests: XCTestCase {
 
     func testBasicAuthorization() {
         let ex = expectation(description: "Request Modification")
-        let ba = HTTPRequestBasicAuthorization(login: "login", password: "password")
+        let ba = UBURLRequestBasicAuthorization(login: "login", password: "password")
         ba.modifyRequest(request) { result in
             switch result {
             case let .failure(error):
@@ -136,7 +136,7 @@ class HTTPRequestModifierTests: XCTestCase {
             fatalError("No test bundle found")
         }
         let frenchCHLocalization = Localization(locale: Locale(identifier: "fr_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        let ba = HTTPRequestAcceptedLanguage(includeRegion: false, localization: frenchCHLocalization)
+        let ba = UBURLRequestAcceptedLanguageModifier(includeRegion: false, localization: frenchCHLocalization)
         ba.modifyRequest(request) { result in
             switch result {
             case let .failure(error):
@@ -156,22 +156,22 @@ private enum Err: Error {
     case x
 }
 
-private struct SleeperModifier: HTTPRequestModifier {
+private struct SleeperModifier: UBURLRequestModifier {
     let duration: TimeInterval
-    func modifyRequest(_ request: HTTPURLRequest, completion: @escaping (Result<HTTPURLRequest>) -> Void) {
+    func modifyRequest(_ request: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             completion(.success(request))
         }
     }
 }
 
-private struct FailureModifier: HTTPRequestModifier {
-    func modifyRequest(_: HTTPURLRequest, completion: @escaping (Result<HTTPURLRequest>) -> Void) {
+private struct FailureModifier: UBURLRequestModifier {
+    func modifyRequest(_: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
         completion(.failure(Err.x))
     }
 }
 
-private class MockTokenAuthorization: HTTPRequestTokenAuthorization {
+private class MockTokenAuthorization: UBURLRequestTokenAuthorization {
     let token: String = "AbCdEf123456"
     var error: Error?
     func getToken(completion: (Result<String>) -> Void) {

@@ -57,7 +57,7 @@ public class NetworkTaskFailureRecoveryStrategyGroup: NetworkingTaskFailureRecov
     }
 
     /// :nodoc:
-    public func recoverTask(_ dataTask: HTTPDataTask, data: Data?, response: URLResponse?, error: Error, completion: @escaping (NetworkingTaskFailureRecoveryResult) -> Void) {
+    public func recoverTask(_ dataTask: UBURLDataTask, data: Data?, response: URLResponse?, error: Error, completion: @escaping (NetworkingTaskFailureRecoveryResult) -> Void) {
         cancelCurrentRecovery()
 
         let newRecovery = Recovery()
@@ -71,7 +71,7 @@ public class NetworkTaskFailureRecoveryStrategyGroup: NetworkingTaskFailureRecov
     }
 
     /// :nodoc:
-    private func recursiveRecoverTask(_ dataTask: HTTPDataTask, data: Data?, response: URLResponse?, error: Error, recovery: Recovery, strategies: ArraySlice<NetworkingTaskFailureRecoveryStrategy>, completion: @escaping (NetworkingTaskFailureRecoveryResult) -> Void) {
+    private func recursiveRecoverTask(_ dataTask: UBURLDataTask, data: Data?, response: URLResponse?, error: Error, recovery: Recovery, strategies: ArraySlice<NetworkingTaskFailureRecoveryStrategy>, completion: @escaping (NetworkingTaskFailureRecoveryResult) -> Void) {
         guard recovery.cancelled == false else {
             return
         }

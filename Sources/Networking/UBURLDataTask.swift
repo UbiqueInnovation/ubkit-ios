@@ -1,5 +1,5 @@
 //
-//  HTTPDataTask.swift
+//  UBURLDataTask.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 21.03.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// A data task that returns downloaded data directly to the app in memory.
-public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConvertible {
+public final class UBURLDataTask: CustomStringConvertible, CustomDebugStringConvertible {
 
     // MARK: - Properties
 
@@ -18,10 +18,10 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// A queue for protecting the request
     private let requestQueue: DispatchQueue = DispatchQueue(label: "Request Queue")
     /// :nodoc:
-    private var _request: HTTPURLRequest
+    private var _request: UBURLRequest
 
     /// The request to execute. Setting this property will cancel any ongoing requests
-    public var request: HTTPURLRequest {
+    public var request: UBURLRequest {
         get {
             return requestQueue.sync {
                 _request
@@ -88,7 +88,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     ///   - priority: The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     ///   - session: The session for the task creation
     ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue
-    public init(request: HTTPURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: URLSessionProtocol = URLSession.shared, callbackQueue: OperationQueue = .main) {
+    public init(request: UBURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: URLSessionProtocol = URLSession.shared, callbackQueue: OperationQueue = .main) {
         _request = request
         self.session = session
         self.taskDescription = taskDescription
@@ -116,7 +116,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     ///   - session: The session for the task creation
     ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue
     public convenience init(url: URL, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: URLSessionProtocol = URLSession.shared, callbackQueue: OperationQueue = .main) {
-        self.init(request: HTTPURLRequest(url: url), taskDescription: taskDescription, priority: priority, session: session, callbackQueue: callbackQueue)
+        self.init(request: UBURLRequest(url: url), taskDescription: taskDescription, priority: priority, session: session, callbackQueue: callbackQueue)
     }
 
     /// :nodoc:
@@ -158,7 +158,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
         }
     }
 
-    private func startRequest(request: HTTPURLRequest) {
+    private func startRequest(request: UBURLRequest) {
         // Create a new task from the preferences
         let dataTask = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             self?.dataTaskCompleted(data: data, response: response, error: error)
@@ -240,14 +240,14 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     // MARK: - Request Modifier
 
     /// All the request modifiers
-    private let requestModifier = HTTPRequestGroupModifier()
+    private let requestModifier = UBURLRequestGroupModifier()
     /// Adds a request modifier.
     ///
     /// This modifier will be called everytime before the request is sent, and it gets a chance to modify the request.
     ///
     /// - Parameter modifier: The request modifier to add
     @discardableResult
-    public func addRequestModifier(_ modifier: HTTPRequestModifier) -> Self {
+    public func addRequestModifier(_ modifier: UBURLRequestModifier) -> Self {
         requestModifier.append(modifier)
         return self
     }
@@ -255,7 +255,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     // MARK: - State
 
     /// Called when the state of the task changed. First parameter is the old state, the second parameter is the new state
-    public typealias StateTransitionObservationBlock = (State, State, HTTPDataTask) -> Void
+    public typealias StateTransitionObservationBlock = (State, State, UBURLDataTask) -> Void
     /// Holds the state observation
     private var dataTaskStateObservation: NSKeyValueObservation?
     /// :nodoc:
@@ -368,7 +368,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     // MARK: Progress
 
     /// A progress observation block. The second paramter is the percentage of completion, between 0.00 and 1.00
-    public typealias ProgressObservationBlock = (HTTPDataTask, Double) -> Void
+    public typealias ProgressObservationBlock = (UBURLDataTask, Double) -> Void
     /// The progress observation holder
     private var dataTaskProgressObservation: NSKeyValueObservation?
     /// :nodoc:
@@ -407,7 +407,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     // MARK: - Completion
 
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingBlock<T> = (Result<T>, HTTPURLResponse?, HTTPDataTask) -> Void
+    public typealias CompletionHandlingBlock<T> = (Result<T>, HTTPURLResponse?, UBURLDataTask) -> Void
     /// A completion handling block called at the end of the task.
     public typealias CompletionHandlingNullableDataBlock = (Result<Data?>, HTTPURLResponse?) -> Void
     /// :nodoc:
@@ -475,7 +475,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     ///   - completionHandler: A completion handler
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addCompletionHandler<T>(decoder: HTTPDataDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) -> Self {
+    public func addCompletionHandler<T>(decoder: UBURLDataTaskDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) -> Self {
         let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
         completionHandlersDispatchQueue.sync {
             _completionHandlers.append(wrapper)
@@ -488,9 +488,9 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// :nodoc:
     private let responseValidatorsDispatchQueue = DispatchQueue(label: "Response validators")
     /// :nodoc:
-    private var _responseValidators: [HTTPResponseValidator] = []
+    private var _responseValidators: [HTTPURLResponseValidator] = []
     /// The validators
-    private var responseValidators: [HTTPResponseValidator] {
+    private var responseValidators: [HTTPURLResponseValidator] {
         return responseValidatorsDispatchQueue.sync {
             _responseValidators
         }
@@ -510,7 +510,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter validator: The validator
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addResponseValidator(_ validator: HTTPResponseValidator) -> Self {
+    public func addResponseValidator(_ validator: HTTPURLResponseValidator) -> Self {
         responseValidatorsDispatchQueue.sync {
             _responseValidators.append(validator)
         }
@@ -538,7 +538,7 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     /// - Parameter validators: An array of validators
     /// - Returns: The data task for call chaining
     @discardableResult
-    public func addResponseValidator(_ validators: [HTTPResponseValidator]) -> Self {
+    public func addResponseValidator(_ validators: [HTTPURLResponseValidator]) -> Self {
         responseValidatorsDispatchQueue.sync {
             _responseValidators.append(contentsOf: validators)
         }
@@ -578,14 +578,14 @@ public final class HTTPDataTask: CustomStringConvertible, CustomDebugStringConve
     }
 }
 
-extension HTTPDataTask {
+extension UBURLDataTask {
     /// This is a wrapper that holds reference for a completion handler
     private struct CompletionHandlerWrapper {
-        private let executionBlock: (Data?, HTTPURLResponse, OperationQueue, HTTPDataTask) -> Void
-        private let failureBlock: (Error, HTTPURLResponse?, HTTPDataTask) -> Void
+        private let executionBlock: (Data?, HTTPURLResponse, OperationQueue, UBURLDataTask) -> Void
+        private let failureBlock: (Error, HTTPURLResponse?, UBURLDataTask) -> Void
 
         /// :nodoc:
-        init<T>(decoder: HTTPDataDecoder<T>, completion: @escaping CompletionHandlingBlock<T>) {
+        init<T>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping CompletionHandlingBlock<T>) {
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, callbackQueue, caller in
                 guard let data = data else {
@@ -625,12 +625,12 @@ extension HTTPDataTask {
         }
 
         /// :nodoc:
-        func parse(data: Data?, response: HTTPURLResponse, callbackQueue: OperationQueue, caller: HTTPDataTask) {
+        func parse(data: Data?, response: HTTPURLResponse, callbackQueue: OperationQueue, caller: UBURLDataTask) {
             executionBlock(data, response, callbackQueue, caller)
         }
 
         /// :nodoc:
-        func fail(error: Error, response: HTTPURLResponse?, caller: HTTPDataTask) {
+        func fail(error: Error, response: HTTPURLResponse?, caller: UBURLDataTask) {
             failureBlock(error, response, caller)
         }
     }

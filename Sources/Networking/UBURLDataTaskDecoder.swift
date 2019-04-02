@@ -1,5 +1,5 @@
 //
-//  HTTPDataDecoder.swift
+//  UBURLDataTaskDecoder.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 21.03.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object that can decode data into the desired type
-open class HTTPDataDecoder<T> {
+open class UBURLDataTaskDecoder<T> {
     /// The logic for data decoding
     public typealias LogicBlock = (Data, HTTPURLResponse) throws -> T
 
@@ -35,7 +35,7 @@ open class HTTPDataDecoder<T> {
 }
 
 /// A string decoder
-public class HTTPStringDecoder: HTTPDataDecoder<String> {
+public class HTTPStringDecoder: UBURLDataTaskDecoder<String> {
     /// Initializes the decoder
     ///
     /// - Parameter encoding: The string encoding
@@ -50,7 +50,7 @@ public class HTTPStringDecoder: HTTPDataDecoder<String> {
 }
 
 /// A JSON Decoder
-public class HTTPJSONDecoder<T: Decodable>: HTTPDataDecoder<T> {
+public class HTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
     /// Initializes the decoder
     ///
     /// - Parameters:

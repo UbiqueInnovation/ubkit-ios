@@ -33,7 +33,7 @@ public protocol URLSessionProtocol {
     ///   - request: A URL request object that provides the URL, cache policy, request type, body data or body stream, and so on.
     ///   - completionHandler: The completion handler to call when the load request is complete. This handler is executed on the delegate queue.
     /// - Returns: The new session data task.
-    func dataTask(with request: HTTPURLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask
+    func dataTask(with request: UBURLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask
 
     // MARK: - Adding Download Tasks to a Session
 
@@ -43,7 +43,7 @@ public protocol URLSessionProtocol {
     ///   - request: A URL request object that provides the URL, cache policy, request type, body data or body stream, and so on.
     ///   - completionHandler: The completion handler to call when the load request is complete. This handler is executed on the delegate queue.
     /// - Returns: The new session download task.
-    func downloadTask(with request: HTTPURLRequest, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask
+    func downloadTask(with request: UBURLRequest, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask
 
     /// Creates a download task to resume a previously cancelled or failed download and calls a handler upon completion.
     ///
@@ -62,7 +62,7 @@ public protocol URLSessionProtocol {
     ///   - bodyData: The body data for the request.
     ///   - completionHandler: The completion handler to call when the load request is complete. This handler is executed on the delegate queue.
     /// - Returns: The new session upload task.
-    func uploadTask(with request: HTTPURLRequest, from bodyData: Data?, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask
+    func uploadTask(with request: UBURLRequest, from bodyData: Data?, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask
 
     /// Creates a task that performs an HTTP request for uploading the specified file, then calls a handler upon completion.
     ///
@@ -71,7 +71,7 @@ public protocol URLSessionProtocol {
     ///   - fileURL: The URL of the file to upload.
     ///   - completionHandler: The completion handler to call when the load request is complete. This handler is executed on the delegate queue.
     /// - Returns: The new session upload task.
-    func uploadTask(with request: HTTPURLRequest, fromFile fileURL: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask
+    func uploadTask(with request: UBURLRequest, fromFile fileURL: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask
 
     // MARK: - Managing the Session
 
@@ -95,22 +95,22 @@ public protocol URLSessionProtocol {
 // URLSession conforms to URLSessionProtocol
 extension URLSession: URLSessionProtocol {
     /// :nodoc:
-    public func dataTask(with request: HTTPURLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+    public func dataTask(with request: UBURLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
         return dataTask(with: request.getRequest(), completionHandler: completionHandler)
     }
 
     /// :nodoc:
-    public func downloadTask(with request: HTTPURLRequest, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
+    public func downloadTask(with request: UBURLRequest, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
         return downloadTask(with: request.getRequest(), completionHandler: completionHandler)
     }
 
     /// :nodoc:
-    public func uploadTask(with request: HTTPURLRequest, from bodyData: Data?, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask {
+    public func uploadTask(with request: UBURLRequest, from bodyData: Data?, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask {
         return uploadTask(with: request.getRequest(), from: bodyData, completionHandler: completionHandler)
     }
 
     /// :nodoc:
-    public func uploadTask(with request: HTTPURLRequest, fromFile fileURL: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask {
+    public func uploadTask(with request: UBURLRequest, fromFile fileURL: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask {
         return uploadTask(with: request.getRequest(), fromFile: fileURL, completionHandler: completionHandler)
     }
 }

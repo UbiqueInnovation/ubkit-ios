@@ -1,5 +1,5 @@
 //
-//  HTTPRequestBasicAuthorization.swift
+//  UBURLRequestBasicAuthorization.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 01.04.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// A basic authorization of login and password
-public class HTTPRequestBasicAuthorization: HTTPRequestModifier {
+public class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     /// :nodoc:
     private let serial = DispatchQueue(label: "Basic Authorization")
 
@@ -53,7 +53,7 @@ public class HTTPRequestBasicAuthorization: HTTPRequestModifier {
     }
 
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: HTTPURLRequest, completion: @escaping (Result<HTTPURLRequest>) -> Void) {
+    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
         // https://tools.ietf.org/html/rfc7617
         var loginString: String = ""
         serial.sync {

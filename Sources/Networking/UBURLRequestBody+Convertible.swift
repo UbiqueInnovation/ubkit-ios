@@ -1,5 +1,5 @@
 //
-//  HTTPRequestBody+Convertible.swift
+//  UBURLRequestBody+Convertible.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 24.03.19.
@@ -8,34 +8,34 @@
 import Foundation
 
 /// Conforming to the protocol allows the conformant to be used as a Body in an HTTP request
-public protocol HTTPRequestBodyConvertible {
+public protocol URLRequestBodyConvertible {
     /// get a body for the HTTP request
     ///
     /// - Returns: A body for the HTTP Request
     /// - Throws: An error in case the body cannot be formed
-    func httpRequestBody() throws -> HTTPRequestBody
+    func httpRequestBody() throws -> UBURLRequestBody
 }
 
-// MARK: - HTTPRequestBodyConvertible
+// MARK: - URLRequestBodyConvertible
 
-extension Data: HTTPRequestBodyConvertible {
+extension Data: URLRequestBodyConvertible {
     /// :nodoc:
-    public func httpRequestBody() throws -> HTTPRequestBody {
-        return HTTPRequestBody(data: self, mimeType: .binary)
+    public func httpRequestBody() throws -> UBURLRequestBody {
+        return UBURLRequestBody(data: self, mimeType: .binary)
     }
 }
 
-extension String: HTTPRequestBodyConvertible {
+extension String: URLRequestBodyConvertible {
     /// :nodoc:
-    public func httpRequestBody() throws -> HTTPRequestBody {
+    public func httpRequestBody() throws -> UBURLRequestBody {
         // Extracting UTF-8 data from a string in Swift never fails as every string is represented in UTF 8.
         let data = self.data(using: .utf8)!
-        return HTTPRequestBody(data: data, mimeType: .text(encoding: .utf8))
+        return UBURLRequestBody(data: data, mimeType: .text(encoding: .utf8))
     }
 }
 
 /// A URL Encoder. The keys are sorted aphabetically and it is case sensitive
-public struct HTTPRequestBodyURLEncoder: HTTPRequestBodyConvertible {
+public struct HTTPRequestBodyURLEncoder: URLRequestBodyConvertible {
 
     // MARK: - Properties
 
@@ -59,7 +59,7 @@ public struct HTTPRequestBodyURLEncoder: HTTPRequestBodyConvertible {
     }
 
     /// :nodoc:
-    public func httpRequestBody() throws -> HTTPRequestBody {
+    public func httpRequestBody() throws -> UBURLRequestBody {
         var urlComponents = URLComponents()
         urlComponents.queryItems = payload.sorted(by: { (left, right) -> Bool in
             left.key < right.key
@@ -71,6 +71,6 @@ public struct HTTPRequestBodyURLEncoder: HTTPRequestBodyConvertible {
         if sendEncoding {
             mime.parameter = MIMEType.Parameter(charsetForEncoding: encoding)
         }
-        return HTTPRequestBody(data: data, mimeType: mime)
+        return UBURLRequestBody(data: data, mimeType: mime)
     }
 }

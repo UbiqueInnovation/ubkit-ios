@@ -29,5 +29,5 @@ public protocol NetworkingTaskFailureRecoveryStrategy {
     ///   - response: The response returned
     ///   - error: The error returned
     ///   - completion: To be called when the recovery process is finished
-    func recoverTask(_ dataTask: HTTPDataTask, data: Data?, response: URLResponse?, error: Error, completion: @escaping (NetworkingTaskFailureRecoveryResult) -> Void)
+    func recoverTask(_ dataTask: UBURLDataTask, data: Data?, response: URLResponse?, error: Error, completion: @escaping (NetworkingTaskFailureRecoveryResult) -> Void)
 }

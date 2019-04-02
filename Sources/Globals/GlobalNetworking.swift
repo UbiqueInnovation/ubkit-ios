@@ -28,14 +28,14 @@ extension Networking {
     /// Adds a task for the global network activity.
     ///
     /// - Parameter task: The task to add.
-    public static func addToGlobalNetworkActivity(_ task: HTTPDataTask) {
+    public static func addToGlobalNetworkActivity(_ task: UBURLDataTask) {
         globalNetworkActivityTracker.add(task)
     }
 
     /// Removes a task from global network activity
     ///
     /// - Parameter task: The task to remove
-    public static func removeFromGlobalNetworkActivity(_ task: HTTPDataTask) {
+    public static func removeFromGlobalNetworkActivity(_ task: UBURLDataTask) {
         globalNetworkActivityTracker.remove(task)
     }
 }
