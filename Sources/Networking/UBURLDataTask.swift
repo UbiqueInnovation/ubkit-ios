@@ -8,7 +8,7 @@
 import Foundation
 
 /// A data task that returns downloaded data directly to the app in memory.
-public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, CustomDebugStringConvertible {
+public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, CustomDebugStringConvertible {
 
     // MARK: - Properties
 
