@@ -7,13 +7,17 @@
 
 import Foundation
 
+/// Holds information on the networking task
 public struct NetworkingTaskInfo: CustomDebugStringConvertible {
-    let metrics: URLSessionTaskMetrics
+    /// The metric collected for the task
+    public let metrics: URLSessionTaskMetrics
 
+    /// Instansiate a network info
     init(metrics: URLSessionTaskMetrics) {
         self.metrics = metrics
     }
 
+    /// :nodoc:
     public var debugDescription: String {
         return String(describing: metrics)
     }
