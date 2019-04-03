@@ -144,6 +144,16 @@ let recovery = NoNetworkFailureRecovery()
 dataTask.addFailureRecoveryStrategy(recovery)
 ```
 
+### Certificate Pinning
+For better security it is recommended to pin the certificates of the backend. You can do so by including the certificate (.CER or .DER) files in the app bundle and make sure to copy them. Then you can use the `PinnedCertificatesTrustEvaluator` object to introduce the pinning. Each `UBURLSession` can be configured by a `UBURLSessionConfiguration` that accept a trust evaluator per host. For example:
+```swift
+let url = URL(string: "https://www.ubique.ch")!
+let evaluator = PinnedCertificatesTrustEvaluator(certificates: testBundle.certificates)
+let configuration = UBURLSessionConfiguration(hostsServerTrusts: ["www.ubique.ch": evaluator])
+let session = UBURLSession(configuration: configuration)
+let dataTask = UBURLDataTask(url: url, session: session)
+```
+
 ### Network Activity
 It is important to show feedback to users when a network activity is running. There for the global methods available in `Networking` can help you add observers and adapt the UI accornigly. The callback will be fired each time the global network activity changes status (from idle to fetching or vis versa). Only the `HTTPDataTask` object created with the default session will be added automatically, otherwise you need to add them manually (more info in the `Networking` object)
 ```swift

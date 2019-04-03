@@ -1,5 +1,5 @@
 //
-//  UBNetworkingTask.swift
+//  UBURLSessionTask.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 02.04.19.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// A task for networking
-public protocol UBNetworkingTask: AnyObject {
+public protocol UBURLSessionTask: AnyObject {
     /// The request to execute. Setting this property will cancel any ongoing requests
     var request: UBURLRequest { get }
     /// An app-provided description of the current task.

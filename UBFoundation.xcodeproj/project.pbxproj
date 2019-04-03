@@ -197,10 +197,10 @@
 		8EBD4857224119AD00CD2639 /* Logger+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD48522241188B00CD2639 /* Logger+Error.swift */; };
 		8EBD4858224119AE00CD2639 /* Logger+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD48522241188B00CD2639 /* Logger+Error.swift */; };
 		8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBD48522241188B00CD2639 /* Logger+Error.swift */; };
-		8EC4845F2241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4845E2241C1BC00AC8E44 /* URLSessionProtocol.swift */; };
-		8EC484602241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4845E2241C1BC00AC8E44 /* URLSessionProtocol.swift */; };
-		8EC484612241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4845E2241C1BC00AC8E44 /* URLSessionProtocol.swift */; };
-		8EC484622241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4845E2241C1BC00AC8E44 /* URLSessionProtocol.swift */; };
+		8EC4845F2241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4845E2241C1BC00AC8E44 /* UBURLSession+Protocol.swift */; };
+		8EC484602241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4845E2241C1BC00AC8E44 /* UBURLSession+Protocol.swift */; };
+		8EC484612241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4845E2241C1BC00AC8E44 /* UBURLSession+Protocol.swift */; };
+		8EC484622241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4845E2241C1BC00AC8E44 /* UBURLSession+Protocol.swift */; };
 		8EC484642241C65A00AC8E44 /* HTTPCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC484632241C65A00AC8E44 /* HTTPCode.swift */; };
 		8EC484652241C65A00AC8E44 /* HTTPCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC484632241C65A00AC8E44 /* HTTPCode.swift */; };
 		8EC484662241C65A00AC8E44 /* HTTPCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC484632241C65A00AC8E44 /* HTTPCode.swift */; };
@@ -267,10 +267,10 @@
 		8EE058E722535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058E522535A7E00B2885B /* NetworkTaskRecovery+Options.swift */; };
 		8EE058E822535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058E522535A7E00B2885B /* NetworkTaskRecovery+Options.swift */; };
 		8EE058E922535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058E522535A7E00B2885B /* NetworkTaskRecovery+Options.swift */; };
-		8EE058EB22535FF700B2885B /* UBNetworkingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */; };
-		8EE058EC22535FF700B2885B /* UBNetworkingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */; };
-		8EE058ED22535FF700B2885B /* UBNetworkingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */; };
-		8EE058EE22535FF700B2885B /* UBNetworkingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */; };
+		8EE058EB22535FF700B2885B /* UBURLSessionTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBURLSessionTask.swift */; };
+		8EE058EC22535FF700B2885B /* UBURLSessionTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBURLSessionTask.swift */; };
+		8EE058ED22535FF700B2885B /* UBURLSessionTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBURLSessionTask.swift */; };
+		8EE058EE22535FF700B2885B /* UBURLSessionTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058EA22535FF700B2885B /* UBURLSessionTask.swift */; };
 		8EE058F5225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
 		8EE058F6225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
 		8EE058F7225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
@@ -287,6 +287,36 @@
 		8EF90D6222429E740055A362 /* HTTPURLRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D6122429E740055A362 /* HTTPURLRequestTests.swift */; };
 		8EF90D6322429E740055A362 /* HTTPURLRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D6122429E740055A362 /* HTTPURLRequestTests.swift */; };
 		8EF90D6422429E740055A362 /* HTTPURLRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D6122429E740055A362 /* HTTPURLRequestTests.swift */; };
+		8EFFDCC022540A7F002D2DE2 /* Networking+URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCBF22540A7F002D2DE2 /* Networking+URLSession.swift */; };
+		8EFFDCC122540A7F002D2DE2 /* Networking+URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCBF22540A7F002D2DE2 /* Networking+URLSession.swift */; };
+		8EFFDCC222540A7F002D2DE2 /* Networking+URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCBF22540A7F002D2DE2 /* Networking+URLSession.swift */; };
+		8EFFDCC322540A7F002D2DE2 /* Networking+URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCBF22540A7F002D2DE2 /* Networking+URLSession.swift */; };
+		8EFFDCC5225413EB002D2DE2 /* UBSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */; };
+		8EFFDCC6225413EB002D2DE2 /* UBSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */; };
+		8EFFDCC7225413EB002D2DE2 /* UBSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */; };
+		8EFFDCC92254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
+		8EFFDCCA2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
+		8EFFDCCB2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
+		8EFFDCCC2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
+		8EFFDCD322545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCD222545F2E002D2DE2 /* UBURLSession+Info.swift */; };
+		8EFFDCD422545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCD222545F2E002D2DE2 /* UBURLSession+Info.swift */; };
+		8EFFDCD522545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCD222545F2E002D2DE2 /* UBURLSession+Info.swift */; };
+		8EFFDCD622545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCD222545F2E002D2DE2 /* UBURLSession+Info.swift */; };
+		8EFFDCDD2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCDC2254AEB9002D2DE2 /* UBURLSession+Delegate.swift */; };
+		8EFFDCDE2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCDC2254AEB9002D2DE2 /* UBURLSession+Delegate.swift */; };
+		8EFFDCDF2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCDC2254AEB9002D2DE2 /* UBURLSession+Delegate.swift */; };
+		8EFFDCE02254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCDC2254AEB9002D2DE2 /* UBURLSession+Delegate.swift */; };
+		8EFFDCE22254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE12254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift */; };
+		8EFFDCE32254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE12254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift */; };
+		8EFFDCE42254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE12254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift */; };
+		8EFFDCE52254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE12254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift */; };
+		8EFFDCE72254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */; };
+		8EFFDCE82254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */; };
+		8EFFDCE92254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */; };
+		8EFFDCEA2254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */; };
+		8EFFDCF02254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
+		8EFFDCF12254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
+		8EFFDCF22254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -382,7 +412,7 @@
 		8EBD484A2240FFE200CD2639 /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		8EBD484E22410F6300CD2639 /* LoggerGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerGroupTests.swift; sourceTree = "<group>"; };
 		8EBD48522241188B00CD2639 /* Logger+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logger+Error.swift"; sourceTree = "<group>"; };
-		8EC4845E2241C1BC00AC8E44 /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
+		8EC4845E2241C1BC00AC8E44 /* UBURLSession+Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+Protocol.swift"; sourceTree = "<group>"; };
 		8EC484632241C65A00AC8E44 /* HTTPCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPCode.swift; sourceTree = "<group>"; };
 		8EC4846922427B9700AC8E44 /* UBURLRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLRequest.swift; sourceTree = "<group>"; };
 		8EC4846E22427BE500AC8E44 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
@@ -400,12 +430,20 @@
 		8EE058DB2252DAC400B2885B /* NetworkTaskRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTaskRecovery.swift; sourceTree = "<group>"; };
 		8EE058E02252E65D00B2885B /* NetworkTaskRecovery+Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+Group.swift"; sourceTree = "<group>"; };
 		8EE058E522535A7E00B2885B /* NetworkTaskRecovery+Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+Options.swift"; sourceTree = "<group>"; };
-		8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBNetworkingTask.swift; sourceTree = "<group>"; };
+		8EE058EA22535FF700B2885B /* UBURLSessionTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLSessionTask.swift; sourceTree = "<group>"; };
 		8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+Option.swift"; sourceTree = "<group>"; };
 		8EF90D55224298700055A362 /* HTTPCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPCodeTests.swift; sourceTree = "<group>"; };
 		8EF90D5922429AA30055A362 /* MIMETypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIMETypeTests.swift; sourceTree = "<group>"; };
 		8EF90D5D22429D300055A362 /* HTTPRequestBodyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestBodyTests.swift; sourceTree = "<group>"; };
 		8EF90D6122429E740055A362 /* HTTPURLRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPURLRequestTests.swift; sourceTree = "<group>"; };
+		8EFFDCBF22540A7F002D2DE2 /* Networking+URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+URLSession.swift"; sourceTree = "<group>"; };
+		8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBSessionTests.swift; sourceTree = "<group>"; };
+		8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLSession.swift; sourceTree = "<group>"; };
+		8EFFDCD222545F2E002D2DE2 /* UBURLSession+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+Info.swift"; sourceTree = "<group>"; };
+		8EFFDCDC2254AEB9002D2DE2 /* UBURLSession+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+Delegate.swift"; sourceTree = "<group>"; };
+		8EFFDCE12254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+ServerTrustEvaluation.swift"; sourceTree = "<group>"; };
+		8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+Configuration.swift"; sourceTree = "<group>"; };
+		8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = NetworkingTestBundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -471,9 +509,8 @@
 				8EC4846E22427BE500AC8E44 /* HTTPMethod.swift */,
 				8E0DB2B32243088000D5E01E /* Networking+Error.swift */,
 				8E7F749F224859A100582E57 /* Networking+Logger.swift */,
+				8EFFDCBF22540A7F002D2DE2 /* Networking+URLSession.swift */,
 				8E7F747322454F1900582E57 /* String+HeaderCharset.swift */,
-				8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */,
-				8EC4845E2241C1BC00AC8E44 /* URLSessionProtocol.swift */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -676,8 +713,8 @@
 				8E27864C22411DE300430D34 /* Globals */,
 				8EBD481E2240779300CD2639 /* Localization */,
 				8EBD48412240F6C900CD2639 /* Logging */,
-				8EF90D54224298000055A362 /* Networking */,
 				8E7F7518224AFD2200582E57 /* Cron */,
+				8EF90D54224298000055A362 /* Networking */,
 				8EBD47DC2240746800CD2639 /* Supporting Files */,
 			);
 			path = Tests;
@@ -768,6 +805,7 @@
 				8EE058AD22513A5E00B2885B /* Network Activity Tracker */,
 				8E7F74832245A08E00582E57 /* HTTP Code */,
 				8E7F74822245A06A00582E57 /* MIME */,
+				8EFFDCB92254091E002D2DE2 /* Session */,
 				8E0DB2C22243BFE800D5E01E /* Request */,
 				8EE058BF22526C2500B2885B /* Request Modifiers */,
 				8E0DB2CE2243EAA100D5E01E /* Response */,
@@ -819,6 +857,7 @@
 		8EF90D54224298000055A362 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */,
 				8E7F749E2248172300582E57 /* Helpers */,
 				8EF90D55224298700055A362 /* HTTPCodeTests.swift */,
 				8EF90D5922429AA30055A362 /* MIMETypeTests.swift */,
@@ -830,8 +869,23 @@
 				8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */,
 				8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */,
 				8EE058BB2252621B00B2885B /* HTTPRequestModifierTests.swift */,
+				8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		8EFFDCB92254091E002D2DE2 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */,
+				8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */,
+				8EFFDCDC2254AEB9002D2DE2 /* UBURLSession+Delegate.swift */,
+				8EFFDCD222545F2E002D2DE2 /* UBURLSession+Info.swift */,
+				8EC4845E2241C1BC00AC8E44 /* UBURLSession+Protocol.swift */,
+				8EFFDCE12254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift */,
+				8EE058EA22535FF700B2885B /* UBURLSessionTask.swift */,
+			);
+			name = Session;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1101,6 +1155,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EFFDCF02254F539002D2DE2 /* NetworkingTestBundle in Resources */,
 				8EBD483E2240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864922411CC600430D34 /* LoggingTestBundle in Resources */,
 			);
@@ -1110,6 +1165,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EFFDCF12254F539002D2DE2 /* NetworkingTestBundle in Resources */,
 				8EBD483F2240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */,
 			);
@@ -1119,6 +1175,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EFFDCF22254F539002D2DE2 /* NetworkingTestBundle in Resources */,
 				8EBD48402240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */,
 			);
@@ -1282,6 +1339,7 @@
 				8EC4846F22427BE500AC8E44 /* HTTPMethod.swift in Sources */,
 				8E7F74AE2249897B00582E57 /* UIColor+HEX.swift in Sources */,
 				8EE058DC2252DAC400B2885B /* NetworkTaskRecovery.swift in Sources */,
+				8EFFDCE22254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8E7F747E2245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EE058B022520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
 				8EBD47FA2240770000CD2639 /* Localization+Notification.swift in Sources */,
@@ -1296,13 +1354,16 @@
 				8EBD48182240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				8EE058E622535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
+				8EFFDCD322545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
 				8E0DB2C52243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,
 				8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */,
+				8EFFDCC022540A7F002D2DE2 /* Networking+URLSession.swift in Sources */,
 				8EBD48022240770000CD2639 /* Localization.swift in Sources */,
 				8EE058D02252744F00B2885B /* UBURLRequestModifier+AcceptedLanguage.swift in Sources */,
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				8EFFDCE72254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
 				8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
@@ -1317,18 +1378,20 @@
 				8EC484742242813200AC8E44 /* UBURLRequest+Body.swift in Sources */,
 				8E7F748A2247B4A300582E57 /* UBURLRequest+BodyConvertible.swift in Sources */,
 				8E0DB2B42243088000D5E01E /* Networking+Error.swift in Sources */,
-				8EC4845F2241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
+				8EC4845F2241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */,
 				8E7F74852245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
+				8EFFDCC92254179F002D2DE2 /* UBURLSession.swift in Sources */,
 				8E0DB2AA2243049900D5E01E /* UBURLDataTask.swift in Sources */,
 				8EE058C622526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8EC484792242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48062240770000CD2639 /* Localization+String.swift in Sources */,
-				8EE058EB22535FF700B2885B /* UBNetworkingTask.swift in Sources */,
+				8EE058EB22535FF700B2885B /* UBURLSessionTask.swift in Sources */,
 				8E101734224F5736006127DA /* CronRule.swift in Sources */,
 				8E27865C2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
 				8E2786572241227A00430D34 /* GlobalLocalization.swift in Sources */,
 				8EC4846A22427B9700AC8E44 /* UBURLRequest.swift in Sources */,
 				8EE058E12252E65D00B2885B /* NetworkTaskRecovery+Group.swift in Sources */,
+				8EFFDCDD2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
 				8E0DB2AF224305F900D5E01E /* Result.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1337,7 +1400,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EE058EC22535FF700B2885B /* UBNetworkingTask.swift in Sources */,
+				8EE058EC22535FF700B2885B /* UBURLSessionTask.swift in Sources */,
 				8EE058B122520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
 				8E7F747522454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4847022427BE500AC8E44 /* HTTPMethod.swift in Sources */,
@@ -1358,13 +1421,17 @@
 				8EBD48032240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D62243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DB2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				8EFFDCDE2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
 				8EE058F6225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
 				8E101735224F5736006127DA /* CronRule.swift in Sources */,
 				8EBD48132240770000CD2639 /* Localization+Error.swift in Sources */,
+				8EFFDCE32254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8EBD480F2240770000CD2639 /* Localization+Languages.swift in Sources */,
+				8EFFDCE82254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8E7F74A1224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786622241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FF2240770000CD2639 /* Language.swift in Sources */,
+				8EFFDCD422545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
 				8EBD47E62240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CB2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
 				8EBD480B2240770000CD2639 /* Localization+Bundle.swift in Sources */,
@@ -1373,13 +1440,14 @@
 				8EC484752242813200AC8E44 /* UBURLRequest+Body.swift in Sources */,
 				8E7F748B2247B4A300582E57 /* UBURLRequest+BodyConvertible.swift in Sources */,
 				8E0DB2B52243088000D5E01E /* Networking+Error.swift in Sources */,
-				8EC484602241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
+				8EC484602241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */,
 				8E7F74862245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8E0DB2AB2243049900D5E01E /* UBURLDataTask.swift in Sources */,
 				8EC4847A2242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EE058AA22513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8EBD48072240770000CD2639 /* Localization+String.swift in Sources */,
 				8E46FA41224DAECF00198321 /* CronJob.swift in Sources */,
+				8EFFDCCA2254179F002D2DE2 /* UBURLSession.swift in Sources */,
 				8E27865D2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
 				8E2786582241227A00430D34 /* GlobalLocalization.swift in Sources */,
 				8EE058E722535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
@@ -1388,6 +1456,7 @@
 				8EE058C722526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8E0DB2B0224305F900D5E01E /* Result.swift in Sources */,
 				8EE058CC22526CEC00B2885B /* UBURLRequestModifier+TokenAuthorization.swift in Sources */,
+				8EFFDCC122540A7F002D2DE2 /* Networking+URLSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1395,7 +1464,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EE058ED22535FF700B2885B /* UBNetworkingTask.swift in Sources */,
+				8EE058ED22535FF700B2885B /* UBURLSessionTask.swift in Sources */,
 				8EE058B222520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
 				8E7F747622454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4847122427BE500AC8E44 /* HTTPMethod.swift in Sources */,
@@ -1416,13 +1485,17 @@
 				8EBD48042240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D72243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DC2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				8EFFDCDF2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
 				8EE058F7225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
 				8E101736224F5736006127DA /* CronRule.swift in Sources */,
 				8EBD48142240770000CD2639 /* Localization+Error.swift in Sources */,
+				8EFFDCE42254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8EBD48102240770000CD2639 /* Localization+Languages.swift in Sources */,
+				8EFFDCE92254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8E7F74A2224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */,
 				8E2786632241269200430D34 /* Localization+Locale.swift in Sources */,
+				8EFFDCD522545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
 				8EBD48002240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E72240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CC2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
@@ -1432,12 +1505,13 @@
 				8EC484762242813200AC8E44 /* UBURLRequest+Body.swift in Sources */,
 				8E7F748C2247B4A300582E57 /* UBURLRequest+BodyConvertible.swift in Sources */,
 				8E0DB2B62243088000D5E01E /* Networking+Error.swift in Sources */,
-				8EC484612241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
+				8EC484612241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */,
 				8E7F74872245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8E0DB2AC2243049900D5E01E /* UBURLDataTask.swift in Sources */,
 				8EE058AB22513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8EC4847B2242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48082240770000CD2639 /* Localization+String.swift in Sources */,
+				8EFFDCCB2254179F002D2DE2 /* UBURLSession.swift in Sources */,
 				8E27865E2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
 				8E2786592241227A00430D34 /* GlobalLocalization.swift in Sources */,
 				8EE058E822535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
@@ -1446,6 +1520,7 @@
 				8EE058C822526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8E0DB2B1224305F900D5E01E /* Result.swift in Sources */,
 				8EE058CD22526CEC00B2885B /* UBURLRequestModifier+TokenAuthorization.swift in Sources */,
+				8EFFDCC222540A7F002D2DE2 /* Networking+URLSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1455,7 +1530,9 @@
 			files = (
 				8E7F747722454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8E101737224F5736006127DA /* CronRule.swift in Sources */,
+				8EFFDCE52254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8EC4847222427BE500AC8E44 /* HTTPMethod.swift in Sources */,
+				8EFFDCCC2254179F002D2DE2 /* UBURLSession.swift in Sources */,
 				8E7F74812245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EE058C922526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8EBD47FD2240770000CD2639 /* Localization+Notification.swift in Sources */,
@@ -1465,6 +1542,7 @@
 				8E7F747C22459D7700582E57 /* MIMEType+Parameter.swift in Sources */,
 				8EE058D32252744F00B2885B /* UBURLRequestModifier+AcceptedLanguage.swift in Sources */,
 				8E0DB2D32243EABB00D5E01E /* HTTPURLResponse+Networking.swift in Sources */,
+				8EFFDCC322540A7F002D2DE2 /* Networking+URLSession.swift in Sources */,
 				8EBD481B2240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EE058F8225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
 				8EC4848622428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
@@ -1473,6 +1551,7 @@
 				8EBD48052240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D82243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DD2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				8EFFDCD622545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
 				8EBD48152240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E7F74A3224859A100582E57 /* Networking+Logger.swift in Sources */,
@@ -1482,6 +1561,7 @@
 				8EBD47E82240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CD2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
 				8EBD480D2240770000CD2639 /* Localization+Bundle.swift in Sources */,
+				8EFFDCE02254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
 				8EBD47F92240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EE058AC22513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8E80D60C2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
@@ -1490,18 +1570,19 @@
 				8E7F748D2247B4A300582E57 /* UBURLRequest+BodyConvertible.swift in Sources */,
 				8EE058DF2252DAC400B2885B /* NetworkTaskRecovery.swift in Sources */,
 				8E0DB2B72243088000D5E01E /* Networking+Error.swift in Sources */,
-				8EC484622241C1BC00AC8E44 /* URLSessionProtocol.swift in Sources */,
+				8EC484622241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */,
 				8E7F74882245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8E0DB2AD2243049900D5E01E /* UBURLDataTask.swift in Sources */,
 				8EE058E42252E65D00B2885B /* NetworkTaskRecovery+Group.swift in Sources */,
 				8EC4847C2242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48092240770000CD2639 /* Localization+String.swift in Sources */,
+				8EFFDCEA2254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8E27865F2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
 				8E27865A2241227A00430D34 /* GlobalLocalization.swift in Sources */,
 				8EE058C422526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
 				8EC4846D22427B9700AC8E44 /* UBURLRequest.swift in Sources */,
 				8E0DB2B2224305F900D5E01E /* Result.swift in Sources */,
-				8EE058EE22535FF700B2885B /* UBNetworkingTask.swift in Sources */,
+				8EE058EE22535FF700B2885B /* UBURLSessionTask.swift in Sources */,
 				8EE058B322520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1519,6 +1600,7 @@
 				8EBD484B2240FFE200CD2639 /* LoggerTests.swift in Sources */,
 				8E278666224144C900430D34 /* GlobalLocalizationTests.swift in Sources */,
 				8E7F74972247F50200582E57 /* HTTPResponseValidatorTests.swift in Sources */,
+				8EFFDCC5225413EB002D2DE2 /* UBSessionTests.swift in Sources */,
 				8E7F749B22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */,
 				8E27865322411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EE058BC2252621B00B2885B /* HTTPRequestModifierTests.swift in Sources */,
@@ -1548,6 +1630,7 @@
 				8EBD484C2240FFE200CD2639 /* LoggerTests.swift in Sources */,
 				8E278667224144C900430D34 /* GlobalLocalizationTests.swift in Sources */,
 				8E7F74982247F50200582E57 /* HTTPResponseValidatorTests.swift in Sources */,
+				8EFFDCC6225413EB002D2DE2 /* UBSessionTests.swift in Sources */,
 				8E7F749C22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */,
 				8E27865422411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EE058BD2252621B00B2885B /* HTTPRequestModifierTests.swift in Sources */,
@@ -1575,6 +1658,7 @@
 				8E7F74992247F50200582E57 /* HTTPResponseValidatorTests.swift in Sources */,
 				8EE058BE2252621B00B2885B /* HTTPRequestModifierTests.swift in Sources */,
 				8E7F749D22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */,
+				8EFFDCC7225413EB002D2DE2 /* UBSessionTests.swift in Sources */,
 				8E27865522411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EF90D58224298700055A362 /* HTTPCodeTests.swift in Sources */,
 				8E7F74712245303A00582E57 /* URLSessionDataTaskMock.swift in Sources */,

@@ -29,4 +29,6 @@ public enum NetworkingError: Error, Equatable {
     case responseBodyIsEmpty
     /// The response body is not empty. Expected it to be empty
     case responseBodyIsNotEmpty
+    /// The certificate validation process failed
+    case certificateValidationFailed
 }

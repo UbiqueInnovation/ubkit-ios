@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import UBFoundation
+@testable import UBFoundation
 
-class DataTaskSessionMock: URLSessionProtocol {
+class DataTaskSessionMock: DataTaskURLSession {
     private var _allTasks: [URLSessionTask] = []
     var dataTaskConfigurationBlock: (UBURLRequest) -> URLSessionDataTaskMock.Configuration
 
@@ -24,30 +24,28 @@ class DataTaskSessionMock: URLSessionProtocol {
         fatalError("Not emplemented")
     }
 
-    func dataTask(with request: UBURLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-        let task = URLSessionDataTaskMock(config: dataTaskConfigurationBlock(request), timeoutInterval: request.timeoutInterval, completionHandler: completionHandler)
+    func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask {
+        let task = URLSessionDataTaskMock(config: dataTaskConfigurationBlock(request), timeoutInterval: request.timeoutInterval) { [weak owner] data, response, baseError in
+            guard let owner = owner else {
+                return
+            }
+            var error = baseError
+            if error == nil, (response is HTTPURLResponse) == false {
+                error = NetworkingError.notHTTPResponse
+            }
+            if let r = response as? HTTPURLResponse {
+                do {
+                    try owner.validate(response: r)
+                    owner.dataTaskCompleted(data: data, response: r, error: error, info: nil)
+                } catch {
+                    owner.dataTaskCompleted(data: data, response: r, error: error, info: nil)
+                }
+            } else {
+                owner.dataTaskCompleted(data: data, response: nil, error: error, info: nil)
+            }
+        }
         _allTasks.append(task)
         return task
-    }
-
-    func downloadTask(with _: UBURLRequest, completionHandler _: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
-        fatalError("Not emplemented")
-    }
-
-    func downloadTask(withResumeData _: Data, completionHandler _: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
-        fatalError("Not emplemented")
-    }
-
-    func uploadTask(with _: UBURLRequest, from _: Data?, completionHandler _: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask {
-        fatalError("Not emplemented")
-    }
-
-    func uploadTask(with _: UBURLRequest, fromFile _: URL, completionHandler _: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask {
-        fatalError("Not emplemented")
-    }
-
-    func getAllTasks(completionHandler: @escaping ([URLSessionTask]) -> Void) {
-        completionHandler(_allTasks)
     }
 
     func finishTasksAndInvalidate() {
