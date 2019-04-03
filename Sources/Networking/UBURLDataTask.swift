@@ -16,7 +16,7 @@ public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, Cus
     public let session: DataTaskURLSession
 
     /// A queue for protecting the request
-    private let requestQueue: DispatchQueue = DispatchQueue(label: "Request Queue")
+    private let requestQueue = DispatchQueue(label: "Request Queue")
     /// :nodoc:
     private var _request: UBURLRequest
 
