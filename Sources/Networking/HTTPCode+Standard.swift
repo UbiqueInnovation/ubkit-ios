@@ -30,6 +30,8 @@ public enum StandardHTTPCode: Int {
 
     /// The requested resource has been assigned a new permanent URI and any future references to this resource SHOULD use one of the returned URIs
     case movedPermanently = 301
+    /// Tells the client to look at (browse to) another URL
+    case found = 302
     /// If the client has performed a conditional GET request and access is allowed, but the document has not been modified.
     case notModified = 304
 

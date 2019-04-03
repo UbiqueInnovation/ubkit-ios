@@ -314,9 +314,9 @@
 		8EFFDCE82254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */; };
 		8EFFDCE92254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */; };
 		8EFFDCEA2254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */; };
-		8EFFDCEC2254DA1A002D2DE2 /* *.ubique.ch.cer in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEB2254DA1A002D2DE2 /* *.ubique.ch.cer */; };
-		8EFFDCED2254DA1A002D2DE2 /* *.ubique.ch.cer in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEB2254DA1A002D2DE2 /* *.ubique.ch.cer */; };
-		8EFFDCEE2254DA1A002D2DE2 /* *.ubique.ch.cer in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEB2254DA1A002D2DE2 /* *.ubique.ch.cer */; };
+		8EFFDCF02254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
+		8EFFDCF12254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
+		8EFFDCF22254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -443,7 +443,7 @@
 		8EFFDCDC2254AEB9002D2DE2 /* UBURLSession+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+Delegate.swift"; sourceTree = "<group>"; };
 		8EFFDCE12254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+ServerTrustEvaluation.swift"; sourceTree = "<group>"; };
 		8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+Configuration.swift"; sourceTree = "<group>"; };
-		8EFFDCEB2254DA1A002D2DE2 /* *.ubique.ch.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "*.ubique.ch.cer"; sourceTree = "<group>"; };
+		8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = NetworkingTestBundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -713,8 +713,8 @@
 				8E27864C22411DE300430D34 /* Globals */,
 				8EBD481E2240779300CD2639 /* Localization */,
 				8EBD48412240F6C900CD2639 /* Logging */,
-				8EF90D54224298000055A362 /* Networking */,
 				8E7F7518224AFD2200582E57 /* Cron */,
+				8EF90D54224298000055A362 /* Networking */,
 				8EBD47DC2240746800CD2639 /* Supporting Files */,
 			);
 			path = Tests;
@@ -857,6 +857,7 @@
 		8EF90D54224298000055A362 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */,
 				8E7F749E2248172300582E57 /* Helpers */,
 				8EF90D55224298700055A362 /* HTTPCodeTests.swift */,
 				8EF90D5922429AA30055A362 /* MIMETypeTests.swift */,
@@ -869,7 +870,6 @@
 				8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */,
 				8EE058BB2252621B00B2885B /* HTTPRequestModifierTests.swift */,
 				8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */,
-				8EFFDCEB2254DA1A002D2DE2 /* *.ubique.ch.cer */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -1155,9 +1155,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EFFDCF02254F539002D2DE2 /* NetworkingTestBundle in Resources */,
 				8EBD483E2240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864922411CC600430D34 /* LoggingTestBundle in Resources */,
-				8EFFDCEC2254DA1A002D2DE2 /* *.ubique.ch.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1165,9 +1165,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EFFDCF12254F539002D2DE2 /* NetworkingTestBundle in Resources */,
 				8EBD483F2240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */,
-				8EFFDCED2254DA1A002D2DE2 /* *.ubique.ch.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1175,9 +1175,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EFFDCF22254F539002D2DE2 /* NetworkingTestBundle in Resources */,
 				8EBD48402240937E00CD2639 /* LocalizationTestBundle in Resources */,
 				8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */,
-				8EFFDCEE2254DA1A002D2DE2 /* *.ubique.ch.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

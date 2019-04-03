@@ -146,11 +146,6 @@ extension Bundle {
         }
     }
 
-    /// Returns all public keys for the valid certificates in the bundle.
-    public var publicKeys: [SecKey] {
-        return certificates.publicKeys
-    }
-
     /// Returns all pathnames for the resources identified by the provided file extensions.
     ///
     /// - Parameter types: The filename extensions locate.
@@ -218,11 +213,6 @@ extension SecTrust {
         }
     }
 
-    /// The public keys contained in `self`.
-    var publicKeys: [SecKey] {
-        return certificates.publicKeys
-    }
-
     /// The `SecCertificate`s contained i `self`.
     var certificates: [SecCertificate] {
         return (0 ..< SecTrustGetCertificateCount(self)).compactMap { index in
@@ -270,11 +260,6 @@ extension Array where Element == SecCertificate {
     /// All `Data` values for the contained `SecCertificate`s.
     var data: [Data] {
         return map { SecCertificateCopyData($0) as Data }
-    }
-
-    /// All public `SecKey` values for the contained `SecCertificate`s.
-    var publicKeys: [SecKey] {
-        return compactMap { $0.publicKey }
     }
 }
 

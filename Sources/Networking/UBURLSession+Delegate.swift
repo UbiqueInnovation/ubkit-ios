@@ -20,11 +20,14 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// The manager providing server trust verification
     private let serverTrustManager: ServerTrustManager
 
+    private let allowsRedirection: Bool
+
     /// Initializes the delegate with a configuration
     ///
     /// - Parameter configuration: The configuration to use
     init(configuration: UBURLSessionConfiguration) {
         serverTrustManager = ServerTrustManager(evaluators: configuration.hostsServerTrusts, default: configuration.defaultServerTrust)
+        allowsRedirection = configuration.allowRedirections
         super.init()
     }
 
@@ -174,6 +177,15 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         } catch {
             return (.cancelAuthenticationChallenge, nil, error)
         }
+    }
+
+    /// :nodoc:
+    func urlSession(_: URLSession, task _: URLSessionTask, willPerformHTTPRedirection _: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+        guard allowsRedirection else {
+            completionHandler(nil)
+            return
+        }
+        completionHandler(request)
     }
 }
 

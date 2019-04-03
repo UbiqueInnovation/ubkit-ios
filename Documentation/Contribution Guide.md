@@ -101,11 +101,6 @@ We separate 3 log levels: __Info__, __Error__, __Debug__.
 
 ### Caching
 
-### Security
-- Limit redirection
-- Security challenges
-- Certificates pinning
-
 ### Retrying Requests
 - No network retry
 
