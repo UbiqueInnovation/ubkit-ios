@@ -100,6 +100,7 @@ We separate 3 log levels: __Info__, __Error__, __Debug__.
 ## Networking
 
 ### Caching
+### Cron scheduling
 
 ### Retrying Requests
 - No network retry

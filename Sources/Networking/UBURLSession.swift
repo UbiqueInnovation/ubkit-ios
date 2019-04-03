@@ -20,12 +20,12 @@ public class UBURLSession: DataTaskURLSession {
     }()
 
     /// A shared session that has a priority of background. Useful for low priority requests.
-    public static let sharedBackground: UBURLSession = {
+    public static let sharedLowPriority: UBURLSession = {
         let queue = OperationQueue()
         queue.name = "UBURLSession Shared Background"
         queue.qualityOfService = .background
         let configuration = UBURLSessionConfiguration()
-        configuration.sessionConfiguration.networkServiceType = .responsiveData
+        configuration.sessionConfiguration.networkServiceType = .background
         return UBURLSession(configuration: configuration, delegateQueue: queue)
     }()
 

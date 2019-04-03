@@ -20,6 +20,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// The manager providing server trust verification
     private let serverTrustManager: ServerTrustManager
 
+    /// :nodoc:
     private let allowsRedirection: Bool
 
     /// Initializes the delegate with a configuration
