@@ -40,7 +40,7 @@ class UBSessionTests: XCTestCase {
     func testRedirection() {
         let ex = expectation(description: "s")
         let url = URL(string: "http://ubique.ch")!
-        let dataTask = UBURLDataTask(url: url, session: UBURLSession.sharedBackground)
+        let dataTask = UBURLDataTask(url: url, session: UBURLSession.sharedLowPriority)
         dataTask.addCompletionHandler { result, response, _, _ in
             switch result {
             case .success:

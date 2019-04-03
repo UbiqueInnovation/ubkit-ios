@@ -13,6 +13,8 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     private let tasks = NSMapTable<URLSessionTask, UBURLDataTask>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     /// Storage of the task data
     private let tasksData = NSMapTable<URLSessionTask, DataHolder>(keyOptions: .weakMemory, valueOptions: .strongMemory)
+    /// Storage of the auto refresh jobs
+    private let autoRefreshJobs = NSMapTable<DataHolder, CronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
     /// The url session, for verification purpouses
     weak var urlSession: URLSession?
@@ -23,12 +25,16 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// :nodoc:
     private let allowsRedirection: Bool
 
+    /// :nodoc:
+    private let allowsAutoRefresh: Bool
+
     /// Initializes the delegate with a configuration
     ///
     /// - Parameter configuration: The configuration to use
     init(configuration: UBURLSessionConfiguration) {
         serverTrustManager = ServerTrustManager(evaluators: configuration.hostsServerTrusts, default: configuration.defaultServerTrust)
         allowsRedirection = configuration.allowRedirections
+        allowsAutoRefresh = configuration.allowAutoRefresh
         super.init()
     }
 

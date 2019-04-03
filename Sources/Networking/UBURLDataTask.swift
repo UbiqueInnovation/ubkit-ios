@@ -121,7 +121,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// :nodoc:
     deinit {
-        cancel()
+        dataTaskProgressObservation?.invalidate()
+        dataTaskStateObservation?.invalidate()
+        dataTask?.cancel()
     }
 
     // MARK: - Startin and stopping
