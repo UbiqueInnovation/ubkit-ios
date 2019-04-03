@@ -298,6 +298,10 @@
 		8EFFDCCA2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
 		8EFFDCCB2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
 		8EFFDCCC2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
+		8EFFDCD322545F2E002D2DE2 /* NetworkingTaskInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCD222545F2E002D2DE2 /* NetworkingTaskInfo.swift */; };
+		8EFFDCD422545F2E002D2DE2 /* NetworkingTaskInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCD222545F2E002D2DE2 /* NetworkingTaskInfo.swift */; };
+		8EFFDCD522545F2E002D2DE2 /* NetworkingTaskInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCD222545F2E002D2DE2 /* NetworkingTaskInfo.swift */; };
+		8EFFDCD622545F2E002D2DE2 /* NetworkingTaskInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCD222545F2E002D2DE2 /* NetworkingTaskInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -420,6 +424,7 @@
 		8EFFDCBF22540A7F002D2DE2 /* URLSession+Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Networking.swift"; sourceTree = "<group>"; };
 		8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBSessionTests.swift; sourceTree = "<group>"; };
 		8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLSession.swift; sourceTree = "<group>"; };
+		8EFFDCD222545F2E002D2DE2 /* NetworkingTaskInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTaskInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -854,6 +859,7 @@
 				8EC4845E2241C1BC00AC8E44 /* UBURLSession+Protocol.swift */,
 				8EFFDCBF22540A7F002D2DE2 /* URLSession+Networking.swift */,
 				8EE058EA22535FF700B2885B /* UBNetworkingTask.swift */,
+				8EFFDCD222545F2E002D2DE2 /* NetworkingTaskInfo.swift */,
 				8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */,
 			);
 			name = Session;
@@ -1321,6 +1327,7 @@
 				8EBD48182240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				8EE058E622535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
+				8EFFDCD322545F2E002D2DE2 /* NetworkingTaskInfo.swift in Sources */,
 				8E0DB2C52243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,
 				8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */,
@@ -1392,6 +1399,7 @@
 				8E7F74A1224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786622241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FF2240770000CD2639 /* Language.swift in Sources */,
+				8EFFDCD422545F2E002D2DE2 /* NetworkingTaskInfo.swift in Sources */,
 				8EBD47E62240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CB2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
 				8EBD480B2240770000CD2639 /* Localization+Bundle.swift in Sources */,
@@ -1452,6 +1460,7 @@
 				8E7F74A2224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */,
 				8E2786632241269200430D34 /* Localization+Locale.swift in Sources */,
+				8EFFDCD522545F2E002D2DE2 /* NetworkingTaskInfo.swift in Sources */,
 				8EBD48002240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E72240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CC2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
@@ -1506,6 +1515,7 @@
 				8EBD48052240770000CD2639 /* Localization.swift in Sources */,
 				8E0DB2D82243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DD2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				8EFFDCD622545F2E002D2DE2 /* NetworkingTaskInfo.swift in Sources */,
 				8EBD48152240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E7F74A3224859A100582E57 /* Networking+Logger.swift in Sources */,

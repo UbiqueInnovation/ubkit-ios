@@ -14,7 +14,7 @@ class UBSessionTests: XCTestCase {
         let url = URL(string: "http://ubique.ch")!
         let session = UBURLSession(configuration: .default, delegateQueue: OperationQueue())
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, response, _ in
+        dataTask.addCompletionHandler { result, response, _, _ in
             print(result)
             print(response)
             ex.fulfill()
@@ -22,8 +22,5 @@ class UBSessionTests: XCTestCase {
         dataTask.start()
         waitForExpectations(timeout: 10, handler: nil)
         session.invalidateAndCancel()
-    }
-
-    func testC() {
     }
 }

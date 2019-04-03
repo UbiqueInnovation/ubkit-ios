@@ -28,11 +28,11 @@ private class Manager: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate 
         }
 
         guard let collectedData = tasksData.object(forKey: task) else {
-            ubDataTask.dataTaskCompleted(data: nil, response: nil, error: error)
+            ubDataTask.dataTaskCompleted(data: nil, response: nil, error: error, info: nil)
             return
         }
 
-        ubDataTask.dataTaskCompleted(data: collectedData.data, response: collectedData.response as? HTTPURLResponse, error: collectedData.error ?? error)
+        ubDataTask.dataTaskCompleted(data: collectedData.data, response: collectedData.response as? HTTPURLResponse, error: collectedData.error ?? error, info: NetworkingTaskInfo(metrics: collectedData.metrics))
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
@@ -158,7 +158,7 @@ public class UBURLSession: DataTaskURLSession {
 private class DataHolder {
     var data: Data?
     var response: URLResponse?
-    var metrics: URLSessionTaskMetrics?
+    var metrics: URLSessionTaskMetrics!
     var error: Error?
     init(_ response: URLResponse?) {
         self.response = response

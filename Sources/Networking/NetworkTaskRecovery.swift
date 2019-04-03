@@ -12,7 +12,7 @@ public enum NetworkingTaskRecoveryResult {
     /// The strategy has finished recovering and needs to restart the task
     case restartDataTask
     /// The strategy has finished successfully and could recover the data
-    case recovered(data: Data?, response: HTTPURLResponse)
+    case recovered(data: Data?, response: HTTPURLResponse, info: NetworkingTaskInfo?)
     /// The strategy could offer different options of recovery
     case recoveryOptions(options: RecoverableError)
     /// Cannot recover the failure

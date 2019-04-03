@@ -36,12 +36,12 @@ class DataTaskSessionMock: DataTaskURLSession {
             if let r = response as? HTTPURLResponse {
                 do {
                     try owner.validate(response: r)
-                    owner.dataTaskCompleted(data: data, response: r, error: error)
+                    owner.dataTaskCompleted(data: data, response: r, error: error, info: nil)
                 } catch {
-                    owner.dataTaskCompleted(data: data, response: r, error: error)
+                    owner.dataTaskCompleted(data: data, response: r, error: error, info: nil)
                 }
             } else {
-                owner.dataTaskCompleted(data: data, response: nil, error: error)
+                owner.dataTaskCompleted(data: data, response: nil, error: error, info: nil)
             }
         }
         _allTasks.append(task)
