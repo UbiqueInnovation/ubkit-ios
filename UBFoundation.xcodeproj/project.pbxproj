@@ -298,10 +298,6 @@
 		8EFFDCCA2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
 		8EFFDCCB2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
 		8EFFDCCC2254179F002D2DE2 /* UBURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */; };
-		8EFFDCCE22543929002D2DE2 /* UBHTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCCD22543929002D2DE2 /* UBHTTPURLResponse.swift */; };
-		8EFFDCCF22543929002D2DE2 /* UBHTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCCD22543929002D2DE2 /* UBHTTPURLResponse.swift */; };
-		8EFFDCD022543929002D2DE2 /* UBHTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCCD22543929002D2DE2 /* UBHTTPURLResponse.swift */; };
-		8EFFDCD122543929002D2DE2 /* UBHTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCCD22543929002D2DE2 /* UBHTTPURLResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -424,7 +420,6 @@
 		8EFFDCBF22540A7F002D2DE2 /* URLSession+Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Networking.swift"; sourceTree = "<group>"; };
 		8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBSessionTests.swift; sourceTree = "<group>"; };
 		8EFFDCC82254179F002D2DE2 /* UBURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLSession.swift; sourceTree = "<group>"; };
-		8EFFDCCD22543929002D2DE2 /* UBHTTPURLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBHTTPURLResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -518,7 +513,6 @@
 		8E0DB2CE2243EAA100D5E01E /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				8EFFDCCD22543929002D2DE2 /* UBHTTPURLResponse.swift */,
 				8E0DB2CF2243EABB00D5E01E /* HTTPURLResponse+Networking.swift */,
 				8E0DB2C92243D95900D5E01E /* HTTPURLResponse+Validator.swift */,
 			);
@@ -1313,7 +1307,6 @@
 				8EC4846F22427BE500AC8E44 /* HTTPMethod.swift in Sources */,
 				8E7F74AE2249897B00582E57 /* UIColor+HEX.swift in Sources */,
 				8EE058DC2252DAC400B2885B /* NetworkTaskRecovery.swift in Sources */,
-				8EFFDCCE22543929002D2DE2 /* UBHTTPURLResponse.swift in Sources */,
 				8E7F747E2245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EE058B022520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
 				8EBD47FA2240770000CD2639 /* Localization+Notification.swift in Sources */,
@@ -1402,7 +1395,6 @@
 				8EBD47E62240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CB2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
 				8EBD480B2240770000CD2639 /* Localization+Bundle.swift in Sources */,
-				8EFFDCCF22543929002D2DE2 /* UBHTTPURLResponse.swift in Sources */,
 				8EBD47F72240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8E80D60A2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EC484752242813200AC8E44 /* UBURLRequest+Body.swift in Sources */,
@@ -1463,7 +1455,6 @@
 				8EBD48002240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E72240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CC2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
-				8EFFDCD022543929002D2DE2 /* UBHTTPURLResponse.swift in Sources */,
 				8EBD480C2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8E80D60B2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD47F82240770000CD2639 /* Localization+Formatter.swift in Sources */,
@@ -1499,7 +1490,6 @@
 				8EFFDCCC2254179F002D2DE2 /* UBURLSession.swift in Sources */,
 				8E7F74812245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EE058C922526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
-				8EFFDCD122543929002D2DE2 /* UBHTTPURLResponse.swift in Sources */,
 				8EBD47FD2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EE058E922535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
 				8EBD47EC2240765200CD2639 /* LoggerGroup.swift in Sources */,

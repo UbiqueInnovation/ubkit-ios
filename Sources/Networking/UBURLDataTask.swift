@@ -210,7 +210,7 @@ public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, Cus
     ///   - data: The data transfered
     ///   - response: The response received with the data
     ///   - error: The error in case of failure
-    func dataTaskCompleted(data: Data?, response: UBHTTPURLResponse?, error: Error?) {
+    func dataTaskCompleted(data: Data?, response: HTTPURLResponse?, error: Error?) {
         if let r = response, Networking.logger.logLevel == .verbose {
             Networking.logger.debug(r)
         }
@@ -409,9 +409,9 @@ public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, Cus
     // MARK: - Completion
 
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingBlock<T> = (Result<T>, UBHTTPURLResponse?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingBlock<T> = (Result<T>, HTTPURLResponse?, UBURLDataTask) -> Void
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingNullableDataBlock = (Result<Data?>, UBHTTPURLResponse?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingNullableDataBlock = (Result<Data?>, HTTPURLResponse?, UBURLDataTask) -> Void
     /// :nodoc:
     private let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
     /// :nodoc:
@@ -424,7 +424,7 @@ public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, Cus
     }
 
     /// :nodoc:
-    private func notifyCompletion(error: Error, response: UBHTTPURLResponse?) {
+    private func notifyCompletion(error: Error, response: HTTPURLResponse?) {
         Networking.logger.debug("Task received error \(error) for \(description)")
         state = .finished
         callbackQueue.addOperation { [weak self] in
@@ -436,7 +436,7 @@ public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, Cus
     }
 
     /// :nodoc:
-    private func notifyCompletion(data: Data?, response: UBHTTPURLResponse) {
+    private func notifyCompletion(data: Data?, response: HTTPURLResponse) {
         // Do some logging
         switch Networking.logger.logLevel {
         case .verbose:
@@ -562,16 +562,16 @@ public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, Cus
     }
 
     /// :nodoc:
-    private func attemptRecovery(data: Data?, response: UBHTTPURLResponse?, error: Error) {
+    private func attemptRecovery(data: Data?, response: HTTPURLResponse?, error: Error) {
         Networking.logger.debug("Attempting recovery of error \(error) for \(description)")
-        failureRecoveryStrategy.recoverTask(self, data: data, response: response?.response, error: error) { [weak self] result in
+        failureRecoveryStrategy.recoverTask(self, data: data, response: response, error: error) { [weak self] result in
             switch result {
             case .cannotRecover:
                 self?.notifyCompletion(error: error, response: response)
             case let .recoveryOptions(options: options):
                 self?.notifyCompletion(error: options, response: response)
             case let .recovered(data: data, response: response):
-                self?.notifyCompletion(data: data, response: UBHTTPURLResponse(response: response, metrics: nil))
+                self?.notifyCompletion(data: data, response: response)
             case .restartDataTask:
                 self?.start()
             }
@@ -582,8 +582,8 @@ public final class UBURLDataTask: UBNetworkingTask, CustomStringConvertible, Cus
 extension UBURLDataTask {
     /// This is a wrapper that holds reference for a completion handler
     private struct CompletionHandlerWrapper {
-        private let executionBlock: (Data?, UBHTTPURLResponse, OperationQueue, UBURLDataTask) -> Void
-        private let failureBlock: (Error, UBHTTPURLResponse?, UBURLDataTask) -> Void
+        private let executionBlock: (Data?, HTTPURLResponse, OperationQueue, UBURLDataTask) -> Void
+        private let failureBlock: (Error, HTTPURLResponse?, UBURLDataTask) -> Void
 
         /// :nodoc:
         init<T>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping CompletionHandlingBlock<T>) {
@@ -594,7 +594,7 @@ extension UBURLDataTask {
                     return
                 }
                 do {
-                    let decoded = try decoder.decode(data: data, response: response.response)
+                    let decoded = try decoder.decode(data: data, response: response)
                     callbackQueue.addOperation {
                         completion(.success(decoded), response, caller)
                     }
@@ -626,12 +626,12 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        func parse(data: Data?, response: UBHTTPURLResponse, callbackQueue: OperationQueue, caller: UBURLDataTask) {
+        func parse(data: Data?, response: HTTPURLResponse, callbackQueue: OperationQueue, caller: UBURLDataTask) {
             executionBlock(data, response, callbackQueue, caller)
         }
 
         /// :nodoc:
-        func fail(error: Error, response: UBHTTPURLResponse?, caller: UBURLDataTask) {
+        func fail(error: Error, response: HTTPURLResponse?, caller: UBURLDataTask) {
             failureBlock(error, response, caller)
         }
     }

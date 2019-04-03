@@ -32,19 +32,15 @@ private class Manager: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate 
             return
         }
 
-        let ubResponse: UBHTTPURLResponse?
-        if let r = collectedData.response as? HTTPURLResponse {
-            ubResponse = UBHTTPURLResponse(response: r, metrics: collectedData.metrics)
-        } else {
-            ubResponse = nil
-        }
-
-        ubDataTask.dataTaskCompleted(data: collectedData.data, response: ubResponse, error: error)
+        ubDataTask.dataTaskCompleted(data: collectedData.data, response: collectedData.response as? HTTPURLResponse, error: collectedData.error ?? error)
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         assert(session == urlSession, "The sessions are not matching")
         guard let dataHolder = tasksData.object(forKey: task) else {
+            let dh = DataHolder(nil)
+            dh.metrics = metrics
+            tasksData.setObject(dh, forKey: task)
             return
         }
         dataHolder.metrics = metrics
@@ -161,10 +157,10 @@ public class UBURLSession: DataTaskURLSession {
 
 private class DataHolder {
     var data: Data?
-    var response: URLResponse
+    var response: URLResponse?
     var metrics: URLSessionTaskMetrics?
     var error: Error?
-    init(_ response: URLResponse) {
+    init(_ response: URLResponse?) {
         self.response = response
     }
 }

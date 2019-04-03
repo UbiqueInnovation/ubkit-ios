@@ -214,7 +214,7 @@ class HTTPDataTaskTests: XCTestCase {
             case .failure:
                 XCTFail("Should have returned data")
             }
-            XCTAssertEqual(response?.response.statusCode, expectedResponse?.statusCode)
+            XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
             ex1.fulfill()
         }.addCompletionHandler(decoder: HTTPStringDecoder(), completionHandler: { result, _, _ in
             switch result {
