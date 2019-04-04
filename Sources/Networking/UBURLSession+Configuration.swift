@@ -22,6 +22,9 @@ public class UBURLSessionConfiguration {
 
     /// Initializes a configuration object
     ///
+    /// The configuration will include these headers as default: App-Version, UBFoundation-Version, OS-Version.
+    /// In addition all the additional headers you pass in the sessionConfiguration object. If one of the headers is found in the sessionConfiguration object then the sessionConfiguration has priority.
+    ///
     /// - Parameters:
     ///   - sessionConfiguration: A configuration object that specifies certain behaviors, such as caching policies, timeouts, proxies, pipelining, TLS versions to support, cookie policies, credential storage, and so on.
     ///   - hostsServerTrusts: A dictionary of Hosts (keys) and their corresponding evaluator. It is highly recommended that you configure for each possible host an evaluator then MITM attacks will be nearly impossible.
@@ -39,7 +42,7 @@ public class UBURLSessionConfiguration {
     }
 
     private func applyDefaultHeaders(configuration: URLSessionConfiguration) {
-        var headers: [String: String] = [:]
+        var headers: [AnyHashable: Any] = [:]
 
         // Add encoding
         headers[HTTPHeaderField.StandardKeys.acceptEncoding.rawValue] = "gzip"
@@ -71,6 +74,13 @@ public class UBURLSessionConfiguration {
         #elseif os(macOS)
             headers["OS-Version"] = "macOS \(osVersionString)"
         #endif
+        
+        
+        if let configHeaders = configuration.httpAdditionalHeaders {
+            for header in configHeaders {
+                headers[header.key] = header.value
+            }
+        }
 
         configuration.httpAdditionalHeaders = headers
     }
