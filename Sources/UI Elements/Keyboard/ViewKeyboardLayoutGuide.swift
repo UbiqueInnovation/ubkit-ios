@@ -8,7 +8,7 @@
 import UIKit
 
 /// A layout guid that follows the top of the keyboard in a view.
-/// - note: This class is only available for iOS
+/// - Note: This class is only available for iOS
 class ViewKeyboardLayoutGuide: UILayoutGuide {
     /// :nodoc:
     private weak var noKeyboardConstraint: NSLayoutConstraint?

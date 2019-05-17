@@ -10,7 +10,7 @@ import UIKit
 /// Some code was inspiered by https://gist.github.com/u10int/bba52655942ea301ccad9f3978da6f32
 
 /// A layout guid that follows the top of the keyboard in a window.
-/// - note: This class is only available for iOS
+/// - Note: This class is only available for iOS
 class WindowKeyboardLayoutGuide: UILayoutGuide {
     /// :nodoc:
     private weak var topConstraint: NSLayoutConstraint?
