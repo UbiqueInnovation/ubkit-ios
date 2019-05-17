@@ -35,45 +35,49 @@ class ViewKeyboardLayoutGuide: UILayoutGuide {
         fatalError("init(coder:) has not been implemented")
     }
 
+    /// :nodoc:
     override var owningView: UIView? {
         willSet {
             guard owningView != newValue else {
                 return
             }
 
+            // If the new view is different than the old one, remove the window reference
             establishedToWindow = nil
-
-            if let keyboardConstraint = keyboardConstraint {
-                owningView?.removeConstraint(keyboardConstraint)
-            }
-            if let noKeyboardConstraint = noKeyboardConstraint {
-                owningView?.removeConstraint(noKeyboardConstraint)
-            }
         }
         didSet {
             guard owningView != oldValue, let owningView = owningView else {
                 return
             }
 
+            // Setup the constraint for when there is no keyboard showing
             let noKeyboardConstraint = topAnchor.constraint(equalTo: owningView.bottomAnchor)
             self.noKeyboardConstraint = noKeyboardConstraint
 
+            // Check if the view is already in a window
             if let window = owningView.window {
+                // Get the keyboard layout guide
                 guard let windowKeyboardLayoutGuide = window.windowKeyboardLayoutGuide else {
+                    // The window was not initialized properly
                     fatalError("The current window \(window) is not initialized for keyboard monitoring. Please call initializeForKeyboardLayoutGuide() after the window is initialized. Typically shortly after the app launches and the window is available.")
                 }
+                // Setup the keyboard constraint top matches the keyboard guide
                 let keyboardConstraint: NSLayoutConstraint
                 keyboardConstraint = windowKeyboardLayoutGuide.topAnchor.constraint(equalTo: topAnchor)
                 keyboardConstraint.priority = UILayoutPriority(999)
                 keyboardConstraint.isActive = true
                 self.keyboardConstraint = keyboardConstraint
+                // Save a reference to the window for verification later if it changes
                 establishedToWindow = window
             } else {
+                // Activate the no keyboard constaint in case the view is not yet part of a window hierarchy
                 noKeyboardConstraint.isActive = true
             }
 
+            // Setup the constraint
             NSLayoutConstraint.activate([
-                topAnchor.constraint(lessThanOrEqualTo: owningView.bottomAnchor),
+                topAnchor.constraint(lessThanOrEqualTo: owningView.bottomAnchor), // The top should never be outside of the view
+                topAnchor.constraint(greaterThanOrEqualTo: owningView.topAnchor), // The top should never be outside of the view
                 owningView.leadingAnchor.constraint(equalTo: leadingAnchor),
                 owningView.trailingAnchor.constraint(equalTo: trailingAnchor),
                 owningView.bottomAnchor.constraint(equalTo: bottomAnchor)
@@ -93,6 +97,7 @@ extension ViewKeyboardLayoutGuide {
         }
 
         defer {
+            // Animate alongside the keyboard
             owningView.setNeedsLayout()
             keyboardInfo.animateAlongsideKeyboard {
                 owningView.layoutIfNeeded()
@@ -100,6 +105,7 @@ extension ViewKeyboardLayoutGuide {
         }
 
         if let establishedToWindow = establishedToWindow, establishedToWindow == owningView.window, keyboardConstraint != nil {
+            // If everything is still the same then just make sure we are using the keyboard constraint
             noKeyboardConstraint?.isActive = false
             return
         }
@@ -112,7 +118,7 @@ extension ViewKeyboardLayoutGuide {
             guard let windowKeyboardLayoutGuide = window.windowKeyboardLayoutGuide else {
                 fatalError("The current window \(window) is not initialized for keyboard monitoring. Please call initializeForKeyboardLayoutGuide() after the window is initialized. Typically shortly after the app launches and the window is available.")
             }
-
+            // If we got a window, setup the needed constraints to pin the top of the guide to the top of the keyboard
             let keyboardConstraint: NSLayoutConstraint
             keyboardConstraint = windowKeyboardLayoutGuide.topAnchor.constraint(equalTo: topAnchor)
             keyboardConstraint.priority = UILayoutPriority(999)
@@ -121,6 +127,7 @@ extension ViewKeyboardLayoutGuide {
             establishedToWindow = window
             noKeyboardConstraint?.isActive = false
         } else {
+            // If we do no longer have a window, return back to pinning to the bottom of the owning view
             establishedToWindow = nil
             noKeyboardConstraint?.isActive = true
         }
@@ -128,6 +135,8 @@ extension ViewKeyboardLayoutGuide {
 
     // :nodoc:
     @objc private func keyboardWillHide(_: Notification) {
+        // Pin to the bottom of the owning view
         noKeyboardConstraint?.isActive = true
+        owningView?.setNeedsLayout()
     }
 }

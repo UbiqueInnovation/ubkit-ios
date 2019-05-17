@@ -39,6 +39,7 @@ class WindowKeyboardLayoutGuide: UILayoutGuide {
                 return
             }
 
+            // Establish the constaints and one in particular that will be used when the keyboard shows
             let topConstraint = owningView.bottomAnchor.constraint(equalTo: topAnchor)
             self.topConstraint = topConstraint
             NSLayoutConstraint.activate([
@@ -79,5 +80,6 @@ extension WindowKeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillHide(_: Notification) {
         topConstraint?.constant = 0.0
+        owningView?.setNeedsLayout()
     }
 }

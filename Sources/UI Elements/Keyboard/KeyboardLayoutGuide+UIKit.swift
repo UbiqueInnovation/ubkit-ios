@@ -25,6 +25,7 @@ extension UIView {
 }
 
 extension UIWindow {
+    /// Call this function at the launch of the app in order to setup the monitoring of the keyboard on the Window/
     public func initializeForKeyboardLayoutGuide() {
         guard layoutGuides.contains(where: { $0 is WindowKeyboardLayoutGuide }) == false else {
             return
@@ -33,6 +34,7 @@ extension UIWindow {
         addLayoutGuide(guide)
     }
 
+    /// Get the keyboard layout guide
     var windowKeyboardLayoutGuide: UILayoutGuide? {
         return layoutGuides.first(where: { $0 is WindowKeyboardLayoutGuide })
     }
