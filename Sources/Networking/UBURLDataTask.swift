@@ -310,7 +310,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private let stateDispatchQueue = DispatchQueue(label: "State")
     /// :nodoc:
-    private private(set) var _state: State {
+    private var _state: State {
         willSet {
             // Validate state machine
             switch (_state, newValue) {

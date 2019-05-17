@@ -172,6 +172,9 @@ print(mainColor?.hexString ?? "No color")
 ## Keyboard Layout Guide
 The keyboard layout guide of a view will represent the area of that view that is obstructed by the keyboard. Making constraints to the top of the keyboard layout guide ensures that the content is always visible when the keyboard shows
 ```swift
+// In app did launch call `initializeForKeyboardLayoutGuide()` on the root window
+window?.initializeForKeyboardLayoutGuide()
+// In the view or view controller
 // Make sure that the input field is always above of the keyboard. Otherwise mapped to the bottom of the parent view.
 inputField.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
 ```
