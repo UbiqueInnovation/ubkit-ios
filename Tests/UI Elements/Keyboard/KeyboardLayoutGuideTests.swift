@@ -12,6 +12,8 @@ class KeyboardLayoutGuideTests: XCTestCase {
     func testKeyboardReaction() {
         // Setup the hierarchy
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 300, height: 600))
+        window.initializeForKeyboardLayoutGuide()
+
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 500))
         let referenceView = UIView()
 
