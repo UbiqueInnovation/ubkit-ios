@@ -162,7 +162,12 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     private func startRequest(request: UBURLRequest) {
         // Create a new task from the preferences
-        let dataTask = session.dataTask(with: request, owner: self)
+        guard let dataTask = session.dataTask(with: request, owner: self) else {
+            if state == .cancelled {
+                state = .finished
+            }
+            return
+        }
 
         // Set priority and description
         dataTask.priority = priority
@@ -317,6 +322,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             case (.initial, .waitingExecution), // Put the task in the queue
                  (.waitingExecution, .fetching), // Start task
                  (.waitingExecution, .cancelled), // Cancel task
+                 (.waitingExecution, .parsing), // Returned from cache
                  (.fetching, .parsing), // Data received
                  (.fetching, .finished), // Error received
                  (.fetching, .cancelled), // Cancel task

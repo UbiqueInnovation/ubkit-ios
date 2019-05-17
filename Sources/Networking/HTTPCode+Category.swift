@@ -41,4 +41,44 @@ public enum HTTPCodeCategory {
             self = .uncategorized
         }
     }
+
+    /// :nodoc:
+    public static func == (left: HTTPCodeCategory, right: Int) -> Bool {
+        return left == HTTPCodeCategory(code: right)
+    }
+
+    /// :nodoc:
+    public static func == (left: Int, right: HTTPCodeCategory) -> Bool {
+        return right == left
+    }
+
+    /// :nodoc:
+    public static func == (left: HTTPURLResponse, right: HTTPCodeCategory) -> Bool {
+        return left.statusCode == right
+    }
+
+    /// :nodoc:
+    public static func == (left: HTTPCodeCategory, right: HTTPURLResponse) -> Bool {
+        return right == left
+    }
+
+    /// :nodoc:
+    public static func != (left: HTTPCodeCategory, right: Int) -> Bool {
+        return left != HTTPCodeCategory(code: right)
+    }
+
+    /// :nodoc:
+    public static func != (left: Int, right: HTTPCodeCategory) -> Bool {
+        return right != left
+    }
+
+    /// :nodoc:
+    public static func != (left: HTTPURLResponse, right: HTTPCodeCategory) -> Bool {
+        return left.statusCode != right
+    }
+
+    /// :nodoc:
+    public static func != (left: HTTPCodeCategory, right: HTTPURLResponse) -> Bool {
+        return right != left
+    }
 }

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// Standard: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+
 /// An HTTP request header field
 public struct HTTPHeaderField {
     /// The value of the fieald
@@ -76,8 +78,14 @@ extension HTTPHeaderField {
         case contentType = "Content-Type"
         /// Date header field key
         case date = "Date"
+        /// A unique string identifying the version of the resource.
+        case etag = "ETag"
         /// Expires header field key
         case expires = "Expires"
+        /// Applies the method only if the stored resource doesn't match any of the given ETags
+        case ifNoneMatch = "If-None-Match"
+        /// Expects the entity to be transmitted only if it has been modified after the given date
+        case ifModifiedSince = "If-Modified-Since"
         /// Last Modified header field key
         case lastModified = "Last-Modified"
         /// User Agent header field key

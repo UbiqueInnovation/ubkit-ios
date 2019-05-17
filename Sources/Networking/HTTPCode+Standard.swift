@@ -62,4 +62,44 @@ public enum StandardHTTPCode: Int {
     case gatewayTimeout = 504
     /// The policy for accessing the resource has not been met in the request. The server should send back all the information necessary for the client to issue an extended request.
     case notExtended = 510
+
+    /// :nodoc:
+    public static func == (left: StandardHTTPCode, right: Int) -> Bool {
+        return left.rawValue == right
+    }
+
+    /// :nodoc:
+    public static func == (left: Int, right: StandardHTTPCode) -> Bool {
+        return right == left
+    }
+
+    /// :nodoc:
+    public static func == (left: HTTPURLResponse, right: StandardHTTPCode) -> Bool {
+        return left.statusCode == right
+    }
+
+    /// :nodoc:
+    public static func == (left: StandardHTTPCode, right: HTTPURLResponse) -> Bool {
+        return right == left
+    }
+
+    /// :nodoc:
+    public static func != (left: StandardHTTPCode, right: Int) -> Bool {
+        return left.rawValue != right
+    }
+
+    /// :nodoc:
+    public static func != (left: Int, right: StandardHTTPCode) -> Bool {
+        return right != left
+    }
+
+    /// :nodoc:
+    public static func != (left: HTTPURLResponse, right: StandardHTTPCode) -> Bool {
+        return left.statusCode != right
+    }
+
+    /// :nodoc:
+    public static func != (left: StandardHTTPCode, right: HTTPURLResponse) -> Bool {
+        return right != left
+    }
 }

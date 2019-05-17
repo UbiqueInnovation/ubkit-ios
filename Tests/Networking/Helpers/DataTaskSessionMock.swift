@@ -24,7 +24,7 @@ class DataTaskSessionMock: DataTaskURLSession {
         fatalError("Not emplemented")
     }
 
-    func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask {
+    func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
         let task = URLSessionDataTaskMock(config: dataTaskConfigurationBlock(request), timeoutInterval: request.timeoutInterval) { [weak owner] data, response, baseError in
             guard let owner = owner else {
                 return

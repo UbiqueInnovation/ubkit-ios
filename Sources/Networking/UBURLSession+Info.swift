@@ -10,15 +10,23 @@ import Foundation
 /// Holds information on the networking task
 public struct NetworkingTaskInfo: CustomDebugStringConvertible {
     /// The metric collected for the task
-    public let metrics: URLSessionTaskMetrics
+    public let metrics: URLSessionTaskMetrics?
+
+    public let cacheHit: Bool
 
     /// Instansiate a network info
-    init(metrics: URLSessionTaskMetrics) {
+    init(metrics: URLSessionTaskMetrics?, cacheHit: Bool) {
         self.metrics = metrics
+        self.cacheHit = cacheHit
     }
 
     /// :nodoc:
     public var debugDescription: String {
-        return String(describing: metrics)
+        let cacheDescription = "Cache \(cacheHit ? "Hit" : "Miss")"
+        if let metrics = metrics {
+            return String(describing: metrics) + "\n" + cacheDescription
+        } else {
+            return cacheDescription
+        }
     }
 }

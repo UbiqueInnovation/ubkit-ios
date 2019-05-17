@@ -56,10 +56,31 @@ public class UBURLSession: DataTaskURLSession {
     }
 
     /// :nodoc:
-    public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask {
-        let sessionDataTask = urlSession.dataTask(with: request.getRequest())
-        sessionDelegate.addTaskPair(key: sessionDataTask, value: owner)
-        return sessionDataTask
+    public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
+        // Check for cached responses
+        guard let cacheResult = sessionDelegate.cachingLogic?.cachedResponse(urlSession, request: request.getRequest(), dataTask: owner) else {
+            let sessionDataTask = urlSession.dataTask(with: request.getRequest())
+            sessionDelegate.addTaskPair(key: sessionDataTask, value: owner, cachedResponse: nil)
+            return sessionDataTask
+        }
+
+        switch cacheResult {
+        case .miss, .invalid:
+            let sessionDataTask = urlSession.dataTask(with: request.getRequest())
+            sessionDelegate.addTaskPair(key: sessionDataTask, value: owner, cachedResponse: nil)
+            return sessionDataTask
+        case let .hit(cachedResponse: cachedResponse):
+            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: NetworkingTaskInfo(metrics: nil, cacheHit: true))
+            return nil
+        case let .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders):
+            var reloadRequest = request.getRequest()
+            for header in reloadHeaders {
+                reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
+            }
+            let sessionDataTask = urlSession.dataTask(with: reloadRequest)
+            sessionDelegate.addTaskPair(key: sessionDataTask, value: owner, cachedResponse: cachedResponse)
+            return sessionDataTask
+        }
     }
 
     /// :nodoc:
