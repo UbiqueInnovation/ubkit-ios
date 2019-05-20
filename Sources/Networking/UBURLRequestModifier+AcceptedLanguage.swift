@@ -65,7 +65,7 @@ public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
             return
         }
 
-        let languageCodes = languages.map({ $0.identifier })
+        let languageCodes = languages.map { $0.identifier }
         var components: [String] = []
         for (index, languageCode) in languageCodes.enumerated() {
             let q = 1.0 - (Double(index) * 0.1)

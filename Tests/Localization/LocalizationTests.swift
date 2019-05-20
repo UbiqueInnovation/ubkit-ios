@@ -22,10 +22,10 @@ class LocalizationTests: XCTestCase {
         XCTAssertNil(frenchCHLocalization.localizedBundle)
 
         let test1 = frenchCHLocalization.preferredLanguages(stripRegionInformation: true, preferredLanguages: ["en", "fr", "it"])
-        XCTAssertEqual(test1.map({ $0.identifier }), ["fr", "en", "it"])
+        XCTAssertEqual(test1.map { $0.identifier }, ["fr", "en", "it"])
 
         let test2 = frenchCHLocalization.preferredLanguages(stripRegionInformation: false, preferredLanguages: ["fr", "en", "it"])
-        XCTAssertEqual(test2.map({ $0.identifier }), ["fr_CH", "fr", "en", "it"])
+        XCTAssertEqual(test2.map { $0.identifier }, ["fr_CH", "fr", "en", "it"])
     }
 
     func testPreferredLanguagesEdgeCases() {
@@ -33,15 +33,15 @@ class LocalizationTests: XCTestCase {
         XCTAssertNil(localization.localizedBundle)
 
         let test1 = localization.preferredLanguages(stripRegionInformation: true, preferredLanguages: ["_", "@"])
-        XCTAssertEqual(test1.map({ $0.identifier }), ["-", "_", "@"])
+        XCTAssertEqual(test1.map { $0.identifier }, ["-", "_", "@"])
     }
 
     func testAvailableLanguages() {
         let languagesStripped = Localization.availableLanguages(stripRegionInformation: true, bundle: testBundle)
-        XCTAssertEqual(languagesStripped.map({ $0.identifier }), ["en"])
+        XCTAssertEqual(languagesStripped.map { $0.identifier }, ["en"])
 
         let languagesNotStripped = Localization.availableLanguages(stripRegionInformation: false, bundle: testBundle)
-        XCTAssertEqual(Set(languagesNotStripped.map({ $0.identifier })), Set(["en", "en-IN"]))
+        XCTAssertEqual(Set(languagesNotStripped.map { $0.identifier }), Set(["en", "en-IN"]))
     }
 
     func testBundleLoadFromIdentifier() {

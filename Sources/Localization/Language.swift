@@ -13,7 +13,6 @@ import Foundation
 extension Localization {
     /// Holds information about a language
     public struct Language: Codable, Hashable, CustomStringConvertible {
-
         // MARK: - Properties
 
         /// The identifier of the language

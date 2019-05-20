@@ -15,7 +15,7 @@ public struct NetworkTaskRecoveryOptions: RecoverableError {
     private let _recoveryOptions: [NetworkTaskRecoveryOption]
     /// Provides a set of possible recovery options to present to the user.
     public var recoveryOptions: [String] {
-        return _recoveryOptions.map({ $0.localizedDisplayName })
+        return _recoveryOptions.map { $0.localizedDisplayName }
     }
 
     /// Creates a set of options to recover from a network task failure
@@ -40,6 +40,6 @@ public struct NetworkTaskRecoveryOptions: RecoverableError {
 
     /// Cancels all ongoing recoveries stored in this object
     public func cancelOngoingRecovery() {
-        _recoveryOptions.forEach({ $0.cancelOngoingRecovery() })
+        _recoveryOptions.forEach { $0.cancelOngoingRecovery() }
     }
 }

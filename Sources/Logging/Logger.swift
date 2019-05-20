@@ -145,7 +145,6 @@ public class Logger {
 }
 
 extension Logger {
-
     // MARK: - Access Level
 
     /// The access level of the log

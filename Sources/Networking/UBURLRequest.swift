@@ -9,7 +9,6 @@ import Foundation
 
 /// A URL load request that is independent of protocol or URL scheme.
 public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomStringConvertible, CustomDebugStringConvertible {
-
     // MARK: - Properties
 
     /// Underlaying data holder
@@ -203,7 +202,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// - Parameter parameters: A dictionary containing the query paramters
     /// - Throws: `NetworkingError` in case of missing or malformed URL
     public mutating func setQueryParameters(_ parameters: [String: String?]) throws {
-        try setQueryParameters(parameters.map({ URLQueryItem(name: $0.key, value: $0.value) }))
+        try setQueryParameters(parameters.map { URLQueryItem(name: $0.key, value: $0.value) })
     }
 
     /// Sets the query parameter
