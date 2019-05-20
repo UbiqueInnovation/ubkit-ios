@@ -9,7 +9,7 @@
 import Foundation
 
 /// A list of notifications fired by the localization
-public enum LocalizationNotification {
+public enum UBLocalizationNotification {
     /// The locale will change notification name
     public static var localeWillChange = Notification.Name("UBFoundation_LocalizationNotification_localeWillChange")
 

@@ -22,7 +22,7 @@ extension UBURLRequestTokenAuthorization {
             var modifierRequest = originalRequest
             switch result {
             case let .success(token):
-                modifierRequest.setHTTPHeaderField(HTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
+                modifierRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
                 completion(.success(modifierRequest))
             case let .failure(error):
                 completion(.failure(error))

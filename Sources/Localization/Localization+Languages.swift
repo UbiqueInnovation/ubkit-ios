@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Getting languages
 
-extension Localization {
+extension UBLocalization {
     /// Returns the preferred languages list modified to match the locale set.
     ///
     /// In the default case, the list is made up of the languages that the user sorted in the system settings and also are available in the app.

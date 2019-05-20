@@ -13,16 +13,16 @@ extension String {
     ///
     /// This method will use the bundle of the passed localization object to resolve the string.
     ///
-    /// - SeeAlso: `Localization`
+    /// - SeeAlso: `UBLocalization`
     ///
     /// - Parameter localization: The localization to use
     /// - Returns: The localized string
-    /// - Throws: `LocalizationError` if there is no bundle in the localization
-    public func localized(localization: Localization) throws -> String {
+    /// - Throws: `UBLocalizationError` if there is no bundle in the localization
+    public func ub_localized(localization: UBLocalization) throws -> String {
         let comment: String = ""
         guard let bundle = localization.localizedBundle else {
-            Localization.logger.error("Bundle not found for \(localization.debugDescription)")
-            throw LocalizationError.bundelNotFound
+            UBLocalization.logger.error("Bundle not found for \(localization.debugDescription)")
+            throw UBLocalizationError.bundelNotFound
         }
         return NSLocalizedString(self, tableName: nil, bundle: bundle, value: self, comment: comment)
     }
@@ -32,9 +32,9 @@ extension String {
     /// If no localization is found the string is returned.
     ///
     /// - Note:Use it only for apps as it uses the main bundle to get localizations. In case of a framework please refer to the function `func localized(localization:)` and pass in your framework localization.
-    public var localized: String {
+    public var ub_localized: String {
         do {
-            return try localized(localization: AppLocalization)
+            return try ub_localized(localization: UBAppLocalization)
         } catch {
             return self
         }
@@ -43,7 +43,7 @@ extension String {
     /// Localizes a string using the framework localization
     internal var frameworkLocalized: String {
         do {
-            return try localized(localization: frameworkLocalization)
+            return try ub_localized(localization: frameworkLocalization)
         } catch {
             return self
         }

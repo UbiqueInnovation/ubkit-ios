@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object that coordinates a group of related network data transfer tasks.
-public class UBURLSession: DataTaskURLSession {
+public class UBURLSession: UBDataTaskURLSession {
     /// A shared session that has a priority of responsive data. Useful for user initiated requests.
     public static let shared: UBURLSession = {
         let queue = OperationQueue()

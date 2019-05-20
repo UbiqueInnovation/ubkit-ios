@@ -12,14 +12,14 @@ public struct UBURLRequestBody {
     /// The data of the body
     public let data: Data
     /// The mime type of the body
-    public let mimeType: MIMEType
+    public let mimeType: UBMIMEType
 
     /// Initializes a request body
     ///
     /// - Parameters:
     ///   - data: The data of the body
     ///   - mimeType: The mime type of the body
-    public init(data: Data, mimeType: MIMEType) {
+    public init(data: Data, mimeType: UBMIMEType) {
         self.data = data
         self.mimeType = mimeType
     }

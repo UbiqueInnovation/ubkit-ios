@@ -11,12 +11,12 @@ import XCTest
 
 class LoggerGroupTests: XCTestCase {
     func testLoggerGroup() {
-        let l1 = try! Logger(category: "T1", bundle: Bundle(for: LoggerGroupTests.self))
+        let l1 = try! UBLogger(category: "T1", bundle: Bundle(for: LoggerGroupTests.self))
         l1.setLogLevel(.verbose)
-        let group = LoggerGroup(loggers: [
+        let group = UBLoggerGroup(loggers: [
             l1,
-            try! Logger(category: "T2", bundle: Bundle(for: LoggerGroupTests.self)),
-            try! Logger(category: "T3", bundle: Bundle(for: LoggerGroupTests.self))
+            try! UBLogger(category: "T2", bundle: Bundle(for: LoggerGroupTests.self)),
+            try! UBLogger(category: "T3", bundle: Bundle(for: LoggerGroupTests.self))
         ])
 
         XCTAssertEqual(group.loggers.count, 3)
@@ -24,9 +24,9 @@ class LoggerGroupTests: XCTestCase {
         XCTAssertEqual(group.loggers.count, 3)
         group.set(groupLogLevel: .none)
         for logger in group.loggers {
-            XCTAssertEqual(logger.logLevel, Logger.LogLevel.none)
+            XCTAssertEqual(logger.logLevel, UBLogger.LogLevel.none)
         }
-        let l4 = try! Logger(category: "T4", bundle: Bundle(for: LoggerGroupTests.self))
+        let l4 = try! UBLogger(category: "T4", bundle: Bundle(for: LoggerGroupTests.self))
         group.add(logger: l4)
         XCTAssertEqual(group.loggers.count, 4)
         group.remove(logger: l4)

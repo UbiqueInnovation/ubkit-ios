@@ -57,7 +57,7 @@ extension UIColor {
     /// - Note: Only available for iOS, watchOS and tvOS
     ///
     /// - Parameter hex: The raw hex string
-    public convenience init?(hexString hex: String) {
+    public convenience init?(ub_hexString hex: String) {
         let input = hex.trimmingCharacters(in: .whitespaces)
         // We want to crash if the regex cannot be formed. Error from the Framework that needs an update
         let hexStringRegex = try! NSRegularExpression(pattern: "^\\#?([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$", options: .caseInsensitive)
@@ -99,7 +99,7 @@ extension UIColor {
     /// - Note: Only available for iOS, watchOS and tvOS
     ///
     /// - Returns: A HEX string representing the color
-    public var hexString: String? {
+    public var ub_hexString: String? {
         var r: CGFloat = 0
         var g: CGFloat = 0
         var b: CGFloat = 0

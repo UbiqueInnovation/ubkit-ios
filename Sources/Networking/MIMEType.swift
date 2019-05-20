@@ -9,7 +9,7 @@ import Foundation
 
 /// A MIME type
 /// - seeAlso: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
-public struct MIMEType {
+public struct UBMIMEType {
     /// The type of the MIME
     public var type: StandardType
     /// The subtype of the MIME
@@ -46,7 +46,7 @@ public struct MIMEType {
             return nil
         }
 
-        guard let type = MIMEType.StandardType(rawValue: String(input[typeCapturedRange])) else {
+        guard let type = UBMIMEType.StandardType(rawValue: String(input[typeCapturedRange])) else {
             return nil
         }
         let subtype = String(input[subtypeCapturedRange])
@@ -73,13 +73,13 @@ public struct MIMEType {
         return resultString
     }
 
-    /// Check if equal to another MIMEType
+    /// Check if equal to another UBMIMEType
     ///
     /// - Parameters:
     ///   - to: The MIME type to check equality
     ///   - ignoreParameter: If we ignore the paramter in the comparison
     /// - Returns: `true` if they are equal
-    public func isEqual(_ to: MIMEType, ignoreParameter: Bool) -> Bool {
+    public func isEqual(_ to: UBMIMEType, ignoreParameter: Bool) -> Bool {
         let comparison = (type == to.type) && (subtype == to.subtype)
         if ignoreParameter {
             return comparison

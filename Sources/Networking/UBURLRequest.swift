@@ -25,12 +25,12 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     }
 
     /// The HTTP request method.
-    public var httpMethod: HTTPMethod? {
+    public var httpMethod: UBHTTPMethod? {
         get {
             guard let requestHTTPMethod = _request.httpMethod else {
                 return nil
             }
-            return HTTPMethod(rawValue: requestHTTPMethod)
+            return UBHTTPMethod(rawValue: requestHTTPMethod)
         }
         set {
             _request.httpMethod = newValue?.rawValue
@@ -103,7 +103,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///   - method: The HTTP Method to use. Default to GET.
     ///   - cachePolicy: The cache policy for the request. The default is `NSURLRequest.CachePolicy.useProtocolCachePolicy`.
     ///   - timeoutInterval: The timeout interval for the request. The default is 60.0.
-    public init(url: URL, method: HTTPMethod = .get, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, timeoutInterval: TimeInterval = 60.0) {
+    public init(url: URL, method: UBHTTPMethod = .get, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, timeoutInterval: TimeInterval = 60.0) {
         self.init(request: URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval))
         httpMethod = method
     }
@@ -127,7 +127,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
         _request.httpBody = nil
         // According to Apple docs, the content-length is set automatically for us.
         // https://developer.apple.com/documentation/foundation/urlrequest/2011502-allhttpheaderfields
-        setHTTPHeaderField(HTTPHeaderField(key: .contentType, value: nil))
+        setHTTPHeaderField(UBHTTPHeaderField(key: .contentType, value: nil))
     }
 
     /// Sets an HTTP body
@@ -138,7 +138,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
         _request.httpBody = body.data
         // According to Apple docs, the content-length is set automatically for us.
         // https://developer.apple.com/documentation/foundation/urlrequest/2011502-allhttpheaderfields
-        setHTTPHeaderField(HTTPHeaderField(key: .contentType, value: body.mimeType.stringValue))
+        setHTTPHeaderField(UBHTTPHeaderField(key: .contentType, value: body.mimeType.stringValue))
     }
 
     /// Sets an HTTP body
@@ -171,14 +171,14 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// Sets a value for a header field.
     ///
     /// - Parameter field: The new value for the header field.
-    public mutating func setHTTPHeaderField(_ field: HTTPHeaderField) {
+    public mutating func setHTTPHeaderField(_ field: UBHTTPHeaderField) {
         _request.setValue(field.value, forHTTPHeaderField: field.key)
     }
 
     /// Adds one value to the header field.
     ///
     /// - Parameter field: The value for the header field.
-    public mutating func addToHTTPHeaderField(_ field: HTTPHeaderField) {
+    public mutating func addToHTTPHeaderField(_ field: UBHTTPHeaderField) {
         guard let value = field.value else {
             return
         }
@@ -200,7 +200,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// Sets the query parameters
     ///
     /// - Parameter parameters: A dictionary containing the query paramters
-    /// - Throws: `NetworkingError` in case of missing or malformed URL
+    /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public mutating func setQueryParameters(_ parameters: [String: String?]) throws {
         try setQueryParameters(parameters.map { URLQueryItem(name: $0.key, value: $0.value) })
     }
@@ -208,7 +208,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// Sets the query parameter
     ///
     /// - Parameter parameter: A query item
-    /// - Throws: `NetworkingError` in case of missing or malformed URL
+    /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public mutating func setQueryParameters(_ parameter: URLQueryItem) throws {
         try setQueryParameters([parameter])
     }
@@ -216,17 +216,17 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// Sets the query parameters
     ///
     /// - Parameter parameters: An array containing the query paramters
-    /// - Throws: `NetworkingError` in case of missing or malformed URL
+    /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public mutating func setQueryParameters(_ parameters: [URLQueryItem]) throws {
         guard let url = url else {
-            throw NetworkingError.missingURL
+            throw UBNetworkingError.missingURL
         }
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            throw NetworkingError.malformedURL(url: url)
+            throw UBNetworkingError.malformedURL(url: url)
         }
         urlComponents.queryItems = parameters
         guard let newURL = urlComponents.url else {
-            throw NetworkingError.couldNotCreateURL
+            throw UBNetworkingError.couldNotCreateURL
         }
         self.url = newURL
     }
@@ -234,13 +234,13 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// Get all query paramters
     ///
     /// - Returns: All query paramters
-    /// - Throws: `NetworkingError` in case of missing or malformed URL
+    /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public func allQueryParameters() throws -> [URLQueryItem] {
         guard let url = url else {
-            throw NetworkingError.missingURL
+            throw UBNetworkingError.missingURL
         }
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            throw NetworkingError.malformedURL(url: url)
+            throw UBNetworkingError.malformedURL(url: url)
         }
         return urlComponents.queryItems ?? []
     }

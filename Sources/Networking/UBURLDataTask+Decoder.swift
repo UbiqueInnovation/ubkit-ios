@@ -35,14 +35,14 @@ open class UBURLDataTaskDecoder<T> {
 }
 
 /// A string decoder
-public class HTTPStringDecoder: UBURLDataTaskDecoder<String> {
+public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String> {
     /// Initializes the decoder
     ///
     /// - Parameter encoding: The string encoding
     public init(encoding: String.Encoding = .utf8) {
         super.init { (data, _) -> String in
             guard let string = String(data: data, encoding: encoding) else {
-                throw NetworkingError.couldNotDecodeBody
+                throw UBNetworkingError.couldNotDecodeBody
             }
             return string
         }
@@ -50,7 +50,7 @@ public class HTTPStringDecoder: UBURLDataTaskDecoder<String> {
 }
 
 /// A JSON Decoder
-public class HTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
+public class UBHTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
     /// Initializes the decoder
     ///
     /// - Parameters:

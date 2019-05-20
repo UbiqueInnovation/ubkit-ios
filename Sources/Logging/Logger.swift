@@ -9,8 +9,8 @@
 import Foundation
 import os.log
 
-/// A logger wrapper for the OSLog that provide an easy way to log. The Logger is thread safe.
-public class Logger {
+/// A logger wrapper for the OSLog that provide an easy way to log. The UBLogger is thread safe.
+public class UBLogger {
     /// The logger to use
     private let logger: OSLog
 
@@ -47,7 +47,7 @@ public class Logger {
     /// - Parameter logger: The OSLog to use
     public init(_ logger: OSLog) {
         self.logger = logger
-        logLevelDispatchQueue = DispatchQueue(label: "Logger")
+        logLevelDispatchQueue = DispatchQueue(label: "UBLogger")
     }
 
     /// Initalizes the logger with category and bundle
@@ -55,10 +55,10 @@ public class Logger {
     /// - Parameters:
     ///   - category: The category to log. _Example: use Networking as a category for all networking activity logging_
     ///   - bundle: The bundle to use
-    /// - Throws: `LoggingError` in case of failure
+    /// - Throws: `UBLoggingError` in case of failure
     public convenience init(category: String, bundle: Bundle = .main) throws {
         guard let bundleIdentifier = bundle.bundleIdentifier else {
-            throw LoggingError.bundelIdentifierNotFound
+            throw UBLoggingError.bundelIdentifierNotFound
         }
         let osLog = OSLog(subsystem: bundleIdentifier, category: category)
         self.init(osLog)
@@ -144,7 +144,7 @@ public class Logger {
     }
 }
 
-extension Logger {
+extension UBLogger {
     // MARK: - Access Level
 
     /// The access level of the log
@@ -168,7 +168,7 @@ extension Logger {
     }
 }
 
-extension Logger {
+extension UBLogger {
     /// :nodoc:
     private func getCurrentThreadDescription() -> String {
         if Thread.current.isMainThread {

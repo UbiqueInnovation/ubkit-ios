@@ -8,7 +8,7 @@
 import Foundation
 @testable import UBFoundation
 
-class DataTaskSessionMock: DataTaskURLSession {
+class DataTaskSessionMock: UBDataTaskURLSession {
     private var _allTasks: [URLSessionTask] = []
     var dataTaskConfigurationBlock: (UBURLRequest) -> URLSessionDataTaskMock.Configuration
 
@@ -31,7 +31,7 @@ class DataTaskSessionMock: DataTaskURLSession {
             }
             var error = baseError
             if error == nil, (response is HTTPURLResponse) == false {
-                error = NetworkingError.notHTTPResponse
+                error = UBNetworkingError.notHTTPResponse
             }
             if let r = response as? HTTPURLResponse {
                 do {

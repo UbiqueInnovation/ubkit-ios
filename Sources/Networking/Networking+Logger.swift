@@ -8,7 +8,7 @@
 import Foundation
 
 /// A name space for networking
-public enum Networking {
+public enum UBNetworking {
     /// A logger associated with data tasks
-    internal static let logger: Logger = Logging.frameworkLoggerFactory(category: "Networking")
+    internal static let logger: UBLogger = UBLogging.frameworkLoggerFactory(category: "Networking")
 }

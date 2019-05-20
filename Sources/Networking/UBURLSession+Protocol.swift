@@ -24,7 +24,7 @@ public protocol UBURLSessionProtocol {
 }
 
 /// A data task capable session
-public protocol DataTaskURLSession: UBURLSessionProtocol {
+public protocol UBDataTaskURLSession: UBURLSessionProtocol {
     /// Creates a task that retrieves the contents of a URL based on the specified URL request object, and calls a handler upon completion.
     ///
     /// - Parameters:

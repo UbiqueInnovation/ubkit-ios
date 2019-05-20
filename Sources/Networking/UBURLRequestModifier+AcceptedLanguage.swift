@@ -13,9 +13,9 @@ public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
     private let serial = DispatchQueue(label: "Accepted Language")
 
     /// :nodoc:
-    public var _localization: Localization
+    public var _localization: UBLocalization
     /// The localization to use for the language list.
-    public var localization: Localization {
+    public var localization: UBLocalization {
         get {
             return serial.sync {
                 _localization
@@ -49,7 +49,7 @@ public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
     /// - Parameters:
     ///   - includeRegion: If the region information (if present) should be appended to the language.
     ///   - localization: The localization to use for the language list.
-    public init(includeRegion: Bool, localization: Localization) {
+    public init(includeRegion: Bool, localization: UBLocalization) {
         _localization = localization
         _includeRegion = includeRegion
     }
@@ -76,7 +76,7 @@ public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
         }
         let headerValue = components.joined(separator: ",")
         var newRequest = originalRequest
-        newRequest.setHTTPHeaderField(HTTPHeaderField(key: .acceptLanguage, value: headerValue))
+        newRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .acceptLanguage, value: headerValue))
         completion(.success(newRequest))
     }
 }

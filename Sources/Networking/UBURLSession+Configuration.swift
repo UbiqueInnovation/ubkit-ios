@@ -12,9 +12,9 @@ public class UBURLSessionConfiguration {
     /// A copy of the configuration object for this session.
     public let sessionConfiguration: URLSessionConfiguration
     /// The evaluator per hosts
-    public let hostsServerTrusts: [String: ServerTrustEvaluator]
+    public let hostsServerTrusts: [String: UBServerTrustEvaluator]
     /// The default evaluator to use
-    public let defaultServerTrust: ServerTrustEvaluator?
+    public let defaultServerTrust: UBServerTrustEvaluator?
     /// If requests are allowed to redirect
     public let allowRedirections: Bool
     /// If requests have the correct headers, then the session will schedule a call in the future for refreshing the data.
@@ -31,7 +31,7 @@ public class UBURLSessionConfiguration {
     ///   - defaultServerTrust: A evaluator to use in case no matche is found in the list of hosts. If no default is set and the host is not found then the default OS behaviour is executed.
     ///   - allowRedirections: Set this flag to `false` if you do not want any redirection. If response wants to redirect, and the flag is set to false, the redirection will not happpen and the data task will be called with the response that caused the redirection.
     ///   - allowAutoRefresh: If set to true and the response has the correct headers. Then the session will try to refresh the data once the cached data is invalid or the next update time is reached.
-    public init(sessionConfiguration: URLSessionConfiguration = .default, hostsServerTrusts: [String: ServerTrustEvaluator] = [:], defaultServerTrust: ServerTrustEvaluator? = nil, allowRedirections: Bool = true, allowAutoRefresh: Bool = true) {
+    public init(sessionConfiguration: URLSessionConfiguration = .default, hostsServerTrusts: [String: UBServerTrustEvaluator] = [:], defaultServerTrust: UBServerTrustEvaluator? = nil, allowRedirections: Bool = true, allowAutoRefresh: Bool = true) {
         self.sessionConfiguration = sessionConfiguration.copy() as! URLSessionConfiguration
         self.hostsServerTrusts = hostsServerTrusts
         self.defaultServerTrust = defaultServerTrust
@@ -45,7 +45,7 @@ public class UBURLSessionConfiguration {
         var headers: [AnyHashable: Any] = [:]
 
         // Add encoding
-        headers[HTTPHeaderField.StandardKeys.acceptEncoding.rawValue] = "gzip"
+        headers[UBHTTPHeaderField.StandardKeys.acceptEncoding.rawValue] = "gzip"
 
         // Add app information
         if let info = Bundle.main.infoDictionary,

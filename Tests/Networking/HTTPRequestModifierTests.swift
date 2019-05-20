@@ -135,7 +135,7 @@ class HTTPRequestModifierTests: XCTestCase {
             let testBundle = Bundle(path: testBundlePath) else {
             fatalError("No test bundle found")
         }
-        let frenchCHLocalization = Localization(locale: Locale(identifier: "fr_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())
+        let frenchCHLocalization = UBLocalization(locale: Locale(identifier: "fr_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())
         let ba = UBURLRequestAcceptedLanguageModifier(includeRegion: false, localization: frenchCHLocalization)
         ba.modifyRequest(request) { result in
             switch result {

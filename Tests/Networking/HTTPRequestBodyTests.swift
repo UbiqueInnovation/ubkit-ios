@@ -25,7 +25,7 @@ class HTTPRequestBodyProviderTests: XCTestCase {
     }
 
     func testURLEncoding() {
-        var encoder = HTTPRequestBodyURLEncoder(payload: ["A": "1", "b": "2", "C": "3"])
+        var encoder = UBHTTPRequestBodyURLEncoder(payload: ["A": "1", "b": "2", "C": "3"])
         let expectedResult = "A=1&C=3&b=2".data(using: .utf8)!
         do {
             let body = try encoder.httpRequestBody()
@@ -43,11 +43,11 @@ class HTTPRequestBodyProviderTests: XCTestCase {
 
     func testMultipartMultiple() {
         do {
-            let parameter1 = URLRequestBodyMultipart.Parameter(name: "p1", value: "parameter1")
-            let parameter2 = URLRequestBodyMultipart.Parameter(name: "p2", value: "parameter2")
-            let payload1 = try URLRequestBodyMultipart.Payload(name: "d1", fileName: "f1", body: "d1f1")
-            let payload2 = try URLRequestBodyMultipart.Payload(name: "d2", fileName: "f2", body: "d2f2")
-            let multipart = URLRequestBodyMultipart(parameters: [parameter1, parameter2], payloads: [payload1, payload2], encoding: .utf8)
+            let parameter1 = UBURLRequestBodyMultipart.Parameter(name: "p1", value: "parameter1")
+            let parameter2 = UBURLRequestBodyMultipart.Parameter(name: "p2", value: "parameter2")
+            let payload1 = try UBURLRequestBodyMultipart.Payload(name: "d1", fileName: "f1", body: "d1f1")
+            let payload2 = try UBURLRequestBodyMultipart.Payload(name: "d2", fileName: "f2", body: "d2f2")
+            let multipart = UBURLRequestBodyMultipart(parameters: [parameter1, parameter2], payloads: [payload1, payload2], encoding: .utf8)
             let body = try multipart.httpRequestBody()
 
             XCTAssertEqual(body.mimeType.stringValue, "multipart/form-data; boundary=\(multipart.boundary)")
@@ -65,8 +65,8 @@ class HTTPRequestBodyProviderTests: XCTestCase {
 
     func testMultipartPayloadOnly() {
         do {
-            let payload1 = try URLRequestBodyMultipart.Payload(name: "d1", fileName: "f1", body: "d1f1")
-            let multipart = URLRequestBodyMultipart(parameters: [], payloads: [payload1], encoding: .utf8)
+            let payload1 = try UBURLRequestBodyMultipart.Payload(name: "d1", fileName: "f1", body: "d1f1")
+            let multipart = UBURLRequestBodyMultipart(parameters: [], payloads: [payload1], encoding: .utf8)
             let body = try multipart.httpRequestBody()
 
             XCTAssertEqual(body.mimeType.stringValue, "multipart/form-data; boundary=\(multipart.boundary)")
@@ -84,9 +84,9 @@ class HTTPRequestBodyProviderTests: XCTestCase {
 
     func testMultipartParameters() {
         do {
-            let parameter1 = URLRequestBodyMultipart.Parameter(name: "p1", value: "parameter1")
-            let parameter2 = URLRequestBodyMultipart.Parameter(name: "p2", value: "parameter2")
-            let multipart = URLRequestBodyMultipart(parameters: [parameter1, parameter2], payloads: [], encoding: .utf8)
+            let parameter1 = UBURLRequestBodyMultipart.Parameter(name: "p1", value: "parameter1")
+            let parameter2 = UBURLRequestBodyMultipart.Parameter(name: "p2", value: "parameter2")
+            let multipart = UBURLRequestBodyMultipart(parameters: [parameter1, parameter2], payloads: [], encoding: .utf8)
             let body = try multipart.httpRequestBody()
 
             XCTAssertEqual(body.mimeType.stringValue, "multipart/form-data; boundary=\(multipart.boundary)")
@@ -103,7 +103,7 @@ class HTTPRequestBodyProviderTests: XCTestCase {
     }
 
     func testMultipartNoParts() {
-        let multipart = URLRequestBodyMultipart(parameters: [], payloads: [], encoding: .utf8)
+        let multipart = UBURLRequestBodyMultipart(parameters: [], payloads: [], encoding: .utf8)
         XCTAssertThrowsError(try multipart.httpRequestBody())
     }
 }

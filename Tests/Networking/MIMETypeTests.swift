@@ -10,18 +10,18 @@ import XCTest
 
 class MIMETypeTests: XCTestCase {
     func testCharacterEncoding() {
-        XCTAssertEqual(MIMEType.Parameter(charsetForEncoding: .utf8)?.value, "utf-8")
-        XCTAssertEqual(MIMEType.Parameter(charsetForEncoding: .ascii)?.value, "us-ascii")
+        XCTAssertEqual(UBMIMEType.Parameter(charsetForEncoding: .utf8)?.value, "utf-8")
+        XCTAssertEqual(UBMIMEType.Parameter(charsetForEncoding: .ascii)?.value, "us-ascii")
     }
 
     func testEquatable() {
-        XCTAssertTrue(MIMEType(type: .text, subtype: "plain").isEqual(.text(), ignoreParameter: false))
-        XCTAssertTrue(MIMEType(type: .text, subtype: "plain").isEqual(.text(), ignoreParameter: true))
-        XCTAssertTrue(MIMEType(type: .text, subtype: "plain", parameter: MIMEType.Parameter(charsetForEncoding: .utf8)).isEqual(.text(encoding: .utf8), ignoreParameter: false))
-        XCTAssertTrue(MIMEType(type: .text, subtype: "plain", parameter: MIMEType.Parameter(charsetForEncoding: .utf8)).isEqual(.text(encoding: nil), ignoreParameter: true))
-        XCTAssertFalse(MIMEType(type: .text, subtype: "plain").isEqual(.png, ignoreParameter: false))
-        XCTAssertFalse(MIMEType(type: .text, subtype: "plain").isEqual(.png, ignoreParameter: true))
-        XCTAssertFalse(MIMEType(type: .text, subtype: "plain", parameter: MIMEType.Parameter(charsetForEncoding: .utf8)).isEqual(.text(encoding: nil), ignoreParameter: false))
+        XCTAssertTrue(UBMIMEType(type: .text, subtype: "plain").isEqual(.text(), ignoreParameter: false))
+        XCTAssertTrue(UBMIMEType(type: .text, subtype: "plain").isEqual(.text(), ignoreParameter: true))
+        XCTAssertTrue(UBMIMEType(type: .text, subtype: "plain", parameter: UBMIMEType.Parameter(charsetForEncoding: .utf8)).isEqual(.text(encoding: .utf8), ignoreParameter: false))
+        XCTAssertTrue(UBMIMEType(type: .text, subtype: "plain", parameter: UBMIMEType.Parameter(charsetForEncoding: .utf8)).isEqual(.text(encoding: nil), ignoreParameter: true))
+        XCTAssertFalse(UBMIMEType(type: .text, subtype: "plain").isEqual(.png, ignoreParameter: false))
+        XCTAssertFalse(UBMIMEType(type: .text, subtype: "plain").isEqual(.png, ignoreParameter: true))
+        XCTAssertFalse(UBMIMEType(type: .text, subtype: "plain", parameter: UBMIMEType.Parameter(charsetForEncoding: .utf8)).isEqual(.text(encoding: nil), ignoreParameter: false))
     }
 
     func testInitializingFromString() {
@@ -37,7 +37,7 @@ class MIMETypeTests: XCTestCase {
         ]
         // Test the successful standard format
         for test in successTestData {
-            let mime = MIMEType(string: test)
+            let mime = UBMIMEType(string: test)
             XCTAssertNotNil(mime)
             XCTAssertEqual(mime?.stringValue, test)
         }
@@ -60,19 +60,19 @@ class MIMETypeTests: XCTestCase {
             "application/json; =utf-8" // Parameter malformatted
         ]
         for test in failureTestData {
-            XCTAssertNil(MIMEType(string: test))
+            XCTAssertNil(UBMIMEType(string: test))
         }
     }
 
     func testDescription() {
-        XCTAssertEqual(MIMEType(type: .image, subtype: "png", parameter: nil).stringValue, "image/png")
-        XCTAssertEqual(MIMEType(type: .text, subtype: "plain", parameter: MIMEType.Parameter(charsetForEncoding: .utf8)).stringValue, "text/plain; charset=utf-8")
+        XCTAssertEqual(UBMIMEType(type: .image, subtype: "png", parameter: nil).stringValue, "image/png")
+        XCTAssertEqual(UBMIMEType(type: .text, subtype: "plain", parameter: UBMIMEType.Parameter(charsetForEncoding: .utf8)).stringValue, "text/plain; charset=utf-8")
     }
 
     func testPresets() {
-        XCTAssertEqual(MIMEType.text(encoding: .utf8).stringValue, "text/plain; charset=utf-8")
-        XCTAssertEqual(MIMEType.text().stringValue, "text/plain")
-        XCTAssertEqual(MIMEType.multipartFormData(boundary: "A").stringValue, "multipart/form-data; boundary=A")
-        XCTAssertEqual(MIMEType.json().stringValue, "application/json; charset=utf-8")
+        XCTAssertEqual(UBMIMEType.text(encoding: .utf8).stringValue, "text/plain; charset=utf-8")
+        XCTAssertEqual(UBMIMEType.text().stringValue, "text/plain")
+        XCTAssertEqual(UBMIMEType.multipartFormData(boundary: "A").stringValue, "multipart/form-data; boundary=A")
+        XCTAssertEqual(UBMIMEType.json().stringValue, "application/json; charset=utf-8")
     }
 }
