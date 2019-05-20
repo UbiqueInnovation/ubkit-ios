@@ -44,6 +44,8 @@ class URLSessionDataTaskMock: URLSessionDataTask {
                 RunLoop.main.add(timeoutTimer!, forMode: RunLoop.Mode.common)
             case .canceling, .completed, .suspended:
                 timeoutTimer?.invalidate()
+            @unknown default:
+                fatalError("Unhandled new state")
             }
             didChangeValue(for: \.state)
         }

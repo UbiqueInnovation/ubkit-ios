@@ -9,7 +9,6 @@ import Foundation
 
 /// A data task that returns downloaded data directly to the app in memory.
 public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, CustomDebugStringConvertible {
-
     // MARK: - Properties
 
     /// The session used to create tasks
@@ -315,7 +314,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private let stateDispatchQueue = DispatchQueue(label: "State")
     /// :nodoc:
-    private private(set) var _state: State {
+    private var _state: State {
         willSet {
             // Validate state machine
             switch (_state, newValue) {
@@ -359,7 +358,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             guard let self = self else {
                 return
             }
-            self.stateTransitionObservers.forEach({ $0(old, new, self) })
+            self.stateTransitionObservers.forEach { $0(old, new, self) }
         }
     }
 
@@ -398,7 +397,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             guard let self = self else {
                 return
             }
-            self.progressObservers.forEach({ $0(self, progress) })
+            self.progressObservers.forEach { $0(self, progress) }
         }
     }
 
@@ -439,7 +438,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             guard let self = self else {
                 return
             }
-            self.completionHandlers.forEach({ $0.fail(error: error, response: response, info: info, caller: self) })
+            self.completionHandlers.forEach { $0.fail(error: error, response: response, info: info, caller: self) }
         }
     }
 
@@ -508,7 +507,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// :nodoc:
     func validate(response: HTTPURLResponse) throws {
-        try responseValidators.forEach({ try $0.validateHTTPResponse(response) })
+        try responseValidators.forEach { try $0.validateHTTPResponse(response) }
     }
 
     /// Adds a response validator.

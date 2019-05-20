@@ -9,7 +9,6 @@ import Foundation
 
 /// A object that can schedule an invocation at a point in time.
 public class CronJob {
-
     // MARK: - Definitions
 
     /// A cron execution block
@@ -142,10 +141,10 @@ public class CronJob {
     ///   - qos: The quality of service of the job
     ///   - executionBlock: The block to be executed by the job
     public init(qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.identifier = UUID()
+        identifier = UUID()
         _executionBlock = executionBlock
-        self.dispatchQueue = DispatchQueue(label: "Cron Job Timer \(identifier.uuidString)", qos: qos)
-        self.serialQueue = DispatchQueue(label: "Cron Job Serial \(identifier.uuidString)", qos: qos)
+        dispatchQueue = DispatchQueue(label: "Cron Job Timer \(identifier.uuidString)", qos: qos)
+        serialQueue = DispatchQueue(label: "Cron Job Serial \(identifier.uuidString)", qos: qos)
     }
 
     /// :nodoc:
@@ -249,14 +248,14 @@ extension CronJob {
     /// :nodoc:
     private func executeBlock() {
         if let rule = self.rule, rule.repeatRule == CronRepeatRule.never {
-            self.state = .finished
+            state = .finished
         }
         if let callbackQueue = self._callbackQueue {
             callbackQueue.addOperation { [weak self] in
                 self?._executionBlock()
             }
         } else {
-            self._executionBlock()
+            _executionBlock()
         }
     }
 }

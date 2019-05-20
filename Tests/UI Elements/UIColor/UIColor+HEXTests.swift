@@ -74,7 +74,7 @@ class UIColor_HEXTests: XCTestCase {
         let testData = ["#FFF", "#FFFF", "#FFFFFF", "#FFFFFFFF", "#000", "#0000", "#000000", "#00000000", "#A12", "#B12"]
         measure {
             for _ in 1 ... 100 {
-                testData.forEach({ _ = UIColor(hexString: $0) })
+                testData.forEach { _ = UIColor(hexString: $0) }
             }
         }
     }

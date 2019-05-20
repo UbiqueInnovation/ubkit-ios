@@ -113,7 +113,6 @@
 		8E7F74B02249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
 		8E7F74BB2249966D00582E57 /* UIColor+HEXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */; };
 		8E7F74BC2249966D00582E57 /* UIColor+HEXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */; };
-		8E7F74C72249A52C00582E57 /* KeyboardLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */; };
 		8E7F7507224A1FD000582E57 /* KeyboardLayoutGuideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7506224A1FD000582E57 /* KeyboardLayoutGuideTests.swift */; };
 		8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
 		8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
@@ -275,6 +274,10 @@
 		8EE058F6225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
 		8EE058F7225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
 		8EE058F8225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */; };
+		8EE5F787228EE349009D174A /* WindowKeyboardLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5F786228EE349009D174A /* WindowKeyboardLayoutGuide.swift */; };
+		8EE5F789228EE3FE009D174A /* KeyboardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5F788228EE3FE009D174A /* KeyboardInfo.swift */; };
+		8EE5F78B228EE498009D174A /* KeyboardLayoutGuide+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5F78A228EE498009D174A /* KeyboardLayoutGuide+UIKit.swift */; };
+		8EE5F78D228EE4E9009D174A /* ViewKeyboardLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5F78C228EE4E9009D174A /* ViewKeyboardLayoutGuide.swift */; };
 		8EF90D56224298700055A362 /* HTTPCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D55224298700055A362 /* HTTPCodeTests.swift */; };
 		8EF90D57224298700055A362 /* HTTPCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D55224298700055A362 /* HTTPCodeTests.swift */; };
 		8EF90D58224298700055A362 /* HTTPCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF90D55224298700055A362 /* HTTPCodeTests.swift */; };
@@ -386,7 +389,6 @@
 		8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEX.swift"; sourceTree = "<group>"; };
 		8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEXTests.swift"; sourceTree = "<group>"; };
 		8E7F74BD22499F2600582E57 /* Usage.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Usage.md; path = Documentation/Usage.md; sourceTree = "<group>"; };
-		8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutGuide.swift; sourceTree = "<group>"; };
 		8E7F7506224A1FD000582E57 /* KeyboardLayoutGuideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutGuideTests.swift; sourceTree = "<group>"; };
 		8E7F7512224AE4C300582E57 /* CronJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronJob.swift; sourceTree = "<group>"; };
 		8E7F7519224AFD4400582E57 /* CronJobTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronJobTests.swift; sourceTree = "<group>"; };
@@ -443,6 +445,10 @@
 		8EE058E522535A7E00B2885B /* NetworkTaskRecovery+Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+Options.swift"; sourceTree = "<group>"; };
 		8EE058EA22535FF700B2885B /* UBURLSessionTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLSessionTask.swift; sourceTree = "<group>"; };
 		8EE058F4225367CC00B2885B /* NetworkTaskRecovery+Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkTaskRecovery+Option.swift"; sourceTree = "<group>"; };
+		8EE5F786228EE349009D174A /* WindowKeyboardLayoutGuide.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowKeyboardLayoutGuide.swift; sourceTree = "<group>"; };
+		8EE5F788228EE3FE009D174A /* KeyboardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardInfo.swift; sourceTree = "<group>"; };
+		8EE5F78A228EE498009D174A /* KeyboardLayoutGuide+UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyboardLayoutGuide+UIKit.swift"; sourceTree = "<group>"; };
+		8EE5F78C228EE4E9009D174A /* ViewKeyboardLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewKeyboardLayoutGuide.swift; sourceTree = "<group>"; };
 		8EF90D55224298700055A362 /* HTTPCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPCodeTests.swift; sourceTree = "<group>"; };
 		8EF90D5922429AA30055A362 /* MIMETypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIMETypeTests.swift; sourceTree = "<group>"; };
 		8EF90D5D22429D300055A362 /* HTTPRequestBodyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequestBodyTests.swift; sourceTree = "<group>"; };
@@ -634,7 +640,10 @@
 		8E7F74C52249A43200582E57 /* Keyboard */ = {
 			isa = PBXGroup;
 			children = (
-				8E7F74C62249A52C00582E57 /* KeyboardLayoutGuide.swift */,
+				8EE5F78A228EE498009D174A /* KeyboardLayoutGuide+UIKit.swift */,
+				8EE5F78C228EE4E9009D174A /* ViewKeyboardLayoutGuide.swift */,
+				8EE5F786228EE349009D174A /* WindowKeyboardLayoutGuide.swift */,
+				8EE5F788228EE3FE009D174A /* KeyboardInfo.swift */,
 			);
 			path = Keyboard;
 			sourceTree = "<group>";
@@ -1084,10 +1093,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1020;
 				TargetAttributes = {
 					8EBD4769224063B400CD2639 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 					};
 					8EBD4777224063D300CD2639 = {
 						CreatedOnToolsVersion = 10.1;
@@ -1100,7 +1110,7 @@
 					};
 					8EBD47B122406F8900CD2639 = {
 						CreatedOnToolsVersion = 10.1;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1020;
 					};
 					8EBD47C022406FB400CD2639 = {
 						CreatedOnToolsVersion = 10.1;
@@ -1118,6 +1128,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 8EBD475E2240636A00CD2639;
 			productRefGroup = 8EBD476B224063B400CD2639 /* Products */;
@@ -1217,7 +1228,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftformat >/dev/null; then\n    swiftformat ${SRCROOT}\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+			shellScript = "if which swiftformat >/dev/null; then\nswiftformat --swiftversion ${SWIFT_VERSION} ${SRCROOT}\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
 		};
 		8EBD482C224081E000CD2639 /* Swift Format */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1235,7 +1246,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftformat >/dev/null; then\n    swiftformat ${SRCROOT}\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+			shellScript = "if which swiftformat >/dev/null; then\n    swiftformat --swiftversion ${SWIFT_VERSION} ${SRCROOT}\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
 		};
 		8EBD482D224081F700CD2639 /* Swift Format */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1253,7 +1264,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftformat >/dev/null; then\n    swiftformat ${SRCROOT}\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+			shellScript = "if which swiftformat >/dev/null; then\n    swiftformat --swiftversion ${SWIFT_VERSION} ${SRCROOT}\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
 		};
 		8EBD482E2240820000CD2639 /* Swift Format */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1271,7 +1282,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftformat >/dev/null; then\n    swiftformat ${SRCROOT}\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+			shellScript = "if which swiftformat >/dev/null; then\n    swiftformat --swiftversion ${SWIFT_VERSION} ${SRCROOT}\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
 		};
 		8EBD482F2240822500CD2639 /* Swift Lint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1367,14 +1378,15 @@
 				8EE058CB22526CEC00B2885B /* UBURLRequestModifier+TokenAuthorization.swift in Sources */,
 				8E0DB2D02243EABB00D5E01E /* HTTPURLResponse+Networking.swift in Sources */,
 				8EE058C122526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
-				8E7F74C72249A52C00582E57 /* KeyboardLayoutGuide.swift in Sources */,
 				8EBD48182240773900CD2639 /* GlobalLogging.swift in Sources */,
+				8EE5F789228EE3FE009D174A /* KeyboardInfo.swift in Sources */,
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				8EFFDD0922568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8EE058E622535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
 				8EFFDCD322545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
 				8E0DB2C52243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,
+				8EE5F787228EE349009D174A /* WindowKeyboardLayoutGuide.swift in Sources */,
 				8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */,
 				8EFFDCC022540A7F002D2DE2 /* Networking+URLSession.swift in Sources */,
 				8EBD48022240770000CD2639 /* Localization.swift in Sources */,
@@ -1398,9 +1410,11 @@
 				8E7F748A2247B4A300582E57 /* UBURLRequest+BodyConvertible.swift in Sources */,
 				8E0DB2B42243088000D5E01E /* Networking+Error.swift in Sources */,
 				8EC4845F2241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */,
+				8EE5F78D228EE4E9009D174A /* ViewKeyboardLayoutGuide.swift in Sources */,
 				8E7F74852245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8EFFDCC92254179F002D2DE2 /* UBURLSession.swift in Sources */,
 				8E0DB2AA2243049900D5E01E /* UBURLDataTask.swift in Sources */,
+				8EE5F78B228EE498009D174A /* KeyboardLayoutGuide+UIKit.swift in Sources */,
 				8EE058C622526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8EC484792242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48062240770000CD2639 /* Localization+String.swift in Sources */,
@@ -1723,9 +1737,36 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 				WATCHOS_DEPLOYMENT_TARGET = 5.0;
@@ -1736,7 +1777,32 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
@@ -1777,7 +1843,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1818,7 +1884,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1857,7 +1923,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1891,7 +1957,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2241,7 +2307,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -2322,7 +2388,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -2433,7 +2499,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2500,7 +2566,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};

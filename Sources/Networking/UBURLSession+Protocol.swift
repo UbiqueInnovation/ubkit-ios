@@ -9,7 +9,6 @@ import Foundation
 
 /// An protocol that coordinates a group of related network data transfer tasks.
 public protocol UBURLSessionProtocol {
-
     // MARK: - Managing the Session
 
     /// Invalidates the session, allowing any outstanding tasks to finish.

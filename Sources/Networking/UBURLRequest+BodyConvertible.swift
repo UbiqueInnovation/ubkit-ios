@@ -36,7 +36,6 @@ extension String: URLRequestBodyConvertible {
 
 /// A URL Encoder. The keys are sorted aphabetically and it is case sensitive
 public struct HTTPRequestBodyURLEncoder: URLRequestBodyConvertible {
-
     // MARK: - Properties
 
     /// The payload to encode
@@ -63,7 +62,7 @@ public struct HTTPRequestBodyURLEncoder: URLRequestBodyConvertible {
         var urlComponents = URLComponents()
         urlComponents.queryItems = payload.sorted(by: { (left, right) -> Bool in
             left.key < right.key
-        }).map({ URLQueryItem(name: $0, value: $1) })
+        }).map { URLQueryItem(name: $0, value: $1) }
         guard let query = urlComponents.query, let data = query.data(using: encoding) else {
             throw NetworkingError.couldNotEncodeBody
         }

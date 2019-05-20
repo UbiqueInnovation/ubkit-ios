@@ -9,7 +9,6 @@ import Foundation
 
 /// The standard HTTP codes
 public enum StandardHTTPCode: Int {
-
     // MARK: - 1xx Informational
 
     /// The client SHOULD continue with its request.

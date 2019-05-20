@@ -72,7 +72,7 @@ public class LoggerGroup {
     public func set(groupLogLevel newLogLevel: Logger.LogLevel) {
         loggersDispatchQueue.async(flags: .barrier) { [weak self] in
             self?.groupLogLevel = newLogLevel
-            self?._loggers.forEach({ $0.setLogLevel(newLogLevel) })
+            self?._loggers.forEach { $0.setLogLevel(newLogLevel) }
         }
     }
 }

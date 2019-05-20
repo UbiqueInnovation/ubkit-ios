@@ -190,7 +190,7 @@ extension SecTrust {
         var result = SecTrustResultType.invalid
         let status = SecTrustEvaluate(self, &result)
 
-        guard status.isSuccess && result.isSuccess else {
+        guard status.isSuccess, result.isSuccess else {
             throw NetworkingError.certificateValidationFailed
         }
     }

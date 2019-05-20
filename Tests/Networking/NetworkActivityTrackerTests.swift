@@ -16,10 +16,10 @@ class NetworkActivityTrackerTests: XCTestCase {
         let request = UBURLRequest(url: url)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.3)
+            URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.3)
         }
         let mockSession2 = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.7)
+            URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.7)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         let dataTask2 = UBURLDataTask(request: request, session: mockSession2)
@@ -29,14 +29,14 @@ class NetworkActivityTrackerTests: XCTestCase {
         let tracker = NetworkActivityTracker()
         tracker.add(dataTask)
         tracker.add(dataTask2)
-        tracker.addStateObserver({ state in
+        tracker.addStateObserver { state in
             let expectedState = sequence.removeFirst()
             XCTAssertEqual(state, expectedState)
             if sequence.isEmpty {
                 XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), 0.75)
                 ex.fulfill()
             }
-        })
+        }
         dataTask.start()
         dataTask2.start()
 
