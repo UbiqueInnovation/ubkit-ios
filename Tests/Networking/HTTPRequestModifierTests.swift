@@ -158,7 +158,7 @@ private enum Err: Error {
 
 private struct SleeperModifier: UBURLRequestModifier {
     let duration: TimeInterval
-    func modifyRequest(_ request: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
+    func modifyRequest(_ request: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             completion(.success(request))
         }
@@ -166,7 +166,7 @@ private struct SleeperModifier: UBURLRequestModifier {
 }
 
 private struct FailureModifier: UBURLRequestModifier {
-    func modifyRequest(_: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
+    func modifyRequest(_: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         completion(.failure(Err.x))
     }
 }
@@ -174,7 +174,7 @@ private struct FailureModifier: UBURLRequestModifier {
 private class MockTokenAuthorization: UBURLRequestTokenAuthorization {
     let token: String = "AbCdEf123456"
     var error: Error?
-    func getToken(completion: (Result<String>) -> Void) {
+    func getToken(completion: (Result<String, Error>) -> Void) {
         if let error = error {
             completion(.failure(error))
         } else {

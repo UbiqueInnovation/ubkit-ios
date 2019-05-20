@@ -410,9 +410,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: - Completion
 
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingBlock<T> = (Result<T>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingBlock<T> = (Result<T, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingNullableDataBlock = (Result<Data?>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingNullableDataBlock = (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// :nodoc:
     private let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
     /// :nodoc:

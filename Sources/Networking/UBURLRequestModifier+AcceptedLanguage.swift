@@ -55,7 +55,7 @@ public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
+    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         // Standard: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language
 
         let languages = localization.preferredLanguages(stripRegionInformation: !includeRegion)

@@ -53,7 +53,7 @@ public class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
+    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         // https://tools.ietf.org/html/rfc7617
         var loginString: String = ""
         serial.sync {
