@@ -32,6 +32,10 @@ Verify that all methods have a correct level of access control. Only functions a
 - Update the Usage.md file if needed
 - Update the contribution guide
 
+## Naming conventions
+- Each `public` or `open` class/struct/enum should be prefixed by __UB__. _Example: the class `CronJob` should be named `UBCronJob`.
+- Each method or variable implemented as part of an extension to Swift standard type should be prefixed by **ub_**. _Example: the helper __var__ `localized` on `String` should be called `ub_localized`. 
+
 ## Logging
 - Logging should be by module. Each module should have a logger.
 - Creating a logger for internal use is made via the Factory call in the `Logging` helper.
