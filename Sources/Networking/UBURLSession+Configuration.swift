@@ -74,8 +74,7 @@ public class UBURLSessionConfiguration {
         #elseif os(macOS)
             headers["OS-Version"] = "macOS \(osVersionString)"
         #endif
-        
-        
+
         if let configHeaders = configuration.httpAdditionalHeaders {
             for header in configHeaders {
                 headers[header.key] = header.value

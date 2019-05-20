@@ -9,7 +9,6 @@ import Foundation
 
 /// A tracker that display an aggregated status of multiple DataTasks
 public class NetworkActivityTracker {
-
     // MARK: - Definitions
 
     /// The status observation block.
@@ -77,8 +76,8 @@ public class NetworkActivityTracker {
 
     /// :nodoc:
     private func updateState() {
-        self.serialQueue.sync {
-            let isFetching = self.trackedTasks.allObjects.reduce(into: false, { $0 = $0 || ($1.state == .fetching) })
+        serialQueue.sync {
+            let isFetching = self.trackedTasks.allObjects.reduce(into: false) { $0 = $0 || ($1.state == .fetching) }
             self.networkActivityState = isFetching ? .fetching : .idle
         }
     }
@@ -108,12 +107,12 @@ public class NetworkActivityTracker {
     /// :nodoc:
     private func notifyObservers() {
         if let callbackQueue = callbackQueue {
-            let state = self.networkActivityState
+            let state = networkActivityState
             callbackQueue.addOperation { [weak self] in
-                self?.stateObservers.forEach({ $0(state) })
+                self?.stateObservers.forEach { $0(state) }
             }
         } else {
-            stateObservers.forEach({ $0(networkActivityState) })
+            stateObservers.forEach { $0(networkActivityState) }
         }
     }
 }

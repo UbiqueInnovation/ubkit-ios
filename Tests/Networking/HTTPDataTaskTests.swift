@@ -18,7 +18,7 @@ class HTTPDataTaskTests: XCTestCase {
         let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
+            URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
@@ -42,7 +42,7 @@ class HTTPDataTaskTests: XCTestCase {
         let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
+            URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
 
@@ -83,7 +83,7 @@ class HTTPDataTaskTests: XCTestCase {
         let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
+            URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
 
@@ -135,7 +135,7 @@ class HTTPDataTaskTests: XCTestCase {
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
+            URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
@@ -178,7 +178,7 @@ class HTTPDataTaskTests: XCTestCase {
         }
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
+            URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler(decoder: HTTPJSONDecoder<TestStruct>()) { result, _, _, _ in
@@ -203,7 +203,7 @@ class HTTPDataTaskTests: XCTestCase {
         let expectedData = "Hello".data(using: .utf16)!
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
+            URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
         }
 
         let dataTask = UBURLDataTask(request: request, session: mockSession)
@@ -243,7 +243,7 @@ class HTTPDataTaskTests: XCTestCase {
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
+            URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
@@ -264,7 +264,7 @@ class HTTPDataTaskTests: XCTestCase {
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
+            URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addResponseValidator { _ in
@@ -288,7 +288,7 @@ class HTTPDataTaskTests: XCTestCase {
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
+            URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addResponseValidator([
@@ -317,7 +317,7 @@ class HTTPDataTaskTests: XCTestCase {
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
+            URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         XCTAssertEqual(dataTask.state, .initial)
@@ -345,7 +345,7 @@ class HTTPDataTaskTests: XCTestCase {
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
+            URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
         }
 
         let dataTask = UBURLDataTask(request: request, session: mockSession)
@@ -370,7 +370,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: 0.5, latency: nil, transferDuration: 2, progressUpdateCount: 5)
+            URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: 0.5, latency: nil, transferDuration: 2, progressUpdateCount: 5)
         }
 
         let dataTask = UBURLDataTask(request: request, session: mockSession)
@@ -423,7 +423,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
+            URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
         }
 
         let dataTask = UBURLDataTask(request: request, session: mockSession)
@@ -482,7 +482,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
+            URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
         }
 
         var dataTask: UBURLDataTask? = UBURLDataTask(request: request, session: mockSession)
@@ -520,7 +520,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
         let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            return URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.2, progressUpdateCount: 10)
+            URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.2, progressUpdateCount: 10)
         }
 
         let queue = OperationQueue()

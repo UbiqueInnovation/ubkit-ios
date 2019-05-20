@@ -33,10 +33,10 @@ extension Localization {
         // Strip the region information if necessary
         if stripRegionInformation {
             // Remove all the region information of the OS preferred languages. Take everything before the "-"
-            mutablePreferredLanguages = mutablePreferredLanguages.map({
+            mutablePreferredLanguages = mutablePreferredLanguages.map {
                 let localeComponents = Locale.components(fromIdentifier: $0)
                 return localeComponents[NSLocale.Key.languageCode.rawValue] ?? $0
-            })
+            }
             // Since we won't have any region information, we should only use the locale language code if possible.
             // Fallback to the locale identifier if no language is found
             currentLanguageIdentifier = locale.languageCode ?? locale.identifier
@@ -49,7 +49,7 @@ extension Localization {
         mutablePreferredLanguages.removeAll(where: { $0 == currentLanguageIdentifier })
         mutablePreferredLanguages.insert(currentLanguageIdentifier, at: 0)
 
-        return mutablePreferredLanguages.map({ Language(identifier: $0) })
+        return mutablePreferredLanguages.map { Language(identifier: $0) }
     }
 
     /// Returns all the available localizations of the app.
@@ -61,12 +61,12 @@ extension Localization {
     public static func availableLanguages(stripRegionInformation: Bool = true, bundle: Bundle = .main) -> Set<Language> {
         var localizations = bundle.localizations
         if stripRegionInformation {
-            localizations = localizations.map({
+            localizations = localizations.map {
                 let localeComponents = Locale.components(fromIdentifier: $0)
                 return localeComponents[NSLocale.Key.languageCode.rawValue] ?? $0
-            })
+            }
         }
-        let languages = localizations.map({ Language(identifier: $0) })
+        let languages = localizations.map { Language(identifier: $0) }
         return Set(languages)
     }
 }

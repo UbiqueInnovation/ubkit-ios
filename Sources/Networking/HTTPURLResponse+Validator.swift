@@ -95,7 +95,7 @@ public struct HTTPResponseStatusValidator: HTTPURLResponseValidator {
     ///
     /// - Parameter statusCodes: An array of status codes
     public init(_ statusCodes: [StandardHTTPCode]) {
-        self.init(statusCodes.map({ $0.rawValue }))
+        self.init(statusCodes.map { $0.rawValue })
     }
 
     /// Initializes the validator
