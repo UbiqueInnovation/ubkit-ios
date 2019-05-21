@@ -14,7 +14,7 @@ class HTTPResponseValidatorTests: XCTestCase {
     func testBlockSuccess() {
         let ex = expectation(description: "validating")
 
-        let validator = HTTPResponseValidatorBlock { response in
+        let validator = UBHTTPResponseValidatorBlock { response in
             XCTAssertEqual(response.statusCode, 200)
             ex.fulfill()
         }
@@ -28,9 +28,9 @@ class HTTPResponseValidatorTests: XCTestCase {
     func testBlockFail() {
         let ex = expectation(description: "validating")
 
-        let validator = HTTPResponseValidatorBlock { _ in
+        let validator = UBHTTPResponseValidatorBlock { _ in
             ex.fulfill()
-            throw NetworkingError.missingURL
+            throw UBNetworkingError.missingURL
         }
 
         let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
@@ -40,7 +40,7 @@ class HTTPResponseValidatorTests: XCTestCase {
     }
 
     func testMIME() {
-        let validator = HTTPResponseContentTypeValidator(expectedMIMEType: .json())
+        let validator = UBHTTPResponseContentTypeValidator(expectedMIMEType: .json())
         let responseNO = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
         let responseYES = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: ["content-type": "application/json"])!
         let responseYES2 = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: ["Content-Type": "application/json"])!
@@ -55,40 +55,40 @@ class HTTPResponseValidatorTests: XCTestCase {
     }
 
     func testStatusCodeRange() {
-        let validator = HTTPResponseStatusValidator(.success)
+        let validator = UBHTTPResponseStatusValidator(.success)
 
         let response200 = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
         let response201 = HTTPURLResponse(url: url, statusCode: 201, httpVersion: "1.1", headerFields: nil)!
         let response404 = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "1.1", headerFields: nil)!
 
         XCTAssertThrowsError(try validator.validateHTTPResponse(response404), "") { error in
-            XCTAssertEqual(error as? NetworkingError, NetworkingError.responseStatusValidationFailed(status: 404))
+            XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseStatusValidationFailed(status: 404))
         }
         XCTAssertNoThrow(try validator.validateHTTPResponse(response200))
         XCTAssertNoThrow(try validator.validateHTTPResponse(response201))
     }
 
     func testStatusCodeSingleValue() {
-        let validator = HTTPResponseStatusValidator(.serverError)
+        let validator = UBHTTPResponseStatusValidator(.serverError)
 
         let response200 = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
         let response500 = HTTPURLResponse(url: url, statusCode: 500, httpVersion: "1.1", headerFields: nil)!
 
         XCTAssertThrowsError(try validator.validateHTTPResponse(response200), "") { error in
-            XCTAssertEqual(error as? NetworkingError, NetworkingError.responseStatusValidationFailed(status: 200))
+            XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseStatusValidationFailed(status: 200))
         }
         XCTAssertNoThrow(try validator.validateHTTPResponse(response500))
     }
 
     func testStatusCodeMultipleValues() {
-        let validator = HTTPResponseStatusValidator([.ok, .created])
+        let validator = UBHTTPResponseStatusValidator([.ok, .created])
 
         let response200 = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
         let response201 = HTTPURLResponse(url: url, statusCode: 201, httpVersion: "1.1", headerFields: nil)!
         let response404 = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "1.1", headerFields: nil)!
 
         XCTAssertThrowsError(try validator.validateHTTPResponse(response404), "") { error in
-            XCTAssertEqual(error as? NetworkingError, NetworkingError.responseStatusValidationFailed(status: 404))
+            XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseStatusValidationFailed(status: 404))
         }
         XCTAssertNoThrow(try validator.validateHTTPResponse(response200))
         XCTAssertNoThrow(try validator.validateHTTPResponse(response201))

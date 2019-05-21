@@ -13,7 +13,7 @@ class CronJobTests: XCTestCase {
         let ex = expectation(description: "Cron test")
         let date = Date()
         let testDuration: TimeInterval = 0.3
-        let job = CronJob(fireAfter: testDuration) {
+        let job = UBCronJob(fireAfter: testDuration) {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), testDuration * 0.9)
             ex.fulfill()
         }
@@ -25,7 +25,7 @@ class CronJobTests: XCTestCase {
         let ex = expectation(description: "Cron test")
         let date = Date()
         let testDuration: TimeInterval = 0.3
-        let job = CronJob(fireAt: Date(timeIntervalSinceNow: testDuration)) {
+        let job = UBCronJob(fireAt: Date(timeIntervalSinceNow: testDuration)) {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), testDuration * 0.9)
             ex.fulfill()
         }
@@ -37,7 +37,7 @@ class CronJobTests: XCTestCase {
         let ex = expectation(description: "Cron test")
         let date = Date()
         let testDuration: TimeInterval = 0.3
-        let job = CronJob(fireAfter: testDuration) {
+        let job = UBCronJob(fireAfter: testDuration) {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), testDuration * 0.9)
             XCTAssertEqual(OperationQueue.current, OperationQueue.main)
             ex.fulfill()
@@ -51,7 +51,7 @@ class CronJobTests: XCTestCase {
         let ex = expectation(description: "Cron test")
         let date = Date()
         let testDuration: TimeInterval = 0.3
-        let job = CronJob(fireAfter: testDuration) {
+        let job = UBCronJob(fireAfter: testDuration) {
             XCTFail("Should not have executed this block")
         }
         job.name = "Test Cron"
@@ -67,7 +67,7 @@ class CronJobTests: XCTestCase {
         let date = Date()
         let testDuration: TimeInterval = 0.2
         let newTestDuration: TimeInterval = 0.35
-        let job = CronJob(fireAfter: testDuration) {
+        let job = UBCronJob(fireAfter: testDuration) {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), newTestDuration * 0.9)
             ex.fulfill()
         }
@@ -82,7 +82,7 @@ class CronJobTests: XCTestCase {
         let date = Date()
         let testDuration: TimeInterval = 0.2
         let newTestDuration: TimeInterval = 0.35
-        let job = CronJob(fireAfter: testDuration) {
+        let job = UBCronJob(fireAfter: testDuration) {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), newTestDuration * 0.9)
             ex.fulfill()
         }
@@ -94,7 +94,7 @@ class CronJobTests: XCTestCase {
 
     func testCronDateInPast() {
         let ex = expectation(description: "Cron Test")
-        let job = CronJob(fireAt: Date(timeIntervalSinceNow: -1)) {
+        let job = UBCronJob(fireAt: Date(timeIntervalSinceNow: -1)) {
             ex.fulfill()
         }
         job.name = "Test Cron"
@@ -104,7 +104,7 @@ class CronJobTests: XCTestCase {
     func testPause() {
         let ex = expectation(description: "Cron test")
         let testDuration: TimeInterval = 0.2
-        let job = CronJob(fireAfter: testDuration) {
+        let job = UBCronJob(fireAfter: testDuration) {
             XCTFail()
         }
         job.name = "Test Cron"
@@ -121,7 +121,7 @@ class CronJobTests: XCTestCase {
         let ex = expectation(description: "Cron test")
         let testDuration: TimeInterval = 0.4
         let date = Date()
-        let job = CronJob(fireAfter: testDuration) {
+        let job = UBCronJob(fireAfter: testDuration) {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), testDuration * 0.9)
             ex.fulfill()
         }
@@ -140,7 +140,7 @@ class CronJobTests: XCTestCase {
         let testDuration: TimeInterval = 0.2
         let pauseTime: TimeInterval = 0.4
         let date = Date()
-        let job = CronJob(fireAfter: testDuration) {
+        let job = UBCronJob(fireAfter: testDuration) {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), pauseTime * 0.9)
             ex.fulfill()
         }
@@ -157,10 +157,10 @@ class CronJobTests: XCTestCase {
     func testDeallocation() {
         let ex = expectation(description: "Cron test")
         let testDuration: TimeInterval = 0.2
-        weak var job: CronJob?
+        weak var job: UBCronJob?
 
         autoreleasepool {
-            let j = CronJob(fireAfter: testDuration) {
+            let j = UBCronJob(fireAfter: testDuration) {
                 XCTFail()
             }
             j.name = "Cron Test"
@@ -177,10 +177,10 @@ class CronJobTests: XCTestCase {
     func testPausedDeallocation() {
         let ex = expectation(description: "Cron test")
         let testDuration: TimeInterval = 0.2
-        weak var job: CronJob?
+        weak var job: UBCronJob?
 
         autoreleasepool {
-            let j = CronJob(fireAfter: testDuration) {
+            let j = UBCronJob(fireAfter: testDuration) {
                 XCTFail()
             }
             j.name = "Cron Test"

@@ -12,7 +12,7 @@ extension HTTPURLResponse {
     ///
     /// - Parameter key: A standard key
     /// - Returns: The value associated with the key
-    public func getHeaderField(key: HTTPHeaderField.StandardKeys) -> String? {
+    public func ub_getHeaderField(key: UBHTTPHeaderField.StandardKeys) -> String? {
         return allHeaderFields[key.rawValue] as? String
     }
 }

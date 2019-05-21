@@ -11,11 +11,11 @@ import XCTest
 class GlobalLocalizationTests: XCTestCase {
     func testSetGlobalLanguage() {
         do {
-            let oldLanguageCode = AppLocalization.locale.languageCode!
+            let oldLanguageCode = UBAppLocalization.locale.languageCode!
             let newLanguageCode = oldLanguageCode == "en" ? "fr" : "en"
-            try UBFoundation.setLanguage(languageCode: newLanguageCode, regionCode: AppLocalization.locale.regionCode)
-            XCTAssertEqual(AppLocalization.locale.languageCode, newLanguageCode)
-            XCTAssertEqual(AppLocalization.locale.identifier, frameworkLocalization.locale.identifier)
+            try UBFoundation.setLanguage(languageCode: newLanguageCode, regionCode: UBAppLocalization.locale.regionCode)
+            XCTAssertEqual(UBAppLocalization.locale.languageCode, newLanguageCode)
+            XCTAssertEqual(UBAppLocalization.locale.identifier, frameworkLocalization.locale.identifier)
         } catch {
             XCTFail(error.localizedDescription)
         }

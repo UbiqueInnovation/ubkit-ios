@@ -8,9 +8,9 @@
 import Foundation
 
 /// A rule for firing a cron job
-public protocol CronRule {
+public protocol UBCronRule {
     /// The rule to apply for repetition
-    var repeatRule: CronRepeatRule { get }
+    var repeatRule: UBCronRepeatRule { get }
     /// The deadline at which the job should fire after
     var deadlineFromNow: DispatchTimeInterval { get }
     /// The accepted tolerence around the firing date
@@ -18,7 +18,7 @@ public protocol CronRule {
 }
 
 /// The rule for repeating jobs
-public enum CronRepeatRule: Equatable {
+public enum UBCronRepeatRule: Equatable {
     /// Never repeat. This is a one time job
     case never
     /// Repeating job after a time interval
@@ -26,9 +26,9 @@ public enum CronRepeatRule: Equatable {
 }
 
 /// A single fire at a specific date
-public struct FireAtDateRule: CronRule {
+public struct UBFireAtDateRule: UBCronRule {
     /// :nodoc:
-    public var repeatRule: CronRepeatRule {
+    public var repeatRule: UBCronRepeatRule {
         return .never
     }
 
@@ -64,9 +64,9 @@ public struct FireAtDateRule: CronRule {
 }
 
 /// A rule that fires at a time interval and can repeat
-public struct FireAtIntervalRule: CronRule {
+public struct UBFireAtIntervalRule: UBCronRule {
     /// :nodoc:
-    public var repeatRule: CronRepeatRule
+    public var repeatRule: UBCronRepeatRule
 
     /// :nodoc:
     public var deadlineFromNow: DispatchTimeInterval {

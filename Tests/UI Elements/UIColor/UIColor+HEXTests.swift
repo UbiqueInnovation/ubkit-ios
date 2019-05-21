@@ -12,7 +12,7 @@ class UIColor_HEXTests: XCTestCase {
     func testHexParsingSuccess() {
         let testData = ["#000", "#57c3b5", "#f24851", "#F3c0", "#b87829bb", "000", "57c3b5", "f24851", "F3c0", "b87829bb"]
         for test in testData {
-            let color = UIColor(hexString: test)
+            let color = UIColor(ub_hexString: test)
             XCTAssertNotNil(color)
         }
     }
@@ -20,7 +20,7 @@ class UIColor_HEXTests: XCTestCase {
     func testHexParsingFailure() {
         let testData = ["#00", "#57m3b5", "#f2485", "F", "#b87829bbb", "", "#", "@fff", "#999.3"]
         for test in testData {
-            let color = UIColor(hexString: test)
+            let color = UIColor(ub_hexString: test)
             XCTAssertNil(color)
         }
     }
@@ -28,20 +28,20 @@ class UIColor_HEXTests: XCTestCase {
     func testColorEquality() {
         // We cannot use UIColor.white as it has a different color space
         let white = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
-        XCTAssertEqual(white, UIColor(hexString: "#FFF"))
-        XCTAssertEqual(white, UIColor(hexString: "#FFFF"))
-        XCTAssertEqual(white, UIColor(hexString: "#FFFFFF"))
-        XCTAssertEqual(white, UIColor(hexString: "#FFFFFFFF"))
+        XCTAssertEqual(white, UIColor(ub_hexString: "#FFF"))
+        XCTAssertEqual(white, UIColor(ub_hexString: "#FFFF"))
+        XCTAssertEqual(white, UIColor(ub_hexString: "#FFFFFF"))
+        XCTAssertEqual(white, UIColor(ub_hexString: "#FFFFFFFF"))
 
         let black = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        XCTAssertEqual(black, UIColor(hexString: "#000"))
-        XCTAssertEqual(black, UIColor(hexString: "#000F"))
-        XCTAssertEqual(black, UIColor(hexString: "#000000"))
-        XCTAssertEqual(black, UIColor(hexString: "#000000FF"))
+        XCTAssertEqual(black, UIColor(ub_hexString: "#000"))
+        XCTAssertEqual(black, UIColor(ub_hexString: "#000F"))
+        XCTAssertEqual(black, UIColor(ub_hexString: "#000000"))
+        XCTAssertEqual(black, UIColor(ub_hexString: "#000000FF"))
 
         let blueTransparent = UIColor(red: 0, green: 0, blue: 1, alpha: 0.6)
-        XCTAssertEqual(blueTransparent, UIColor(hexString: "#00F9"))
-        XCTAssertEqual(blueTransparent, UIColor(hexString: "#0000FF99"))
+        XCTAssertEqual(blueTransparent, UIColor(ub_hexString: "#00F9"))
+        XCTAssertEqual(blueTransparent, UIColor(ub_hexString: "#0000FF99"))
     }
 
     func testHexRepresentation() {
@@ -53,9 +53,9 @@ class UIColor_HEXTests: XCTestCase {
             ("#aabbcc99", "#AABBCC99")
         ]
         for test in testData {
-            let color = UIColor(hexString: test.test)
+            let color = UIColor(ub_hexString: test.test)
             XCTAssertNotNil(color)
-            XCTAssertEqual(color?.hexString, test.result)
+            XCTAssertEqual(color?.ub_hexString, test.result)
         }
     }
 
@@ -66,7 +66,7 @@ class UIColor_HEXTests: XCTestCase {
             (.red, "#FF0000")
         ]
         for test in testData {
-            XCTAssertEqual(test.test.hexString, test.result)
+            XCTAssertEqual(test.test.ub_hexString, test.result)
         }
     }
 
@@ -74,7 +74,7 @@ class UIColor_HEXTests: XCTestCase {
         let testData = ["#FFF", "#FFFF", "#FFFFFF", "#FFFFFFFF", "#000", "#0000", "#000000", "#00000000", "#A12", "#B12"]
         measure {
             for _ in 1 ... 100 {
-                testData.forEach { _ = UIColor(hexString: $0) }
+                testData.forEach { _ = UIColor(ub_hexString: $0) }
             }
         }
     }

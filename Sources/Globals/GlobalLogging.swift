@@ -10,21 +10,21 @@ import Foundation
 import os.log
 
 /// Internal logger group that holds all loggers
-private var loggerGroup: LoggerGroup = LoggerGroup()
+private var loggerGroup: UBLoggerGroup = UBLoggerGroup()
 
 /// A domain for framework logging manipulation
-public enum Logging {
+public enum UBLogging {
     /// Sets the global log level for all framework loggers
     ///
     /// - Parameter newLogLevel: The new log level
-    public static func setGlobalLogLevel(_ newLogLevel: Logger.LogLevel) {
+    public static func setGlobalLogLevel(_ newLogLevel: UBLogger.LogLevel) {
         loggerGroup.set(groupLogLevel: newLogLevel)
     }
 
     /// Add a logger to the global logger groups
     ///
     /// - Parameter logger: The logger to add
-    internal static func addLogger(_ logger: Logger) {
+    internal static func addLogger(_ logger: UBLogger) {
         loggerGroup.add(logger: logger)
     }
 
@@ -35,9 +35,9 @@ public enum Logging {
     ///
     /// - Parameter category: The category of the logger
     /// - Returns: A logger for the framework use
-    internal static func frameworkLoggerFactory(category: String) -> Logger {
+    internal static func frameworkLoggerFactory(category: String) -> UBLogger {
         do {
-            let logger = try Logger(category: category, bundle: Bundle(for: Logger.self))
+            let logger = try UBLogger(category: category, bundle: Bundle(for: UBLogger.self))
             addLogger(logger)
             return logger
         } catch {

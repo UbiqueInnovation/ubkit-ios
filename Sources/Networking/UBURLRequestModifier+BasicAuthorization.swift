@@ -53,7 +53,7 @@ public class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
+    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         // https://tools.ietf.org/html/rfc7617
         var loginString: String = ""
         serial.sync {
@@ -62,7 +62,7 @@ public class UBURLRequestBasicAuthorization: UBURLRequestModifier {
         let loginData = loginString.data(using: .utf8)! // Internally all strings are stored in utf8. This never fails
         let base64LoginString = loginData.base64EncodedString()
         var modifierRequest = originalRequest
-        modifierRequest.setHTTPHeaderField(HTTPHeaderField(key: .authorization, value: "Basic \(base64LoginString)"))
+        modifierRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Basic \(base64LoginString)"))
         completion(.success(modifierRequest))
     }
 }

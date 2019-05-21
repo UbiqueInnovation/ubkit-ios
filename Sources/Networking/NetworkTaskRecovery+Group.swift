@@ -8,15 +8,15 @@
 import Foundation
 
 /// A group of data task failure recovery strategies
-public class NetworkTaskRecoveryGroup: NetworkingTaskRecoveryStrategy {
+public class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy {
     // - MARK: Properties
 
     /// :nodoc:
     private let serialStrategies = DispatchQueue(label: "Failure Recovery Strategies")
     /// :nodoc:
-    private var _strategies: [NetworkingTaskRecoveryStrategy]
+    private var _strategies: [UBNetworkingTaskRecoveryStrategy]
     /// The list of recovery strategies in the group
-    public var strategies: [NetworkingTaskRecoveryStrategy] {
+    public var strategies: [UBNetworkingTaskRecoveryStrategy] {
         return serialStrategies.sync {
             _strategies
         }
@@ -27,7 +27,7 @@ public class NetworkTaskRecoveryGroup: NetworkingTaskRecoveryStrategy {
     /// Initializes the group with strategies
     ///
     /// - Parameter strategies: The list of strategies to add in the group. Default to nothing
-    public init(strategies: [NetworkingTaskRecoveryStrategy] = []) {
+    public init(strategies: [UBNetworkingTaskRecoveryStrategy] = []) {
         _strategies = strategies
     }
 
@@ -39,7 +39,7 @@ public class NetworkTaskRecoveryGroup: NetworkingTaskRecoveryStrategy {
     /// Add a strategy to the group
     ///
     /// - Parameter strategy: The strategy to add
-    public func append(_ strategy: NetworkingTaskRecoveryStrategy) {
+    public func append(_ strategy: UBNetworkingTaskRecoveryStrategy) {
         serialStrategies.sync {
             _strategies.append(strategy)
         }
@@ -57,11 +57,11 @@ public class NetworkTaskRecoveryGroup: NetworkingTaskRecoveryStrategy {
     }
 
     /// :nodoc:
-    public func recoverTask(_ dataTask: UBURLDataTask, data: Data?, response: URLResponse?, error: Error, completion: @escaping (NetworkingTaskRecoveryResult) -> Void) {
+    public func recoverTask(_ dataTask: UBURLDataTask, data: Data?, response: URLResponse?, error: Error, completion: @escaping (UBNetworkingTaskRecoveryResult) -> Void) {
         cancelCurrentRecovery()
 
         let newRecovery = Recovery()
-        var strategies = ArraySlice<NetworkingTaskRecoveryStrategy>()
+        var strategies = ArraySlice<UBNetworkingTaskRecoveryStrategy>()
         serialOperation.sync {
             currentRecovery = newRecovery
             strategies = ArraySlice(self.strategies)
@@ -71,7 +71,7 @@ public class NetworkTaskRecoveryGroup: NetworkingTaskRecoveryStrategy {
     }
 
     /// :nodoc:
-    private func recursiveRecoverTask(_ dataTask: UBURLDataTask, data: Data?, response: URLResponse?, error: Error, recovery: Recovery, strategies: ArraySlice<NetworkingTaskRecoveryStrategy>, completion: @escaping (NetworkingTaskRecoveryResult) -> Void) {
+    private func recursiveRecoverTask(_ dataTask: UBURLDataTask, data: Data?, response: URLResponse?, error: Error, recovery: Recovery, strategies: ArraySlice<UBNetworkingTaskRecoveryStrategy>, completion: @escaping (UBNetworkingTaskRecoveryResult) -> Void) {
         guard recovery.cancelled == false else {
             return
         }
@@ -91,7 +91,7 @@ public class NetworkTaskRecoveryGroup: NetworkingTaskRecoveryStrategy {
     }
 }
 
-extension NetworkTaskRecoveryGroup {
+extension UBNetworkTaskRecoveryGroup {
     /// This is used to convey cancellation information to the running task
     private class Recovery {
         /// :nodoc

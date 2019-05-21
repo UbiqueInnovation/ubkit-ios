@@ -8,7 +8,7 @@
 import Foundation
 
 /// A cluster of HTTP code
-public enum HTTPCodeCategory {
+public enum UBHTTPCodeCategory {
     /// Code is outside of the known ranges
     case uncategorized
     /// Informational status

@@ -10,20 +10,20 @@ import XCTest
 
 class HTTPCodeTests: XCTestCase {
     func testStandardHTTPCode() {
-        let testData: [(status: Int, standard: StandardHTTPCode?)] = [
+        let testData: [(status: Int, standard: UBStandardHTTPCode?)] = [
             (200, .ok),
             (404, .notFound),
             (2000, nil)
         ]
 
         for data in testData {
-            let standard = data.status.standardHTTPCode
+            let standard = data.status.ub_standardHTTPCode
             XCTAssertEqual(standard, data.standard)
         }
     }
 
     func testHTTPCodeCategory() {
-        let testData: [(statusCode: Int, category: HTTPCodeCategory)] = [
+        let testData: [(statusCode: Int, category: UBHTTPCodeCategory)] = [
             (010, .uncategorized),
             (600, .uncategorized),
             (1600, .uncategorized),
@@ -37,7 +37,7 @@ class HTTPCodeTests: XCTestCase {
         ]
 
         for data in testData {
-            let category = data.statusCode.httpCodeCategory
+            let category = data.statusCode.ub_httpCodeCategory
             XCTAssertEqual(category, data.category)
         }
     }

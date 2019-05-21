@@ -8,7 +8,7 @@
 import Foundation
 
 /// Holds information on the networking task
-public struct NetworkingTaskInfo: CustomDebugStringConvertible {
+public struct UBNetworkingTaskInfo: CustomDebugStringConvertible {
     /// The metric collected for the task
     public let metrics: URLSessionTaskMetrics
 

@@ -8,7 +8,7 @@
 import Foundation
 
 /// A multipart body
-public struct URLRequestBodyMultipart: URLRequestBodyConvertible {
+public struct UBURLRequestBodyMultipart: URLRequestBodyConvertible {
     /// The encoding to use for strings
     public var encoding: String.Encoding
     /// The parameters to send
@@ -34,19 +34,19 @@ public struct URLRequestBodyMultipart: URLRequestBodyConvertible {
     /// :nodoc:
     public func httpRequestBody() throws -> UBURLRequestBody {
         guard parameters.isEmpty == false || payloads.isEmpty == false else {
-            throw NetworkingError.couldNotEncodeBody
+            throw UBNetworkingError.couldNotEncodeBody
         }
 
         var data: Data = Data()
 
         guard let boundaryPrefix = "--\(boundary)\r\n".data(using: encoding) else {
-            throw NetworkingError.couldNotEncodeBody
+            throw UBNetworkingError.couldNotEncodeBody
         }
 
         for parameter in parameters {
             guard let header = "Content-Disposition: form-data; name=\"\(parameter.name)\"\r\n\r\n".data(using: encoding),
                 let value = "\(parameter.value)\r\n".data(using: encoding) else {
-                throw NetworkingError.couldNotEncodeBody
+                throw UBNetworkingError.couldNotEncodeBody
             }
             data.append(boundaryPrefix)
             data.append(header)
@@ -55,7 +55,7 @@ public struct URLRequestBodyMultipart: URLRequestBodyConvertible {
 
         for payload in payloads {
             guard let header = "Content-Disposition: form-data; name=\"\(payload.name)\"; filename=\"\(payload.fileName)\"\r\n".data(using: encoding), let contentType = "Content-Type: \(payload.mimeType.stringValue)\r\n\r\n".data(using: encoding), let ending = "\r\n".data(using: encoding) else {
-                throw NetworkingError.couldNotEncodeBody
+                throw UBNetworkingError.couldNotEncodeBody
             }
             data.append(boundaryPrefix)
             data.append(header)
@@ -66,7 +66,7 @@ public struct URLRequestBodyMultipart: URLRequestBodyConvertible {
 
         let endingString = "--" + boundary + "--\r\n"
         guard let ending = endingString.data(using: encoding) else {
-            throw NetworkingError.couldNotEncodeBody
+            throw UBNetworkingError.couldNotEncodeBody
         }
         data.append(ending)
 
@@ -76,7 +76,7 @@ public struct URLRequestBodyMultipart: URLRequestBodyConvertible {
 
 // MARK: - Parts
 
-extension URLRequestBodyMultipart {
+extension UBURLRequestBodyMultipart {
     /// Multipart parameter
     public struct Parameter {
         /// Name
@@ -104,7 +104,7 @@ extension URLRequestBodyMultipart {
         /// Data
         let data: Data
         /// MIME type
-        let mimeType: MIMEType
+        let mimeType: UBMIMEType
 
         /// Initializes a multipart payload
         ///
@@ -113,7 +113,7 @@ extension URLRequestBodyMultipart {
         ///   - fileName: The file name of payload
         ///   - data: The data of payload
         ///   - mimeType: The MIME type of the data
-        public init(name: String, fileName: String, data: Data, mimeType: MIMEType) {
+        public init(name: String, fileName: String, data: Data, mimeType: UBMIMEType) {
             self.name = name
             self.fileName = fileName
             self.data = data

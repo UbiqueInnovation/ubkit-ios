@@ -22,7 +22,7 @@ class HTTPDataDecoderTests: XCTestCase {
     }
 
     func testStringDecoder() {
-        let decoder = HTTPStringDecoder(encoding: .utf8)
+        let decoder = UBHTTPStringDecoder(encoding: .utf8)
         let test = "Hello"
         let testData = test.data(using: .utf8)!
         do {
@@ -34,7 +34,7 @@ class HTTPDataDecoderTests: XCTestCase {
     }
 
     func testStringDecoderFail() {
-        let decoder = HTTPStringDecoder(encoding: .utf8)
+        let decoder = UBHTTPStringDecoder(encoding: .utf8)
         let test = "Hello"
         let testData = test.data(using: .utf16)!
         XCTAssertThrowsError(try decoder.decode(data: testData, response: response))
@@ -44,7 +44,7 @@ class HTTPDataDecoderTests: XCTestCase {
         struct TestObject: Decodable {
             let value: String
         }
-        let decoder = HTTPJSONDecoder<TestObject>()
+        let decoder = UBHTTPJSONDecoder<TestObject>()
         let testData = "{\"value\":\"A\"}".data(using: .utf8)!
         do {
             let result = try decoder.decode(data: testData, response: response)

@@ -9,7 +9,7 @@
 import Foundation
 
 /// Errors thrown by the localization
-public enum LocalizationError: Error {
+public enum UBLocalizationError: Error {
     /// The language code is invalid.
     case invalidLanguageCode
     /// The region code is invalid.

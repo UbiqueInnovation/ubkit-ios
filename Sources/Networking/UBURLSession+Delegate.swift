@@ -14,13 +14,13 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// Storage of the task data
     private let tasksData = NSMapTable<URLSessionTask, DataHolder>(keyOptions: .weakMemory, valueOptions: .strongMemory)
     /// Storage of the auto refresh jobs
-    private let autoRefreshJobs = NSMapTable<DataHolder, CronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
+    private let autoRefreshJobs = NSMapTable<DataHolder, UBCronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
     /// The url session, for verification purpouses
     weak var urlSession: URLSession?
 
     /// The manager providing server trust verification
-    private let serverTrustManager: ServerTrustManager
+    private let serverTrustManager: UBServerTrustManager
 
     /// :nodoc:
     private let allowsRedirection: Bool
@@ -32,7 +32,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     ///
     /// - Parameter configuration: The configuration to use
     init(configuration: UBURLSessionConfiguration) {
-        serverTrustManager = ServerTrustManager(evaluators: configuration.hostsServerTrusts, default: configuration.defaultServerTrust)
+        serverTrustManager = UBServerTrustManager(evaluators: configuration.hostsServerTrusts, default: configuration.defaultServerTrust)
         allowsRedirection = configuration.allowRedirections
         allowsAutoRefresh = configuration.allowAutoRefresh
         super.init()
@@ -61,7 +61,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             return
         }
 
-        ubDataTask.dataTaskCompleted(data: collectedData.data, response: collectedData.response as? HTTPURLResponse, error: collectedData.error ?? error, info: NetworkingTaskInfo(metrics: collectedData.metrics))
+        ubDataTask.dataTaskCompleted(data: collectedData.data, response: collectedData.response as? HTTPURLResponse, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics))
     }
 
     /// :nodoc:
@@ -96,7 +96,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         dataHolder.response = response
 
         guard let httpRespnse = response as? HTTPURLResponse else {
-            dataHolder.error = NetworkingError.notHTTPResponse
+            dataHolder.error = UBNetworkingError.notHTTPResponse
             completionHandler(.cancel)
             return
         }

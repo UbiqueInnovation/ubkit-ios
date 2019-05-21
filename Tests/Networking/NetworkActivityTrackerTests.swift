@@ -25,8 +25,8 @@ class NetworkActivityTrackerTests: XCTestCase {
         let dataTask2 = UBURLDataTask(request: request, session: mockSession2)
 
         let date = Date()
-        var sequence: [NetworkActivityTracker.NetworkActivityState] = [.idle, .fetching, .idle]
-        let tracker = NetworkActivityTracker()
+        var sequence: [UBNetworkActivityTracker.NetworkActivityState] = [.idle, .fetching, .idle]
+        let tracker = UBNetworkActivityTracker()
         tracker.add(dataTask)
         tracker.add(dataTask2)
         tracker.addStateObserver { state in

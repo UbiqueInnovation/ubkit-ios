@@ -24,7 +24,7 @@ class KeyboardLayoutGuideTests: XCTestCase {
         referenceView.widthAnchor.constraint(equalToConstant: 10).isActive = true
         referenceView.heightAnchor.constraint(equalToConstant: 10).isActive = true
         referenceView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        referenceView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
+        referenceView.bottomAnchor.constraint(equalTo: view.ub_keyboardLayoutGuide.topAnchor).isActive = true
 
         // Check that the layout is correct
         view.layoutIfNeeded()
@@ -53,9 +53,9 @@ class KeyboardLayoutGuideTests: XCTestCase {
 
         autoreleasepool {
             view = UIView()
-            keyboard = view?.keyboardLayoutGuide
+            keyboard = view?.ub_keyboardLayoutGuide
             XCTAssertNotNil(keyboard)
-            XCTAssertEqual(keyboard, view?.keyboardLayoutGuide)
+            XCTAssertEqual(keyboard, view?.ub_keyboardLayoutGuide)
             view = nil
         }
 

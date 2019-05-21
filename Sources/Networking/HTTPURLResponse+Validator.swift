@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object capable of validating an HTTP response
-public protocol HTTPURLResponseValidator {
+public protocol UBHTTPURLResponseValidator {
     /// Validates a HTTP response
     ///
     /// - Parameter response: The response to validate
@@ -17,7 +17,7 @@ public protocol HTTPURLResponseValidator {
 }
 
 /// A response validator block
-public struct HTTPResponseValidatorBlock: HTTPURLResponseValidator {
+public struct UBHTTPResponseValidatorBlock: UBHTTPURLResponseValidator {
     /// Validation Block
     public typealias ValidationBlock = (HTTPURLResponse) throws -> Void
 
@@ -38,31 +38,31 @@ public struct HTTPResponseValidatorBlock: HTTPURLResponseValidator {
 }
 
 /// Validates the content type of the response
-public struct HTTPResponseContentTypeValidator: HTTPURLResponseValidator {
+public struct UBHTTPResponseContentTypeValidator: UBHTTPURLResponseValidator {
     /// The expected MIME Type
-    let expectedMIMEType: MIMEType
+    let expectedMIMEType: UBMIMEType
 
     /// Initalizes the validator
     ///
     /// - Parameter mimeType: The expected MIME Type
-    public init(expectedMIMEType mimeType: MIMEType) {
+    public init(expectedMIMEType mimeType: UBMIMEType) {
         expectedMIMEType = mimeType
     }
 
     /// :nodoc:
     public func validateHTTPResponse(_ response: HTTPURLResponse) throws {
-        guard let value = response.getHeaderField(key: .contentType), let receivedMIME = MIMEType(string: value), expectedMIMEType.isEqual(receivedMIME, ignoreParameter: true) else {
-            throw NetworkingError.responseMIMETypeValidationFailed
+        guard let value = response.ub_getHeaderField(key: .contentType), let receivedMIME = UBMIMEType(string: value), expectedMIMEType.isEqual(receivedMIME, ignoreParameter: true) else {
+            throw UBNetworkingError.responseMIMETypeValidationFailed
         }
     }
 }
 
 /// Validates the Status code of a response
-public struct HTTPResponseStatusValidator: HTTPURLResponseValidator {
+public struct UBHTTPResponseStatusValidator: UBHTTPURLResponseValidator {
     /// A validation type
     private enum ValidationType {
         /// Validate a range of status codes
-        case category(HTTPCodeCategory)
+        case category(UBHTTPCodeCategory)
         /// Validates multiple status codes
         case multipleStatusCode([Int])
     }
@@ -73,14 +73,14 @@ public struct HTTPResponseStatusValidator: HTTPURLResponseValidator {
     /// Initializes the validator
     ///
     /// - Parameter category: A category of status codes
-    public init(_ category: HTTPCodeCategory) {
+    public init(_ category: UBHTTPCodeCategory) {
         type = .category(category)
     }
 
     /// Initializes the validator
     ///
     /// - Parameter statusCode: A standard status code
-    public init(_ statusCode: StandardHTTPCode) {
+    public init(_ statusCode: UBStandardHTTPCode) {
         self.init(statusCode.rawValue)
     }
 
@@ -94,7 +94,7 @@ public struct HTTPResponseStatusValidator: HTTPURLResponseValidator {
     /// Initializes the validator
     ///
     /// - Parameter statusCodes: An array of status codes
-    public init(_ statusCodes: [StandardHTTPCode]) {
+    public init(_ statusCodes: [UBStandardHTTPCode]) {
         self.init(statusCodes.map { $0.rawValue })
     }
 
@@ -109,12 +109,12 @@ public struct HTTPResponseStatusValidator: HTTPURLResponseValidator {
     public func validateHTTPResponse(_ response: HTTPURLResponse) throws {
         switch type {
         case let .category(category):
-            guard category == response.statusCode.httpCodeCategory else {
-                throw NetworkingError.responseStatusValidationFailed(status: response.statusCode)
+            guard category == response.statusCode.ub_httpCodeCategory else {
+                throw UBNetworkingError.responseStatusValidationFailed(status: response.statusCode)
             }
         case let .multipleStatusCode(statuses):
             guard statuses.contains(response.statusCode) else {
-                throw NetworkingError.responseStatusValidationFailed(status: response.statusCode)
+                throw UBNetworkingError.responseStatusValidationFailed(status: response.statusCode)
             }
         }
     }

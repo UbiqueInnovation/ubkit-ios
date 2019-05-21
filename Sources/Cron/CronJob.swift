@@ -8,7 +8,7 @@
 import Foundation
 
 /// A object that can schedule an invocation at a point in time.
-public class CronJob {
+public class UBCronJob {
     // MARK: - Definitions
 
     /// A cron execution block
@@ -51,7 +51,7 @@ public class CronJob {
     /// Internal GCD Timer with the corresponding fire mode
     private var timer: DispatchSourceTimer?
     /// Current rule
-    private var rule: CronRule?
+    private var rule: UBCronRule?
     /// The state of the Job
     public private(set) var state: State = .initial {
         willSet {
@@ -110,7 +110,7 @@ public class CronJob {
     ///   - qos: The quality of service of the job
     ///   - executionBlock: The block to be executed by the job
     public convenience init(fireAfter interval: TimeInterval, repeat isRepeating: Bool = false, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.init(rule: FireAtIntervalRule(interval, repeat: isRepeating), qos: qos, executionBlock: executionBlock)
+        self.init(rule: UBFireAtIntervalRule(interval, repeat: isRepeating), qos: qos, executionBlock: executionBlock)
     }
 
     /// Creates a cron job that will fire at the specified date. The job will start right away, no need to call resume.
@@ -120,7 +120,7 @@ public class CronJob {
     ///   - qos: The quality of service of the job
     ///   - executionBlock: The block to be executed by the job
     public convenience init(fireAt date: Date, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.init(rule: FireAtDateRule(date), qos: qos, executionBlock: executionBlock)
+        self.init(rule: UBFireAtDateRule(date), qos: qos, executionBlock: executionBlock)
     }
 
     /// Creates a cron job with a fire rule. The job will start right away, no need to call resume.
@@ -129,7 +129,7 @@ public class CronJob {
     ///   - rule: The rule of firing
     ///   - qos: The quality of service of the job
     ///   - executionBlock: The block to be executed by the job
-    public convenience init(rule: CronRule, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
+    public convenience init(rule: UBCronRule, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
         self.init(qos: qos, executionBlock: executionBlock)
         setRule(rule)
         resume()
@@ -162,7 +162,7 @@ public class CronJob {
     ///
     /// - Parameter date: The new fire date
     public func setFireAt(_ date: Date) {
-        setRule(FireAtDateRule(date))
+        setRule(UBFireAtDateRule(date))
     }
 
     /// Set the fire interval
@@ -171,13 +171,13 @@ public class CronJob {
     ///   - interval: The new interval
     ///   - isRepeating: If the job should repeat
     public func setFireAfter(_ interval: TimeInterval, repeat isRepeating: Bool = false) {
-        setRule(FireAtIntervalRule(interval, repeat: isRepeating))
+        setRule(UBFireAtIntervalRule(interval, repeat: isRepeating))
     }
 
     /// Sets the rule of the job
     ///
     /// - Parameter rule: The new rule to follow for firing
-    public func setRule(_ rule: CronRule) {
+    public func setRule(_ rule: UBCronRule) {
         serialQueue.sync {
             let newTimer = createTimer(fireRule: rule)
             self.timer = newTimer
@@ -216,9 +216,9 @@ public class CronJob {
     }
 }
 
-extension CronJob {
+extension UBCronJob {
     /// :nodoc:
-    private func createTimer(fireRule: CronRule) -> DispatchSourceTimer {
+    private func createTimer(fireRule: UBCronRule) -> DispatchSourceTimer {
         let timer = DispatchSource.makeTimerSource(queue: dispatchQueue)
         let deadline: DispatchWallTime = DispatchWallTime.now() + fireRule.deadlineFromNow
         switch (fireRule.repeatRule, fireRule.tolerence) {
@@ -247,7 +247,7 @@ extension CronJob {
 
     /// :nodoc:
     private func executeBlock() {
-        if let rule = self.rule, rule.repeatRule == CronRepeatRule.never {
+        if let rule = self.rule, rule.repeatRule == UBCronRepeatRule.never {
             state = .finished
         }
         if let callbackQueue = self._callbackQueue {
@@ -260,16 +260,16 @@ extension CronJob {
     }
 }
 
-extension CronJob: CustomDebugStringConvertible {
+extension UBCronJob: CustomDebugStringConvertible {
     /// :nodoc:
     public var debugDescription: String {
         return "Cron Job <\(name ?? identifier.uuidString)> \(state)"
     }
 }
 
-extension CronJob: Hashable {
+extension UBCronJob: Hashable {
     /// :nodoc:
-    public static func == (lhs: CronJob, rhs: CronJob) -> Bool {
+    public static func == (lhs: UBCronJob, rhs: UBCronJob) -> Bool {
         return lhs.identifier == rhs.identifier
     }
 

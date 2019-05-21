@@ -11,9 +11,9 @@ import Foundation
 /// A class that manages localization, locale and bundles
 /// The object will post notifications in the specified notification center to notify of the locale changement.
 /// - SeeAlso: `LocalizationNotification` for the available notifications.
-public class Localization: Codable {
+public class UBLocalization: Codable {
     /// A logger associated with localization
-    internal static let logger: Logger = Logging.frameworkLoggerFactory(category: "Localization")
+    internal static let logger: UBLogger = UBLogging.frameworkLoggerFactory(category: "Localization")
 
     // MARK: - Properties
 
@@ -60,7 +60,7 @@ public class Localization: Codable {
                 localizedBundle = Bundle(locale: locale, in: baseBundle)
             }
         } else {
-            Localization.logger.info("Bundle path is missing")
+            UBLocalization.logger.info("Bundle path is missing")
         }
 
         // Set the notification center
@@ -70,7 +70,7 @@ public class Localization: Codable {
 
 // MARK: - Setting the locale
 
-extension Localization {
+extension UBLocalization {
     /// Resets the locale to the current locale
     ///
     /// - Parameter baseBundle: The bundle to use
@@ -85,7 +85,7 @@ extension Localization {
     ///   - regionCode: The new region to use
     ///   - baseLocale: The base locale to change. All attribute will be copied except the language and region. _Default: current_.
     ///   - baseBundle: The bundle to use
-    /// - Throws: A `LocalizationError` if the language, region or the combination is not available.
+    /// - Throws: A `UBLocalizationError` if the language, region or the combination is not available.
     public func setLanguage(languageCode: String, regionCode: String? = nil, baseLocale: Locale = .current, baseBundle: Bundle = .main) throws {
         var localeComponents: [String: String] = Locale.components(fromIdentifier: baseLocale.identifier)
         localeComponents[NSLocale.Key.languageCode.rawValue] = languageCode
@@ -105,17 +105,17 @@ extension Localization {
     /// - Parameters:
     ///   - localeIdentifier: The locale identifier
     ///   - baseBundle: The bundle to use
-    /// - Throws: A `LocalizationError` if the identifier is not available
+    /// - Throws: A `UBLocalizationError` if the identifier is not available
     public func setLocale(identifier localeIdentifier: String, baseBundle: Bundle = .main) throws {
         let localeComponents = Locale.components(fromIdentifier: localeIdentifier)
         guard let languageCode = localeComponents[NSLocale.Key.languageCode.rawValue], Locale.isoLanguageCodes.contains(languageCode) else {
-            Localization.logger.error("The language code is not valid \(localeIdentifier)")
-            throw LocalizationError.invalidLanguageCode
+            UBLocalization.logger.error("The language code is not valid \(localeIdentifier)")
+            throw UBLocalizationError.invalidLanguageCode
         }
 
         if let regionCode = localeComponents[NSLocale.Key.countryCode.rawValue], Locale.isoRegionCodes.contains(regionCode) == false {
-            Localization.logger.error("The region code is not valid \(localeIdentifier)")
-            throw LocalizationError.invalidRegionCode
+            UBLocalization.logger.error("The region code is not valid \(localeIdentifier)")
+            throw UBLocalizationError.invalidRegionCode
         }
 
         let newLocale = Locale(identifier: localeIdentifier)
@@ -130,21 +130,21 @@ extension Localization {
     public func setLocale(_ locale: Locale, baseBundle: Bundle) {
         let oldIdentifier = self.locale.identifier
         let newIdentifier = locale.identifier
-        let userInfo = [LocalizationNotification.oldLocaleKey: self.locale, LocalizationNotification.newLocaleKey: locale]
+        let userInfo = [UBLocalizationNotification.oldLocaleKey: self.locale, UBLocalizationNotification.newLocaleKey: locale]
 
-        Localization.logger.debug("Locale will change from [\(oldIdentifier)] to [\(newIdentifier)]")
-        notificationCenter.post(name: LocalizationNotification.localeWillChange, object: self, userInfo: userInfo)
+        UBLocalization.logger.debug("Locale will change from [\(oldIdentifier)] to [\(newIdentifier)]")
+        notificationCenter.post(name: UBLocalizationNotification.localeWillChange, object: self, userInfo: userInfo)
         self.locale = locale
         self.baseBundle = baseBundle
         localizedBundle = Bundle(locale: locale, in: baseBundle)
-        Localization.logger.debug("Locale did change from [\(oldIdentifier)] to [\(newIdentifier)]")
-        notificationCenter.post(name: LocalizationNotification.localeDidChange, object: self, userInfo: userInfo)
+        UBLocalization.logger.debug("Locale did change from [\(oldIdentifier)] to [\(newIdentifier)]")
+        notificationCenter.post(name: UBLocalizationNotification.localeDidChange, object: self, userInfo: userInfo)
     }
 }
 
 // MARK: - Coding complience
 
-extension Localization {
+extension UBLocalization {
     /// :nodoc:
     enum CodingKeys: String, CodingKey {
         /// :nodoc:
@@ -162,9 +162,9 @@ extension Localization {
 
 // MARK: - Debug
 
-extension Localization: CustomDebugStringConvertible {
+extension UBLocalization: CustomDebugStringConvertible {
     /// :nodoc:
     public var debugDescription: String {
-        return "\(Localization.self) (\(locale.identifier)) [\(localizedBundle?.bundlePath ?? "No bundle")]"
+        return "\(UBLocalization.self) (\(locale.identifier)) [\(localizedBundle?.bundlePath ?? "No bundle")]"
     }
 }

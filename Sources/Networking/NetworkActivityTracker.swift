@@ -8,7 +8,7 @@
 import Foundation
 
 /// A tracker that display an aggregated status of multiple DataTasks
-public class NetworkActivityTracker {
+public class UBNetworkActivityTracker {
     // MARK: - Definitions
 
     /// The status observation block.
@@ -87,7 +87,7 @@ public class NetworkActivityTracker {
     /// Add an observer that gets called when the state of the network activity changes.
     ///
     /// - Parameter block: The block to be executed when the network activity state changes
-    public func addStateObserver(_ block: @escaping NetworkActivityTracker.StateObservationBlock) {
+    public func addStateObserver(_ block: @escaping UBNetworkActivityTracker.StateObservationBlock) {
         serialQueue.sync {
             // Pass the current status to the block when added
             if let callbackQueue = callbackQueue {
