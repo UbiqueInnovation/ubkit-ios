@@ -56,10 +56,51 @@ public class UBURLSession: UBDataTaskURLSession {
     }
 
     /// :nodoc:
-    public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask {
-        let sessionDataTask = urlSession.dataTask(with: request.getRequest())
-        sessionDelegate.addTaskPair(key: sessionDataTask, value: owner)
-        return sessionDataTask
+    public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
+        // Creats and adds a data task to the delegate
+        func createTask(_ request: URLRequest, cachedResponse: CachedURLResponse? = nil) -> URLSessionDataTask? {
+            let sessionDataTask = urlSession.dataTask(with: request)
+            sessionDelegate.addTaskPair(key: sessionDataTask, value: owner, cachedResponse: cachedResponse)
+            return sessionDataTask
+        }
+
+        // Check if we have a caching logic otherwise return a task
+        guard let cacheResult = sessionDelegate.cachingLogic?.cachedResponse(urlSession, request: request.getRequest(), dataTask: owner) else {
+            return createTask(request.getRequest())
+        }
+
+        switch (urlSession.configuration.requestCachePolicy, cacheResult) {
+        case (.reloadIgnoringLocalAndRemoteCacheData, _),
+             (.reloadIgnoringLocalCacheData, _),
+             (.reloadRevalidatingCacheData, .miss),
+             (.useProtocolCachePolicy, .miss),
+             (.returnCacheDataElseLoad, .miss):
+            return createTask(request.getRequest())
+
+        case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
+             let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
+             let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
+             let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
+            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: nil, cacheHit: true))
+            return nil
+
+        case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _)),
+             (.returnCacheDataDontLoad, .miss):
+            owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
+            return nil
+
+        case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
+             let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
+             let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)):
+            var reloadRequest = request.getRequest()
+            for header in reloadHeaders {
+                reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
+            }
+            return createTask(reloadRequest, cachedResponse: cachedResponse)
+
+        @unknown default:
+            fatalError()
+        }
     }
 
     /// :nodoc:

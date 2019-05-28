@@ -9,6 +9,15 @@ import UBFoundation
 import XCTest
 
 class UBSessionTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        let ex = expectation(description: "a")
+        UBURLSession.shared.reset(completionHandler: {
+            ex.fulfill()
+        })
+        waitForExpectations(timeout: 2, handler: nil)
+    }
+
     let testBundle: Bundle = {
         guard let testBundlePath = Bundle(for: LocalizationTests.self).path(forResource: "NetworkingTestBundle", ofType: nil),
             let testBundle = Bundle(path: testBundlePath) else {
@@ -17,20 +26,53 @@ class UBSessionTests: XCTestCase {
         return testBundle
     }()
 
-    func testNoRedirection() {
+    func testNotSuccessStatusCode() {
         let ex = expectation(description: "s")
-        let url = URL(string: "http://ubique.ch")!
-        let configuration = UBURLSessionConfiguration(allowRedirections: false)
-        let session = UBURLSession(configuration: configuration)
-        let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, response, _, _ in
+        let url = URL(string: "https://httpstat.us/404")!
+        let dataTask = UBURLDataTask(url: url)
+        dataTask.addCompletionHandler { result, _, _, _ in
+            switch result {
+            case .success:
+                XCTFail()
+            case .failure:
+                break
+            }
+            ex.fulfill()
+        }
+        dataTask.start()
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+
+    func testSuccessStatusCode() {
+        let ex = expectation(description: "s")
+        let url = URL(string: "https://httpstat.us/200")!
+        let dataTask = UBURLDataTask(url: url)
+        dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
             case .success:
                 break
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
+            case .failure:
+                XCTFail()
             }
-            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.found)
+            ex.fulfill()
+        }
+        dataTask.start()
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+
+    func testNoRedirection() {
+        let ex = expectation(description: "s")
+        let url = URL(string: "https://httpstat.us/302")!
+        let configuration = UBURLSessionConfiguration(allowRedirections: false)
+        let session = UBURLSession(configuration: configuration)
+        let dataTask = UBURLDataTask(url: url, session: session)
+        dataTask.addCompletionHandler { result, _, _, _ in
+            switch result {
+            case .success:
+                XCTFail()
+            case let .failure(error):
+                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.requestRedirected)
+            }
             ex.fulfill()
         }
         dataTask.start()

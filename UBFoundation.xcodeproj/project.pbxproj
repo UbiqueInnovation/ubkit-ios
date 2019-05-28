@@ -62,6 +62,14 @@
 		8E278668224144C900430D34 /* GlobalLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E278665224144C900430D34 /* GlobalLocalizationTests.swift */; };
 		8E46FA41224DAECF00198321 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
 		8E46FA42224DAED000198321 /* CronJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7512224AE4C300582E57 /* CronJob.swift */; };
+		8E52B77C229D69A000633EFA /* BaseCachingLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E52B77B229D69A000633EFA /* BaseCachingLogic.swift */; };
+		8E52B77D229D69A000633EFA /* BaseCachingLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E52B77B229D69A000633EFA /* BaseCachingLogic.swift */; };
+		8E52B77E229D69A000633EFA /* BaseCachingLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E52B77B229D69A000633EFA /* BaseCachingLogic.swift */; };
+		8E52B77F229D69A000633EFA /* BaseCachingLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E52B77B229D69A000633EFA /* BaseCachingLogic.swift */; };
+		8E52B781229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E52B780229D6AF100633EFA /* AutoRefreshCacheLogic.swift */; };
+		8E52B782229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E52B780229D6AF100633EFA /* AutoRefreshCacheLogic.swift */; };
+		8E52B783229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E52B780229D6AF100633EFA /* AutoRefreshCacheLogic.swift */; };
+		8E52B784229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E52B780229D6AF100633EFA /* AutoRefreshCacheLogic.swift */; };
 		8E7F7467224464F100582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
 		8E7F74682244650C00582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
 		8E7F74692244650C00582E57 /* HTTPDataTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */; };
@@ -100,10 +108,6 @@
 		8E7F749B22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */; };
 		8E7F749C22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */; };
 		8E7F749D22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */; };
-		8E7F74A0224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
-		8E7F74A1224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
-		8E7F74A2224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
-		8E7F74A3224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
 		8E7F74AE2249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
 		8E7F74AF2249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
 		8E7F74B02249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
@@ -316,6 +320,17 @@
 		8EFFDCF02254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
 		8EFFDCF12254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
 		8EFFDCF22254F539002D2DE2 /* NetworkingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */; };
+		8EFFDD0022560A51002D2DE2 /* CachingLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */; };
+		8EFFDD0122560A51002D2DE2 /* CachingLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */; };
+		8EFFDD0222560A51002D2DE2 /* CachingLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */; };
+		8EFFDD0322560A51002D2DE2 /* CachingLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */; };
+		8EFFDD0522562444002D2DE2 /* TaskAutoRefreshLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0422562444002D2DE2 /* TaskAutoRefreshLogicTests.swift */; };
+		8EFFDD0622562444002D2DE2 /* TaskAutoRefreshLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0422562444002D2DE2 /* TaskAutoRefreshLogicTests.swift */; };
+		8EFFDD0722562444002D2DE2 /* TaskAutoRefreshLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0422562444002D2DE2 /* TaskAutoRefreshLogicTests.swift */; };
+		8EFFDD0922568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
+		8EFFDD0A22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
+		8EFFDD0B22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
+		8EFFDD0C22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -357,6 +372,8 @@
 		8E27865B2241230E00430D34 /* GlobalNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalNotificationCenter.swift; sourceTree = "<group>"; };
 		8E2786602241269200430D34 /* Localization+Locale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Localization+Locale.swift"; sourceTree = "<group>"; };
 		8E278665224144C900430D34 /* GlobalLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLocalizationTests.swift; sourceTree = "<group>"; };
+		8E52B77B229D69A000633EFA /* BaseCachingLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCachingLogic.swift; sourceTree = "<group>"; };
+		8E52B780229D6AF100633EFA /* AutoRefreshCacheLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRefreshCacheLogic.swift; sourceTree = "<group>"; };
 		8E7F7466224464F100582E57 /* HTTPDataTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPDataTaskTests.swift; sourceTree = "<group>"; };
 		8E7F746A22452F8300582E57 /* DataTaskSessionMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTaskSessionMock.swift; sourceTree = "<group>"; };
 		8E7F746E2245303A00582E57 /* URLSessionDataTaskMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionDataTaskMock.swift; sourceTree = "<group>"; };
@@ -368,7 +385,6 @@
 		8E7F74922247ED0B00582E57 /* HTTPURLResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPURLResponseTests.swift; sourceTree = "<group>"; };
 		8E7F74962247F50200582E57 /* HTTPResponseValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponseValidatorTests.swift; sourceTree = "<group>"; };
 		8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPDataDecoderTests.swift; sourceTree = "<group>"; };
-		8E7F749F224859A100582E57 /* Networking+Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Logger.swift"; sourceTree = "<group>"; };
 		8E7F74A9224955F700582E57 /* Contribution Guide.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Contribution Guide.md"; path = "Documentation/Contribution Guide.md"; sourceTree = "<group>"; };
 		8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEX.swift"; sourceTree = "<group>"; };
 		8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEXTests.swift"; sourceTree = "<group>"; };
@@ -445,6 +461,9 @@
 		8EFFDCE12254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+ServerTrustEvaluation.swift"; sourceTree = "<group>"; };
 		8EFFDCE62254CA18002D2DE2 /* UBURLSession+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLSession+Configuration.swift"; sourceTree = "<group>"; };
 		8EFFDCEF2254F539002D2DE2 /* NetworkingTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = NetworkingTestBundle; sourceTree = "<group>"; };
+		8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingLogic.swift; sourceTree = "<group>"; };
+		8EFFDD0422562444002D2DE2 /* TaskAutoRefreshLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAutoRefreshLogicTests.swift; sourceTree = "<group>"; };
+		8EFFDD0822568D81002D2DE2 /* CacheControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheControl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -509,7 +528,6 @@
 				8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */,
 				8EC4846E22427BE500AC8E44 /* HTTPMethod.swift */,
 				8E0DB2B32243088000D5E01E /* Networking+Error.swift */,
-				8E7F749F224859A100582E57 /* Networking+Logger.swift */,
 				8EFFDCBF22540A7F002D2DE2 /* Networking+URLSession.swift */,
 				8E7F747322454F1900582E57 /* String+HeaderCharset.swift */,
 			);
@@ -552,6 +570,17 @@
 				8E27865222411E5600430D34 /* GlobalLoggingTests.swift */,
 			);
 			path = Globals;
+			sourceTree = "<group>";
+		};
+		8E52B77A229D696500633EFA /* Caching */ = {
+			isa = PBXGroup;
+			children = (
+				8EFFDD0822568D81002D2DE2 /* CacheControl.swift */,
+				8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */,
+				8E52B77B229D69A000633EFA /* BaseCachingLogic.swift */,
+				8E52B780229D6AF100633EFA /* AutoRefreshCacheLogic.swift */,
+			);
+			name = Caching;
 			sourceTree = "<group>";
 		};
 		8E7F74822245A06A00582E57 /* MIME */ = {
@@ -809,6 +838,7 @@
 				8E7F74832245A08E00582E57 /* HTTP Code */,
 				8E7F74822245A06A00582E57 /* MIME */,
 				8EFFDCB92254091E002D2DE2 /* Session */,
+				8E52B77A229D696500633EFA /* Caching */,
 				8E0DB2C22243BFE800D5E01E /* Request */,
 				8EE058BF22526C2500B2885B /* Request Modifiers */,
 				8E0DB2CE2243EAA100D5E01E /* Response */,
@@ -865,6 +895,7 @@
 				8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */,
 				8EE058BB2252621B00B2885B /* HTTPRequestModifierTests.swift */,
 				8EFFDCC4225413EB002D2DE2 /* UBSessionTests.swift */,
+				8EFFDD0422562444002D2DE2 /* TaskAutoRefreshLogicTests.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -1349,7 +1380,9 @@
 				8EE058C122526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
 				8EBD48182240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EE5F789228EE3FE009D174A /* KeyboardInfo.swift in Sources */,
+				8E52B781229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */,
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
+				8EFFDD0922568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8EE058E622535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
 				8EFFDCD322545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
 				8E0DB2C52243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
@@ -1362,10 +1395,11 @@
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EFFDCE72254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
+				8EFFDD0022560A51002D2DE2 /* CachingLogic.swift in Sources */,
+				8E52B77C229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
 				8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
-				8E7F74A0224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786612241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FE2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E52240765200CD2639 /* Logger.swift in Sources */,
@@ -1401,10 +1435,12 @@
 			files = (
 				8EE058EC22535FF700B2885B /* UBURLSessionTask.swift in Sources */,
 				8EE058B122520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
+				8EFFDD0A22568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8E7F747522454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4847022427BE500AC8E44 /* HTTPMethod.swift in Sources */,
 				8EE058C222526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
 				8E7F74AF2249897B00582E57 /* UIColor+HEX.swift in Sources */,
+				8E52B782229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */,
 				8E7F747F2245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EE058E22252E65D00B2885B /* NetworkTaskRecovery+Group.swift in Sources */,
 				8EBD47FB2240770000CD2639 /* Localization+Notification.swift in Sources */,
@@ -1418,16 +1454,17 @@
 				8E0DB2C62243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4858224119AE00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48032240770000CD2639 /* Localization.swift in Sources */,
+				8EFFDD0122560A51002D2DE2 /* CachingLogic.swift in Sources */,
 				8E0DB2D62243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DB2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EFFDCDE2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
 				8EE058F6225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
 				8E101735224F5736006127DA /* CronRule.swift in Sources */,
+				8E52B77D229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
 				8EBD48132240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EFFDCE32254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8EBD480F2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8EFFDCE82254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
-				8E7F74A1224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786622241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FF2240770000CD2639 /* Language.swift in Sources */,
 				8EFFDCD422545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
@@ -1464,10 +1501,12 @@
 			files = (
 				8EE058ED22535FF700B2885B /* UBURLSessionTask.swift in Sources */,
 				8EE058B222520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
+				8EFFDD0B22568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8E7F747622454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4847122427BE500AC8E44 /* HTTPMethod.swift in Sources */,
 				8EE058C322526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
 				8E7F74B02249897B00582E57 /* UIColor+HEX.swift in Sources */,
+				8E52B783229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */,
 				8E7F74802245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EE058E32252E65D00B2885B /* NetworkTaskRecovery+Group.swift in Sources */,
 				8EBD47FC2240770000CD2639 /* Localization+Notification.swift in Sources */,
@@ -1481,16 +1520,17 @@
 				8E0DB2C72243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4857224119AD00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48042240770000CD2639 /* Localization.swift in Sources */,
+				8EFFDD0222560A51002D2DE2 /* CachingLogic.swift in Sources */,
 				8E0DB2D72243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DC2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EFFDCDF2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
 				8EE058F7225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
 				8E101736224F5736006127DA /* CronRule.swift in Sources */,
+				8E52B77E229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
 				8EBD48142240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EFFDCE42254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8EBD48102240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8EFFDCE92254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
-				8E7F74A2224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */,
 				8E2786632241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EFFDCD522545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
@@ -1536,12 +1576,14 @@
 				8EE058E922535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
 				8EBD47EC2240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EC484672241C65A00AC8E44 /* HTTPCode.swift in Sources */,
+				8EFFDD0322560A51002D2DE2 /* CachingLogic.swift in Sources */,
 				8E7F747C22459D7700582E57 /* MIMEType+Parameter.swift in Sources */,
 				8EE058D32252744F00B2885B /* UBURLRequestModifier+AcceptedLanguage.swift in Sources */,
 				8E0DB2D32243EABB00D5E01E /* HTTPURLResponse+Networking.swift in Sources */,
 				8EFFDCC322540A7F002D2DE2 /* Networking+URLSession.swift in Sources */,
 				8EBD481B2240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EE058F8225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
+				8E52B784229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */,
 				8EC4848622428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				8E0DB2C82243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4856224119AD00CD2639 /* Logger+Error.swift in Sources */,
@@ -1551,7 +1593,6 @@
 				8EFFDCD622545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
 				8EBD48152240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
-				8E7F74A3224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
 				8E46FA42224DAED000198321 /* CronJob.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,
@@ -1562,6 +1603,7 @@
 				8EBD47F92240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EE058AC22513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8E80D60C2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
+				8E52B77F229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
 				8EE058CE22526CEC00B2885B /* UBURLRequestModifier+TokenAuthorization.swift in Sources */,
 				8EC484772242813200AC8E44 /* UBURLRequest+Body.swift in Sources */,
 				8E7F748D2247B4A300582E57 /* UBURLRequest+BodyConvertible.swift in Sources */,
@@ -1570,6 +1612,7 @@
 				8EC484622241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */,
 				8E7F74882245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8E0DB2AD2243049900D5E01E /* UBURLDataTask.swift in Sources */,
+				8EFFDD0C22568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8EE058E42252E65D00B2885B /* NetworkTaskRecovery+Group.swift in Sources */,
 				8EC4847C2242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48092240770000CD2639 /* Localization+String.swift in Sources */,
@@ -1599,6 +1642,7 @@
 				8EFFDCC5225413EB002D2DE2 /* UBSessionTests.swift in Sources */,
 				8E7F749B22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */,
 				8E27865322411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
+				8EFFDD0522562444002D2DE2 /* TaskAutoRefreshLogicTests.swift in Sources */,
 				8EE058BC2252621B00B2885B /* HTTPRequestModifierTests.swift in Sources */,
 				8E7F7507224A1FD000582E57 /* KeyboardLayoutGuideTests.swift in Sources */,
 				8EF90D56224298700055A362 /* HTTPCodeTests.swift in Sources */,
@@ -1620,6 +1664,7 @@
 				8EBD483B22408E1000CD2639 /* LocalizationTests.swift in Sources */,
 				8EE058A62251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */,
 				8E7F746C22452F8300582E57 /* DataTaskSessionMock.swift in Sources */,
+				8EFFDD0622562444002D2DE2 /* TaskAutoRefreshLogicTests.swift in Sources */,
 				8EF90D5F22429D300055A362 /* HTTPRequestBodyTests.swift in Sources */,
 				8E7F74682244650C00582E57 /* HTTPDataTaskTests.swift in Sources */,
 				8EBD485022410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
@@ -1658,6 +1703,7 @@
 				8E27865522411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EF90D58224298700055A362 /* HTTPCodeTests.swift in Sources */,
 				8E7F74712245303A00582E57 /* URLSessionDataTaskMock.swift in Sources */,
+				8EFFDD0722562444002D2DE2 /* TaskAutoRefreshLogicTests.swift in Sources */,
 				8EBD482A22407A6F00CD2639 /* LanguageTests.swift in Sources */,
 				8EE058A72251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */,
 				8EF90D5C22429AA30055A362 /* MIMETypeTests.swift in Sources */,

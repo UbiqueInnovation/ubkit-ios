@@ -30,6 +30,6 @@ public protocol UBDataTaskURLSession: UBURLSessionProtocol {
     /// - Parameters:
     ///   - request: The request to be executed
     ///   - owner: A Data Task that owns the request
-    /// - Returns: The new session data task.
-    func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask
+    /// - Returns: The new session data task. Nil if there is no need for one.
+    func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask?
 }

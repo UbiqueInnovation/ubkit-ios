@@ -29,7 +29,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have failed")
             }
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -71,7 +72,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have failed")
             }
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -125,7 +127,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have failed")
             }
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -146,7 +149,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -163,7 +167,8 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addRequestModifier(UBURLRequestBasicAuthorization(login: "login", password: "password"))
         dataTask.addCompletionHandler { _, _, _, _ in
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -189,7 +194,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -216,7 +222,8 @@ class HTTPDataTaskTests: XCTestCase {
             }
             XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
             ex1.fulfill()
-        }.addCompletionHandler(decoder: UBHTTPStringDecoder(), completionHandler: { result, _, _, _ in
+        }
+        dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(), completionHandler: { result, _, _, _ in
             switch result {
             case .failure:
                 break
@@ -224,7 +231,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have failed parsing")
             }
             ex2.fulfill()
-        }).addCompletionHandler(decoder: UBHTTPStringDecoder(encoding: .utf16), completionHandler: { result, _, _, _ in
+        })
+        dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(encoding: .utf16), completionHandler: { result, _, _, _ in
             switch result {
             case let .success(data):
                 XCTAssertEqual(data, "Hello")
@@ -232,7 +240,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have returned a string")
             }
             ex3.fulfill()
-        }).start()
+        })
+        dataTask.start()
 
         waitForExpectations(timeout: 1, handler: nil)
     }
@@ -254,7 +263,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail()
             }
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -278,7 +288,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -303,7 +314,8 @@ class HTTPDataTaskTests: XCTestCase {
                 XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -334,7 +346,8 @@ class HTTPDataTaskTests: XCTestCase {
             default:
                 break
             }
-        }.start()
+        }
+        dataTask.start()
         waitForExpectations(timeout: 1, handler: nil)
     }
 
@@ -469,7 +482,7 @@ class HTTPDataTaskTests: XCTestCase {
 
         let t = Timer(timeInterval: 0.25, repeats: false) { _ in
             // This should trigger also the cancelation of the task
-            dataTask.request = UBURLRequest(url: self.url)
+            dataTask.cancel()
         }
         RunLoop.main.add(t, forMode: .common)
 

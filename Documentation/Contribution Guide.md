@@ -102,6 +102,7 @@ We separate 3 log levels: __Info__, __Error__, __Debug__.
 # Roadmap
 
 ## Networking
+Check dates in the future
 
 ### Caching
 ### Cron scheduling

@@ -31,4 +31,10 @@ public enum UBNetworkingError: Error, Equatable {
     case responseBodyIsNotEmpty
     /// The certificate validation process failed
     case certificateValidationFailed
+    /// The request has failed with a status code
+    case requestFailed(httpStatusCode: Int)
+    /// The request got redirected
+    case requestRedirected
+    /// No cached data was found
+    case noCachedData
 }

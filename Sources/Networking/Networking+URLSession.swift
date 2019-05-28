@@ -10,7 +10,7 @@ import Foundation
 // URLSession conforms to URLSessionProtocol
 extension URLSession: UBDataTaskURLSession {
     /// :nodoc:
-    public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask {
+    public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
         return dataTask(with: request.getRequest(), completionHandler: { [weak owner] data, response, baseError in
             guard let owner = owner else {
                 return
