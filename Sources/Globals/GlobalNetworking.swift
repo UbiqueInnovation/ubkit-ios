@@ -12,7 +12,8 @@ private let globalNetworkActivityTracker = NetworkActivityTracker()
 
 // MARK: - Network Activity
 
-extension Networking {
+/// A name space for networking
+public enum Networking {
     /// The global network activity state
     public static var globalNetworkActivityState: NetworkActivityTracker.NetworkActivityState {
         return globalNetworkActivityTracker.networkActivityState

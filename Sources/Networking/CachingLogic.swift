@@ -13,7 +13,7 @@ public enum CacheResult {
     case miss
     case invalid
     case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
-    case hit(cachedResponse: CachedURLResponse)
+    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
 }
 
 public protocol CachingLogic {
@@ -111,7 +111,7 @@ open class AutoRefreshCacheLogic: CachingLogic {
         case .serverError, .informational, .clientError, .uncategorized:
             return nil
         case .redirection:
-            guard response != StandardHTTPCode.notModified else {
+            guard response == StandardHTTPCode.notModified else {
                 return nil
             }
             scheduleRefreshCronJobIfNeeded(for: ubDataTask, headers: response.allHeaderFields)
@@ -175,7 +175,8 @@ open class AutoRefreshCacheLogic: CachingLogic {
         guard let response = cachedResponse.response as? HTTPURLResponse,
             let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String,
             let cacheControlDirectives = CacheResponseDirectives(cacheControlHeader: cacheControlHeader),
-            cacheControlDirectives.cachingAllowed else {
+            cacheControlDirectives.cachingAllowed,
+            response.statusCode == HTTPCodeCategory.success else {
             session.configuration.urlCache?.removeCachedResponse(for: request)
             cancelRefreshCronJob(for: dataTask)
             return .invalid
@@ -209,7 +210,7 @@ open class AutoRefreshCacheLogic: CachingLogic {
                 return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
             } else {
                 scheduleRefreshCronJobIfNeeded(for: dataTask, headers: response.allHeaderFields)
-                return .hit(cachedResponse: cachedResponse)
+                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
             }
 
             // If there are no max age then search for expire header
@@ -220,7 +221,7 @@ open class AutoRefreshCacheLogic: CachingLogic {
                 return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
             } else {
                 scheduleRefreshCronJobIfNeeded(for: dataTask, headers: response.allHeaderFields)
-                return .hit(cachedResponse: cachedResponse)
+                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
             }
 
             // If there is no max age neither expires, set a cache validity default
@@ -236,7 +237,7 @@ open class AutoRefreshCacheLogic: CachingLogic {
                 return .expired(cachedResponse: cachedResponse, reloadHeaders: [:])
             } else {
                 scheduleRefreshCronJobIfNeeded(for: dataTask, headers: response.allHeaderFields)
-                return .hit(cachedResponse: cachedResponse)
+                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
             }
 
             // In case no caching information is found just remove the cached object

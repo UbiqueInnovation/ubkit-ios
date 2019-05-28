@@ -54,7 +54,6 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         }
 
         guard let ubDataTask = tasks.object(forKey: task) else {
-            assertionFailure("Should have a data holder")
             return
         }
 
@@ -63,17 +62,29 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             return
         }
 
-        // Execute the caching logic
-        executeCachingLogic(cachingLogic: cachingLogic, session: session, task: task, ubDataTask: ubDataTask, request: collectedData.request, response: collectedData.response, data: collectedData.data, metrics: collectedData.metrics)
-
         guard let response = collectedData.response as? HTTPURLResponse else {
-            ubDataTask.dataTaskCompleted(data: collectedData.data, response: nil, error: error, info: NetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
+            ubDataTask.dataTaskCompleted(data: collectedData.data, response: nil, error: collectedData.error ?? error, info: NetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
             return
         }
+
+        // Execute the caching logic
+        executeCachingLogic(cachingLogic: cachingLogic, session: session, task: task, ubDataTask: ubDataTask, request: collectedData.request, response: response, data: collectedData.data, metrics: collectedData.metrics)
 
         // If not modified return the cached data
         if response.statusCode == StandardHTTPCode.notModified, let cached = collectedData.cached {
             ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: NetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true))
+            return
+        }
+
+        // Make sure we do not process error status
+        guard response.statusCode == HTTPCodeCategory.success else {
+            let responseError: Error
+            if response.statusCode == HTTPCodeCategory.redirection, allowsRedirection == false {
+                responseError = NetworkingError.requestRedirected
+            } else {
+                responseError = NetworkingError.requestFailed(httpStatusCode: response.statusCode)
+            }
+            ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: responseError, info: NetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
             return
         }
 
@@ -84,7 +95,6 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         assert(session == urlSession, "The sessions are not matching")
         guard let dataHolder = tasksData.object(forKey: task) else {
-            assertionFailure("Should have a data holder")
             return
         }
         dataHolder.metrics = metrics
@@ -95,7 +105,6 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         assert(session == urlSession, "The sessions are not matching")
 
         guard let ubDataTask = tasks.object(forKey: dataTask), let dataHolder = tasksData.object(forKey: dataTask) else {
-            assertionFailure("Should have a data holder")
             completionHandler(.cancel)
             return
         }
@@ -121,7 +130,6 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         assert(session == urlSession, "The sessions are not matching")
         guard let dataHolder = tasksData.object(forKey: dataTask) else {
-            assertionFailure("Should have a data holder")
             return
         }
         if dataHolder.data == nil {
@@ -146,17 +154,20 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// :nodoc:
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         assert(session == urlSession, "The sessions are not matching")
+
+        guard let dataHolder = tasksData.object(forKey: task) else {
+            completionHandler(request)
+            return
+        }
+
         guard allowsRedirection else {
             completionHandler(nil)
             return
         }
-        guard let dataHolder = tasksData.object(forKey: task) else {
-            assertionFailure("Should have a data holder")
-            completionHandler(request)
-            return
-        }
-        assert(response == dataHolder.response)
+
+        dataHolder.response = response
         dataHolder.request = request
+
         completionHandler(request)
     }
 
@@ -209,8 +220,8 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         }
     }
 
-    private func executeCachingLogic(cachingLogic: CachingLogic?, session: URLSession, task: URLSessionTask, ubDataTask: UBURLDataTask, request: URLRequest, response: URLResponse?, data: Data?, metrics: URLSessionTaskMetrics?) {
-        guard let cachingLogic = cachingLogic, let task = task as? URLSessionDataTask, let response = response as? HTTPURLResponse, let originalRequest = task.originalRequest else {
+    private func executeCachingLogic(cachingLogic: CachingLogic?, session: URLSession, task: URLSessionTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) {
+        guard let cachingLogic = cachingLogic, let task = task as? URLSessionDataTask, let originalRequest = task.originalRequest else {
             return
         }
 

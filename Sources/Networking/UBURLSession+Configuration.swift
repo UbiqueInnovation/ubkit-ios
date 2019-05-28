@@ -93,6 +93,8 @@ extension URLRequest.NetworkServiceType {
             qos = .userInteractive
         case .default:
             qos = .default
+        @unknown default:
+            fatalError()
         }
         return qos
     }

@@ -19,18 +19,17 @@ class UBSessionTests: XCTestCase {
 
     func testNoRedirection() {
         let ex = expectation(description: "s")
-        let url = URL(string: "http://ubique.ch")!
+        let url = URL(string: "https://httpstat.us/302")!
         let configuration = UBURLSessionConfiguration(allowRedirections: false)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, response, _, _ in
+        dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
             case .success:
-                break
+                XCTFail()
             case let .failure(error):
-                XCTFail(error.localizedDescription)
+                XCTAssertEqual(error as? NetworkingError, NetworkingError.requestRedirected)
             }
-            XCTAssertEqual(response?.statusCode.standardHTTPCode, StandardHTTPCode.found)
             ex.fulfill()
         }
         dataTask.start()

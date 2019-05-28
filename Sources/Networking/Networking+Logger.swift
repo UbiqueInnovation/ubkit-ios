@@ -6,9 +6,3 @@
 //
 
 import Foundation
-
-/// A name space for networking
-public enum Networking {
-    /// A logger associated with data tasks
-    internal static let logger: Logger = Logging.frameworkLoggerFactory(category: "Networking")
-}
