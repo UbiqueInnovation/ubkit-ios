@@ -29,7 +29,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 //    }
 }
 
-class MeteoAutoRefreshCacheLogic: AutoRefreshCacheLogic {
+class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     override var nextRefreshHeaderFieldName: String {
         return "x-amz-meta-next-refresh"
     }

@@ -9,19 +9,19 @@ import Foundation
 
 // TODO: Cancelation of the task + change request monitoring
 
-public enum CacheResult {
+public enum UBCacheResult {
     case miss
     case invalid
     case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
     case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
 }
 
-public protocol CachingLogic {
+public protocol UBCachingLogic {
     func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse?
-    func cachedResponse(_ session: URLSession, request: URLRequest, dataTask: UBURLDataTask) -> CacheResult
+    func cachedResponse(_ session: URLSession, request: URLRequest, dataTask: UBURLDataTask) -> UBCacheResult
 }
 
-open class AutoRefreshCacheLogic: CachingLogic {
+open class UBAutoRefreshCacheLogic: UBCachingLogic {
     private let refreshJobs = NSMapTable<UBURLDataTask, UBCronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
     open var nextRefreshHeaderFieldName: String {
@@ -101,7 +101,7 @@ open class AutoRefreshCacheLogic: CachingLogic {
     open func proposeCachedResponse(for session: URLSession, dataTask _: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
         cancelRefreshCronJob(for: ubDataTask)
 
-        guard let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String, let cacheControlDirectives = CacheResponseDirectives(cacheControlHeader: cacheControlHeader), cacheControlDirectives.cachingAllowed else {
+        guard let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String, let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), cacheControlDirectives.cachingAllowed else {
             return nil
         }
 
@@ -167,14 +167,14 @@ open class AutoRefreshCacheLogic: CachingLogic {
         }
     }
 
-    open func cachedResponse(_ session: URLSession, request: URLRequest, dataTask: UBURLDataTask) -> CacheResult {
+    open func cachedResponse(_ session: URLSession, request: URLRequest, dataTask: UBURLDataTask) -> UBCacheResult {
         guard let cachedResponse = session.configuration.urlCache?.cachedResponse(for: request) else {
             return .miss
         }
 
         guard let response = cachedResponse.response as? HTTPURLResponse,
             let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String,
-            let cacheControlDirectives = CacheResponseDirectives(cacheControlHeader: cacheControlHeader),
+            let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader),
             cacheControlDirectives.cachingAllowed,
             response.statusCode == UBHTTPCodeCategory.success else {
             session.configuration.urlCache?.removeCachedResponse(for: request)

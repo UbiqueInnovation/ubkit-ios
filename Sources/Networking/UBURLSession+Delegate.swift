@@ -24,7 +24,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     private let allowsRedirection: Bool
 
     /// :nodoc:
-    let cachingLogic: CachingLogic?
+    let cachingLogic: UBCachingLogic?
 
     /// Initializes the delegate with a configuration
     ///
@@ -220,7 +220,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         }
     }
 
-    private func executeCachingLogic(cachingLogic: CachingLogic?, session: URLSession, task: URLSessionTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) {
+    private func executeCachingLogic(cachingLogic: UBCachingLogic?, session: URLSession, task: URLSessionTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) {
         guard let cachingLogic = cachingLogic, let task = task as? URLSessionDataTask, let originalRequest = task.originalRequest else {
             return
         }

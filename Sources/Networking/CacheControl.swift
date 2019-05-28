@@ -7,9 +7,9 @@
 
 import Foundation
 
-public typealias CacheResponseDirectives = [CacheResponseDirective]
+public typealias UBCacheResponseDirectives = [UBCacheResponseDirective]
 
-public struct CacheResponseDirective: Hashable {
+public struct UBCacheResponseDirective: Hashable {
     public enum Command: String, Equatable {
         case noCache = "no-cache"
         case noStore = "no-store"
@@ -26,27 +26,27 @@ public struct CacheResponseDirective: Hashable {
     }
 
     /// :nodoc:
-    public static func == (left: CacheResponseDirective, right: Command) -> Bool {
+    public static func == (left: UBCacheResponseDirective, right: Command) -> Bool {
         return left.command == right
     }
 
     /// :nodoc:
-    public static func == (left: Command, right: CacheResponseDirective) -> Bool {
+    public static func == (left: Command, right: UBCacheResponseDirective) -> Bool {
         return right == left
     }
 }
 
-extension Array where Element == CacheResponseDirective {
+extension Array where Element == UBCacheResponseDirective {
     public init?(cacheControlHeader: String) {
         let cacheControlRegex = try! NSRegularExpression(pattern: "([a-z-]+)(=([0-9]+))?", options: [NSRegularExpression.Options.caseInsensitive])
         let matches = cacheControlRegex.matches(in: cacheControlHeader, options: [], range: NSRange(cacheControlHeader.startIndex..., in: cacheControlHeader))
-        var result: CacheResponseDirectives = []
+        var result: UBCacheResponseDirectives = []
         for match in matches {
             if match.numberOfRanges == 4, let range = Range(match.range(at: 0), in: cacheControlHeader) {
-                if let directiveRange = Range(match.range(at: 1), in: cacheControlHeader), let valueRange = Range(match.range(at: 3), in: cacheControlHeader), let command = CacheResponseDirective.Command(rawValue: String(cacheControlHeader[directiveRange])) {
-                    result.append(CacheResponseDirective(command: command, value: Int(String(cacheControlHeader[valueRange]))))
-                } else if let command = CacheResponseDirective.Command(rawValue: String(cacheControlHeader[range])) {
-                    result.append(CacheResponseDirective(command: command, value: nil))
+                if let directiveRange = Range(match.range(at: 1), in: cacheControlHeader), let valueRange = Range(match.range(at: 3), in: cacheControlHeader), let command = UBCacheResponseDirective.Command(rawValue: String(cacheControlHeader[directiveRange])) {
+                    result.append(UBCacheResponseDirective(command: command, value: Int(String(cacheControlHeader[valueRange]))))
+                } else if let command = UBCacheResponseDirective.Command(rawValue: String(cacheControlHeader[range])) {
+                    result.append(UBCacheResponseDirective(command: command, value: nil))
                 }
             }
         }
@@ -59,11 +59,11 @@ extension Array where Element == CacheResponseDirective {
 
     public var cachingAllowed: Bool {
         return !contains(where: {
-            $0 == CacheResponseDirective.Command.noCache || $0 == CacheResponseDirective.Command.noStore
+            $0 == UBCacheResponseDirective.Command.noCache || $0 == UBCacheResponseDirective.Command.noStore
         })
     }
 
     public var maxAge: Int? {
-        return first(where: { $0 == CacheResponseDirective.Command.maxAge || $0 == CacheResponseDirective.Command.sMaxAge })?.value
+        return first(where: { $0 == UBCacheResponseDirective.Command.maxAge || $0 == UBCacheResponseDirective.Command.sMaxAge })?.value
     }
 }

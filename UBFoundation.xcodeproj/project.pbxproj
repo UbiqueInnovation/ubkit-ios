@@ -100,10 +100,6 @@
 		8E7F749B22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */; };
 		8E7F749C22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */; };
 		8E7F749D22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */; };
-		8E7F74A0224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
-		8E7F74A1224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
-		8E7F74A2224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
-		8E7F74A3224859A100582E57 /* Networking+Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F749F224859A100582E57 /* Networking+Logger.swift */; };
 		8E7F74AE2249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
 		8E7F74AF2249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
 		8E7F74B02249897B00582E57 /* UIColor+HEX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */; };
@@ -379,7 +375,6 @@
 		8E7F74922247ED0B00582E57 /* HTTPURLResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPURLResponseTests.swift; sourceTree = "<group>"; };
 		8E7F74962247F50200582E57 /* HTTPResponseValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponseValidatorTests.swift; sourceTree = "<group>"; };
 		8E7F749A22480E8600582E57 /* HTTPDataDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPDataDecoderTests.swift; sourceTree = "<group>"; };
-		8E7F749F224859A100582E57 /* Networking+Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Logger.swift"; sourceTree = "<group>"; };
 		8E7F74A9224955F700582E57 /* Contribution Guide.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Contribution Guide.md"; path = "Documentation/Contribution Guide.md"; sourceTree = "<group>"; };
 		8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEX.swift"; sourceTree = "<group>"; };
 		8E7F74BA2249966D00582E57 /* UIColor+HEXTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HEXTests.swift"; sourceTree = "<group>"; };
@@ -523,7 +518,6 @@
 				8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */,
 				8EC4846E22427BE500AC8E44 /* HTTPMethod.swift */,
 				8E0DB2B32243088000D5E01E /* Networking+Error.swift */,
-				8E7F749F224859A100582E57 /* Networking+Logger.swift */,
 				8EFFDCBF22540A7F002D2DE2 /* Networking+URLSession.swift */,
 				8E7F747322454F1900582E57 /* String+HeaderCharset.swift */,
 				8EFFDD0822568D81002D2DE2 /* CacheControl.swift */,
@@ -1384,7 +1378,6 @@
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
 				8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
-				8E7F74A0224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786612241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FE2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E52240765200CD2639 /* Logger.swift in Sources */,
@@ -1448,7 +1441,6 @@
 				8EFFDCE32254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8EBD480F2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8EFFDCE82254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
-				8E7F74A1224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786622241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FF2240770000CD2639 /* Language.swift in Sources */,
 				8EFFDCD422545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
@@ -1513,7 +1505,6 @@
 				8EFFDCE42254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8EBD48102240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8EFFDCE92254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
-				8E7F74A2224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */,
 				8E2786632241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EFFDCD522545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
@@ -1575,7 +1566,6 @@
 				8EFFDCD622545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
 				8EBD48152240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
-				8E7F74A3224859A100582E57 /* Networking+Logger.swift in Sources */,
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
 				8E46FA42224DAED000198321 /* CronJob.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,
