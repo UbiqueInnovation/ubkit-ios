@@ -11,7 +11,7 @@ import XCTest
 class HTTPURLResponseTests: XCTestCase {
     func testHeaderExtraction() {
         let response = HTTPURLResponse(url: URL(string: "http://ubique.ch")!, statusCode: 200, httpVersion: "1.1", headerFields: ["Accept": "application/json"])!
-        XCTAssertEqual(response.getHeaderField(key: .accept), "application/json")
-        XCTAssertNil(response.getHeaderField(key: .authorization))
+        XCTAssertEqual(response.ub_getHeaderField(key: .accept), "application/json")
+        XCTAssertNil(response.ub_getHeaderField(key: .authorization))
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Parameter
 
-extension MIMEType {
+extension UBMIMEType {
     /// MIME Parameter
     /// - seeAlso: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
     public struct Parameter: Equatable {

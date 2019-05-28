@@ -8,7 +8,7 @@
 import Foundation
 
 // URLSession conforms to URLSessionProtocol
-extension URLSession: DataTaskURLSession {
+extension URLSession: UBDataTaskURLSession {
     /// :nodoc:
     public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
         return dataTask(with: request.getRequest(), completionHandler: { [weak owner] data, response, baseError in
@@ -17,7 +17,7 @@ extension URLSession: DataTaskURLSession {
             }
             var error = baseError
             if error == nil, (response is HTTPURLResponse) == false {
-                error = NetworkingError.notHTTPResponse
+                error = UBNetworkingError.notHTTPResponse
             }
 
             if let r = response as? HTTPURLResponse {

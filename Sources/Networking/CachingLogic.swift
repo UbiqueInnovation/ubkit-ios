@@ -22,7 +22,7 @@ public protocol CachingLogic {
 }
 
 open class AutoRefreshCacheLogic: CachingLogic {
-    private let refreshJobs = NSMapTable<UBURLDataTask, CronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
+    private let refreshJobs = NSMapTable<UBURLDataTask, UBCronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
     open var nextRefreshHeaderFieldName: String {
         return "X-Next-Refresh"
@@ -33,43 +33,43 @@ open class AutoRefreshCacheLogic: CachingLogic {
     }
 
     open var cacheControlHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.cacheControl.rawValue
+        return UBHTTPHeaderField.StandardKeys.cacheControl.rawValue
     }
 
     open var expiresHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.expires.rawValue
+        return UBHTTPHeaderField.StandardKeys.expires.rawValue
     }
 
     open var ageHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.age.rawValue
+        return UBHTTPHeaderField.StandardKeys.age.rawValue
     }
 
     open var dateHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.date.rawValue
+        return UBHTTPHeaderField.StandardKeys.date.rawValue
     }
 
     open var acceptedLanguageHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.acceptLanguage.rawValue
+        return UBHTTPHeaderField.StandardKeys.acceptLanguage.rawValue
     }
 
     open var contentLanguageHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.contentLanguage.rawValue
+        return UBHTTPHeaderField.StandardKeys.contentLanguage.rawValue
     }
 
     open var eTagHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.etag.rawValue
+        return UBHTTPHeaderField.StandardKeys.etag.rawValue
     }
 
     open var ifNoneMatchHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.ifNoneMatch.rawValue
+        return UBHTTPHeaderField.StandardKeys.ifNoneMatch.rawValue
     }
 
     open var ifModifiedSinceHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.ifModifiedSince.rawValue
+        return UBHTTPHeaderField.StandardKeys.ifModifiedSince.rawValue
     }
 
     open var lastModifiedHeaderFieldName: String {
-        return HTTPHeaderField.StandardKeys.lastModified.rawValue
+        return UBHTTPHeaderField.StandardKeys.lastModified.rawValue
     }
 
     open var dateFormatter: DateFormatter {
@@ -106,12 +106,12 @@ open class AutoRefreshCacheLogic: CachingLogic {
         }
 
         // Check the status code
-        let statusCodeCategory = HTTPCodeCategory(code: response.statusCode)
+        let statusCodeCategory = UBHTTPCodeCategory(code: response.statusCode)
         switch statusCodeCategory {
         case .serverError, .informational, .clientError, .uncategorized:
             return nil
         case .redirection:
-            guard response == StandardHTTPCode.notModified else {
+            guard response == UBStandardHTTPCode.notModified else {
                 return nil
             }
             scheduleRefreshCronJobIfNeeded(for: ubDataTask, headers: response.allHeaderFields)
@@ -137,7 +137,7 @@ open class AutoRefreshCacheLogic: CachingLogic {
         }
         cancelRefreshCronJob(for: task)
         // Schedule a new job
-        let job = CronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
+        let job = UBCronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
             task?.start()
         }
         refreshJobs.setObject(job, forKey: task)
@@ -176,7 +176,7 @@ open class AutoRefreshCacheLogic: CachingLogic {
             let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String,
             let cacheControlDirectives = CacheResponseDirectives(cacheControlHeader: cacheControlHeader),
             cacheControlDirectives.cachingAllowed,
-            response.statusCode == HTTPCodeCategory.success else {
+            response.statusCode == UBHTTPCodeCategory.success else {
             session.configuration.urlCache?.removeCachedResponse(for: request)
             cancelRefreshCronJob(for: dataTask)
             return .invalid

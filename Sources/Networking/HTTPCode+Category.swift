@@ -8,7 +8,7 @@
 import Foundation
 
 /// A cluster of HTTP code
-public enum HTTPCodeCategory {
+public enum UBHTTPCodeCategory {
     /// Code is outside of the known ranges
     case uncategorized
     /// Informational status
@@ -43,42 +43,42 @@ public enum HTTPCodeCategory {
     }
 
     /// :nodoc:
-    public static func == (left: HTTPCodeCategory, right: Int) -> Bool {
-        return left == HTTPCodeCategory(code: right)
+    public static func == (left: UBHTTPCodeCategory, right: Int) -> Bool {
+        return left == UBHTTPCodeCategory(code: right)
     }
 
     /// :nodoc:
-    public static func == (left: Int, right: HTTPCodeCategory) -> Bool {
+    public static func == (left: Int, right: UBHTTPCodeCategory) -> Bool {
         return right == left
     }
 
     /// :nodoc:
-    public static func == (left: HTTPURLResponse, right: HTTPCodeCategory) -> Bool {
+    public static func == (left: HTTPURLResponse, right: UBHTTPCodeCategory) -> Bool {
         return left.statusCode == right
     }
 
     /// :nodoc:
-    public static func == (left: HTTPCodeCategory, right: HTTPURLResponse) -> Bool {
+    public static func == (left: UBHTTPCodeCategory, right: HTTPURLResponse) -> Bool {
         return right == left
     }
 
     /// :nodoc:
-    public static func != (left: HTTPCodeCategory, right: Int) -> Bool {
-        return left != HTTPCodeCategory(code: right)
+    public static func != (left: UBHTTPCodeCategory, right: Int) -> Bool {
+        return left != UBHTTPCodeCategory(code: right)
     }
 
     /// :nodoc:
-    public static func != (left: Int, right: HTTPCodeCategory) -> Bool {
+    public static func != (left: Int, right: UBHTTPCodeCategory) -> Bool {
         return right != left
     }
 
     /// :nodoc:
-    public static func != (left: HTTPURLResponse, right: HTTPCodeCategory) -> Bool {
+    public static func != (left: HTTPURLResponse, right: UBHTTPCodeCategory) -> Bool {
         return left.statusCode != right
     }
 
     /// :nodoc:
-    public static func != (left: HTTPCodeCategory, right: HTTPURLResponse) -> Bool {
+    public static func != (left: UBHTTPCodeCategory, right: HTTPURLResponse) -> Bool {
         return right != left
     }
 }

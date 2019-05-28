@@ -10,8 +10,8 @@ import XCTest
 
 class GlobalLoggingTests: XCTestCase {
     func testSetGlobalLogLevel() {
-        UBFoundation.Logging.setGlobalLogLevel(.none)
-        UBFoundation.Logging.setGlobalLogLevel(.verbose)
-        UBFoundation.Logging.setGlobalLogLevel(.default)
+        UBFoundation.UBLogging.setGlobalLogLevel(.none)
+        UBFoundation.UBLogging.setGlobalLogLevel(.verbose)
+        UBFoundation.UBLogging.setGlobalLogLevel(.default)
     }
 }

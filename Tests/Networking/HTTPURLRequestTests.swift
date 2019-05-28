@@ -19,7 +19,7 @@ class HTTPURLRequestTests: XCTestCase {
         XCTAssertEqual(cache, request.cachePolicy)
         XCTAssertEqual(timeout, request.timeoutInterval)
 
-        request.httpMethod = HTTPMethod.get
+        request.httpMethod = UBHTTPMethod.get
         XCTAssertEqual(request.httpMethod?.rawValue, "GET")
 
         XCTAssertTrue(request.allowsCellularAccess)
@@ -50,9 +50,9 @@ class HTTPURLRequestTests: XCTestCase {
         var request = UBURLRequest(url: url)
         let key = "Hi"
         let value = "xcd"
-        request.setHTTPHeaderField(HTTPHeaderField(key: key, value: value))
+        request.setHTTPHeaderField(UBHTTPHeaderField(key: key, value: value))
         XCTAssertEqual(request.value(forHTTPHeaderField: key), value)
-        request.addToHTTPHeaderField(HTTPHeaderField(key: .contentType, value: "text/plain"))
+        request.addToHTTPHeaderField(UBHTTPHeaderField(key: .contentType, value: "text/plain"))
         XCTAssertEqual(request.value(forHTTPHeaderField: key), value)
         XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "text/plain")
         let all = request.allHTTPHeaderFields

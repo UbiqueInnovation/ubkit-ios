@@ -18,7 +18,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     weak var urlSession: URLSession?
 
     /// The manager providing server trust verification
-    private let serverTrustManager: ServerTrustManager
+    private let serverTrustManager: UBServerTrustManager
 
     /// :nodoc:
     private let allowsRedirection: Bool
@@ -30,7 +30,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     ///
     /// - Parameter configuration: The configuration to use
     init(configuration: UBURLSessionConfiguration) {
-        serverTrustManager = ServerTrustManager(evaluators: configuration.hostsServerTrusts, default: configuration.defaultServerTrust)
+        serverTrustManager = UBServerTrustManager(evaluators: configuration.hostsServerTrusts, default: configuration.defaultServerTrust)
         allowsRedirection = configuration.allowRedirections
         cachingLogic = configuration.cachingLogic
         super.init()
@@ -63,7 +63,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         }
 
         guard let response = collectedData.response as? HTTPURLResponse else {
-            ubDataTask.dataTaskCompleted(data: collectedData.data, response: nil, error: collectedData.error ?? error, info: NetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
+            ubDataTask.dataTaskCompleted(data: collectedData.data, response: nil, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
             return
         }
 
@@ -71,24 +71,24 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         executeCachingLogic(cachingLogic: cachingLogic, session: session, task: task, ubDataTask: ubDataTask, request: collectedData.request, response: response, data: collectedData.data, metrics: collectedData.metrics)
 
         // If not modified return the cached data
-        if response.statusCode == StandardHTTPCode.notModified, let cached = collectedData.cached {
-            ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: NetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true))
+        if response.statusCode == UBStandardHTTPCode.notModified, let cached = collectedData.cached {
+            ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true))
             return
         }
 
         // Make sure we do not process error status
-        guard response.statusCode == HTTPCodeCategory.success else {
+        guard response.statusCode == UBHTTPCodeCategory.success else {
             let responseError: Error
-            if response.statusCode == HTTPCodeCategory.redirection, allowsRedirection == false {
-                responseError = NetworkingError.requestRedirected
+            if response.statusCode == UBHTTPCodeCategory.redirection, allowsRedirection == false {
+                responseError = UBNetworkingError.requestRedirected
             } else {
-                responseError = NetworkingError.requestFailed(httpStatusCode: response.statusCode)
+                responseError = UBNetworkingError.requestFailed(httpStatusCode: response.statusCode)
             }
-            ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: responseError, info: NetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
+            ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: responseError, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
             return
         }
 
-        ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: collectedData.error ?? error, info: NetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
+        ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
     }
 
     /// :nodoc:
@@ -112,7 +112,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         dataHolder.response = response
 
         guard let httpRespnse = response as? HTTPURLResponse else {
-            dataHolder.error = NetworkingError.notHTTPResponse
+            dataHolder.error = UBNetworkingError.notHTTPResponse
             completionHandler(.cancel)
             return
         }

@@ -21,6 +21,10 @@ fastlane setup
 ## Creating and Submitting changes
 For each change that needs to be introduces to the framework, start by creating a branch from `develop` and commit your changes there. Once ready, create a pull request to see your changes merged. You cannot push changes directly to `develop` or `master`.
 
+## Naming conventions
+- Each `public` or `open` class/struct/enum should be prefixed by __UB__. _Example: the class `CronJob` should be named `UBCronJob`.
+- Each method or variable implemented as part of an extension to Swift standard type should be prefixed by **ub_**. _Example: the helper __var__ `localized` on `String` should be called `ub_localized`. 
+
 ## Project Organization
 ### Version Control
 We use `git` as our version control and we host our code on a private repository in [Bitbucket Cloud](https://bitbucket.org/).

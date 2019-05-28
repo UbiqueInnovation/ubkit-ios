@@ -11,12 +11,12 @@ import Foundation
 
 extension Int {
     /// Get the http category
-    public var httpCodeCategory: HTTPCodeCategory {
-        return HTTPCodeCategory(code: self)
+    public var ub_httpCodeCategory: UBHTTPCodeCategory {
+        return UBHTTPCodeCategory(code: self)
     }
 
     /// Get the standard http code
-    public var standardHTTPCode: StandardHTTPCode? {
-        return StandardHTTPCode(rawValue: self)
+    public var ub_standardHTTPCode: UBStandardHTTPCode? {
+        return UBStandardHTTPCode(rawValue: self)
     }
 }

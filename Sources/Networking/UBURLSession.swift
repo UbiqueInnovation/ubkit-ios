@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object that coordinates a group of related network data transfer tasks.
-public class UBURLSession: DataTaskURLSession {
+public class UBURLSession: UBDataTaskURLSession {
     /// A shared session that has a priority of responsive data. Useful for user initiated requests.
     public static let shared: UBURLSession = {
         let queue = OperationQueue()
@@ -84,13 +84,13 @@ public class UBURLSession: DataTaskURLSession {
              let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
              let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
              let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
-            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: NetworkingTaskInfo(metrics: nil, cacheHit: true))
+            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: nil, cacheHit: true))
             return nil
 
         case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _)),
              (.returnCacheDataDontLoad, .invalid),
              (.returnCacheDataDontLoad, .miss):
-            owner.dataTaskCompleted(data: nil, response: nil, error: NetworkingError.noCachedData, info: nil)
+            owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
             return nil
 
         case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),

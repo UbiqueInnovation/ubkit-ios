@@ -8,7 +8,7 @@
 import Foundation
 
 /// Errors thrown by the localization
-public enum LoggingError: Error {
+public enum UBLoggingError: Error {
     /// The bundle identifier is not found
     case bundelIdentifierNotFound
 }

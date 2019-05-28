@@ -28,7 +28,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail()
             case let .failure(error):
-                XCTAssertEqual(error as? NetworkingError, NetworkingError.requestRedirected)
+                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.requestRedirected)
             }
             ex.fulfill()
         }
@@ -47,7 +47,7 @@ class UBSessionTests: XCTestCase {
             case let .failure(error):
                 XCTFail(error.localizedDescription)
             }
-            XCTAssertEqual(response?.statusCode.standardHTTPCode, StandardHTTPCode.ok)
+            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.ok)
             ex.fulfill()
         }
         dataTask.start()
@@ -78,7 +78,7 @@ class UBSessionTests: XCTestCase {
     func testValidCertificatePinning() {
         let ex = expectation(description: "s")
         let url = URL(string: "https://www.ubique.ch")!
-        let evaluator = PinnedCertificatesTrustEvaluator(certificates: testBundle.certificates)
+        let evaluator = UBPinnedCertificatesTrustEvaluator(certificates: testBundle.ub_certificates)
         let configuration = UBURLSessionConfiguration(hostsServerTrusts: ["www.ubique.ch": evaluator])
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
@@ -89,7 +89,7 @@ class UBSessionTests: XCTestCase {
             case let .failure(error):
                 XCTFail(error.localizedDescription)
             }
-            XCTAssertEqual(response?.statusCode.standardHTTPCode, StandardHTTPCode.ok)
+            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.ok)
             ex.fulfill()
         }
         dataTask.start()
@@ -99,7 +99,7 @@ class UBSessionTests: XCTestCase {
     func testInvalidCertificatePinning() {
         let ex = expectation(description: "s")
         let url = URL(string: "https://www.google.com")!
-        let evaluator = PinnedCertificatesTrustEvaluator(certificates: testBundle.certificates)
+        let evaluator = UBPinnedCertificatesTrustEvaluator(certificates: testBundle.ub_certificates)
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
@@ -108,7 +108,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail("Certificate Pinning should have failed")
             case let .failure(error):
-                XCTAssertEqual(error as? NetworkingError, NetworkingError.certificateValidationFailed)
+                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -119,7 +119,7 @@ class UBSessionTests: XCTestCase {
     func testExpiredCertificate() {
         let ex = expectation(description: "s")
         let url = URL(string: "https://expired.badssl.com/")!
-        let evaluator = DefaultTrustEvaluator()
+        let evaluator = UBDefaultTrustEvaluator()
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
@@ -128,7 +128,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail("Certificate Pinning should have failed")
             case let .failure(error):
-                XCTAssertEqual(error as? NetworkingError, NetworkingError.certificateValidationFailed)
+                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -139,7 +139,7 @@ class UBSessionTests: XCTestCase {
     func testWrongHostCertificate() {
         let ex = expectation(description: "s")
         let url = URL(string: "https://wrong.host.badssl.com/")!
-        let evaluator = DefaultTrustEvaluator()
+        let evaluator = UBDefaultTrustEvaluator()
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
@@ -148,7 +148,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail("Certificate Pinning should have failed")
             case let .failure(error):
-                XCTAssertEqual(error as? NetworkingError, NetworkingError.certificateValidationFailed)
+                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -159,7 +159,7 @@ class UBSessionTests: XCTestCase {
     func testSelfSignedCertificate() {
         let ex = expectation(description: "s")
         let url = URL(string: "https://self-signed.badssl.com/")!
-        let evaluator = DefaultTrustEvaluator()
+        let evaluator = UBDefaultTrustEvaluator()
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
@@ -168,7 +168,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail("Certificate Pinning should have failed")
             case let .failure(error):
-                XCTAssertEqual(error as? NetworkingError, NetworkingError.certificateValidationFailed)
+                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -179,7 +179,7 @@ class UBSessionTests: XCTestCase {
     func testSelfSignedCertificatePass() {
         let ex = expectation(description: "s")
         let url = URL(string: "https://self-signed.badssl.com/")!
-        let evaluator = PinnedCertificatesTrustEvaluator(certificates: testBundle.certificates, acceptSelfSignedCertificates: true, performDefaultValidation: false, validateHost: false)
+        let evaluator = UBPinnedCertificatesTrustEvaluator(certificates: testBundle.ub_certificates, acceptSelfSignedCertificates: true, performDefaultValidation: false, validateHost: false)
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
@@ -199,7 +199,7 @@ class UBSessionTests: XCTestCase {
     func testDisableEvaluation() {
         let ex = expectation(description: "s")
         let url = URL(string: "https://self-signed.badssl.com/")!
-        let evaluator = DisabledEvaluator()
+        let evaluator = UBDisabledEvaluator()
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)

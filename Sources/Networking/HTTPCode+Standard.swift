@@ -8,7 +8,7 @@
 import Foundation
 
 /// The standard HTTP codes
-public enum StandardHTTPCode: Int {
+public enum UBStandardHTTPCode: Int {
     // MARK: - 1xx Informational
 
     /// The client SHOULD continue with its request.
@@ -63,42 +63,42 @@ public enum StandardHTTPCode: Int {
     case notExtended = 510
 
     /// :nodoc:
-    public static func == (left: StandardHTTPCode, right: Int) -> Bool {
+    public static func == (left: UBStandardHTTPCode, right: Int) -> Bool {
         return left.rawValue == right
     }
 
     /// :nodoc:
-    public static func == (left: Int, right: StandardHTTPCode) -> Bool {
+    public static func == (left: Int, right: UBStandardHTTPCode) -> Bool {
         return right == left
     }
 
     /// :nodoc:
-    public static func == (left: HTTPURLResponse, right: StandardHTTPCode) -> Bool {
+    public static func == (left: HTTPURLResponse, right: UBStandardHTTPCode) -> Bool {
         return left.statusCode == right
     }
 
     /// :nodoc:
-    public static func == (left: StandardHTTPCode, right: HTTPURLResponse) -> Bool {
+    public static func == (left: UBStandardHTTPCode, right: HTTPURLResponse) -> Bool {
         return right == left
     }
 
     /// :nodoc:
-    public static func != (left: StandardHTTPCode, right: Int) -> Bool {
+    public static func != (left: UBStandardHTTPCode, right: Int) -> Bool {
         return left.rawValue != right
     }
 
     /// :nodoc:
-    public static func != (left: Int, right: StandardHTTPCode) -> Bool {
+    public static func != (left: Int, right: UBStandardHTTPCode) -> Bool {
         return right != left
     }
 
     /// :nodoc:
-    public static func != (left: HTTPURLResponse, right: StandardHTTPCode) -> Bool {
+    public static func != (left: HTTPURLResponse, right: UBStandardHTTPCode) -> Bool {
         return left.statusCode != right
     }
 
     /// :nodoc:
-    public static func != (left: StandardHTTPCode, right: HTTPURLResponse) -> Bool {
+    public static func != (left: UBStandardHTTPCode, right: HTTPURLResponse) -> Bool {
         return right != left
     }
 }

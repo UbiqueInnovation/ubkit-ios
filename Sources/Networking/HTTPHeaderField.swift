@@ -10,7 +10,7 @@ import Foundation
 // Standard: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 
 /// An HTTP request header field
-public struct HTTPHeaderField {
+public struct UBHTTPHeaderField {
     /// The value of the fieald
     public let value: String?
     /// The key of the field
@@ -41,7 +41,7 @@ public struct HTTPHeaderField {
     /// - Parameters:
     ///   - key: The key of the field
     ///   - value: The value of the field. `Nil` to remove the field
-    public init(key: StandardKeys, value: MIMEType) {
+    public init(key: StandardKeys, value: UBMIMEType) {
         self.key = key.rawValue
         self.value = value.stringValue
     }
@@ -49,7 +49,7 @@ public struct HTTPHeaderField {
 
 // MARK: - Standard Header Keys
 
-extension HTTPHeaderField {
+extension UBHTTPHeaderField {
     /// Standard Header Fields
     public enum StandardKeys: String {
         /// Accept header field key

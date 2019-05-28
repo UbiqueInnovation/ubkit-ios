@@ -8,7 +8,7 @@
 import Foundation
 
 /// Networking errors
-public enum NetworkingError: Error, Equatable {
+public enum UBNetworkingError: Error, Equatable {
     /// The URL is missing in the request
     case missingURL
     /// The URL is malformed and cannot be interpretade

@@ -47,10 +47,10 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
 
-        class MockRecovery: NetworkingTaskRecoveryStrategy {
+        class MockRecovery: UBNetworkingTaskRecoveryStrategy {
             private var counter = 1
             var ex: XCTestExpectation?
-            func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (NetworkingTaskRecoveryResult) -> Void) {
+            func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (UBNetworkingTaskRecoveryResult) -> Void) {
                 ex?.fulfill()
                 if counter == 1 {
                     counter -= 1
@@ -93,7 +93,7 @@ class HTTPDataTaskTests: XCTestCase {
             case x
         }
 
-        class MockRecoveryOption: NetworkTaskRecoveryOption {
+        class MockRecoveryOption: UBNetworkTaskRecoveryOption {
             var localizedDisplayName: String = "Test"
             func attemptRecovery(resultHandler handler: @escaping (Bool) -> Void) {
                 handler(true)
@@ -102,9 +102,9 @@ class HTTPDataTaskTests: XCTestCase {
             func cancelOngoingRecovery() {}
         }
 
-        class MockRecovery: NetworkingTaskRecoveryStrategy {
-            func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (NetworkingTaskRecoveryResult) -> Void) {
-                let options = NetworkTaskRecoveryOptions(recoveringFrom: Err.x, recoveryOptions: [MockRecoveryOption()])
+        class MockRecovery: UBNetworkingTaskRecoveryStrategy {
+            func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (UBNetworkingTaskRecoveryResult) -> Void) {
+                let options = UBNetworkTaskRecoveryOptions(recoveringFrom: Err.x, recoveryOptions: [MockRecoveryOption()])
                 completion(.recoveryOptions(options: options))
             }
         }
@@ -186,7 +186,7 @@ class HTTPDataTaskTests: XCTestCase {
             URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
-        dataTask.addCompletionHandler(decoder: HTTPJSONDecoder<TestStruct>()) { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: UBHTTPJSONDecoder<TestStruct>()) { result, _, _, _ in
             switch result {
             case let .success(test):
                 XCTAssertEqual(test.value, "A")
@@ -223,7 +223,7 @@ class HTTPDataTaskTests: XCTestCase {
             XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
             ex1.fulfill()
         }
-        dataTask.addCompletionHandler(decoder: HTTPStringDecoder(), completionHandler: { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(), completionHandler: { result, _, _, _ in
             switch result {
             case .failure:
                 break
@@ -232,7 +232,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
             ex2.fulfill()
         })
-        dataTask.addCompletionHandler(decoder: HTTPStringDecoder(encoding: .utf16), completionHandler: { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(encoding: .utf16), completionHandler: { result, _, _, _ in
             switch result {
             case let .success(data):
                 XCTAssertEqual(data, "Hello")
@@ -278,12 +278,12 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addResponseValidator { _ in
-            throw NetworkingError.responseMIMETypeValidationFailed
+            throw UBNetworkingError.responseMIMETypeValidationFailed
         }
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
             case let .failure(error):
-                XCTAssertEqual(error as? NetworkingError, NetworkingError.responseMIMETypeValidationFailed)
+                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseMIMETypeValidationFailed)
             case .success:
                 XCTFail("Should have returned success with empty")
             }
@@ -303,13 +303,13 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addResponseValidator([
-            HTTPResponseStatusValidator(.success),
-            HTTPResponseContentTypeValidator(expectedMIMEType: .png)
+            UBHTTPResponseStatusValidator(.success),
+            UBHTTPResponseContentTypeValidator(expectedMIMEType: .png)
         ])
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
             case let .failure(error):
-                XCTAssertEqual(error as? NetworkingError, NetworkingError.responseMIMETypeValidationFailed)
+                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseMIMETypeValidationFailed)
             case .success:
                 XCTFail("Should have returned success with empty")
             }

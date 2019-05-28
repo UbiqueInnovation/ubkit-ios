@@ -11,25 +11,25 @@ import Foundation
 // https://github.com/Alamofire/Alamofire/blob/master/Source/ServerTrustEvaluation.swift
 
 /// Manages for each host the preferred trust evaluator
-class ServerTrustManager {
+class UBServerTrustManager {
     /// The default evaluation in case none of the host matches
-    let `default`: ServerTrustEvaluator?
+    let `default`: UBServerTrustEvaluator?
     /// The list of evaluators per host
-    let evaluators: [String: ServerTrustEvaluator]
+    let evaluators: [String: UBServerTrustEvaluator]
     /// :nodoc:
-    init(evaluators: [String: ServerTrustEvaluator], default defaultEvaluation: ServerTrustEvaluator? = nil) {
+    init(evaluators: [String: UBServerTrustEvaluator], default defaultEvaluation: UBServerTrustEvaluator? = nil) {
         self.evaluators = evaluators
         `default` = defaultEvaluation
     }
 
     /// Gets the evaluator for the specified host
-    func serverTrustEvaluator(forHost host: String) -> ServerTrustEvaluator? {
+    func serverTrustEvaluator(forHost host: String) -> UBServerTrustEvaluator? {
         return evaluators[host] ?? `default`
     }
 }
 
 /// A protocol describing the API used to evaluate server trusts.
-public protocol ServerTrustEvaluator {
+public protocol UBServerTrustEvaluator {
     /// Evaluates the given `SecTrust` value for the given `host`.
     ///
     /// - Parameters:
@@ -44,7 +44,7 @@ public protocol ServerTrustEvaluator {
 /// An evaluator which uses the default server trust evaluation while allowing you to control whether to validate the
 /// host provided by the challenge. Applications are encouraged to always validate the host in production environments
 /// to guarantee the validity of the server's certificate chain.
-public final class DefaultTrustEvaluator: ServerTrustEvaluator {
+public final class UBDefaultTrustEvaluator: UBServerTrustEvaluator {
     private let validateHost: Bool
 
     /// Creates a `DefaultTrustEvalutor`.
@@ -68,7 +68,7 @@ public final class DefaultTrustEvaluator: ServerTrustEvaluator {
 /// pinning provides a very secure form of server trust validation mitigating most, if not all, MITM attacks.
 /// Applications are encouraged to always validate the host and require a valid certificate chain in production
 /// environments.
-public final class PinnedCertificatesTrustEvaluator: ServerTrustEvaluator {
+public final class UBPinnedCertificatesTrustEvaluator: UBServerTrustEvaluator {
     private let certificates: [SecCertificate]
     private let acceptSelfSignedCertificates: Bool
     private let performDefaultValidation: Bool
@@ -87,7 +87,7 @@ public final class PinnedCertificatesTrustEvaluator: ServerTrustEvaluator {
     ///   - validateHost:                 Determines whether or not the evaluator should validate the host, in addition
     ///                                   to performing the default evaluation, even if `performDefaultValidation` is
     ///                                   `false`. Defaults to `true`.
-    public init(certificates: [SecCertificate] = Bundle.main.certificates,
+    public init(certificates: [SecCertificate] = Bundle.main.ub_certificates,
                 acceptSelfSignedCertificates: Bool = false,
                 performDefaultValidation: Bool = true,
                 validateHost: Bool = true) {
@@ -118,7 +118,7 @@ public final class PinnedCertificatesTrustEvaluator: ServerTrustEvaluator {
         let pinnedCertificatesData = Set(certificates.data)
         let pinnedCertificatesInServerData = !serverCertificatesData.isDisjoint(with: pinnedCertificatesData)
         if !pinnedCertificatesInServerData {
-            throw NetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed
         }
     }
 }
@@ -126,7 +126,7 @@ public final class PinnedCertificatesTrustEvaluator: ServerTrustEvaluator {
 /// Disables all evaluation which in turn will always consider any server trust as valid.
 ///
 /// THIS EVALUATOR SHOULD NEVER BE USED IN PRODUCTION!
-public final class DisabledEvaluator: ServerTrustEvaluator {
+public final class UBDisabledEvaluator: UBServerTrustEvaluator {
     /// :nodoc:
     public init() {}
 
@@ -136,7 +136,7 @@ public final class DisabledEvaluator: ServerTrustEvaluator {
 
 extension Bundle {
     /// Returns all valid `cer`, `crt`, and `der` certificates in the bundle.
-    public var certificates: [SecCertificate] {
+    public var ub_certificates: [SecCertificate] {
         return paths(forResourcesOfTypes: [".cer", ".CER", ".crt", ".CRT", ".der", ".DER"]).compactMap { path in
             guard
                 let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
@@ -175,7 +175,7 @@ extension SecTrust {
         let status = SecTrustSetPolicies(self, policy)
 
         guard status.isSuccess else {
-            throw NetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed
         }
 
         return self
@@ -191,7 +191,7 @@ extension SecTrust {
         let status = SecTrustEvaluate(self, &result)
 
         guard status.isSuccess, result.isSuccess else {
-            throw NetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed
         }
     }
 
@@ -203,13 +203,13 @@ extension SecTrust {
         // Add additional anchor certificates.
         let status = SecTrustSetAnchorCertificates(self, certificates as CFArray)
         guard status.isSuccess else {
-            throw NetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed
         }
 
         // Reenable system anchor certificates.
         let systemStatus = SecTrustSetAnchorCertificatesOnly(self, true)
         guard systemStatus.isSuccess else {
-            throw NetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed
         }
     }
 

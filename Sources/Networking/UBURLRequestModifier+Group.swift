@@ -57,7 +57,7 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest>) -> Void) {
+    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         cancelCurrentModification()
 
         let newModification = Modification()
@@ -70,7 +70,7 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    private func recursiveModifyRequest(_ originalRequest: UBURLRequest, modification: Modification, modifiers: ArraySlice<UBURLRequestModifier>, completion: @escaping (Result<UBURLRequest>) -> Void) {
+    private func recursiveModifyRequest(_ originalRequest: UBURLRequest, modification: Modification, modifiers: ArraySlice<UBURLRequestModifier>, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         guard modification.cancelled == false else {
             return
         }

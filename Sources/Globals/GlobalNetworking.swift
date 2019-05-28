@@ -8,21 +8,21 @@
 import Foundation
 
 /// The global network activity tracker instance
-private let globalNetworkActivityTracker = NetworkActivityTracker()
+private let globalNetworkActivityTracker = UBNetworkActivityTracker()
 
 // MARK: - Network Activity
 
 /// A name space for networking
 public enum Networking {
     /// The global network activity state
-    public static var globalNetworkActivityState: NetworkActivityTracker.NetworkActivityState {
+    public static var globalNetworkActivityState: UBNetworkActivityTracker.NetworkActivityState {
         return globalNetworkActivityTracker.networkActivityState
     }
 
     /// Add an observer for the state of the global network activity
     ///
     /// - Parameter block: The block to be called when the state changes
-    public static func addGlobalNetworkActivityStateObserver(_ block: @escaping NetworkActivityTracker.StateObservationBlock) {
+    public static func addGlobalNetworkActivityStateObserver(_ block: @escaping UBNetworkActivityTracker.StateObservationBlock) {
         return globalNetworkActivityTracker.addStateObserver(block)
     }
 

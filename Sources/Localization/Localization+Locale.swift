@@ -9,7 +9,7 @@ import Foundation
 
 extension Locale {
     /// Checks if the locale is the current locale
-    public var isCurrent: Bool {
+    public var ub_isCurrent: Bool {
         return self == .current
     }
 }

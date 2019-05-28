@@ -8,11 +8,11 @@
 import Foundation
 
 /// A set of options to recover from a network task failure
-public struct NetworkTaskRecoveryOptions: RecoverableError {
+public struct UBNetworkTaskRecoveryOptions: RecoverableError {
     /// The original error that the object try to recover from
     public let originalError: Error
     /// :nodoc:
-    private let _recoveryOptions: [NetworkTaskRecoveryOption]
+    private let _recoveryOptions: [UBNetworkTaskRecoveryOption]
     /// Provides a set of possible recovery options to present to the user.
     public var recoveryOptions: [String] {
         return _recoveryOptions.map { $0.localizedDisplayName }
@@ -23,7 +23,7 @@ public struct NetworkTaskRecoveryOptions: RecoverableError {
     /// - Parameters:
     ///   - error: The original error that the object is recovering from
     ///   - recoveryOptions: The recovery options available to pic from
-    public init(recoveringFrom error: Error, recoveryOptions: [NetworkTaskRecoveryOption]) {
+    public init(recoveringFrom error: Error, recoveryOptions: [UBNetworkTaskRecoveryOption]) {
         originalError = error
         _recoveryOptions = recoveryOptions
     }

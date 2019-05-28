@@ -12,7 +12,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: - Properties
 
     /// The session used to create tasks
-    public let session: DataTaskURLSession
+    public let session: UBDataTaskURLSession
 
     /// The request to execute.
     public let request: UBURLRequest
@@ -56,7 +56,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - priority: The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     ///   - session: The session for the task creation
     ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue
-    public init(request: UBURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: DataTaskURLSession = UBURLSession.shared, callbackQueue: OperationQueue = .main) {
+    public init(request: UBURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = UBURLSession.shared, callbackQueue: OperationQueue = .main) {
         self.request = request
         self.session = session
         self.taskDescription = taskDescription
@@ -83,7 +83,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - priority: The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     ///   - session: The session for the task creation
     ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue
-    public convenience init(url: URL, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: DataTaskURLSession = UBURLSession.shared, callbackQueue: OperationQueue = .main) {
+    public convenience init(url: URL, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = UBURLSession.shared, callbackQueue: OperationQueue = .main) {
         self.init(request: UBURLRequest(url: url), taskDescription: taskDescription, priority: priority, session: session, callbackQueue: callbackQueue)
     }
 
@@ -179,7 +179,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - data: The data transfered
     ///   - response: The response received with the data
     ///   - error: The error in case of failure
-    func dataTaskCompleted(data: Data?, response: HTTPURLResponse?, error: Error?, info: NetworkingTaskInfo?) {
+    func dataTaskCompleted(data: Data?, response: HTTPURLResponse?, error: Error?, info: UBNetworkingTaskInfo?) {
         // Check for Task error
         guard error == nil else {
             if (error! as NSError).code == NSURLErrorCancelled {
@@ -194,7 +194,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         guard let unwrappedResponse = response else {
-            attemptRecovery(data: data, response: response, error: NetworkingError.notHTTPResponse)
+            attemptRecovery(data: data, response: response, error: UBNetworkingError.notHTTPResponse)
             return
         }
 
@@ -366,9 +366,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: - Completion
 
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingBlock<T> = (Result<T>, HTTPURLResponse?, NetworkingTaskInfo?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingBlock<T> = (Result<T, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingNullableDataBlock = (Result<Data?>, HTTPURLResponse?, NetworkingTaskInfo?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingNullableDataBlock = (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// :nodoc:
     private let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
     /// The completion handlers
@@ -381,13 +381,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// :nodoc:
-    private func notifyCompletion(error: Error, response: HTTPURLResponse?, info: NetworkingTaskInfo?) {
+    private func notifyCompletion(error: Error, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?) {
         state = .finished
         completionHandlers.forEach { $0.fail(error: error, response: response, info: info, callbackQueue: callbackQueue, caller: self) }
     }
 
     /// :nodoc:
-    private func notifyCompletion(data: Data?, response: HTTPURLResponse, info: NetworkingTaskInfo?) {
+    private func notifyCompletion(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?) {
         state = .finished
         completionHandlers.forEach { $0.parse(data: data, response: response, info: info, callbackQueue: self.callbackQueue, caller: self) }
     }
@@ -421,9 +421,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private let responseValidatorsDispatchQueue = DispatchQueue(label: "Response validators")
     /// :nodoc:
-    private var _responseValidators: [HTTPURLResponseValidator] = []
+    private var _responseValidators: [UBHTTPURLResponseValidator] = []
     /// The validators
-    private var responseValidators: [HTTPURLResponseValidator] {
+    private var responseValidators: [UBHTTPURLResponseValidator] {
         return responseValidatorsDispatchQueue.sync {
             _responseValidators
         }
@@ -440,7 +440,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// It can validate that the response or data are in order and can proceed for completion
     ///
     /// - Parameter validator: The validator
-    public func addResponseValidator(_ validator: HTTPURLResponseValidator) {
+    public func addResponseValidator(_ validator: UBHTTPURLResponseValidator) {
         responseValidatorsDispatchQueue.sync {
             _responseValidators.append(validator)
         }
@@ -452,8 +452,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// It can validate that the response or data are in order and can proceed for completion
     ///
     /// - Parameter validationBlock: The validator block
-    public func addResponseValidator(_ validationBlock: @escaping HTTPResponseValidatorBlock.ValidationBlock) {
-        addResponseValidator(HTTPResponseValidatorBlock(validationBlock))
+    public func addResponseValidator(_ validationBlock: @escaping UBHTTPResponseValidatorBlock.ValidationBlock) {
+        addResponseValidator(UBHTTPResponseValidatorBlock(validationBlock))
     }
 
     /// Adds response validators.
@@ -462,7 +462,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// It can validate that the response or data are in order and can proceed for completion
     ///
     /// - Parameter validators: An array of validators
-    public func addResponseValidator(_ validators: [HTTPURLResponseValidator]) {
+    public func addResponseValidator(_ validators: [UBHTTPURLResponseValidator]) {
         responseValidatorsDispatchQueue.sync {
             _responseValidators.append(contentsOf: validators)
         }
@@ -471,13 +471,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: - Failure Recovery
 
     /// All the failure recovery strategies
-    private let failureRecoveryStrategy = NetworkTaskRecoveryGroup()
+    private let failureRecoveryStrategy = UBNetworkTaskRecoveryGroup()
     /// Adds a failure recovery strategy.
     ///
     /// This failure recovery strategy will be called everytime if the request has failed. The recovery is not called when the failure occurs on the decoding level. But only before the decoding stage, after the validation.
     ///
     /// - Parameter strategy: The failure recovery strategy to add
-    public func addFailureRecoveryStrategy(_ strategy: NetworkingTaskRecoveryStrategy) {
+    public func addFailureRecoveryStrategy(_ strategy: UBNetworkingTaskRecoveryStrategy) {
         failureRecoveryStrategy.append(strategy)
     }
 
@@ -501,8 +501,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 extension UBURLDataTask {
     /// This is a wrapper that holds reference for a completion handler
     private struct CompletionHandlerWrapper {
-        private let executionBlock: (Data?, HTTPURLResponse, NetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
-        private let failureBlock: (Error, HTTPURLResponse?, NetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
+        private let executionBlock: (Data?, HTTPURLResponse, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
+        private let failureBlock: (Error, HTTPURLResponse?, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
 
         /// :nodoc:
         init<T>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping CompletionHandlingBlock<T>) {
@@ -510,7 +510,7 @@ extension UBURLDataTask {
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
                     callbackQueue.addOperation {
-                        completion(.failure(NetworkingError.responseBodyIsEmpty), response, info, caller)
+                        completion(.failure(UBNetworkingError.responseBodyIsEmpty), response, info, caller)
                     }
                     return
                 }
@@ -551,12 +551,12 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        func parse(data: Data?, response: HTTPURLResponse, info: NetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
+        func parse(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
             executionBlock(data, response, info, callbackQueue, caller)
         }
 
         /// :nodoc:
-        func fail(error: Error, response: HTTPURLResponse?, info: NetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
+        func fail(error: Error, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
             failureBlock(error, response, info, callbackQueue, caller)
         }
     }
