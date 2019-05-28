@@ -34,7 +34,7 @@ class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
         return "x-amz-meta-next-refresh"
     }
 
-    override var backoffHeaderFieldName: String {
+    override var backoffIntervalHeaderFieldName: String {
         return "x-amz-meta-backoff"
     }
 

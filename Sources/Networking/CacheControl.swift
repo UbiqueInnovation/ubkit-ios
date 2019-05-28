@@ -7,19 +7,33 @@
 
 import Foundation
 
+/// A group of cache directives
 public typealias UBCacheResponseDirectives = [UBCacheResponseDirective]
 
+/// A cache control directive
 public struct UBCacheResponseDirective: Hashable {
+    /// A cache control directive command
     public enum Command: String, Equatable {
+        /// A no cache command
         case noCache = "no-cache"
+        /// A no store command
         case noStore = "no-store"
+        /// A max age command
         case maxAge = "max-age"
+        /// An s-max age command
         case sMaxAge = "s-maxage"
     }
 
+    /// The cache control directive command
     public let command: Command
+    /// The value  of the command. If present.
     public let value: Int?
 
+    /// Initializes a cache control directive.
+    ///
+    /// - Parameters:
+    ///   - command: The command
+    ///   - value: The value
     public init(command: Command, value: Int?) {
         self.command = command
         self.value = value
@@ -37,6 +51,9 @@ public struct UBCacheResponseDirective: Hashable {
 }
 
 extension Array where Element == UBCacheResponseDirective {
+    /// Initializes and array of cache control commands from a cache control header string
+    ///
+    /// - Parameter cacheControlHeader: The cache control header string
     public init?(cacheControlHeader: String) {
         let cacheControlRegex = try! NSRegularExpression(pattern: "([a-z-]+)(=([0-9]+))?", options: [NSRegularExpression.Options.caseInsensitive])
         let matches = cacheControlRegex.matches(in: cacheControlHeader, options: [], range: NSRange(cacheControlHeader.startIndex..., in: cacheControlHeader))
@@ -57,12 +74,14 @@ extension Array where Element == UBCacheResponseDirective {
         self = result
     }
 
+    /// Checks is cacjing is allowed on the group of cache controle
     public var cachingAllowed: Bool {
         return !contains(where: {
             $0 == UBCacheResponseDirective.Command.noCache || $0 == UBCacheResponseDirective.Command.noStore
         })
     }
 
+    /// Check if there is a max age on the cache control group
     public var maxAge: Int? {
         return first(where: { $0 == UBCacheResponseDirective.Command.maxAge || $0 == UBCacheResponseDirective.Command.sMaxAge })?.value
     }

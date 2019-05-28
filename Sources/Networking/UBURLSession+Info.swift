@@ -12,6 +12,7 @@ public struct UBNetworkingTaskInfo: CustomDebugStringConvertible {
     /// The metric collected for the task
     public let metrics: URLSessionTaskMetrics?
 
+    /// `true` if the response was returned from cache
     public let cacheHit: Bool
 
     /// Instansiate a network info
