@@ -85,6 +85,7 @@ public class UBURLSessionConfiguration {
 }
 
 extension URLRequest.NetworkServiceType {
+    /// Returns the equivalent dispatch queue qos from a network service type
     var equivalentDispatchQOS: DispatchQoS {
         let qos: DispatchQoS
         switch self {

@@ -228,6 +228,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         let proposedResponse = cachingLogic.proposeCachedResponse(for: session, dataTask: task, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics)
 
         if let proposedResponse = proposedResponse {
+            // If there is a proposed caching, cache it
             session.configuration.urlCache?.storeCachedResponse(proposedResponse, for: originalRequest)
         }
     }

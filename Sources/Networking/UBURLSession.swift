@@ -72,11 +72,8 @@ public class UBURLSession: UBDataTaskURLSession {
         switch (urlSession.configuration.requestCachePolicy, cacheResult) {
         case (.reloadIgnoringLocalAndRemoteCacheData, _),
              (.reloadIgnoringLocalCacheData, _),
-             (.reloadRevalidatingCacheData, .invalid),
              (.reloadRevalidatingCacheData, .miss),
-             (.useProtocolCachePolicy, .invalid),
              (.useProtocolCachePolicy, .miss),
-             (.returnCacheDataElseLoad, .invalid),
              (.returnCacheDataElseLoad, .miss):
             return createTask(request.getRequest())
 
@@ -88,7 +85,6 @@ public class UBURLSession: UBDataTaskURLSession {
             return nil
 
         case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _)),
-             (.returnCacheDataDontLoad, .invalid),
              (.returnCacheDataDontLoad, .miss):
             owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
             return nil
