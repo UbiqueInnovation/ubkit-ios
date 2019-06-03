@@ -492,31 +492,40 @@ class HTTPDataTaskTests: XCTestCase {
     }
 
     func testDeallocation() {
-        let request = UBURLRequest(url: url)
-        let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
-            URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
-        }
+        autoreleasepool {
+            let request = UBURLRequest(url: url)
+            let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+            let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+                URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
+            }
 
-        var dataTask: UBURLDataTask? = UBURLDataTask(request: request, session: mockSession)
-        weak var ref = dataTask
+            var dataTask: UBURLDataTask? = UBURLDataTask(request: request, session: mockSession)
+            weak var ref = dataTask
 
-        dataTask!.addCompletionHandler { _, _, _, _ in
-            XCTFail()
-        }
+            dataTask!.addCompletionHandler { _, _, _, _ in
+                XCTFail()
+            }
 
-        dataTask!.start()
-        let ex = expectation(description: "Waiting")
-        let t = Timer(timeInterval: 0.25, repeats: false) { _ in
-            XCTAssertNotEqual(dataTask!.state, .initial)
-            dataTask = nil
-            XCTAssertNil(ref)
-            let m = Timer(timeInterval: 0.5, repeats: false, block: { _ in
-                ex.fulfill()
-            })
-            RunLoop.main.add(m, forMode: .common)
+            dataTask!.start()
+
+            XCTAssertEqual(Networking.numberOfDataTasks, 1)
+
+            let ex = expectation(description: "Waiting")
+            let t = Timer(timeInterval: 0.25, repeats: false) { _ in
+                autoreleasepool {
+                    XCTAssertNotEqual(dataTask!.state, .initial)
+                    dataTask = nil
+                    XCTAssertNil(ref)
+                }
+
+                XCTAssertEqual(Networking.numberOfDataTasks, 0)
+                let m = Timer(timeInterval: 0.5, repeats: false, block: { _ in
+                    ex.fulfill()
+                })
+                RunLoop.main.add(m, forMode: .common)
+            }
+            RunLoop.main.add(t, forMode: .common)
         }
-        RunLoop.main.add(t, forMode: .common)
 
         waitForExpectations(timeout: 1, handler: nil)
     }

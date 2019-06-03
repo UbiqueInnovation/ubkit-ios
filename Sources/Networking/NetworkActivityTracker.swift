@@ -53,6 +53,11 @@ public class UBNetworkActivityTracker {
         trackedTasks = NSHashTable<UBURLDataTask>(options: [.weakMemory])
     }
 
+    /// The number of tracked tasks
+    public var numberOfTrackedTasks: Int {
+        return trackedTasks.allObjects.count
+    }
+
     // MARK: - Task addition and removal
 
     /// Add a task to be monitored for network activity.

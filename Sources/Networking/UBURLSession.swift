@@ -9,26 +9,6 @@ import Foundation
 
 /// An object that coordinates a group of related network data transfer tasks.
 public class UBURLSession: UBDataTaskURLSession {
-    /// A shared session that has a priority of responsive data. Useful for user initiated requests.
-    public static let shared: UBURLSession = {
-        let queue = OperationQueue()
-        queue.name = "UBURLSession Shared"
-        queue.qualityOfService = .userInitiated
-        let configuration = UBURLSessionConfiguration()
-        configuration.sessionConfiguration.networkServiceType = .responsiveData
-        return UBURLSession(configuration: configuration, delegateQueue: queue)
-    }()
-
-    /// A shared session that has a priority of background. Useful for low priority requests.
-    public static let sharedLowPriority: UBURLSession = {
-        let queue = OperationQueue()
-        queue.name = "UBURLSession Shared Background"
-        queue.qualityOfService = .background
-        let configuration = UBURLSessionConfiguration()
-        configuration.sessionConfiguration.networkServiceType = .background
-        return UBURLSession(configuration: configuration, delegateQueue: queue)
-    }()
-
     /// The underlaying session
     private let urlSession: URLSession
 

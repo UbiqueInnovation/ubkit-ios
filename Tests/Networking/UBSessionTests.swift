@@ -12,7 +12,7 @@ class UBSessionTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let ex = expectation(description: "a")
-        UBURLSession.shared.reset(completionHandler: {
+        Networking.sharedSession.reset(completionHandler: {
             ex.fulfill()
         })
         waitForExpectations(timeout: 2, handler: nil)
@@ -82,7 +82,7 @@ class UBSessionTests: XCTestCase {
     func testRedirection() {
         let ex = expectation(description: "s")
         let url = URL(string: "http://ubique.ch")!
-        let dataTask = UBURLDataTask(url: url, session: UBURLSession.sharedLowPriority)
+        let dataTask = UBURLDataTask(url: url, session: Networking.sharedLowPrioritySession)
         dataTask.addCompletionHandler { result, response, _, _ in
             switch result {
             case .success:
