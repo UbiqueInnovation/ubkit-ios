@@ -173,6 +173,12 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         requestModifier.cancelCurrentModification()
         failureRecoveryStrategy.cancelCurrentRecovery()
         dataTask?.cancel()
+        switch state {
+        case .initial, .parsing, .finished, .cancelled:
+            break
+        case .fetching, .waitingExecution:
+            state = .cancelled
+        }
     }
 
     /// Called when the corresponding network call has finished loading
