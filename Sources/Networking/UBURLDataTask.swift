@@ -151,7 +151,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 self.dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
                     switch task.state {
                     case .running:
-                        if self?.state != .fetching {
+                        if self?.state != .fetching, self?.state != .cancelled {
                             self?.state = .fetching
                         }
                     default:
@@ -291,7 +291,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                  (.fetching, .cancelled), // Cancel task
                  (.parsing, .finished), // Data parsed
                  (.finished, .waitingExecution), // Restart task
-                 (.cancelled, .cancelled), // Cancelled 
+                 (.cancelled, .cancelled), // Cancelled
                  (.cancelled, .waitingExecution): // Restart task
                 break
             default:
