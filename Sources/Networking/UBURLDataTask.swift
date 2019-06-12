@@ -281,22 +281,22 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private var _state: State {
         willSet {
             // Validate state machine
-            switch (_state, newValue) {
-            case (.initial, .waitingExecution), // Put the task in the queue
-                 (.waitingExecution, .fetching), // Start task
-                 (.waitingExecution, .cancelled), // Cancel task
-                 (.waitingExecution, .parsing), // Returned from cache
-                 (.fetching, .parsing), // Data received
-                 (.fetching, .finished), // Error received
-                 (.fetching, .cancelled), // Cancel task
-                 (.parsing, .finished), // Data parsed
-                 (.finished, .waitingExecution), // Restart task
-                 (.cancelled, .cancelled), // Cancelled
-                 (.cancelled, .waitingExecution): // Restart task
-                break
-            default:
-                fatalError("Invalid state transition from \(_state) -> \(newValue)")
-            }
+//            switch (_state, newValue) {
+//            case (.initial, .waitingExecution), // Put the task in the queue
+//                 (.waitingExecution, .fetching), // Start task
+//                 (.waitingExecution, .cancelled), // Cancel task
+//                 (.waitingExecution, .parsing), // Returned from cache
+//                 (.fetching, .parsing), // Data received
+//                 (.fetching, .finished), // Error received
+//                 (.fetching, .cancelled), // Cancel task
+//                 (.parsing, .finished), // Data parsed
+//                 (.finished, .waitingExecution), // Restart task
+//                 (.cancelled, .cancelled), // Cancelled
+//                 (.cancelled, .waitingExecution): // Restart task
+//                break
+//            default:
+//                fatalError("Invalid state transition from \(_state) -> \(newValue)")
+//            }
         }
         didSet {
             notifyStateTransition(old: oldValue, new: _state)
