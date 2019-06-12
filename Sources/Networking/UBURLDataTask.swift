@@ -373,12 +373,16 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     public typealias CompletionHandlingNullableDataBlock = (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// :nodoc:
     private let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
+
+    /// Identifies a completion block
+    public typealias CompletionHandlerIdentifier = UUID
+
     /// The completion handlers
-    private var _completionHandlers: [CompletionHandlerWrapper] = []
+    private var _completionHandlers: [CompletionHandlerIdentifier: CompletionHandlerWrapper] = [:]
 
     private var completionHandlers: [CompletionHandlerWrapper] {
         return completionHandlersDispatchQueue.sync {
-            _completionHandlers
+            _completionHandlers.map { $0.value }
         }
     }
 
@@ -394,14 +398,71 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         completionHandlers.forEach { $0.parse(data: data, response: response, info: info, callbackQueue: self.callbackQueue, caller: self) }
     }
 
+    /// A semaphore to ensure when starting a task in synchronous mode, to block the current thread
+    private let synchronousStartSemaphore = DispatchSemaphore(value: 1)
+
+    /// Starts the data task and blocks the current thread until a response or an error are returned
+    ///
+    /// - Parameter decoder: A decoder for the response
+    /// - Returns: The result of the task
+    @discardableResult
+    public func startSynchronous<T>(decoder: UBURLDataTaskDecoder<T>) -> (result: Result<T, Error>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
+        synchronousStartSemaphore.wait()
+        var fetchedResult: (Result<T, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
+
+        let completionBlockIdentifier = addCompletionHandler(decoder: decoder) { [weak self] result, response, taskInfo, dataTask in
+            fetchedResult = (result, response, taskInfo, dataTask)
+            self?.synchronousStartSemaphore.signal()
+        }
+
+        start()
+        synchronousStartSemaphore.wait()
+        removeCompletionHandler(identifier: completionBlockIdentifier)
+
+        guard let unwrappedResult = fetchedResult else {
+            return (Result.failure(UBNetworkingError.unexpected), nil, nil, self)
+        }
+
+        synchronousStartSemaphore.signal()
+        return unwrappedResult
+    }
+
+    /// Starts the data task and blocks the current thread until a response or an error are returned
+    ///
+    /// - Returns: The result of the task
+    @discardableResult
+    public func startSynchronous() -> (result: Result<Data?, Error>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
+        synchronousStartSemaphore.wait()
+        var fetchedResult: (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
+
+        let completionBlockIdentifier = addCompletionHandler { [weak self] result, response, taskInfo, dataTask in
+            fetchedResult = (result, response, taskInfo, dataTask)
+            self?.synchronousStartSemaphore.signal()
+        }
+
+        start()
+        synchronousStartSemaphore.wait()
+        removeCompletionHandler(identifier: completionBlockIdentifier)
+
+        guard let unwrappedResult = fetchedResult else {
+            return (Result.failure(UBNetworkingError.unexpected), nil, nil, self)
+        }
+
+        synchronousStartSemaphore.signal()
+        return unwrappedResult
+    }
+
     /// Adds a completion handler that gets the raw data as is.
     ///
     /// - Parameter completionHandler: A completion handler
-    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingNullableDataBlock) {
+    @discardableResult
+    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingNullableDataBlock) -> UUID {
         let wrapper = CompletionHandlerWrapper(completion: completionHandler)
+        let uuid = CompletionHandlerIdentifier()
         completionHandlersDispatchQueue.sync {
-            _completionHandlers.append(wrapper)
+            _completionHandlers[uuid] = wrapper
         }
+        return uuid
     }
 
     /// Adds a completion handler that gets the data decoded by the specified decoder.
@@ -411,10 +472,22 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// - Parameters:
     ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
     ///   - completionHandler: A completion handler
-    public func addCompletionHandler<T>(decoder: UBURLDataTaskDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) {
+    @discardableResult
+    public func addCompletionHandler<T>(decoder: UBURLDataTaskDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
         let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
+        let uuid = CompletionHandlerIdentifier()
         completionHandlersDispatchQueue.sync {
-            _completionHandlers.append(wrapper)
+            _completionHandlers[uuid] = wrapper
+        }
+        return uuid
+    }
+
+    /// Removes a completion handler
+    ///
+    /// - Parameter identifier: The identifier returned when adding the completion block
+    public func removeCompletionHandler(identifier: CompletionHandlerIdentifier) {
+        return completionHandlersDispatchQueue.sync {
+            _ = _completionHandlers.removeValue(forKey: identifier)
         }
     }
 

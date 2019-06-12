@@ -103,6 +103,13 @@ self.task.addCompletionHandler(decoder: HTTPJSONDecoder<Books>()) { (result, _) 
         break
     }
 }
+self.task.start()
+```
+
+### Loading resources synchronously
+You can run the `HTTDataTask` synchronously and block the current thread waiting for a response. You will get back a result tuple with all the info similar to calling it asynchronously.
+```swift
+let response = self.task.startSynchronously(decoder: HTTPJSONDecoder<Books>())
 ```
 
 ### Modifying the request

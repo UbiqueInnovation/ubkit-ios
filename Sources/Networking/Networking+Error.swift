@@ -9,6 +9,8 @@ import Foundation
 
 /// Networking errors
 public enum UBNetworkingError: Error, Equatable {
+    /// An unexpected error means that something extraordinary happened
+    case unexpected
     /// The URL is missing in the request
     case missingURL
     /// The URL is malformed and cannot be interpretade
