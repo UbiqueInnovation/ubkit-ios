@@ -291,6 +291,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                  (.fetching, .cancelled), // Cancel task
                  (.parsing, .finished), // Data parsed
                  (.finished, .waitingExecution), // Restart task
+                 (.cancelled, .cancelled), // Cancelled 
                  (.cancelled, .waitingExecution): // Restart task
                 break
             default:
