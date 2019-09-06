@@ -88,8 +88,8 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         case .miss:
             // If we have a miss in the cache then we cancel any cron jobs
             cancelRefreshCronJob(for: dataTask)
-        case let .expired(cachedResponse: cachedResponse, reloadHeaders: _),
-             let .hit(cachedResponse: cachedResponse, reloadHeaders: _):
+		case let .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: _),
+             let .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: _):
             // if we hit or we found out the cron is expired, then we schedule a cron job
             guard let response = cachedResponse.response as? HTTPURLResponse else {
                 // Cancel cron jobs if the response is not HTTP

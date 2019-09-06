@@ -14,9 +14,9 @@ public enum UBCacheResult {
     /// The cache missed
     case miss
     /// Cached data found but is expired
-    case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
+	case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
     /// Cached data found and is valid
-    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
+    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
 }
 
 /// A caching logic object can provide decision when comes to requests and response that needs caching

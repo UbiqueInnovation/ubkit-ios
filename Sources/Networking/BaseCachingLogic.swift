@@ -18,6 +18,8 @@ open class UBBaseCachingLogic: UBCachingLogic {
     /// The quality of service
     public let qos: DispatchQoS
 
+	private let UserInfoKeyMetrics = "UserInfoKeyMetrics"
+
     /// Initializes the caching logic with a policy and a quality of service
     ///
     /// - Parameters:
@@ -65,7 +67,11 @@ open class UBBaseCachingLogic: UBCachingLogic {
                 return nil
             }
             // If successful then cache the data
-            let cachedResponse = CachedURLResponse(response: response, data: data, userInfo: nil, storagePolicy: storagePolicy)
+			var userInfo = [AnyHashable: Any]()
+			if let metrics = metrics {
+				userInfo[UserInfoKeyMetrics] = metrics
+			}
+            let cachedResponse = CachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: storagePolicy)
             return cachedResponse
         }
     }
@@ -94,6 +100,9 @@ open class UBBaseCachingLogic: UBCachingLogic {
             return .miss
         }
 
+		// Load metrics from last request
+		let metrics = cachedResponse.userInfo?[UserInfoKeyMetrics] as? URLSessionTaskMetrics
+
         // Setup reload headers
         var reloadHeaders: [String: String] = [:]
         if let lastModified = response.allHeaderFields[lastModifiedHeaderFieldName] as? String {
@@ -109,18 +118,19 @@ open class UBBaseCachingLogic: UBCachingLogic {
             if cacheAge < 0 {
                 return .miss
             } else if cacheAge > maxAge {
-                return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
+				return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             } else {
-                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
+				let metrics = cachedResponse.userInfo?[UserInfoKeyMetrics] as? URLSessionTaskMetrics
+				return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             }
 
             // If there are no max age then search for expire header
         } else if let expiresHeader = response.allHeaderFields[expiresHeaderFieldName] as? String,
             let expiresDate = dateFormatter.date(from: expiresHeader) {
             if expiresDate > Date() {
-                return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
+                return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             } else {
-                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
+				return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             }
 
             // If there is no max age neither expires, set a cache validity default
@@ -131,9 +141,9 @@ open class UBBaseCachingLogic: UBCachingLogic {
                 return .miss
             }
             if defaultCachingLimit < Date() {
-                return .expired(cachedResponse: cachedResponse, reloadHeaders: [:])
+                return .expired(cachedResponse: cachedResponse, reloadHeaders: [:], metrics: metrics)
             } else {
-                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
+				return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             }
 
             // In case no caching information is found just remove the cached object

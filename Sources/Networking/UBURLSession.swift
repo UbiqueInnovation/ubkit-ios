@@ -57,21 +57,21 @@ public class UBURLSession: UBDataTaskURLSession {
              (.returnCacheDataElseLoad, .miss):
             return createTask(request.getRequest())
 
-        case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
-             let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
-             let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
-             let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
-            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: nil, cacheHit: true))
+		case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
+             let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
+             let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
+             let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)):
+            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: metrics, cacheHit: true))
             return nil
 
-        case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _)),
+        case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _, metrics: _)),
              (.returnCacheDataDontLoad, .miss):
             owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
             return nil
 
-        case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
-             let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
-             let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)):
+        case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
+             let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
+             let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)):
             var reloadRequest = request.getRequest()
             for header in reloadHeaders {
                 reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
