@@ -18,7 +18,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
     /// The quality of service
     public let qos: DispatchQoS
 
-	private let UserInfoKeyMetrics = "UserInfoKeyMetrics"
+    private let UserInfoKeyMetrics = "UserInfoKeyMetrics"
 
     /// Initializes the caching logic with a policy and a quality of service
     ///
@@ -67,10 +67,10 @@ open class UBBaseCachingLogic: UBCachingLogic {
                 return nil
             }
             // If successful then cache the data
-			var userInfo = [AnyHashable: Any]()
-			if let metrics = metrics {
-				userInfo[UserInfoKeyMetrics] = metrics
-			}
+            var userInfo = [AnyHashable: Any]()
+            if let metrics = metrics {
+                userInfo[UserInfoKeyMetrics] = metrics
+            }
             let cachedResponse = CachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: storagePolicy)
             return cachedResponse
         }
@@ -100,14 +100,14 @@ open class UBBaseCachingLogic: UBCachingLogic {
             return .miss
         }
 
-		// Load metrics from last request
-		let metrics = cachedResponse.userInfo?[UserInfoKeyMetrics] as? URLSessionTaskMetrics
+        // Load metrics from last request
+        let metrics = cachedResponse.userInfo?[UserInfoKeyMetrics] as? URLSessionTaskMetrics
 
-		guard metrics != nil else {
-			// cache might contain responses that don't have user info
-			// those could be used but might lead to unexpected results
-			return .miss
-		}
+        guard metrics != nil else {
+            // cache might contain responses that don't have user info
+            // those could be used but might lead to unexpected results
+            return .miss
+        }
 
         // Setup reload headers
         var reloadHeaders: [String: String] = [:]
@@ -124,9 +124,9 @@ open class UBBaseCachingLogic: UBCachingLogic {
             if cacheAge < 0 {
                 return .miss
             } else if cacheAge > maxAge {
-				return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
+                return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             } else {
-				return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
+                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             }
 
             // If there are no max age then search for expire header
@@ -135,7 +135,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
             if expiresDate > Date() {
                 return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             } else {
-				return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
+                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             }
 
             // If there is no max age neither expires, set a cache validity default
@@ -148,7 +148,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
             if defaultCachingLimit < Date() {
                 return .expired(cachedResponse: cachedResponse, reloadHeaders: [:], metrics: metrics)
             } else {
-				return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
+                return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             }
 
             // In case no caching information is found just remove the cached object
@@ -158,15 +158,15 @@ open class UBBaseCachingLogic: UBCachingLogic {
         }
     }
 
-	/// :nodoc:
-	public func hasUsed(result: UBCacheResult, session: URLSession, request: URLRequest, dataTask: UBURLDataTask) {
-		// don't care, subclasses might
-	}
+    /// :nodoc:
+    public func hasUsed(result _: UBCacheResult, session _: URLSession, request _: URLRequest, dataTask _: UBURLDataTask) {
+        // don't care, subclasses might
+    }
 
-	/// :nodoc:
-	public func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session: URLSession, request: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?) {
-		// don't care, subclasses might
-	}
+    /// :nodoc:
+    public func hasProposedCachedResponse(cachedURLResponse _: CachedURLResponse?, response _: HTTPURLResponse, session _: URLSession, request _: URLRequest, ubDataTask _: UBURLDataTask, metrics _: URLSessionTaskMetrics?) {
+        // don't care, subclasses might
+    }
 
     // MARK: - Header fields keys
 

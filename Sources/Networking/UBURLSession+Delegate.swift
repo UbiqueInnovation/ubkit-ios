@@ -90,9 +90,9 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
 
         ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.refresh))
 
-		ubDataTask.completionHandlersDispatchQueue.sync {
-			cachingLogic?.hasProposedCachedResponse(cachedURLResponse: cachedResponse, response: response, session: session, request: collectedData.request, ubDataTask: ubDataTask, metrics: collectedData.metrics)
-		}
+        ubDataTask.completionHandlersDispatchQueue.sync {
+            cachingLogic?.hasProposedCachedResponse(cachedURLResponse: cachedResponse, response: response, session: session, request: collectedData.request, ubDataTask: ubDataTask, metrics: collectedData.metrics)
+        }
     }
 
     /// :nodoc:
@@ -236,7 +236,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             session.configuration.urlCache?.storeCachedResponse(proposedResponse, for: originalRequest)
         }
 
-		return proposedResponse
+        return proposedResponse
     }
 }
 

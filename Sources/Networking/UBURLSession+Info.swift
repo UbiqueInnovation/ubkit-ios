@@ -15,14 +15,14 @@ public struct UBNetworkingTaskInfo: CustomDebugStringConvertible {
     /// `true` if the response was returned from cache
     public let cacheHit: Bool
 
-	/// `true` if the response was returned from cron refresh
-	public let refresh: Bool
+    /// `true` if the response was returned from cron refresh
+    public let refresh: Bool
 
     /// Instansiate a network info
-	init(metrics: URLSessionTaskMetrics?, cacheHit: Bool, refresh: Bool) {
+    init(metrics: URLSessionTaskMetrics?, cacheHit: Bool, refresh: Bool) {
         self.metrics = metrics
         self.cacheHit = cacheHit
-		self.refresh = refresh
+        self.refresh = refresh
     }
 
     /// :nodoc:

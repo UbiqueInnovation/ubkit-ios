@@ -12,8 +12,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
     let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
 
     func testCaching() {
-
-		// Load Request with Meteo-specific headers to enable cache
+        // Load Request with Meteo-specific headers to enable cache
 
         let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
 
@@ -22,106 +21,101 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         conf.sessionConfiguration.urlCache = c
         let session = UBURLSession(configuration: conf)
 
-		// load request to fill cache
+        // load request to fill cache
 
         let dataTask = UBURLDataTask(url: url, session: session)
 
-		let ex = expectation(description: "s")
+        let ex = expectation(description: "s")
         dataTask.addCompletionHandler { _, _, _, _ in
 
-			ex.fulfill()
+            ex.fulfill()
         }
         dataTask.start()
-		self.wait(for: [ex], timeout: 10000)
+        wait(for: [ex], timeout: 10000)
 
-		// load request again
+        // load request again
 
-		let dataTask2 = UBURLDataTask(url: url, session: session)
+        let dataTask2 = UBURLDataTask(url: url, session: session)
 
-		let ex2 = self.expectation(description: "s2")
-		dataTask2.addCompletionHandler { _, _, info, _ in
+        let ex2 = expectation(description: "s2")
+        dataTask2.addCompletionHandler { _, _, info, _ in
 
-			XCTAssertNotNil(info)
-			XCTAssert(info!.cacheHit)
-			XCTAssertNotNil(info!.metrics)
+            XCTAssertNotNil(info)
+            XCTAssert(info!.cacheHit)
+            XCTAssertNotNil(info!.metrics)
 
-			ex2.fulfill()
-		}
-		dataTask2.start()
-		self.wait(for: [ex2], timeout: 10000)
-
+            ex2.fulfill()
+        }
+        dataTask2.start()
+        wait(for: [ex2], timeout: 10000)
     }
 
-	func testNoCacheHeaders() {
+    func testNoCacheHeaders() {
+        // Load Request with default headers and no cache
 
-		// Load Request with default headers and no cache
+        let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
 
-		let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
+        // load request to (not) fill cache
 
-		// load request to (not) fill cache
+        let dataTask = UBURLDataTask(url: url)
 
-		let dataTask = UBURLDataTask(url: url)
+        let ex = expectation(description: "s")
+        dataTask.addCompletionHandler { _, _, _, _ in
 
-		let ex = expectation(description: "s")
-		dataTask.addCompletionHandler { _, _, _, _ in
+            ex.fulfill()
+        }
+        dataTask.start()
+        wait(for: [ex], timeout: 10000)
 
-			ex.fulfill()
-		}
-		dataTask.start()
-		self.wait(for: [ex], timeout: 10000)
+        dataTask.cancel() // make sure that cron doesn't trigger
 
-		dataTask.cancel() // make sure that cron doesn't trigger
+        // load request again
 
-		// load request again
+        let dataTask2 = UBURLDataTask(url: url)
 
-		let dataTask2 = UBURLDataTask(url: url)
+        let ex2 = expectation(description: "s2")
+        dataTask2.addCompletionHandler { _, _, info, _ in
 
-		let ex2 = self.expectation(description: "s2")
-		dataTask2.addCompletionHandler { _, _, info, _ in
+            XCTAssertNotNil(info)
+            XCTAssertFalse(info!.cacheHit)
+            XCTAssertNotNil(info!.metrics)
 
-			XCTAssertNotNil(info)
-			XCTAssertFalse(info!.cacheHit)
-			XCTAssertNotNil(info!.metrics)
+            ex2.fulfill()
+        }
+        dataTask2.start()
+        wait(for: [ex2], timeout: 10000)
+    }
 
-			ex2.fulfill()
-		}
-		dataTask2.start()
-		self.wait(for: [ex2], timeout: 10000)
+    func testAutoRefresh() {
+        // Load Request with default headers and no cache
 
-	}
+        let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
 
-	func testAutoRefresh() {
+        // load request and wait for two responses
 
-		// Load Request with default headers and no cache
+        let cache = MeteoAutoRefreshCacheLogic()
+        let conf = UBURLSessionConfiguration(cachingLogic: cache)
+        conf.sessionConfiguration.urlCache = c
+        let session = UBURLSession(configuration: conf)
 
-		let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
+        let dataTask = UBURLDataTask(url: url, session: session)
 
-		// load request and wait for two responses
+        let ex1 = expectation(description: "s")
+        let ex2 = expectation(description: "s2")
 
-		let cache = MeteoAutoRefreshCacheLogic()
-		let conf = UBURLSessionConfiguration(cachingLogic: cache)
-		conf.sessionConfiguration.urlCache = c
-		let session = UBURLSession(configuration: conf)
+        dataTask.addCompletionHandler { _, _, info, _ in
 
-		let dataTask = UBURLDataTask(url: url, session: session)
+            XCTAssertNotNil(info)
 
-		let ex1 = expectation(description: "s")
-		let ex2 = expectation(description: "s2")
-
-		dataTask.addCompletionHandler { _, _, info, _ in
-
-			XCTAssertNotNil(info)
-
-			if info!.refresh {
-				ex1.fulfill()
-			} else {
-				ex2.fulfill()
-			}
-		}
-		dataTask.start()
-		self.wait(for: [ex1, ex2], timeout: 10000)
-
-	}
+            if info!.refresh {
+                ex1.fulfill()
+            } else {
+                ex2.fulfill()
+            }
+        }
+        dataTask.start()
+        wait(for: [ex1, ex2], timeout: 10000)
+    }
 }
 
 class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
@@ -145,12 +139,12 @@ class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
         return "Etag"
     }
 
-	// scale relative time for faster unit test
-	override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
-		if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
-			return Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
-		} else {
-			return nil
-		}
-	}
+    // scale relative time for faster unit test
+    override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
+        if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
+            return Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
+        } else {
+            return nil
+        }
+    }
 }

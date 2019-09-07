@@ -45,7 +45,7 @@ public class UBURLSession: UBDataTaskURLSession {
         }
 
         // Check if we have a caching logic otherwise return a task
-		// Only if not a refresh task
+        // Only if not a refresh task
         guard !owner.refresh, let cacheResult = sessionDelegate.cachingLogic?.cachedResponse(urlSession, request: request.getRequest(), dataTask: owner) else {
             return createTask(request.getRequest())
         }
@@ -57,27 +57,27 @@ public class UBURLSession: UBDataTaskURLSession {
              (.useProtocolCachePolicy, .miss),
              (.returnCacheDataElseLoad, .miss):
 
-			owner.completionHandlersDispatchQueue.sync {
-				sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
-			}
+            owner.completionHandlersDispatchQueue.sync {
+                sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
+            }
             return createTask(request.getRequest())
 
-		case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
+        case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
              let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
              let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
              let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)):
-			owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: metrics, cacheHit: true, refresh: false))
-			owner.completionHandlersDispatchQueue.sync {
-				sessionDelegate.cachingLogic?.hasUsed(result: cacheResult, session: urlSession, request: request.getRequest(), dataTask: owner)
-			}
+            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: metrics, cacheHit: true, refresh: false))
+            owner.completionHandlersDispatchQueue.sync {
+                sessionDelegate.cachingLogic?.hasUsed(result: cacheResult, session: urlSession, request: request.getRequest(), dataTask: owner)
+            }
             return nil
 
         case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _, metrics: _)),
              (.returnCacheDataDontLoad, .miss):
-			sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
-			owner.completionHandlersDispatchQueue.sync {
-				owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
-			}
+            sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
+            owner.completionHandlersDispatchQueue.sync {
+                owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
+            }
             return nil
 
         case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
@@ -87,9 +87,9 @@ public class UBURLSession: UBDataTaskURLSession {
             for header in reloadHeaders {
                 reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
             }
-			owner.completionHandlersDispatchQueue.sync {
-				sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
-			}
+            owner.completionHandlersDispatchQueue.sync {
+                sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
+            }
             return createTask(reloadRequest, cachedResponse: cachedResponse)
 
         @unknown default:

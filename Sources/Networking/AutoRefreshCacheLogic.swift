@@ -21,7 +21,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     private func scheduleRefreshCronJob(for task: UBURLDataTask, headers: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) {
         cancelRefreshCronJob(for: task)
 
-		guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics) else {
+        guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics) else {
             return
         }
         // Schedule a new job
@@ -51,12 +51,12 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
             // The backoff date is the response date added to the backoff interval
             let responseBackoffDate = responseDate + backoffInterval
 
-			if let metrics = metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
-				let metricBackoffDate = date + backoffInterval
-				backoffDate = max(responseBackoffDate, metricBackoffDate)
-			} else {
-				backoffDate = responseBackoffDate
-			}
+            if let metrics = metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
+                let metricBackoffDate = date + backoffInterval
+                backoffDate = max(responseBackoffDate, metricBackoffDate)
+            } else {
+                backoffDate = responseBackoffDate
+            }
 
         } else {
             // If none is specified then we can assume it is always allowed to make requests
@@ -80,36 +80,35 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         return cachedURLResponse
     }
 
-	/// :nodoc:
+    /// :nodoc:
 
-	override public func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session: URLSession, request: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?) {
-		if cachedURLResponse != nil ||
-			response == UBStandardHTTPCode.notModified {
-			// If there is a response or the response is not modified, reschedule the cron job
-			scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics)
-		} else {
-			// Otherwise cancel any current cron jobs
-			cancelRefreshCronJob(for: ubDataTask)
-		}
-	}
+    public override func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session _: URLSession, request _: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?) {
+        if cachedURLResponse != nil ||
+            response == UBStandardHTTPCode.notModified {
+            // If there is a response or the response is not modified, reschedule the cron job
+            scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics)
+        } else {
+            // Otherwise cancel any current cron jobs
+            cancelRefreshCronJob(for: ubDataTask)
+        }
+    }
 
     /// :nodoc:
 
-	override public func hasUsed(result: UBCacheResult, session: URLSession, request: URLRequest, dataTask: UBURLDataTask) {
-		switch result {
-		case .miss:
-			// If we have a miss in the cache then we cancel any cron jobs
-			cancelRefreshCronJob(for: dataTask)
-		case let .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics),
-			 let .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics):
-			// if we hit or we found out the cron is expired, then we schedule a cron job
-			guard let response = cachedResponse.response as? HTTPURLResponse else {
-				// Cancel cron jobs if the response is not HTTP
-				cancelRefreshCronJob(for: dataTask)
-				break
-			}
-			scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics)
-		}
-	}
-
+    public override func hasUsed(result: UBCacheResult, session _: URLSession, request _: URLRequest, dataTask: UBURLDataTask) {
+        switch result {
+        case .miss:
+            // If we have a miss in the cache then we cancel any cron jobs
+            cancelRefreshCronJob(for: dataTask)
+        case let .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics),
+             let .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics):
+            // if we hit or we found out the cron is expired, then we schedule a cron job
+            guard let response = cachedResponse.response as? HTTPURLResponse else {
+                // Cancel cron jobs if the response is not HTTP
+                cancelRefreshCronJob(for: dataTask)
+                break
+            }
+            scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics)
+        }
+    }
 }
