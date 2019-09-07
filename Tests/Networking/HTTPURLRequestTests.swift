@@ -12,11 +12,9 @@ class HTTPURLRequestTests: XCTestCase {
     let url = URL(string: "http://ubique.ch")!
 
     func testIntialization() {
-        let cache = URLRequest.CachePolicy.reloadIgnoringCacheData
         let timeout: TimeInterval = 34
-        var request = UBURLRequest(url: url, cachePolicy: cache, timeoutInterval: timeout)
+        var request = UBURLRequest(url: url, timeoutInterval: timeout)
         XCTAssertEqual(url, request.url)
-        XCTAssertEqual(cache, request.cachePolicy)
         XCTAssertEqual(timeout, request.timeoutInterval)
 
         request.httpMethod = UBHTTPMethod.get
