@@ -50,6 +50,45 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [ex2], timeout: 10000)
     }
 
+    func testRegaCaching() {
+        // Load Request with Meteo-specific headers to enable cache
+
+        let url = URL(string: "https://p-aps-regaws.azurewebsites.net/v1/webcam_overview.json")!
+
+        let cache = RegaAutoRefreshCacheLogic()
+        let conf = UBURLSessionConfiguration(cachingLogic: cache)
+        conf.sessionConfiguration.urlCache = c
+        let session = UBURLSession(configuration: conf)
+
+        // load request to fill cache
+
+        let dataTask = UBURLDataTask(url: url, session: session)
+
+        let ex = expectation(description: "s")
+        dataTask.addCompletionHandler { _, _, _, _ in
+
+            ex.fulfill()
+        }
+        dataTask.start()
+        wait(for: [ex], timeout: 10000)
+
+        // load request again
+
+        let dataTask2 = UBURLDataTask(url: url, session: session)
+
+        let ex2 = expectation(description: "s2")
+        dataTask2.addCompletionHandler { _, _, info, _ in
+
+            XCTAssertNotNil(info)
+            XCTAssert(info!.cacheHit)
+            XCTAssertNotNil(info!.metrics)
+
+            ex2.fulfill()
+        }
+        dataTask2.start()
+        wait(for: [ex2], timeout: 10000)
+    }
+
     func testNoCacheHeaders() {
         // Load Request with default headers and no cache
 
@@ -133,6 +172,37 @@ class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
 
     override var cacheControlHeaderFieldName: String {
         return "x-amz-meta-cache"
+    }
+
+    override var eTagHeaderFieldName: String {
+        return "Etag"
+    }
+
+    // scale relative time for faster unit test
+    override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
+        if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
+            return Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
+        } else {
+            return nil
+        }
+    }
+}
+
+class RegaAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
+    override var nextRefreshHeaderFieldName: String {
+        return "x-ms-meta-nextrefresh"
+    }
+
+    override var backoffIntervalHeaderFieldName: String {
+        return "x-ms-meta-backoff"
+    }
+
+    override var expiresHeaderFieldName: String {
+        return "x-ms-meta-bestbefore"
+    }
+
+    override var cacheControlHeaderFieldName: String {
+        return "Cache-Control"
     }
 
     override var eTagHeaderFieldName: String {

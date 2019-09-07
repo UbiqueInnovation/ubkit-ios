@@ -103,12 +103,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
         // Load metrics from last request
         let metrics = cachedResponse.userInfo?[UserInfoKeyMetrics] as? URLSessionTaskMetrics
 
-        guard metrics != nil else {
-            // cache might contain responses that don't have user info
-            // those could be used but might lead to unexpected results
-            return .miss
-        }
-
         // Setup reload headers
         var reloadHeaders: [String: String] = [:]
         if let lastModified = response.allHeaderFields[lastModifiedHeaderFieldName] as? String {
