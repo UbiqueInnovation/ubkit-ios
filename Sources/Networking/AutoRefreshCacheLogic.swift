@@ -46,22 +46,21 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         }
 
         // This is the date that we are not allowed to make requests before.
-        let backoffDate: Date
-        if let backoffHeader = allHeaderFields[backoffIntervalHeaderFieldName] as? String, let backoffInterval = TimeInterval(backoffHeader) {
-            // The backoff date is the response date added to the backoff interval
-            let responseBackoffDate = responseDate + backoffInterval
+		let backoffInterval: TimeInterval
+        if let backoffHeader = allHeaderFields[backoffIntervalHeaderFieldName] as? String, let interval = TimeInterval(backoffHeader) {
+			backoffInterval = interval
+		}
+		else {
+			backoffInterval = 60
+		}
 
-            if let metrics = metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
-                let metricBackoffDate = date + backoffInterval
-                backoffDate = max(responseBackoffDate, metricBackoffDate)
-            } else {
-                backoffDate = responseBackoffDate
-            }
-
-        } else {
-            // If none is specified then we can assume it is always allowed to make requests
-            backoffDate = Date(timeIntervalSinceNow: 60)
-        }
+		// The backoff date is the response date added to the backoff interval
+		let backoffDate: Date
+		if let metrics = metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
+			backoffDate = max(responseDate + backoffInterval, date + backoffInterval)
+		} else {
+			backoffDate = responseDate + backoffInterval
+		}
 
         // Return the date that is the most in the future.
         return max(nextRefreshDate, backoffDate)
