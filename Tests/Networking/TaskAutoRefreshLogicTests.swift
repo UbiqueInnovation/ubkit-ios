@@ -81,12 +81,18 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
             XCTAssertNotNil(info)
             XCTAssert(info!.cacheHit)
-            XCTAssertNotNil(info!.metrics)
 
             ex2.fulfill()
         }
+
+        let ex3 = expectation(description: "s3")
+        dataTask2.addCompletionHandler { _, _, _, _ in
+
+            ex3.fulfill()
+        }
+
         dataTask2.start()
-        wait(for: [ex2], timeout: 10000)
+        wait(for: [ex2, ex3], timeout: 10000)
     }
 
     func testNoCacheHeaders() {
