@@ -27,7 +27,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
 
 		let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler { _, _, _, _ in
 
 			ex.fulfill()
         }
@@ -39,7 +39,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 		let dataTask2 = UBURLDataTask(url: url, session: session)
 
 		let ex2 = self.expectation(description: "s2")
-		dataTask2.addCompletionHandler { result, _, info, _ in
+		dataTask2.addCompletionHandler { _, _, info, _ in
 
 			XCTAssertNotNil(info)
 			XCTAssert(info!.cacheHit)
@@ -63,19 +63,21 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 		let dataTask = UBURLDataTask(url: url)
 
 		let ex = expectation(description: "s")
-		dataTask.addCompletionHandler { result, _, _, _ in
+		dataTask.addCompletionHandler { _, _, _, _ in
 
 			ex.fulfill()
 		}
 		dataTask.start()
 		self.wait(for: [ex], timeout: 10000)
 
+		dataTask.cancel() // make sure that cron doesn't trigger
+
 		// load request again
 
 		let dataTask2 = UBURLDataTask(url: url)
 
 		let ex2 = self.expectation(description: "s2")
-		dataTask2.addCompletionHandler { result, _, info, _ in
+		dataTask2.addCompletionHandler { _, _, info, _ in
 
 			XCTAssertNotNil(info)
 			XCTAssertFalse(info!.cacheHit)
@@ -85,6 +87,39 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 		}
 		dataTask2.start()
 		self.wait(for: [ex2], timeout: 10000)
+
+	}
+
+	func testAutoRefresh() {
+
+		// Load Request with default headers and no cache
+
+		let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
+
+		// load request and wait for two responses
+
+		let cache = MeteoAutoRefreshCacheLogic()
+		let conf = UBURLSessionConfiguration(cachingLogic: cache)
+		conf.sessionConfiguration.urlCache = c
+		let session = UBURLSession(configuration: conf)
+
+		let dataTask = UBURLDataTask(url: url, session: session)
+
+		let ex1 = expectation(description: "s")
+		let ex2 = expectation(description: "s2")
+
+		dataTask.addCompletionHandler { _, _, info, _ in
+
+			XCTAssertNotNil(info)
+
+			if info!.refresh {
+				ex1.fulfill()
+			} else {
+				ex2.fulfill()
+			}
+		}
+		dataTask.start()
+		self.wait(for: [ex1, ex2], timeout: 10000)
 
 	}
 }
@@ -109,4 +144,13 @@ class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     override var eTagHeaderFieldName: String {
         return "Etag"
     }
+
+	// scale relative time for faster unit test
+	override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
+		if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
+			return Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
+		} else {
+			return nil
+		}
+	}
 }

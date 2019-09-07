@@ -103,6 +103,12 @@ open class UBBaseCachingLogic: UBCachingLogic {
 		// Load metrics from last request
 		let metrics = cachedResponse.userInfo?[UserInfoKeyMetrics] as? URLSessionTaskMetrics
 
+		guard metrics != nil else {
+			// cache might contain responses that don't have user info
+			// those could be used but might lead to unexpected results
+			return .miss
+		}
+
         // Setup reload headers
         var reloadHeaders: [String: String] = [:]
         if let lastModified = response.allHeaderFields[lastModifiedHeaderFieldName] as? String {
@@ -120,7 +126,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
             } else if cacheAge > maxAge {
 				return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             } else {
-				let metrics = cachedResponse.userInfo?[UserInfoKeyMetrics] as? URLSessionTaskMetrics
 				return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             }
 
@@ -152,6 +157,16 @@ open class UBBaseCachingLogic: UBCachingLogic {
             return .miss
         }
     }
+
+	/// :nodoc:
+	public func hasUsed(result: UBCacheResult, session: URLSession, request: URLRequest, dataTask: UBURLDataTask) {
+		// don't care, subclasses might
+	}
+
+	/// :nodoc:
+	public func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session: URLSession, request: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?) {
+		// don't care, subclasses might
+	}
 
     // MARK: - Header fields keys
 

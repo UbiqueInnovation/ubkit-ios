@@ -20,6 +20,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// An app-provided description of the current task.
     public let taskDescription: String?
 
+	/// If the task has been started to refresh a previous result
+	private(set) var refresh: Bool = false
+
     /// The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     public let priority: Float
 
@@ -104,8 +107,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // The semaphore ensuring no two threads can call start simultaniously
     private let requestStartSemaphore = DispatchSemaphore(value: 1)
 
+	// Default start is not a refresh
+	public func start() {
+		self.start(refresh: false)
+	}
+
     /// Start the task with the given request. It will cancel any ongoing request
-    public func start() {
+	public func start(refresh: Bool) {
         // Wait for any ongoing request start
         requestStartSemaphore.wait()
 
@@ -114,6 +122,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         // Set the state to waiting execution and launch the task
         state = .waitingExecution
+
+		// update refresh state
+		self.refresh = refresh
 
         // Apply all modification
         requestModifier.modifyRequest(request) { [weak self] result in
@@ -130,6 +141,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                     if self.state == .cancelled {
                         self.state = .finished
                     }
+					self.requestStartSemaphore.signal()
                     return
                 }
 
@@ -379,7 +391,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// A completion handling block called at the end of the task.
     public typealias CompletionHandlingNullableDataBlock = (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// :nodoc:
-    private let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
+    let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
     /// The completion handlers
     private var _completionHandlers: [CompletionHandlerWrapper] = []
 
@@ -501,7 +513,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             case let .recovered(data: data, response: response, info: info):
                 self?.notifyCompletion(data: data, response: response, info: info)
             case .restartDataTask:
-                self?.start()
+                self?.start(refresh: false)
             }
         }
     }
