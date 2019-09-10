@@ -58,7 +58,7 @@ public class UBURLSession: UBDataTaskURLSession {
              (.returnCacheDataElseLoad, .miss):
 
             owner.completionHandlersDispatchQueue.sync {
-                sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
+                sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
             }
             return createTask(request.getRequest())
 
@@ -68,13 +68,15 @@ public class UBURLSession: UBDataTaskURLSession {
              let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)):
             owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: metrics, cacheHit: true, refresh: false))
             owner.completionHandlersDispatchQueue.sync {
-                sessionDelegate.cachingLogic?.hasUsed(result: cacheResult, session: urlSession, request: request.getRequest(), dataTask: owner)
+                if let response = cachedResponse.response as? HTTPURLResponse {
+                    sessionDelegate.cachingLogic?.hasUsed(response: response, metrics: metrics, request: request.getRequest(), dataTask: owner)
+                }
             }
             return nil
 
         case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _, metrics: _)),
              (.returnCacheDataDontLoad, .miss):
-            sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
+            sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
             owner.completionHandlersDispatchQueue.sync {
                 owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
             }
@@ -88,7 +90,7 @@ public class UBURLSession: UBDataTaskURLSession {
                 reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
             }
             owner.completionHandlersDispatchQueue.sync {
-                sessionDelegate.cachingLogic?.hasUsed(result: .miss, session: urlSession, request: request.getRequest(), dataTask: owner)
+                sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
             }
             return createTask(reloadRequest, cachedResponse: cachedResponse)
 

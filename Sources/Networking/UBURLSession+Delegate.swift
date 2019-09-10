@@ -73,6 +73,9 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         // If not modified return the cached data
         if response.statusCode == UBStandardHTTPCode.notModified, let cached = collectedData.cached {
             ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true, refresh: ubDataTask.refresh))
+            if let response = cached.response as? HTTPURLResponse {
+                cachingLogic?.hasUsed(response: response, metrics: collectedData.metrics, request: collectedData.request, dataTask: ubDataTask)
+            }
             return
         }
 

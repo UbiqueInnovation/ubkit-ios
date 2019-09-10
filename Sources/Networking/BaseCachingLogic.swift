@@ -52,8 +52,10 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
     /// :nodoc:
     open func proposeCachedResponse(for session: URLSession, dataTask _: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
-        guard let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String, let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), cacheControlDirectives.cachingAllowed else {
-            return nil
+        if let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String, let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader) {
+            guard cacheControlDirectives.cachingAllowed else {
+                return nil
+            }
         }
 
         // Check the status code
@@ -84,13 +86,16 @@ open class UBBaseCachingLogic: UBCachingLogic {
         }
 
         /// Make sure we have the caching headers and it was allowed to cache the response in the first place
-        guard let response = cachedResponse.response as? HTTPURLResponse,
-            let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String,
-            let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader),
-            cacheControlDirectives.cachingAllowed,
-            response.statusCode == UBHTTPCodeCategory.success else {
+        guard let response = cachedResponse.response as? HTTPURLResponse, response.statusCode == UBHTTPCodeCategory.success else {
             session.configuration.urlCache?.removeCachedResponse(for: request)
             return .miss
+        }
+        if let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String,
+            let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader) {
+            guard cacheControlDirectives.cachingAllowed else {
+                session.configuration.urlCache?.removeCachedResponse(for: request)
+                return .miss
+            }
         }
 
         // Check that the content language of the cached response is contained in the request accepted language
@@ -113,7 +118,8 @@ open class UBBaseCachingLogic: UBCachingLogic {
         }
 
         // Check Max Age
-        if let maxAge = cacheControlDirectives.maxAge, let responseDateHearder = response.allHeaderFields[dateHeaderFieldName] as? String, let responseDate = dateFormatter.date(from: responseDateHearder) {
+        if let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String,
+            let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), let maxAge = cacheControlDirectives.maxAge, let responseDateHearder = response.allHeaderFields[dateHeaderFieldName] as? String, let responseDate = dateFormatter.date(from: responseDateHearder) {
             let cacheAge = Int(-responseDate.timeIntervalSinceNow)
             if cacheAge < 0 {
                 return .miss
@@ -153,7 +159,12 @@ open class UBBaseCachingLogic: UBCachingLogic {
     }
 
     /// :nodoc:
-    public func hasUsed(result _: UBCacheResult, session _: URLSession, request _: URLRequest, dataTask _: UBURLDataTask) {
+    public func hasMissedCache(dataTask _: UBURLDataTask) {
+        // don't care, subclasses might
+    }
+
+    /// :nodoc:
+    public func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
         // don't care, subclasses might
     }
 

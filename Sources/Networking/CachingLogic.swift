@@ -45,8 +45,11 @@ public protocol UBCachingLogic {
     /// - Returns: A cached result
     func cachedResponse(_ session: URLSession, request: URLRequest, dataTask: UBURLDataTask) -> UBCacheResult
 
+    /// Tell the caching logic that the cache had no result
+    func hasMissedCache(dataTask: UBURLDataTask)
+
     /// Tell the caching logic that the result was used
-    func hasUsed(result: UBCacheResult, session: URLSession, request: URLRequest, dataTask: UBURLDataTask)
+    func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask)
 
     /// Tell the caching logic that a new result was cached
     func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session: URLSession, request: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?)
