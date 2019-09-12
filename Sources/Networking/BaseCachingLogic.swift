@@ -132,7 +132,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
             // If there are no max age then search for expire header
         } else if let expiresHeader = response.allHeaderFields[expiresHeaderFieldName] as? String,
             let expiresDate = dateFormatter.date(from: expiresHeader) {
-            if expiresDate > Date() {
+            if expiresDate < Date() {
                 return .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
             } else {
                 return .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
