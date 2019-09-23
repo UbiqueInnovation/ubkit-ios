@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E8ADA062339139A00A78254 /* UIFont+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */; };
 		8E0DB2AA2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
 		8E0DB2AB2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
 		8E0DB2AC2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
@@ -358,6 +359,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Helpers.swift"; sourceTree = "<group>"; };
 		8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLDataTask.swift; sourceTree = "<group>"; };
 		8E0DB2B32243088000D5E01E /* Networking+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Error.swift"; sourceTree = "<group>"; };
 		8E0DB2C42243D00E00D5E01E /* UBURLDataTask+Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLDataTask+Decoder.swift"; sourceTree = "<group>"; };
@@ -522,6 +524,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E8ADA042339138D00A78254 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
 		8E0DB2C12243BFB600D5E01E /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -710,6 +720,7 @@
 		8EBD479A2240646700CD2639 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				6E8ADA042339138D00A78254 /* Font */,
 				8EBD48162240773900CD2639 /* Globals */,
 				8E7F74AB2249892E00582E57 /* UI Elements */,
 				8EBD47ED2240770000CD2639 /* Localization */,
@@ -1397,6 +1408,7 @@
 				8EFFDCE72254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8EFFDD0022560A51002D2DE2 /* CachingLogic.swift in Sources */,
 				8E52B77C229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
+				6E8ADA062339139A00A78254 /* UIFont+Helpers.swift in Sources */,
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
 				8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
