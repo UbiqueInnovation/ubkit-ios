@@ -1,5 +1,5 @@
 //
-//  NSDate+UBHelpers.swift
+//  Date+UBHelpers.swift
 //  UBFoundation iOS
 //
 //  Created by Marco Zimmermann on 23.09.19.
