@@ -9,66 +9,58 @@ import UIKit
 
 // MARK: - UBLabelType Protocol
 
-public protocol UBLabelType
-{
-    var font : UIFont { get }
-    var textColor : UIColor { get }
-    var lineSpacing : CGFloat { get }
-    var letterSpacing : CGFloat? { get }
+public protocol UBLabelType {
+    var font: UIFont { get }
+    var textColor: UIColor { get }
+    var lineSpacing: CGFloat { get }
+    var letterSpacing: CGFloat? { get }
 
-    var isUppercased : Bool { get }
+    var isUppercased: Bool { get }
 
     /// between [0.0,1.0]: 0.0 disabled, 1.0 most hyphenation
-    var hyphenationFactor : Float { get }
+    var hyphenationFactor: Float { get }
 
-    var lineBreakMode : NSLineBreakMode { get }
+    var lineBreakMode: NSLineBreakMode { get }
 }
 
 // MARK: - UBLabel
 
-public class UBLabel<T: UBLabelType> : UILabel
-{
-    private let type : T
+public class UBLabel<T: UBLabelType>: UILabel {
+    private let type: T
 
     /// Simple way to initialize Label with T and optional textColor to override standard color of type. Standard multiline and left-aligned.
-    public init(_ type: T, textColor : UIColor? = nil, numberOfLines : Int = 0, textAlignment : NSTextAlignment = .left)
-    {
+    public init(_ type: T, textColor: UIColor? = nil, numberOfLines: Int = 0, textAlignment: NSTextAlignment = .left) {
         self.type = type
 
         super.init(frame: .zero)
 
-        self.font = self.type.font
+        font = self.type.font
         self.textColor = textColor == nil ? self.type.textColor : textColor
         self.textAlignment = textAlignment
         self.numberOfLines = numberOfLines
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override var text: String?
-    {
-        didSet { self.update() }
+    public override var text: String? {
+        didSet { update() }
     }
 
-    public var isHtmlContent: Bool = false
-    {
-        didSet { self.update() }
+    public var isHtmlContent: Bool = false {
+        didSet { update() }
     }
 
     /// :nodoc:
-    private func update()
-    {
-        guard var textContent = self.text else
-        {
-            self.attributedText = nil
+    private func update() {
+        guard var textContent = self.text else {
+            attributedText = nil
             return
         }
 
         // uppercase the text if type is uppercased
-        if self.type.isUppercased
-        {
+        if type.isUppercased {
             textContent = textContent.uppercased()
         }
 
@@ -76,24 +68,21 @@ public class UBLabel<T: UBLabelType> : UILabel
         let textString: NSMutableAttributedString
 
         // check html
-        do
-        {
+        do {
             var text = textContent
 
-            if self.isHtmlContent
-            {
-                text = textContent + "<style>body{font-family: '\(font.fontName)'; font-size:\(self.font.pointSize)px;}</style>"
+            if isHtmlContent {
+                text = textContent + "<style>body{font-family: '\(font.fontName)'; font-size:\(font.pointSize)px;}</style>"
             }
 
-            let options: [NSAttributedString.DocumentReadingOptionKey : Any] = [
+            let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
                 .documentType: self.isHtmlContent ? NSAttributedString.DocumentType.html : NSAttributedString.DocumentType.plain,
                 .characterEncoding: String.Encoding.utf8.rawValue,
-                .defaultAttributes: [:]]
+                .defaultAttributes: [:]
+            ]
 
             textString = try NSMutableAttributedString(data: text.data(using: .utf8)!, options: options, documentAttributes: nil)
-        }
-        catch
-        {
+        } catch {
             textString = NSMutableAttributedString(string: textContent, attributes: [:])
         }
 
@@ -101,31 +90,28 @@ public class UBLabel<T: UBLabelType> : UILabel
         let textRange = NSRange(location: 0, length: textString.length)
 
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = self.textAlignment
+        paragraphStyle.alignment = textAlignment
 
-        let lineSpacing = self.numberOfLines == 1 ? 1.0 : self.type.lineSpacing
+        let lineSpacing = numberOfLines == 1 ? 1.0 : type.lineSpacing
 
-        let lineHeightMultiple = (self.font.pointSize / self.font.lineHeight) * lineSpacing
-        paragraphStyle.lineSpacing = lineHeightMultiple * self.font.lineHeight - self.font.lineHeight
-        paragraphStyle.lineBreakMode = self.type.lineBreakMode
+        let lineHeightMultiple = (font.pointSize / font.lineHeight) * lineSpacing
+        paragraphStyle.lineSpacing = lineHeightMultiple * font.lineHeight - font.lineHeight
+        paragraphStyle.lineBreakMode = type.lineBreakMode
 
         // check hyphenation
-        if self.numberOfLines != 1
-        {
-            paragraphStyle.hyphenationFactor = self.type.hyphenationFactor
+        if numberOfLines != 1 {
+            paragraphStyle.hyphenationFactor = type.hyphenationFactor
         }
 
         // add attribute for paragraph
-        textString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range: textRange)
+        textString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: textRange)
 
         // add attribute for kerning
-        if let k = self.type.letterSpacing
-        {
+        if let k = self.type.letterSpacing {
             textString.addAttribute(NSAttributedString.Key.kern, value: k, range: textRange)
         }
 
         // set attributed text
-        self.attributedText = textString
+        attributedText = textString
     }
 }
-

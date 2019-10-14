@@ -9,11 +9,9 @@ import UIKit
 
 // MARK: - UIFont Helpers
 
-extension UIFont
-{
+extension UIFont {
     /// Returns the height of the font
-    public func ub_fontHeight() -> CGFloat
-    {
-        return self.ascender - self.descender
+    public func ub_fontHeight() -> CGFloat {
+        return ascender - descender
     }
 }
