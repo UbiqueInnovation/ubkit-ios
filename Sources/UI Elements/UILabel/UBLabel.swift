@@ -18,7 +18,9 @@ public protocol UBLabelType
 
     var isUppercased : Bool { get }
 
+    /// between [0.0,1.0]: 0.0 disabled, 1.0 most hyphenation
     var hyphenationFactor : Float { get }
+
     var lineBreakMode : NSLineBreakMode { get }
 }
 
@@ -27,10 +29,6 @@ public protocol UBLabelType
 public class UBLabel<T: UBLabelType> : UILabel
 {
     private let type : T
-
-    private var lineSpacing : CGFloat = 1.0
-    private var kerningValue : CGFloat?
-    private var hyphenated: Bool = true
 
     /// Simple way to initialize Label with T and optional textColor to override standard color of type. Standard multiline and left-aligned.
     public init(_ type: T, textColor : UIColor? = nil, numberOfLines : Int = 0, textAlignment : NSTextAlignment = .left)
@@ -42,8 +40,6 @@ public class UBLabel<T: UBLabelType> : UILabel
         self.font = self.type.font
         self.textColor = textColor == nil ? self.type.textColor : textColor
         self.textAlignment = textAlignment
-        self.lineSpacing = self.type.lineSpacing
-        self.kerningValue = self.type.letterSpacing
         self.numberOfLines = numberOfLines
     }
 
@@ -59,25 +55,6 @@ public class UBLabel<T: UBLabelType> : UILabel
     public var isHtmlContent: Bool = false
     {
         didSet { self.update() }
-    }
-
-    public override var numberOfLines: Int
-    {
-        didSet
-        {
-            if numberOfLines == 1
-            {
-                // why would you hyphenate?
-                // (also fixes alignment issues)
-                hyphenated = false
-                lineSpacing = 1.0
-            }
-            else
-            {
-                hyphenated = true
-                lineSpacing = self.type.lineSpacing
-            }
-        }
     }
 
     /// :nodoc:
@@ -126,12 +103,14 @@ public class UBLabel<T: UBLabelType> : UILabel
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = self.textAlignment
 
-        let lineHeightMultiple = (self.font.pointSize / self.font.lineHeight) * self.lineSpacing
+        let lineSpacing = self.numberOfLines == 1 ? 1.0 : self.type.lineSpacing
+
+        let lineHeightMultiple = (self.font.pointSize / self.font.lineHeight) * lineSpacing
         paragraphStyle.lineSpacing = lineHeightMultiple * self.font.lineHeight - self.font.lineHeight
         paragraphStyle.lineBreakMode = self.type.lineBreakMode
 
         // check hyphenation
-        if hyphenated
+        if self.numberOfLines != 1
         {
             paragraphStyle.hyphenationFactor = self.type.hyphenationFactor
         }
@@ -140,7 +119,7 @@ public class UBLabel<T: UBLabelType> : UILabel
         textString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range: textRange)
 
         // add attribute for kerning
-        if let k = self.kerningValue
+        if let k = self.type.letterSpacing
         {
             textString.addAttribute(NSAttributedString.Key.kern, value: k, range: textRange)
         }
