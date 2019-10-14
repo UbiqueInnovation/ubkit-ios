@@ -10,12 +10,6 @@ import UIKit
 // MARK: - Date Helpers
 extension Date
 {
-    /// Returns a string in the format of dateFormat
-    public func ub_dateString(with dateFormat: String) -> String
-    {
-        return Date.ub_formatter(dateFormat: dateFormat).string(from: self)
-    }
-
     /// Returns a date from a string in the format of dateFormat with optional timeZone and locale
     public func ub_dateString(with dateFormat: String, timeZone: TimeZone? = nil, locale: Locale? = nil) -> String
     {
@@ -112,6 +106,8 @@ extension Date
     /// :nodoc:
     private static func ub_formatter(dateFormat: String, timeZone: TimeZone? = nil, locale: Locale? = nil) -> DateFormatter
     {
+        // DateFormatter is not thread-safe, so we use a dictionary for
+        // each thread that is formatting dates.
         let threadDictionary = Thread.current.threadDictionary
 
         var dict = threadDictionary.object(forKey: Date.ub_cachedDateFormatterDictionaryKey) as? NSMutableDictionary
@@ -129,6 +125,8 @@ extension Date
         if formatter == nil
         {
             formatter = DateFormatter()
+
+            // !: always set.
             formatter!.dateFormat = dateFormat
             formatter!.timeZone = timeZone
             formatter!.locale = locale
@@ -136,6 +134,7 @@ extension Date
             dict?[key] = formatter
         }
 
+        // !: always set.
         return formatter!
     }
 
