@@ -12,13 +12,7 @@ import UIKit
 extension UIView
 {
     /// Adds shadow to UIView with black color and other parameters
-    public func ub_addShadow(with radius : CGFloat, opacity: CGFloat, xOffset: CGFloat, yOffset: CGFloat)
-    {
-        self.ub_addShadow(with: UIColor.black, radius: radius, opacity: opacity, xOffset: xOffset, yOffset: yOffset)
-    }
-
-    /// Adds shadow to UIView with color and other parameters
-    public func ub_addShadow(with color: UIColor, radius : CGFloat, opacity: CGFloat, xOffset: CGFloat, yOffset: CGFloat)
+    public func ub_addShadow(with color: UIColor = UIColor.black, radius : CGFloat, opacity: CGFloat, xOffset: CGFloat, yOffset: CGFloat)
     {
         self.layer.shadowColor = color.cgColor
         self.layer.shadowOpacity = Float(opacity)
