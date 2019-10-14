@@ -12,7 +12,7 @@ import UIKit
 extension UIView
 {
     /// Sets contentHuggingPriority and contentCompressionResistance to highest priority both vertical and horizontal
-    public func ub_contentPriorityRequired()
+    public func ub_setContentPriorityRequired()
     {
         self.setContentHuggingPriority(.required, for: .horizontal)
         self.setContentHuggingPriority(.required, for: .vertical)
