@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - Basic text button class that implements basic button properties
 
-public class UBButton: UIButton {
+open class UBButton: UIButton {
     // MARK: - Callback for .touchDown action
 
     public var touchDownCallback: (() -> Void)?
@@ -67,7 +67,7 @@ public class UBButton: UIButton {
         addTarget(self, action: #selector(touchUp), for: .touchUpInside)
     }
 
-    required init?(coder _: NSCoder) {
+    required public init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
