@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - Basic text button class that implements basic button properties
 
-class UBButton: UIButton {
+public class UBButton: UIButton {
     // MARK: - Callback for .touchDown action
 
     public var touchDownCallback: (() -> Void)?
