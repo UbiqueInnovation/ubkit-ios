@@ -48,7 +48,7 @@ public class UBButton: UIButton {
 
     private let highlightView = UIView()
 
-    init() {
+    public init() {
         super.init(frame: .zero)
 
         backgroundColor = UIColor.clear
