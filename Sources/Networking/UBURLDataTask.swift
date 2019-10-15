@@ -137,15 +137,21 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 dataTask.priority = self.priority
                 dataTask.taskDescription = self.taskDescription
 
-                // Observe the task progress
-                self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-                    guard let self = self else {
-                        return
-                    }
-                    self.progress.totalUnitCount = task.progress.totalUnitCount
-                    self.progress.completedUnitCount = task.progress.completedUnitCount
-                    self.notifyProgress(self.progress.fractionCompleted)
-                })
+                if #available(iOSApplicationExtension 11.0, *) {
+                    // Observe the task progress
+                    self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
+                        guard let self = self else {
+                            return
+                        }
+
+                        self.progress.totalUnitCount = task.progress.totalUnitCount
+
+                        self.progress.completedUnitCount = task.progress.completedUnitCount
+                        self.notifyProgress(self.progress.fractionCompleted)
+                    })
+                } else {
+                    // TODO: Support iOS 10 progress traking
+                }
 
                 // Observe the task state
                 self.dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
