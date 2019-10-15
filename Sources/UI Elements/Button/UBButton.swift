@@ -21,7 +21,9 @@ open class UBButton: UIButton {
     // MARK: - Title for button
 
     public var title: String? {
-        didSet { titleLabel?.text = title }
+        didSet {
+            self.setTitle(title, for: .normal)
+        }
     }
 
     // MARK: - Highlight view
