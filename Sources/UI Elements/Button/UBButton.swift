@@ -21,7 +21,9 @@ open class UBButton: UIButton {
     // MARK: - Title for button
 
     public var title: String? {
-        didSet { titleLabel?.text = title }
+        didSet {
+            self.setTitle(title, for: .normal)
+        }
     }
 
     // MARK: - Highlight view
@@ -78,7 +80,7 @@ open class UBButton: UIButton {
     }
 
     override public var isHighlighted: Bool {
-        get { return self.isHighlighted }
+        get { return super.isHighlighted }
 
         set(highlighted) {
             super.isHighlighted = highlighted
