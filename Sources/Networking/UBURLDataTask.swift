@@ -149,8 +149,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                         self.progress.completedUnitCount = task.progress.completedUnitCount
                         self.notifyProgress(self.progress.fractionCompleted)
                     })
-                } else {
-                    // TODO: Support iOS 10 progress traking
                 }
 
                 // Observe the task state
