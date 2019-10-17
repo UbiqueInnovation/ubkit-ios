@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UICollectionReusableView: ReusableView {}
+extension UICollectionReusableView: UBReusableView {}
 
 // MARK: - Registering and Reusing Cells
 extension UICollectionView
@@ -15,17 +15,17 @@ extension UICollectionView
     /// Register a collection view cell for reuse.
     ///
     /// - Parameter cellType: The class of the collection view cell to register.
-    func register<T: UICollectionViewCell>(_ cellType: T.Type) {
-        self.register(T.self, forCellWithReuseIdentifier: T.reuseIdentifier)
+    func ub_register<T: UICollectionViewCell>(_ cellType: T.Type) {
+        self.register(T.self, forCellWithReuseIdentifier: T.ub_reuseIdentifier)
     }
 
     /// Dequeue a reusable colection view cell for displaying at a given index path.
     ///
     /// - Parameter indexPath: The index path where the cell will be placed.
     /// - Returns: A dequeued reusable cell.
-    func dequeueReusableCell<T: UICollectionViewCell>(for indexPath: IndexPath) -> T {
-        guard let cell = self.dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
-            fatalError("Could not dequeue cell with identifier: \(T.reuseIdentifier)")
+    func ub_dequeueReusableCell<T: UICollectionViewCell>(for indexPath: IndexPath) -> T {
+        guard let cell = self.dequeueReusableCell(withReuseIdentifier: T.ub_reuseIdentifier, for: indexPath) as? T else {
+            fatalError("Could not dequeue cell with identifier: \(T.ub_reuseIdentifier)")
         }
         return cell
     }
@@ -34,13 +34,13 @@ extension UICollectionView
 // MARK: - Registering and Reusing Supplementary Views
 extension UICollectionView
 {
-    func register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind elementKind: String) {
-        self.register(T.self, forSupplementaryViewOfKind: elementKind, withReuseIdentifier: T.reuseIdentifier)
+    func ub_register<T: UICollectionReusableView>(_ viewType: T.Type, forSupplementaryViewOfKind elementKind: String) {
+        self.register(T.self, forSupplementaryViewOfKind: elementKind, withReuseIdentifier: T.ub_reuseIdentifier)
     }
 
-    func dequeueReusableSupplementaryView<T: UICollectionReusableView>(ofKind elementKind: String, for indexPath: IndexPath) -> T {
-        guard let view = self.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
-            fatalError("Could not dequeue supplementary view with identifier: \(T.reuseIdentifier)")
+    func ub_dequeueReusableSupplementaryView<T: UICollectionReusableView>(ofKind elementKind: String, for indexPath: IndexPath) -> T {
+        guard let view = self.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: T.ub_reuseIdentifier, for: indexPath) as? T else {
+            fatalError("Could not dequeue supplementary view with identifier: \(T.ub_reuseIdentifier)")
         }
         return view
     }
@@ -51,14 +51,14 @@ extension UICollectionView
 
 extension UICollectionViewLayout
 {
-    func register<T: UICollectionReusableView>(_ viewType: T.Type) {
-        self.register(T.self, forDecorationViewOfKind: T.reuseIdentifier)
+    func ub_register<T: UICollectionReusableView>(_ viewType: T.Type) {
+        self.register(T.self, forDecorationViewOfKind: T.ub_reuseIdentifier)
     }
 }
 
 extension UICollectionViewLayoutAttributes
 {
     convenience init<T: UICollectionReusableView>(forDecorationViewOfType viewType: T.Type, with indexPath: IndexPath) {
-        self.init(forDecorationViewOfKind: T.reuseIdentifier, with: indexPath)
+        self.init(forDecorationViewOfKind: T.ub_reuseIdentifier, with: indexPath)
     }
 }
