@@ -34,7 +34,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
 
         super.init(frame: .zero)
 
-        font = self.type.font
+        self.font = self.type.font
         self.textColor = textColor == nil ? self.type.textColor : textColor
         self.textAlignment = textAlignment
         self.numberOfLines = numberOfLines
@@ -69,21 +69,20 @@ open class UBLabel<T: UBLabelType>: UILabel {
 
         // check html
         do {
-            var text = textContent
-
-            if isHtmlContent {
-                text = textContent + "<style>body{font-family: '\(font.fontName)'; font-size:\(font.pointSize)px;}</style>"
-            }
-
             let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
                 .documentType: self.isHtmlContent ? NSAttributedString.DocumentType.html : NSAttributedString.DocumentType.plain,
                 .characterEncoding: String.Encoding.utf8.rawValue,
                 .defaultAttributes: [:]
             ]
 
-            textString = try NSMutableAttributedString(data: text.data(using: .utf8)!, options: options, documentAttributes: nil)
+            textString = try NSMutableAttributedString(data: textContent.data(using: .utf8)!, options: options, documentAttributes: nil)
         } catch {
             textString = NSMutableAttributedString(string: textContent, attributes: [:])
+        }
+
+        if self.isHtmlContent
+        {
+            textString.ub_replaceFonts(with: self.font)
         }
 
         // check paragraph style
@@ -115,3 +114,27 @@ open class UBLabel<T: UBLabelType>: UILabel {
         attributedText = textString
     }
 }
+
+extension NSMutableAttributedString
+{
+    func ub_replaceFonts(with font: UIFont)
+    {
+        // from: https://stackoverflow.com/questions/19921972/
+        let baseFontDescriptor = font.fontDescriptor
+        var changes = [NSRange: UIFont]()
+
+        enumerateAttribute(.font, in: NSMakeRange(0, length), options: []) { foundFont, range, _ in
+            if let htmlTraits = (foundFont as? UIFont)?.fontDescriptor.symbolicTraits,
+                let adjustedDescriptor = baseFontDescriptor.withSymbolicTraits(htmlTraits) {
+                let newFont = UIFont(descriptor: adjustedDescriptor, size: font.pointSize)
+                changes[range] = newFont
+            }
+        }
+
+        changes.forEach { range, newFont in
+            removeAttribute(.font, range: range)
+            addAttribute(.font, value: newFont, range: range)
+        }
+    }
+}
+
