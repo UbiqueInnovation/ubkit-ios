@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6E0B82A1235868E2005F8B97 /* UIView+Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A0235868E2005F8B97 /* UIView+Autolayout.swift */; };
+		6E0B82A623586AD8005F8B97 /* UIView+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A523586AD8005F8B97 /* UIView+Shadows.swift */; };
 		6E0B82A4235869E7005F8B97 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A3235869E7005F8B97 /* UIImage+Helpers.swift */; };
 		6E8AD9F42338F0F900A78254 /* UBButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8AD9F32338F0F900A78254 /* UBButton.swift */; };
 		6E8ADA062339139A00A78254 /* UIFont+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */; };
@@ -365,6 +366,7 @@
 /* Begin PBXFileReference section */
 		6E0B82A0235868E2005F8B97 /* UIView+Autolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Autolayout.swift"; sourceTree = "<group>"; };
 		6E0B82A3235869E7005F8B97 /* UIImage+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
+		6E0B82A523586AD8005F8B97 /* UIView+Shadows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Shadows.swift"; sourceTree = "<group>"; };
 		6E8AD9F32338F0F900A78254 /* UBButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBButton.swift; sourceTree = "<group>"; };
 		6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Helpers.swift"; sourceTree = "<group>"; };
 		6E8ADA1123394B6900A78254 /* UBLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBLabel.swift; sourceTree = "<group>"; };
@@ -535,6 +537,7 @@
 		6E0B829F235868E2005F8B97 /* UIView */ = {
 			isa = PBXGroup;
 			children = (
+				6E0B82A523586AD8005F8B97 /* UIView+Shadows.swift */,
 				6E0B82A0235868E2005F8B97 /* UIView+Autolayout.swift */,
 			);
 			path = UIView;
@@ -1451,6 +1454,7 @@
 				8EE058D02252744F00B2885B /* UBURLRequestModifier+AcceptedLanguage.swift in Sources */,
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				6E0B82A623586AD8005F8B97 /* UIView+Shadows.swift in Sources */,
 				8EFFDCE72254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8EFFDD0022560A51002D2DE2 /* CachingLogic.swift in Sources */,
 				8E52B77C229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
