@@ -11,6 +11,8 @@
 		6E0B82A4235869E7005F8B97 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A3235869E7005F8B97 /* UIImage+Helpers.swift */; };
 		6E0B82A623586AD8005F8B97 /* UIView+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A523586AD8005F8B97 /* UIView+Shadows.swift */; };
 		6E0B82A823586D9F005F8B97 /* UIColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A723586D9F005F8B97 /* UIColor+Helper.swift */; };
+		6E0B82AD23586E82005F8B97 /* UITableView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82AA23586E81005F8B97 /* UITableView+Helpers.swift */; };
+		6E0B82AE23586E82005F8B97 /* UICollectionView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82AC23586E82005F8B97 /* UICollectionView+Helpers.swift */; };
 		6E8AD9F42338F0F900A78254 /* UBButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8AD9F32338F0F900A78254 /* UBButton.swift */; };
 		6E8ADA062339139A00A78254 /* UIFont+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */; };
 		6E8ADA1223394B6900A78254 /* UBLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ADA1123394B6900A78254 /* UBLabel.swift */; };
@@ -369,6 +371,8 @@
 		6E0B82A3235869E7005F8B97 /* UIImage+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
 		6E0B82A523586AD8005F8B97 /* UIView+Shadows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Shadows.swift"; sourceTree = "<group>"; };
 		6E0B82A723586D9F005F8B97 /* UIColor+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Helper.swift"; sourceTree = "<group>"; };
+		6E0B82AA23586E81005F8B97 /* UITableView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Helpers.swift"; sourceTree = "<group>"; };
+		6E0B82AC23586E82005F8B97 /* UICollectionView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Helpers.swift"; sourceTree = "<group>"; };
 		6E8AD9F32338F0F900A78254 /* UBButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBButton.swift; sourceTree = "<group>"; };
 		6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Helpers.swift"; sourceTree = "<group>"; };
 		6E8ADA1123394B6900A78254 /* UBLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBLabel.swift; sourceTree = "<group>"; };
@@ -553,6 +557,22 @@
 			path = UIImage;
 			sourceTree = "<group>";
 		};
+		6E0B82A923586E81005F8B97 /* UITableView */ = {
+			isa = PBXGroup;
+			children = (
+				6E0B82AA23586E81005F8B97 /* UITableView+Helpers.swift */,
+			);
+			path = UITableView;
+			sourceTree = "<group>";
+		};
+		6E0B82AB23586E82005F8B97 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				6E0B82AC23586E82005F8B97 /* UICollectionView+Helpers.swift */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
 		6E8AD9F22338F0E700A78254 /* Button */ = {
 			isa = PBXGroup;
 			children = (
@@ -670,6 +690,8 @@
 		8E7F74AB2249892E00582E57 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
+				6E0B82AB23586E82005F8B97 /* CollectionView */,
+				6E0B82A923586E81005F8B97 /* UITableView */,
 				6E0B82A2235869E7005F8B97 /* UIImage */,
 				6E0B829F235868E2005F8B97 /* UIView */,
 				6E8ADA1023394B5900A78254 /* UILabel */,
@@ -1436,6 +1458,8 @@
 				8EBD47E92240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EC484642241C65A00AC8E44 /* HTTPCode.swift in Sources */,
 				8E7F747922459D7700582E57 /* MIMEType+Parameter.swift in Sources */,
+				6E0B82AE23586E82005F8B97 /* UICollectionView+Helpers.swift in Sources */,
+				6E0B82AD23586E82005F8B97 /* UITableView+Helpers.swift in Sources */,
 				8EE058CB22526CEC00B2885B /* UBURLRequestModifier+TokenAuthorization.swift in Sources */,
 				8E0DB2D02243EABB00D5E01E /* HTTPURLResponse+Networking.swift in Sources */,
 				8EE058C122526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
