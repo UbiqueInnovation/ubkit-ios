@@ -32,7 +32,7 @@ extension UITableView
     /// Register a table view cell for reuse.
     ///
     /// - Parameter cellType: The class of the table view cell to register.
-    func ub_register<T: UITableViewCell>(_ cellType: T.Type) {
+    public func ub_register<T: UITableViewCell>(_ cellType: T.Type) {
         self.register(T.self, forCellReuseIdentifier: T.ub_reuseIdentifier)
     }
 
@@ -40,7 +40,7 @@ extension UITableView
     ///
     /// - Parameter indexPath: The index path where the cell will be placed.
     /// - Returns: A dequeued reusable cell.
-    func ub_dequeueReusableCell<T: UITableViewCell>(for indexPath: IndexPath) -> T {
+    public func ub_dequeueReusableCell<T: UITableViewCell>(for indexPath: IndexPath) -> T {
         guard let cell = self.dequeueReusableCell(withIdentifier: T.ub_reuseIdentifier, for: indexPath) as? T else {
             fatalError("Could not dequeue cell with identifier: \(T.ub_reuseIdentifier)")
         }
@@ -58,14 +58,14 @@ extension UITableView
     /// Register a view for reuse as header or footer view.
     ///
     /// - Parameter viewType: The class of the view to register.
-    func ub_register<T: UITableViewHeaderFooterView>(_ viewType: T.Type) {
+    public func ub_register<T: UITableViewHeaderFooterView>(_ viewType: T.Type) {
         self.register(T.self, forHeaderFooterViewReuseIdentifier: T.ub_reuseIdentifier)
     }
 
     /// Dequeue a reusable view for displaying as a header or footer view.
     ///
     /// - Returns: A dequeued reusable view.
-    func ub_dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>() -> T {
+    public func ub_dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>() -> T {
         guard let view = self.dequeueReusableHeaderFooterView(withIdentifier: T.ub_reuseIdentifier) as? T else {
             fatalError("Could not dequeue view with identifier: \(T.ub_reuseIdentifier)")
         }
