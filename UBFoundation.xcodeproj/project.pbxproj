@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E0B82A1235868E2005F8B97 /* UIView+Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A0235868E2005F8B97 /* UIView+Autolayout.swift */; };
+		6E0B82A4235869E7005F8B97 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A3235869E7005F8B97 /* UIImage+Helpers.swift */; };
+		6E0B82A623586AD8005F8B97 /* UIView+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A523586AD8005F8B97 /* UIView+Shadows.swift */; };
+		6E0B82A823586D9F005F8B97 /* UIColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82A723586D9F005F8B97 /* UIColor+Helper.swift */; };
+		6E0B82AD23586E82005F8B97 /* UITableView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82AA23586E81005F8B97 /* UITableView+Helpers.swift */; };
+		6E0B82AE23586E82005F8B97 /* UICollectionView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0B82AC23586E82005F8B97 /* UICollectionView+Helpers.swift */; };
+		6E8AD9F42338F0F900A78254 /* UBButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8AD9F32338F0F900A78254 /* UBButton.swift */; };
+		6E8ADA062339139A00A78254 /* UIFont+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */; };
+		6E8ADA1223394B6900A78254 /* UBLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ADA1123394B6900A78254 /* UBLabel.swift */; };
 		8E0DB2AA2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
 		8E0DB2AB2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
 		8E0DB2AC2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
@@ -358,6 +367,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6E0B82A0235868E2005F8B97 /* UIView+Autolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Autolayout.swift"; sourceTree = "<group>"; };
+		6E0B82A3235869E7005F8B97 /* UIImage+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
+		6E0B82A523586AD8005F8B97 /* UIView+Shadows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Shadows.swift"; sourceTree = "<group>"; };
+		6E0B82A723586D9F005F8B97 /* UIColor+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Helper.swift"; sourceTree = "<group>"; };
+		6E0B82AA23586E81005F8B97 /* UITableView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Helpers.swift"; sourceTree = "<group>"; };
+		6E0B82AC23586E82005F8B97 /* UICollectionView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Helpers.swift"; sourceTree = "<group>"; };
+		6E8AD9F32338F0F900A78254 /* UBButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBButton.swift; sourceTree = "<group>"; };
+		6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Helpers.swift"; sourceTree = "<group>"; };
+		6E8ADA1123394B6900A78254 /* UBLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBLabel.swift; sourceTree = "<group>"; };
 		8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLDataTask.swift; sourceTree = "<group>"; };
 		8E0DB2B32243088000D5E01E /* Networking+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Error.swift"; sourceTree = "<group>"; };
 		8E0DB2C42243D00E00D5E01E /* UBURLDataTask+Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLDataTask+Decoder.swift"; sourceTree = "<group>"; };
@@ -522,6 +540,63 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E0B829F235868E2005F8B97 /* UIView */ = {
+			isa = PBXGroup;
+			children = (
+				6E0B82A523586AD8005F8B97 /* UIView+Shadows.swift */,
+				6E0B82A0235868E2005F8B97 /* UIView+Autolayout.swift */,
+			);
+			path = UIView;
+			sourceTree = "<group>";
+		};
+		6E0B82A2235869E7005F8B97 /* UIImage */ = {
+			isa = PBXGroup;
+			children = (
+				6E0B82A3235869E7005F8B97 /* UIImage+Helpers.swift */,
+			);
+			path = UIImage;
+			sourceTree = "<group>";
+		};
+		6E0B82A923586E81005F8B97 /* UITableView */ = {
+			isa = PBXGroup;
+			children = (
+				6E0B82AA23586E81005F8B97 /* UITableView+Helpers.swift */,
+			);
+			path = UITableView;
+			sourceTree = "<group>";
+		};
+		6E0B82AB23586E82005F8B97 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				6E0B82AC23586E82005F8B97 /* UICollectionView+Helpers.swift */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
+		6E8AD9F22338F0E700A78254 /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				6E8AD9F32338F0F900A78254 /* UBButton.swift */,
+			);
+			path = Button;
+			sourceTree = "<group>";
+		};
+		6E8ADA042339138D00A78254 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				6E8ADA052339139A00A78254 /* UIFont+Helpers.swift */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
+		6E8ADA1023394B5900A78254 /* UILabel */ = {
+			isa = PBXGroup;
+			children = (
+				6E8ADA1123394B6900A78254 /* UBLabel.swift */,
+			);
+			path = UILabel;
+			sourceTree = "<group>";
+		};
 		8E0DB2C12243BFB600D5E01E /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -615,6 +690,12 @@
 		8E7F74AB2249892E00582E57 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
+				6E0B82AB23586E82005F8B97 /* CollectionView */,
+				6E0B82A923586E81005F8B97 /* UITableView */,
+				6E0B82A2235869E7005F8B97 /* UIImage */,
+				6E0B829F235868E2005F8B97 /* UIView */,
+				6E8ADA1023394B5900A78254 /* UILabel */,
+				6E8AD9F22338F0E700A78254 /* Button */,
 				8E7F74AC2249894000582E57 /* UIColor */,
 				8E7F74C52249A43200582E57 /* Keyboard */,
 			);
@@ -624,6 +705,7 @@
 		8E7F74AC2249894000582E57 /* UIColor */ = {
 			isa = PBXGroup;
 			children = (
+				6E0B82A723586D9F005F8B97 /* UIColor+Helper.swift */,
 				8E7F74AD2249897B00582E57 /* UIColor+HEX.swift */,
 			);
 			path = UIColor;
@@ -710,6 +792,7 @@
 		8EBD479A2240646700CD2639 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				6E8ADA042339138D00A78254 /* Font */,
 				8EBD48162240773900CD2639 /* Globals */,
 				8E7F74AB2249892E00582E57 /* UI Elements */,
 				8EBD47ED2240770000CD2639 /* Localization */,
@@ -1375,6 +1458,8 @@
 				8EBD47E92240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EC484642241C65A00AC8E44 /* HTTPCode.swift in Sources */,
 				8E7F747922459D7700582E57 /* MIMEType+Parameter.swift in Sources */,
+				6E0B82AE23586E82005F8B97 /* UICollectionView+Helpers.swift in Sources */,
+				6E0B82AD23586E82005F8B97 /* UITableView+Helpers.swift in Sources */,
 				8EE058CB22526CEC00B2885B /* UBURLRequestModifier+TokenAuthorization.swift in Sources */,
 				8E0DB2D02243EABB00D5E01E /* HTTPURLResponse+Networking.swift in Sources */,
 				8EE058C122526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
@@ -1382,9 +1467,11 @@
 				8EE5F789228EE3FE009D174A /* KeyboardInfo.swift in Sources */,
 				8E52B781229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */,
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
+				6E0B82A1235868E2005F8B97 /* UIView+Autolayout.swift in Sources */,
 				8EFFDD0922568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8EE058E622535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
 				8EFFDCD322545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
+				6E0B82A4235869E7005F8B97 /* UIImage+Helpers.swift in Sources */,
 				8E0DB2C52243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,
 				8EE5F787228EE349009D174A /* WindowKeyboardLayoutGuide.swift in Sources */,
@@ -1394,9 +1481,11 @@
 				8EE058D02252744F00B2885B /* UBURLRequestModifier+AcceptedLanguage.swift in Sources */,
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				6E0B82A623586AD8005F8B97 /* UIView+Shadows.swift in Sources */,
 				8EFFDCE72254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8EFFDD0022560A51002D2DE2 /* CachingLogic.swift in Sources */,
 				8E52B77C229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
+				6E8ADA062339139A00A78254 /* UIFont+Helpers.swift in Sources */,
 				8EBD48122240770000CD2639 /* Localization+Error.swift in Sources */,
 				8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
@@ -1412,9 +1501,11 @@
 				8E0DB2B42243088000D5E01E /* Networking+Error.swift in Sources */,
 				8EC4845F2241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */,
 				8EE5F78D228EE4E9009D174A /* ViewKeyboardLayoutGuide.swift in Sources */,
+				6E0B82A823586D9F005F8B97 /* UIColor+Helper.swift in Sources */,
 				8E7F74852245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8EFFDCC92254179F002D2DE2 /* UBURLSession.swift in Sources */,
 				8E0DB2AA2243049900D5E01E /* UBURLDataTask.swift in Sources */,
+				6E8ADA1223394B6900A78254 /* UBLabel.swift in Sources */,
 				8EE5F78B228EE498009D174A /* KeyboardLayoutGuide+UIKit.swift in Sources */,
 				8EE058C622526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8EC484792242821300AC8E44 /* MIMEType.swift in Sources */,
@@ -1423,6 +1514,7 @@
 				8E101734224F5736006127DA /* CronRule.swift in Sources */,
 				8E27865C2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
 				8E2786572241227A00430D34 /* GlobalLocalization.swift in Sources */,
+				6E8AD9F42338F0F900A78254 /* UBButton.swift in Sources */,
 				8EC4846A22427B9700AC8E44 /* UBURLRequest.swift in Sources */,
 				8EE058E12252E65D00B2885B /* NetworkTaskRecovery+Group.swift in Sources */,
 				8EFFDCDD2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
@@ -1764,7 +1856,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
@@ -1803,7 +1895,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				TVOS_DEPLOYMENT_TARGET = 12.0;
