@@ -22,7 +22,7 @@ open class UBButton: UIButton {
 
     public var title: String? {
         didSet {
-            self.setTitle(title, for: .normal)
+            setTitle(title, for: .normal)
         }
     }
 
@@ -69,7 +69,7 @@ open class UBButton: UIButton {
         addTarget(self, action: #selector(touchUp), for: .touchUpInside)
     }
 
-    required public init?(coder _: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -91,14 +91,13 @@ open class UBButton: UIButton {
         }
     }
 
-    override public var isHighlighted: Bool {
+    public override var isHighlighted: Bool {
         get { return super.isHighlighted }
 
         set(highlighted) {
-            self.setHighlighted(highlighted)
+            setHighlighted(highlighted)
         }
     }
-
 
     private func adjustClipsToBounds() {
         clipsToBounds = (highlightXInset >= 0) && (highlightYInset >= 0)
