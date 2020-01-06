@@ -13,7 +13,9 @@ public class UBURLSession: UBDataTaskURLSession {
     private let urlSession: URLSession
 
     /// The session delegate handeling everything
+    // swiftlint:disable weak_delegate
     private let sessionDelegate: UBURLSessionDelegate
+    // swiftlint:enable weak_delegate
 
     // MARK: - Creating a Session
 

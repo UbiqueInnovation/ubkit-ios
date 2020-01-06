@@ -9,17 +9,15 @@ import UIKit
 
 // MARK: - UIView Shadow Extensions
 
-extension UIView
-{
+extension UIView {
     /// Adds shadow to UIView with black color and other parameters
-    public func ub_addShadow(with color: UIColor = UIColor.black, radius : CGFloat, opacity: CGFloat, xOffset: CGFloat, yOffset: CGFloat)
-    {
-        self.layer.shadowColor = color.cgColor
-        self.layer.shadowOpacity = Float(opacity)
-        self.layer.shadowOffset = CGSize(width: xOffset, height: yOffset)
-        self.layer.shadowRadius = radius
-        self.layer.masksToBounds = false
-        self.layer.shouldRasterize = true
-        self.layer.rasterizationScale = UIScreen.main.scale
+    public func ub_addShadow(with color: UIColor = UIColor.black, radius: CGFloat, opacity: CGFloat, xOffset: CGFloat, yOffset: CGFloat) {
+        layer.shadowColor = color.cgColor
+        layer.shadowOpacity = Float(opacity)
+        layer.shadowOffset = CGSize(width: xOffset, height: yOffset)
+        layer.shadowRadius = radius
+        layer.masksToBounds = false
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.main.scale
     }
 }
