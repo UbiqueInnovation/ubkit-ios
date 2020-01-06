@@ -73,27 +73,32 @@ open class UBButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
 
         highlightView.frame = bounds.inset(by: UIEdgeInsets(top: highlightYInset, left: highlightXInset, bottom: highlightYInset, right: highlightXInset))
+    }
+
+    open func setHighlighted(_ highlighted: Bool, animated: Bool = false) {
+        super.isHighlighted = highlighted
+
+        if highlighted {
+            highlightView.alpha = 1.0
+        } else {
+            UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent], animations: {
+                self.highlightView.alpha = 0.0
+            }, completion: nil)
+        }
     }
 
     override public var isHighlighted: Bool {
         get { return super.isHighlighted }
 
         set(highlighted) {
-            super.isHighlighted = highlighted
-
-            if highlighted {
-                highlightView.alpha = 1.0
-            } else {
-                UIView.animate(withDuration: 0.4, delay: 0.0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent], animations: {
-                    self.highlightView.alpha = 0.0
-                }, completion: nil)
-            }
+            self.setHighlighted(highlighted)
         }
     }
+
 
     private func adjustClipsToBounds() {
         clipsToBounds = (highlightXInset >= 0) && (highlightYInset >= 0)
