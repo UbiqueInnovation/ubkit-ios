@@ -325,6 +325,9 @@
 		8EFFDD0A22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
 		8EFFDD0B22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
 		8EFFDD0C22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
+		AA7A9FD523D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
+		AA7A9FD623D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
+		AA7A9FD823D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -466,6 +469,7 @@
 		8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingLogic.swift; sourceTree = "<group>"; };
 		8EFFDD0422562444002D2DE2 /* TaskAutoRefreshLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAutoRefreshLogicTests.swift; sourceTree = "<group>"; };
 		8EFFDD0822568D81002D2DE2 /* CacheControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheControl.swift; sourceTree = "<group>"; };
+		AA7A9FD423D076410001E735 /* UBLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UBLocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -779,6 +783,7 @@
 			children = (
 				8EBD48162240773900CD2639 /* Globals */,
 				8E7F74AB2249892E00582E57 /* UI Elements */,
+				AA91DB0323D0757B00E9BEAE /* Location */,
 				8EBD47ED2240770000CD2639 /* Localization */,
 				8EBD47DD2240765200CD2639 /* Logging */,
 				8EC4845D2241C01B00AC8E44 /* Networking */,
@@ -979,6 +984,14 @@
 				8EE058EA22535FF700B2885B /* UBURLSessionTask.swift */,
 			);
 			name = Session;
+			sourceTree = "<group>";
+		};
+		AA91DB0323D0757B00E9BEAE /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				AA7A9FD423D076410001E735 /* UBLocationManager.swift */,
+			);
+			path = Location;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1464,6 +1477,8 @@
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				24B18B1D23D1A1F500350130 /* UBButton.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
+				6E0B82A623586AD8005F8B97 /* UIView+Shadows.swift in Sources */,
+				AA7A9FD523D076410001E735 /* UBLocationManager.swift in Sources */,
 				8EFFDCE72254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8EFFDD0022560A51002D2DE2 /* CachingLogic.swift in Sources */,
 				8E52B77C229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
@@ -1545,6 +1560,8 @@
 				8E0DB2B52243088000D5E01E /* Networking+Error.swift in Sources */,
 				8E7F74862245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8EC4847A2242821300AC8E44 /* MIMEType.swift in Sources */,
+				AA7A9FD623D076410001E735 /* UBLocationManager.swift in Sources */,
+				8EE058AA22513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8EBD48072240770000CD2639 /* Localization+String.swift in Sources */,
 				8E46FA41224DAECF00198321 /* CronJob.swift in Sources */,
 				8E27865D2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
@@ -1657,6 +1674,7 @@
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
 				8E46FA42224DAED000198321 /* CronJob.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,
+				AA7A9FD823D076410001E735 /* UBLocationManager.swift in Sources */,
 				8EBD47E82240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CD2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
 				8EBD480D2240770000CD2639 /* Localization+Bundle.swift in Sources */,
