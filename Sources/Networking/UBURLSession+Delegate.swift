@@ -63,7 +63,12 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         }
 
         guard let response = collectedData.response as? HTTPURLResponse else {
-            ubDataTask.dataTaskCompleted(data: collectedData.data, response: nil, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
+            #if os(watchOS)
+                let info = UBNetworkingTaskInfo(cacheHit: false)
+            #else
+                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false)
+            #endif
+            ubDataTask.dataTaskCompleted(data: collectedData.data, response: nil, error: collectedData.error ?? error, info: info)
             return
         }
 
@@ -72,7 +77,12 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
 
         // If not modified return the cached data
         if response.statusCode == UBStandardHTTPCode.notModified, let cached = collectedData.cached {
-            ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true))
+            #if os(watchOS)
+                let info = UBNetworkingTaskInfo(cacheHit: true)
+            #else
+                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true)
+            #endif
+            ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: info)
             return
         }
 
@@ -84,11 +94,21 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             } else {
                 responseError = UBNetworkingError.requestFailed(httpStatusCode: response.statusCode)
             }
-            ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: responseError, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
+            #if os(watchOS)
+                let info = UBNetworkingTaskInfo(cacheHit: false)
+            #else
+                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false)
+            #endif
+            ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: responseError, info: info)
             return
         }
 
-        ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: collectedData.error ?? error, info: UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false))
+        #if os(watchOS)
+            let info = UBNetworkingTaskInfo(cacheHit: false)
+        #else
+            let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false)
+        #endif
+        ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: collectedData.error ?? error, info: info)
     }
 
     /// :nodoc:

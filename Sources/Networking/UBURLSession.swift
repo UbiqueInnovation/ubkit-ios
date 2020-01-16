@@ -63,7 +63,12 @@ public class UBURLSession: UBDataTaskURLSession {
              let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
              let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
              let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
-            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: nil, cacheHit: true))
+            #if os(watchOS)
+                let info = UBNetworkingTaskInfo(cacheHit: true)
+            #else
+                let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true)
+            #endif
+            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
             return nil
 
         case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _)),
