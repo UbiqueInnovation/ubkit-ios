@@ -224,9 +224,9 @@ The monitoring for the desired location services are started and stopped with
         // if it has not been granted yet...
         locationManager.startLocationMonitoring(canAskForPermission: true)
         
-        // ...otherwise, it is assumed that the user has been asked to grant
+        // ...or not, where it is assumed that the user has been asked to grant
         // location permissions at some other point in the application.
-        locationManager.startLocationMonitoring()
+        locationManager.startLocationMonitoring(canAskForPermission: false)
     }
     
     override func viewDidDisappear(animated: Bool) {

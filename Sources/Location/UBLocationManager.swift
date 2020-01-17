@@ -115,7 +115,7 @@ public class UBLocationManager: NSObject {
     ///
     /// - Parameters:
     ///   - canAskForPermission: Whether the location manager can ask for the required permission on its own behalf
-    public func startLocationMonitoring(canAskForPermission: Bool = false) {
+    public func startLocationMonitoring(canAskForPermission: Bool) {
         let authorizationStatus = CLLocationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
         switch authorizationStatus {
@@ -199,7 +199,7 @@ public class UBLocationManager: NSObject {
 
 extension UBLocationManager: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        startLocationMonitoring()
+        startLocationMonitoring(canAskForPermission: false)
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
