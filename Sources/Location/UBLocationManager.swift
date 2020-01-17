@@ -126,6 +126,15 @@ public class UBLocationManager: NSObject {
     /// - Parameters:
     ///   - canAskForPermission: Whether the location manager can ask for the required permission on its own behalf
     public func startLocationMonitoring(canAskForPermission: Bool) {
+        func requestPermission(for authorizationLevel: LocationMonitoringUsage.AuthorizationLevel) {
+            switch authorizationLevel {
+            case .always:
+                locationManager.requestAlwaysAuthorization()
+            case .whenInUse:
+                locationManager.requestWhenInUseAuthorization()
+            }
+        }
+
         let authorizationStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
         switch authorizationStatus {
@@ -134,24 +143,23 @@ public class UBLocationManager: NSObject {
         case .authorizedWhenInUse:
             guard minimumAuthorizationLevelRequired == .whenInUse else {
                 if canAskForPermission {
-                    locationManager.requestAlwaysAuthorization()
+                    requestPermission(for: minimumAuthorizationLevelRequired)
                 }
+                delegate?.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
                 return
             }
             startLocationMonitoringWithoutChecks()
         case .denied,
              .restricted:
             stopLocationMonitoring()
+            if canAskForPermission {
+                requestPermission(for: minimumAuthorizationLevelRequired)
+            }
             delegate?.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
         case .notDetermined:
             stopLocationMonitoring()
             if canAskForPermission {
-                switch minimumAuthorizationLevelRequired {
-                case .always:
-                    locationManager.requestAlwaysAuthorization()
-                case .whenInUse:
-                    locationManager.requestWhenInUseAuthorization()
-                }
+                requestPermission(for: minimumAuthorizationLevelRequired)
             }
             delegate?.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
         @unknown default:
