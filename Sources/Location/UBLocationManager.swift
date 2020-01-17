@@ -6,8 +6,8 @@
 //  Copyright © 2020 Ubique. All rights reserved.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
 
 /// An object defining methods that handle events related to GPS location.
 public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
@@ -24,8 +24,8 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
 }
 
 extension UBLocationManagerDelegate {
-    func locationManager(_ manager: UBLocationManager, didUpdateLocations locations: [CLLocation]) {}
-    func locationManager(_ manager: UBLocationManager, didVisit visit: CLVisit) {}
+    func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
+    func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
 }
 
 /// A convenience wrapper for `CLLocationManager` which facilitates obtaining the required authorization
@@ -41,6 +41,7 @@ public class UBLocationManager: NSObject {
             locationManager.desiredAccuracy = newValue
         }
     }
+
     /// The distance filter of the underlying `CLLocationManager`
     public var distanceFilter: CLLocationDistance {
         get { locationManager.distanceFilter }
@@ -48,6 +49,7 @@ public class UBLocationManager: NSObject {
             locationManager.distanceFilter = newValue
         }
     }
+
     /// The heading filter of the underlying `CLLocationManager`
     public var headingFilter: CLLocationDegrees {
         get { locationManager.headingFilter }
@@ -55,6 +57,7 @@ public class UBLocationManager: NSObject {
             locationManager.headingFilter = newValue
         }
     }
+
     /// The amount of seconds after which a location obtained by `CLLocationManager` should be considered stale
     /// and not trigger a call of the `locationManager(_:didUpdateLocations)` delegate method
     public var maximumLastLocationTimestampSeconds: UInt = 3600
@@ -65,7 +68,7 @@ public class UBLocationManager: NSObject {
 
     /// Does the location manager have the required authorization level for the desired `usage`?
     public var hasRequiredAuthorizationLevel: Bool {
-        return Self.hasRequiredAuthorizationLevel(forUsage: usage)
+        Self.hasRequiredAuthorizationLevel(forUsage: usage)
     }
 
     /// Does the location manager have the required authorization level for `usage`?
@@ -88,7 +91,7 @@ public class UBLocationManager: NSObject {
             fatalError()
         }
     }
-    
+
     private(set) lazy var locationManager: CLLocationManager = {
         let manager = CLLocationManager()
         manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -154,7 +157,7 @@ public class UBLocationManager: NSObject {
         timedOut = false
         locationTimer?.invalidate()
         locationTimer = nil
-        
+
         if usage.contains(.location) {
             locationManager.stopUpdatingLocation()
         }
@@ -175,11 +178,11 @@ public class UBLocationManager: NSObject {
             delegate?.locationManager(self, requiresPermission: usage.minimumAuthorizationLevelRequired)
             return
         }
-        
+
         if usage.contains(.location) {
             locationManager.startUpdatingLocation()
             locationTimer?.invalidate()
-            locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] (_) in
+            locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] _ in
                 guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
                 self.timedOut = true
                 self.delegate?.locationManager(self, didUpdateLocations: [location])
@@ -198,18 +201,18 @@ public class UBLocationManager: NSObject {
 }
 
 extension UBLocationManager: CLLocationManagerDelegate {
-    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    public func locationManager(_: CLLocationManager, didChangeAuthorization _: CLAuthorizationStatus) {
         startLocationMonitoring(canAskForPermission: false)
     }
-    
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
+    public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let results: [CLLocation]
-        
+
         if timedOut {
             results = locations
         } else {
             results = locations.filter { (location) -> Bool in
-                return location.horizontalAccuracy < desiredAccuracy
+                location.horizontalAccuracy < desiredAccuracy
             }
         }
         if !results.isEmpty {
@@ -218,16 +221,16 @@ extension UBLocationManager: CLLocationManagerDelegate {
             delegate?.locationManager(self, didUpdateLocations: locations)
         }
     }
-    
-    public func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
+
+    public func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
         delegate?.locationManager(self, didVisit: visit)
     }
 
-    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+    public func locationManager(_: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         delegate?.locationManager(self, didUpdateHeading: newHeading)
     }
 
-    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
         if (error as! CLError).code == CLError.denied {
             // Location updates are not authorized.
             stopLocationMonitoring()
@@ -253,7 +256,7 @@ extension UBLocationManager {
         public static let visits = LocationMonitoringUsage(rawValue: 1 << 3)
         /// Monitors heading
         public static let heading = LocationMonitoringUsage(rawValue: 1 << 4)
-        
+
         public init(rawValue: UInt8) {
             switch rawValue {
             case 1 << 2:
@@ -277,7 +280,7 @@ extension UBLocationManager {
 
         /// :nodoc:
         public var minimumAuthorizationLevelRequired: AuthorizationLevel {
-            if self.contains(.significantChange) || self.contains(.visits) {
+            if contains(.significantChange) || contains(.visits) {
                 return AuthorizationLevel.always
             } else {
                 return AuthorizationLevel.whenInUse
