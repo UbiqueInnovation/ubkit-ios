@@ -13,7 +13,7 @@ extension UIView {
     /// When the view is visible onscreen, this guide reflects the portion of the view that is covered by the keyboard. If the view is not currently installed in a view hierarchy, or is not yet visible onscreen, the layout guide edges are equal to the edges of the view.
     /// - Note: It is necessary to call `initializeForKeyboardLayoutGuide()` on `UIWindow` at the launch of the app in order to instanciate the listening correctly. Failing to do so will crash the app.
     public var ub_keyboardLayoutGuide: UILayoutGuide {
-        if let existingGuide = self.layoutGuides.first(where: { $0 is ViewKeyboardLayoutGuide }) {
+        if let existingGuide = layoutGuides.first(where: { $0 is ViewKeyboardLayoutGuide }) {
             return existingGuide
         }
 

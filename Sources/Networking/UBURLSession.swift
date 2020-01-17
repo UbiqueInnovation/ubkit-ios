@@ -13,7 +13,9 @@ public class UBURLSession: UBDataTaskURLSession {
     private let urlSession: URLSession
 
     /// The session delegate handeling everything
+    // swiftlint:disable weak_delegate
     private let sessionDelegate: UBURLSessionDelegate
+    // swiftlint:enable weak_delegate
 
     // MARK: - Creating a Session
 
@@ -66,7 +68,13 @@ public class UBURLSession: UBDataTaskURLSession {
              let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
              let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
              let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)):
-            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: UBNetworkingTaskInfo(metrics: metrics, cacheHit: true, refresh: false))
+            #if os(watchOS)
+                let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
+            #else
+                let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
+            #endif
+
+            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
             owner.completionHandlersDispatchQueue.sync {
                 if let response = cachedResponse.response as? HTTPURLResponse {
                     sessionDelegate.cachingLogic?.hasUsed(response: response, metrics: metrics, request: request.getRequest(), dataTask: owner)

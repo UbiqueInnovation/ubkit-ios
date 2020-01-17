@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		245E53052325003000EA245F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 245E53042325003000EA245F /* Foundation.framework */; };
+		24B18B1823D1A1F500350130 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B0C23D1A1F500350130 /* UIImage+Helpers.swift */; };
+		24B18B1923D1A1F500350130 /* UBLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B0E23D1A1F500350130 /* UBLabel.swift */; };
+		24B18B1A23D1A1F500350130 /* UIView+Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B1023D1A1F500350130 /* UIView+Autolayout.swift */; };
+		24B18B1B23D1A1F500350130 /* UIView+Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B1123D1A1F500350130 /* UIView+Shadows.swift */; };
+		24B18B1C23D1A1F500350130 /* UITableView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B1323D1A1F500350130 /* UITableView+Helpers.swift */; };
+		24B18B1D23D1A1F500350130 /* UBButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B1523D1A1F500350130 /* UBButton.swift */; };
+		24B18B1E23D1A1F500350130 /* UICollectionView+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B1723D1A1F500350130 /* UICollectionView+Helpers.swift */; };
 		8E0DB2AA2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
 		8E0DB2AC2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
 		8E0DB2AD2243049900D5E01E /* UBURLDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */; };
@@ -346,6 +353,13 @@
 
 /* Begin PBXFileReference section */
 		245E53042325003000EA245F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		24B18B0C23D1A1F500350130 /* UIImage+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
+		24B18B0E23D1A1F500350130 /* UBLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UBLabel.swift; sourceTree = "<group>"; };
+		24B18B1023D1A1F500350130 /* UIView+Autolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Autolayout.swift"; sourceTree = "<group>"; };
+		24B18B1123D1A1F500350130 /* UIView+Shadows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Shadows.swift"; sourceTree = "<group>"; };
+		24B18B1323D1A1F500350130 /* UITableView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Helpers.swift"; sourceTree = "<group>"; };
+		24B18B1523D1A1F500350130 /* UBButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UBButton.swift; sourceTree = "<group>"; };
+		24B18B1723D1A1F500350130 /* UICollectionView+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Helpers.swift"; sourceTree = "<group>"; };
 		8E0DB2A92243049900D5E01E /* UBURLDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLDataTask.swift; sourceTree = "<group>"; };
 		8E0DB2B32243088000D5E01E /* Networking+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Error.swift"; sourceTree = "<group>"; };
 		8E0DB2C42243D00E00D5E01E /* UBURLDataTask+Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLDataTask+Decoder.swift"; sourceTree = "<group>"; };
@@ -519,6 +533,55 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		24B18B0B23D1A1F500350130 /* UIImage */ = {
+			isa = PBXGroup;
+			children = (
+				24B18B0C23D1A1F500350130 /* UIImage+Helpers.swift */,
+			);
+			path = UIImage;
+			sourceTree = "<group>";
+		};
+		24B18B0D23D1A1F500350130 /* UILabel */ = {
+			isa = PBXGroup;
+			children = (
+				24B18B0E23D1A1F500350130 /* UBLabel.swift */,
+			);
+			path = UILabel;
+			sourceTree = "<group>";
+		};
+		24B18B0F23D1A1F500350130 /* UIView */ = {
+			isa = PBXGroup;
+			children = (
+				24B18B1023D1A1F500350130 /* UIView+Autolayout.swift */,
+				24B18B1123D1A1F500350130 /* UIView+Shadows.swift */,
+			);
+			path = UIView;
+			sourceTree = "<group>";
+		};
+		24B18B1223D1A1F500350130 /* UITableView */ = {
+			isa = PBXGroup;
+			children = (
+				24B18B1323D1A1F500350130 /* UITableView+Helpers.swift */,
+			);
+			path = UITableView;
+			sourceTree = "<group>";
+		};
+		24B18B1423D1A1F500350130 /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				24B18B1523D1A1F500350130 /* UBButton.swift */,
+			);
+			path = Button;
+			sourceTree = "<group>";
+		};
+		24B18B1623D1A1F500350130 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				24B18B1723D1A1F500350130 /* UICollectionView+Helpers.swift */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
 		8E0DB2C12243BFB600D5E01E /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -612,6 +675,12 @@
 		8E7F74AB2249892E00582E57 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
+				24B18B1423D1A1F500350130 /* Button */,
+				24B18B1623D1A1F500350130 /* CollectionView */,
+				24B18B0B23D1A1F500350130 /* UIImage */,
+				24B18B0D23D1A1F500350130 /* UILabel */,
+				24B18B1223D1A1F500350130 /* UITableView */,
+				24B18B0F23D1A1F500350130 /* UIView */,
 				8E7F74AC2249894000582E57 /* UIColor */,
 				8E7F74C52249A43200582E57 /* Keyboard */,
 			);
@@ -1374,6 +1443,7 @@
 				8EBD47E92240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EC484642241C65A00AC8E44 /* HTTPCode.swift in Sources */,
 				8E7F747922459D7700582E57 /* MIMEType+Parameter.swift in Sources */,
+				24B18B1B23D1A1F500350130 /* UIView+Shadows.swift in Sources */,
 				8EE058CB22526CEC00B2885B /* UBURLRequestModifier+TokenAuthorization.swift in Sources */,
 				8E0DB2D02243EABB00D5E01E /* HTTPURLResponse+Networking.swift in Sources */,
 				8EE058C122526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
@@ -1392,6 +1462,7 @@
 				8EBD48022240770000CD2639 /* Localization.swift in Sources */,
 				8EE058D02252744F00B2885B /* UBURLRequestModifier+AcceptedLanguage.swift in Sources */,
 				8E0DB2D52243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
+				24B18B1D23D1A1F500350130 /* UBButton.swift in Sources */,
 				8E0DB2DA2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EFFDCE72254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8EFFDD0022560A51002D2DE2 /* CachingLogic.swift in Sources */,
@@ -1400,6 +1471,7 @@
 				8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */,
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786612241269200430D34 /* Localization+Locale.swift in Sources */,
+				24B18B1C23D1A1F500350130 /* UITableView+Helpers.swift in Sources */,
 				8EBD47FE2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E52240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CA2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
@@ -1409,15 +1481,19 @@
 				8EC484742242813200AC8E44 /* UBURLRequest+Body.swift in Sources */,
 				8E7F748A2247B4A300582E57 /* UBURLRequest+BodyConvertible.swift in Sources */,
 				8E0DB2B42243088000D5E01E /* Networking+Error.swift in Sources */,
+				24B18B1823D1A1F500350130 /* UIImage+Helpers.swift in Sources */,
 				8EC4845F2241C1BC00AC8E44 /* UBURLSession+Protocol.swift in Sources */,
 				8EE5F78D228EE4E9009D174A /* ViewKeyboardLayoutGuide.swift in Sources */,
 				8E7F74852245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8EFFDCC92254179F002D2DE2 /* UBURLSession.swift in Sources */,
 				8E0DB2AA2243049900D5E01E /* UBURLDataTask.swift in Sources */,
+				24B18B1923D1A1F500350130 /* UBLabel.swift in Sources */,
 				8EE5F78B228EE498009D174A /* KeyboardLayoutGuide+UIKit.swift in Sources */,
+				24B18B1A23D1A1F500350130 /* UIView+Autolayout.swift in Sources */,
 				8EE058C622526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8EC484792242821300AC8E44 /* MIMEType.swift in Sources */,
 				8EBD48062240770000CD2639 /* Localization+String.swift in Sources */,
+				24B18B1E23D1A1F500350130 /* UICollectionView+Helpers.swift in Sources */,
 				8EE058EB22535FF700B2885B /* UBURLSessionTask.swift in Sources */,
 				8E101734224F5736006127DA /* CronRule.swift in Sources */,
 				8E27865C2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,

@@ -9,8 +9,12 @@ import Foundation
 
 /// Holds information on the networking task
 public struct UBNetworkingTaskInfo: CustomDebugStringConvertible {
-    /// The metric collected for the task
-    public let metrics: URLSessionTaskMetrics?
+    // Apple linker has a bug that prevents the `URLSessionTaskMetrics` to be correctly linked
+    // Althow it is marked as available from watchOS 3.0 and up
+    #if !os(watchOS)
+        /// The metric collected for the task
+        public let metrics: URLSessionTaskMetrics?
+    #endif
 
     /// `true` if the response was returned from cache
     public let cacheHit: Bool
@@ -18,20 +22,32 @@ public struct UBNetworkingTaskInfo: CustomDebugStringConvertible {
     /// `true` if the response was returned from cron refresh
     public let refresh: Bool
 
-    /// Instansiate a network info
-    init(metrics: URLSessionTaskMetrics?, cacheHit: Bool, refresh: Bool) {
-        self.metrics = metrics
-        self.cacheHit = cacheHit
-        self.refresh = refresh
-    }
+    #if os(watchOS)
+        init(cacheHit: Bool, refresh: Bool) {
+            self.cacheHit = cacheHit
+            self.refresh = refresh
+        }
+
+    #else
+        /// Instansiate a network info
+        init(metrics: URLSessionTaskMetrics?, cacheHit: Bool, refresh: Bool) {
+            self.metrics = metrics
+            self.cacheHit = cacheHit
+            self.refresh = refresh
+        }
+    #endif
 
     /// :nodoc:
     public var debugDescription: String {
         let cacheDescription = "Cache \(cacheHit ? "Hit" : "Miss") \(refresh ? "Refresh" : "First")"
-        if let metrics = metrics {
-            return String(describing: metrics) + "\n" + cacheDescription
-        } else {
+        #if os(watchOS)
             return cacheDescription
-        }
+        #else
+            if let metrics = metrics {
+                return String(describing: metrics) + "\n" + cacheDescription
+            } else {
+                return cacheDescription
+            }
+        #endif
     }
 }

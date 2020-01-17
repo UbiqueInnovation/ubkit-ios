@@ -224,7 +224,7 @@ extension UBCronJob {
         switch (fireRule.repeatRule, fireRule.tolerence) {
         case (.never, .none):
             timer.schedule(wallDeadline: deadline, repeating: .never)
-        case (let .after(interval), .none):
+        case let (.after(interval), .none):
             timer.schedule(wallDeadline: deadline, repeating: interval, leeway: .never)
         case let (.never, .some(leeway)):
             timer.schedule(wallDeadline: deadline, repeating: .never, leeway: leeway)
@@ -250,7 +250,7 @@ extension UBCronJob {
         if let rule = self.rule, rule.repeatRule == UBCronRepeatRule.never {
             state = .finished
         }
-        if let callbackQueue = self._callbackQueue {
+        if let callbackQueue = _callbackQueue {
             callbackQueue.addOperation { [weak self] in
                 self?._executionBlock()
             }
