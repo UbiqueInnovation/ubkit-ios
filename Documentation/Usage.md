@@ -192,11 +192,11 @@ let job = CronJob(fireAt: date) {
 A `UBLocationManager` facilitates asking for the required authorization level for the desired usage (location, significant updates, visits or heading). 
 It can be instantiated with a single usage, which is of type `UBLocationManager.LocationMonitoringUsage`:
 ```swift
-let locationManager = UBLocationManager(usage: .active) // monitors the location 
+let locationManager = UBLocationManager(usage: .location) 
 ```
 or a set of usages:
 ```swift
-let locationManager = UBLocationManager(usage: [.active, .heading]) // monitors location and heading 
+let locationManager = UBLocationManager(usage: [.location, .heading])  
 ```
 
 The location manager forwards the updates to the client's `UBLocationManagerDelegate`, similar to the `CLLocationManagerDelegate`.

@@ -106,8 +106,8 @@ public class UBLocationManager: NSObject {
     /// Creates a `LocationManager` which facilitates obtaining the required location permissions for the desired usage
     ///
     /// - Parameters:
-    ///   - usage: The desired usage. Can also be an array, e.g. [.active, .heading]
-    public init(usage: LocationMonitoringUsage) {
+    ///   - usage: The desired usage. Can also be an array, e.g. [.location, .heading]
+    public init(usage: LocationMonitoringUsage = .location) {
         self.usage = usage
     }
 
@@ -155,7 +155,7 @@ public class UBLocationManager: NSObject {
         locationTimer?.invalidate()
         locationTimer = nil
         
-        if usage.contains(.active) {
+        if usage.contains(.location) {
             locationManager.stopUpdatingLocation()
         }
         if usage.contains(.significantChange), CLLocationManager.significantLocationChangeMonitoringAvailable() {
@@ -176,7 +176,7 @@ public class UBLocationManager: NSObject {
             return
         }
         
-        if usage.contains(.active) {
+        if usage.contains(.location) {
             locationManager.startUpdatingLocation()
             locationTimer?.invalidate()
             locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] (_) in
@@ -246,7 +246,7 @@ extension UBLocationManager {
         public let rawValue: UInt8
 
         /// Monitors location updates
-        public static let active = LocationMonitoringUsage(rawValue: 1 << 0)
+        public static let location = LocationMonitoringUsage(rawValue: 1 << 0)
         /// Monitors significant location changes
         public static let significantChange = LocationMonitoringUsage(rawValue: 1 << 2)
         /// Monitors visits
@@ -263,7 +263,7 @@ extension UBLocationManager {
             case 1 << 4:
                 self = .heading
             default:
-                self = .active
+                self = .location
             }
         }
 
