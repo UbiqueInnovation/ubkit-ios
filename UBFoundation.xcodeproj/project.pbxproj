@@ -328,6 +328,10 @@
 		AA7A9FD523D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
 		AA7A9FD623D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
 		AA7A9FD823D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
+		AA7A9FFA23D1A7E20001E735 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */; };
+		AA7A9FFB23D1A7E30001E735 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */; };
+		AA7A9FFC23D1A7E30001E735 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */; };
+		AA7A9FFD23D1A7E40001E735 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -470,6 +474,7 @@
 		8EFFDD0422562444002D2DE2 /* TaskAutoRefreshLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAutoRefreshLogicTests.swift; sourceTree = "<group>"; };
 		8EFFDD0822568D81002D2DE2 /* CacheControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheControl.swift; sourceTree = "<group>"; };
 		AA7A9FD423D076410001E735 /* UBLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UBLocationManager.swift; sourceTree = "<group>"; };
+		AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBLocationManagerProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -990,6 +995,7 @@
 			isa = PBXGroup;
 			children = (
 				AA7A9FD423D076410001E735 /* UBLocationManager.swift */,
+				AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */,
 			);
 			path = Location;
 			sourceTree = "<group>";
@@ -1451,6 +1457,7 @@
 				8EFFDCE22254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8E7F747E2245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EE058B022520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
+				AA7A9FFA23D1A7E20001E735 /* UBLocationManagerProtocol.swift in Sources */,
 				8EBD47FA2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EE058F5225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
 				8EBD47E92240765200CD2639 /* LoggerGroup.swift in Sources */,
@@ -1524,6 +1531,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EE058EC22535FF700B2885B /* UBURLSessionTask.swift in Sources */,
+				AA7A9FFB23D1A7E30001E735 /* UBLocationManagerProtocol.swift in Sources */,
 				8EE058B122520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
 				8EFFDD0A22568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8E7F747522454F1900582E57 /* String+HeaderCharset.swift in Sources */,
@@ -1608,6 +1616,7 @@
 				8EBD48142240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EFFDCE42254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
 				8EBD48102240770000CD2639 /* Localization+Languages.swift in Sources */,
+				AA7A9FFC23D1A7E30001E735 /* UBLocationManagerProtocol.swift in Sources */,
 				8EFFDCE92254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8E7F7515224AE4C300582E57 /* CronJob.swift in Sources */,
 				8E2786632241269200430D34 /* Localization+Locale.swift in Sources */,
@@ -1674,6 +1683,7 @@
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
 				8E46FA42224DAED000198321 /* CronJob.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,
+				AA7A9FFD23D1A7E40001E735 /* UBLocationManagerProtocol.swift in Sources */,
 				AA7A9FD823D076410001E735 /* UBLocationManager.swift in Sources */,
 				8EBD47E82240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CD2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,

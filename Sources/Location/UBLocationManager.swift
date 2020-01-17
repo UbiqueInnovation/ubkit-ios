@@ -92,26 +92,33 @@ public class UBLocationManager: NSObject {
         }
     }
 
-    private(set) lazy var locationManager: CLLocationManager = {
-        let manager = CLLocationManager()
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.delegate = self
-        manager.distanceFilter = kCLDistanceFilterNone
-        manager.headingFilter = kCLHeadingFilterNone
-        return manager
-    }()
+    /// The underlying location manager
+    private(set) var locationManager: UBLocationManagerProtocol
 
     /// The desired usage for this location manager
     public let usage: LocationMonitoringUsage
 
     // MARK: - Initialization
 
-    /// Creates a `LocationManager` which facilitates obtaining the required location permissions for the desired usage
+    /// Creates a `UBLocationManager` which facilitates obtaining the required location permissions for the desired usage
     ///
     /// - Parameters:
     ///   - usage: The desired usage. Can also be an array, e.g. [.location, .heading]
-    public init(usage: LocationMonitoringUsage = .location) {
+    public init(usage: LocationMonitoringUsage = .location, locationManager: UBLocationManagerProtocol = CLLocationManager()) {
         self.usage = usage
+        self.locationManager = locationManager
+
+        super.init()
+
+        setupLocationManager()
+    }
+
+    /// Applies the initial configuration for the location manager
+    private func setupLocationManager() {
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.delegate = self
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.headingFilter = kCLHeadingFilterNone
     }
 
     /// Start monitoring location service events (varies by `usage`)
@@ -119,7 +126,7 @@ public class UBLocationManager: NSObject {
     /// - Parameters:
     ///   - canAskForPermission: Whether the location manager can ask for the required permission on its own behalf
     public func startLocationMonitoring(canAskForPermission: Bool) {
-        let authorizationStatus = CLLocationManager.authorizationStatus()
+        let authorizationStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
         switch authorizationStatus {
         case .authorizedAlways:
@@ -161,7 +168,7 @@ public class UBLocationManager: NSObject {
         if usage.contains(.location) {
             locationManager.stopUpdatingLocation()
         }
-        if usage.contains(.significantChange), CLLocationManager.significantLocationChangeMonitoringAvailable() {
+        if usage.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.stopMonitoringSignificantLocationChanges()
         }
         if usage.contains(.visits) {
@@ -174,7 +181,7 @@ public class UBLocationManager: NSObject {
 
     /// :nodoc:
     private func startLocationMonitoringWithoutChecks() {
-        guard CLLocationManager.locationServicesEnabled() else {
+        guard locationManager.locationServicesEnabled() else {
             delegate?.locationManager(self, requiresPermission: usage.minimumAuthorizationLevelRequired)
             return
         }
@@ -188,7 +195,7 @@ public class UBLocationManager: NSObject {
                 self.delegate?.locationManager(self, didUpdateLocations: [location])
             })
         }
-        if usage.contains(.significantChange), CLLocationManager.significantLocationChangeMonitoringAvailable() {
+        if usage.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.startMonitoringSignificantLocationChanges()
         }
         if usage.contains(.visits) {
