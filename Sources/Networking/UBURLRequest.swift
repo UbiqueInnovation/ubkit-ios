@@ -14,16 +14,6 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// Underlaying data holder
     private var _request: URLRequest
 
-    /// The request’s cache policy.
-    public var cachePolicy: URLRequest.CachePolicy {
-        get {
-            return _request.cachePolicy
-        }
-        set {
-            _request.cachePolicy = newValue
-        }
-    }
-
     /// The HTTP request method.
     public var httpMethod: UBHTTPMethod? {
         get {
@@ -101,10 +91,9 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// - Parameters:
     ///   - url: The URL for the request.
     ///   - method: The HTTP Method to use. Default to GET.
-    ///   - cachePolicy: The cache policy for the request. The default is `NSURLRequest.CachePolicy.useProtocolCachePolicy`.
     ///   - timeoutInterval: The timeout interval for the request. The default is 60.0.
-    public init(url: URL, method: UBHTTPMethod = .get, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, timeoutInterval: TimeInterval = 60.0) {
-        self.init(request: URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval))
+    public init(url: URL, method: UBHTTPMethod = .get, timeoutInterval: TimeInterval = 60.0) {
+        self.init(request: URLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: timeoutInterval))
         httpMethod = method
     }
 
