@@ -13,7 +13,9 @@ public struct UBNetworkingTaskInfo: CustomDebugStringConvertible {
     // Althow it is marked as available from watchOS 3.0 and up
     #if !os(watchOS)
         /// The metric collected for the task
-        public let metrics: URLSessionTaskMetrics?
+        /// NM - 17.1.2020: This API is a really working as expected in combination with caching and cron and we dont need it right now
+        /// I'll set it to private, we can make it public when we have an actual usecase
+        private let metrics: URLSessionTaskMetrics?
     #endif
 
     /// `true` if the response was returned from cache

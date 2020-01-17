@@ -80,7 +80,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
             XCTAssertNotNil(info)
             XCTAssert(info!.cacheHit)
-            XCTAssertNotNil(info!.metrics)
 
             ex2.fulfill()
         }
@@ -161,7 +160,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
             XCTAssertNotNil(info)
             XCTAssertFalse(info!.cacheHit)
-            XCTAssertNotNil(info!.metrics)
 
             ex2.fulfill()
         }
