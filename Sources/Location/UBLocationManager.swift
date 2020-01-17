@@ -248,6 +248,10 @@ extension UBLocationManager {
     public struct LocationMonitoringUsage: OptionSet {
         public let rawValue: UInt8
 
+        public init(rawValue: Self.RawValue) {
+            self.rawValue = rawValue
+        }
+
         /// Monitors location updates
         public static let location = LocationMonitoringUsage(rawValue: 1 << 0)
         /// Monitors significant location changes
@@ -256,19 +260,6 @@ extension UBLocationManager {
         public static let visits = LocationMonitoringUsage(rawValue: 1 << 3)
         /// Monitors heading
         public static let heading = LocationMonitoringUsage(rawValue: 1 << 4)
-
-        public init(rawValue: UInt8) {
-            switch rawValue {
-            case 1 << 2:
-                self = .significantChange
-            case 1 << 3:
-                self = .visits
-            case 1 << 4:
-                self = .heading
-            default:
-                self = .location
-            }
-        }
 
         /// An authorization level granted by the user which allows starting location services
         public enum AuthorizationLevel: Int {
