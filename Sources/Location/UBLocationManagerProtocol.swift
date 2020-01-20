@@ -5,8 +5,8 @@
 //  Created by Zeno Koller on 17.01.20.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
 
 /// Enables supplying a mock location manager to `UBLocationManager`
 public protocol UBLocationManagerProtocol {

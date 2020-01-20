@@ -5,13 +5,11 @@
 //  Created by Zeno Koller on 17.01.20.
 //
 
+import CoreLocation
 import Foundation
 import UBFoundation
-import CoreLocation
-
 
 class MockLocationManager: UBLocationManagerProtocol {
-
     /// The sequence of authorizationStatues that is traversed when requesting Authorization
     var authorizationStatuses: [CLAuthorizationStatus] = []
 
@@ -33,7 +31,7 @@ class MockLocationManager: UBLocationManagerProtocol {
         CLLocation(latitude: 47.376794, longitude: 8.543733)
     }
 
-    var delegate: CLLocationManagerDelegate?
+    weak var delegate: CLLocationManagerDelegate?
 
     var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
 
@@ -78,12 +76,12 @@ class MockLocationManager: UBLocationManagerProtocol {
     // MARK: - Authorization
 
     func requestWhenInUseAuthorization() {
-        let _ = authorizationStatuses.removeFirst()
+        _ = authorizationStatuses.removeFirst()
         delegate?.locationManager?(CLLocationManager(), didChangeAuthorization: _authorizationStatus)
     }
 
     func requestAlwaysAuthorization() {
-        let _ = authorizationStatuses.removeFirst()
+        _ = authorizationStatuses.removeFirst()
         delegate?.locationManager?(CLLocationManager(), didChangeAuthorization: _authorizationStatus)
     }
 
