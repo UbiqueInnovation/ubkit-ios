@@ -62,8 +62,15 @@ public class UBLocationManager: NSObject {
     /// and not trigger a call of the `locationManager(_:didUpdateLocations)` delegate method
     public var maximumLastLocationTimestampSeconds: UInt = 3600
 
-    var timeout: TimeInterval = 2
+    /// For usage `.location`, the maximum time to wait for a location update from the underlying location manager.
+    /// If no update has happened, we call `locationManager(_:didUpdateLocations)` with the most recent
+    /// location from the underlying location manager, if it is not older than maximumLastLocationTimestampSeconds
+    private(set) var timeout: TimeInterval
+    /// The default value for `timeout`
+    public static var defaultTimeout: TimeInterval = 2
+    /// :nodoc:
     private var locationTimer: Timer?
+    /// :nodoc:
     var timedOut: Bool = false
 
     /// Does the location manager have the required authorization level for the desired `usage`?
@@ -104,9 +111,12 @@ public class UBLocationManager: NSObject {
     ///
     /// - Parameters:
     ///   - usage: The desired usage. Can also be an array, e.g. [.location, .heading]
-    public init(usage: LocationMonitoringUsage = .location, locationManager: UBLocationManagerProtocol = CLLocationManager()) {
+    public init(usage: LocationMonitoringUsage = .location,
+                locationManager: UBLocationManagerProtocol = CLLocationManager(),
+                timeout: TimeInterval = UBLocationManager.defaultTimeout) {
         self.usage = usage
         self.locationManager = locationManager
+        self.timeout = timeout
 
         super.init()
 
