@@ -111,6 +111,10 @@ public class UBLocationManager: NSObject {
     ///
     /// - Parameters:
     ///   - usage: The desired usage. Can also be an array, e.g. [.location, .heading]
+    ///   - locationManager: The underlying location manager
+    ///   - timeout: The maximum time to wait for a location update from the underlying location manager. If
+    ///   no update has happened, we call `locationManager(_:didUpdateLocations)` with the most recent
+    ///   location from the underlying location manager, if it is not older than maximumLastLocationTimestampSeconds
     public init(usage: LocationMonitoringUsage = .location,
                 locationManager: UBLocationManagerProtocol = CLLocationManager(),
                 timeout: TimeInterval = UBLocationManager.defaultTimeout) {
