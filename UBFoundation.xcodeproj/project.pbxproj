@@ -126,9 +126,6 @@
 		8E80D6092250F4AE00E4D633 /* GlobalNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */; };
 		8E80D60B2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */; };
 		8E80D60C2250F4AE00E4D633 /* GlobalNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E80D6082250F4AE00E4D633 /* GlobalNetworking.swift */; };
-		8EA06EC823D60FDC007F4420 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */; };
-		8EA06EC923D60FEE007F4420 /* UBLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF423D1A59D0001E735 /* UBLocationManagerTests.swift */; };
-		8EA06ECA23D60FF5007F4420 /* MockLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF623D1A5DF0001E735 /* MockLocationManager.swift */; };
 		8EBD476F224063B400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479B2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EBD479C2240669400CD2639 /* UBFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EBD476D224063B400CD2639 /* UBFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -329,12 +326,9 @@
 		8EFFDD0B22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
 		8EFFDD0C22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
 		AA7A9FD523D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
-		AA7A9FD623D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
-		AA7A9FD823D076410001E735 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FD423D076410001E735 /* UBLocationManager.swift */; };
 		AA7A9FF523D1A59D0001E735 /* UBLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF423D1A59D0001E735 /* UBLocationManagerTests.swift */; };
 		AA7A9FF723D1A5DF0001E735 /* MockLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF623D1A5DF0001E735 /* MockLocationManager.swift */; };
 		AA7A9FFA23D1A7E20001E735 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */; };
-		AA7A9FFD23D1A7E40001E735 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1563,7 +1557,6 @@
 				8E0DB2C62243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4858224119AE00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48032240770000CD2639 /* Localization.swift in Sources */,
-				8EA06EC823D60FDC007F4420 /* UBLocationManagerProtocol.swift in Sources */,
 				8E0DB2D62243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DB2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EE058F6225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
@@ -1582,7 +1575,6 @@
 				8E0DB2B52243088000D5E01E /* Networking+Error.swift in Sources */,
 				8E7F74862245B58D00582E57 /* UBURLRequest+BodyMultipart.swift in Sources */,
 				8EC4847A2242821300AC8E44 /* MIMEType.swift in Sources */,
-				AA7A9FD623D076410001E735 /* UBLocationManager.swift in Sources */,
 				8EBD48072240770000CD2639 /* Localization+String.swift in Sources */,
 				8E46FA41224DAECF00198321 /* CronJob.swift in Sources */,
 				8E27865D2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
@@ -1695,8 +1687,6 @@
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
 				8E46FA42224DAED000198321 /* CronJob.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,
-				AA7A9FFD23D1A7E40001E735 /* UBLocationManagerProtocol.swift in Sources */,
-				AA7A9FD823D076410001E735 /* UBLocationManager.swift in Sources */,
 				8EBD47E82240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CD2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
 				8EBD480D2240770000CD2639 /* Localization+Bundle.swift in Sources */,
@@ -1801,7 +1791,6 @@
 				8E278668224144C900430D34 /* GlobalLocalizationTests.swift in Sources */,
 				8E7F74992247F50200582E57 /* HTTPResponseValidatorTests.swift in Sources */,
 				8EE058BE2252621B00B2885B /* HTTPRequestModifierTests.swift in Sources */,
-				8EA06EC923D60FEE007F4420 /* UBLocationManagerTests.swift in Sources */,
 				8E7F749D22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */,
 				8EFFDCC7225413EB002D2DE2 /* UBSessionTests.swift in Sources */,
 				8E27865522411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
@@ -1812,7 +1801,6 @@
 				8EE058A72251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */,
 				8EF90D5C22429AA30055A362 /* MIMETypeTests.swift in Sources */,
 				8E7F74952247ED0B00582E57 /* HTTPURLResponseTests.swift in Sources */,
-				8EA06ECA23D60FF5007F4420 /* MockLocationManager.swift in Sources */,
 				8EF90D6422429E740055A362 /* HTTPURLRequestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
