@@ -40,7 +40,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let ex2 = expectation(description: "s2")
         dataTask2.addCompletionHandler { _, _, info, _ in
 
-            XCTAssertNotNil(info)
+            XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
 
             ex2.fulfill()
@@ -78,7 +78,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let ex2 = expectation(description: "s2")
         dataTask2.addCompletionHandler { _, _, info, _ in
 
-            XCTAssertNotNil(info)
+            XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
 
             ex2.fulfill()
@@ -116,7 +116,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let ex2 = expectation(description: "s2")
         dataTask2.addCompletionHandler { _, _, info, _ in
 
-            XCTAssertNotNil(info)
+            XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
 
             ex2.fulfill()
@@ -158,7 +158,8 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let ex2 = expectation(description: "s2")
         dataTask2.addCompletionHandler { _, _, info, _ in
 
-            XCTAssertNotNil(info)
+            XCTAssert(info != nil)
+            XCTAssertFalse(info!.cacheHit)
 	func testMaxAge0() {
         // Load Request with default headers and max-age=0 directive
 
@@ -213,7 +214,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         dataTask.addCompletionHandler { _, _, info, _ in
 
-            XCTAssertNotNil(info)
+            XCTAssert(info != nil)
 
             if info!.refresh {
                 ex1.fulfill()
