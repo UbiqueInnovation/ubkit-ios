@@ -159,6 +159,33 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask2.addCompletionHandler { _, _, info, _ in
 
             XCTAssertNotNil(info)
+	func testMaxAge0() {
+        // Load Request with default headers and max-age=0 directive
+
+        let url = URL(string: "http://worldtimeapi.org/api/timezone/Europe/Zurich.txt")!
+
+        // load request to fill cache
+
+        let dataTask = UBURLDataTask(url: url)
+
+        let ex = expectation(description: "s")
+        dataTask.addCompletionHandler { _, _, _, _ in
+
+            ex.fulfill()
+        }
+        dataTask.start()
+        wait(for: [ex], timeout: 10000)
+
+        dataTask.cancel() // make sure that cron doesn't trigger
+
+        // load request again immediately
+
+        let dataTask2 = UBURLDataTask(url: url)
+
+        let ex2 = expectation(description: "s2")
+        dataTask2.addCompletionHandler { _, _, info, _ in
+
+            XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
 
             ex2.fulfill()
