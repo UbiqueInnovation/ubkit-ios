@@ -135,7 +135,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
     func testNoCacheHeaders() {
         // Load Request with default headers and no cache
 
-        let url = URL(string: "http://worldclockapi.com/api/json/est/now")!
+        let url = URL(string: "http://no-cache-but-pie.glitch.me")!
 
         // load request to (not) fill cache
 
