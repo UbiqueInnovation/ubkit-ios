@@ -160,6 +160,12 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
+		}
+
+		dataTask2.start()
+		wait(for: [ex2], timeout: 10000)
+	}
+	
 	func testMaxAge0() {
         // Load Request with default headers and max-age=0 directive
 
