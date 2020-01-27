@@ -40,7 +40,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
         self.numberOfLines = numberOfLines
     }
 
-    required public init?(coder _: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -54,7 +54,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
 
     /// :nodoc:
     private func update() {
-        guard var textContent = self.text else {
+        guard var textContent = text else {
             attributedText = nil
             return
         }
@@ -76,7 +76,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
             }
 
             let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-                .documentType: self.isHtmlContent ? NSAttributedString.DocumentType.html : NSAttributedString.DocumentType.plain,
+                .documentType: isHtmlContent ? NSAttributedString.DocumentType.html : NSAttributedString.DocumentType.plain,
                 .characterEncoding: String.Encoding.utf8.rawValue,
                 .defaultAttributes: [:]
             ]
@@ -107,7 +107,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
         textString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: textRange)
 
         // add attribute for kerning
-        if let k = self.type.letterSpacing {
+        if let k = type.letterSpacing {
             textString.addAttribute(NSAttributedString.Key.kern, value: k, range: textRange)
         }
 

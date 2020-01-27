@@ -14,9 +14,9 @@ public enum UBCacheResult {
     /// The cache missed
     case miss
     /// Cached data found but is expired
-    case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
+    case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
     /// Cached data found and is valid
-    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
+    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
 }
 
 /// A caching logic object can provide decision when comes to requests and response that needs caching
@@ -44,4 +44,13 @@ public protocol UBCachingLogic {
     ///   - dataTask: The associated UB data task
     /// - Returns: A cached result
     func cachedResponse(_ session: URLSession, request: URLRequest, dataTask: UBURLDataTask) -> UBCacheResult
+
+    /// Tell the caching logic that the cache had no result
+    func hasMissedCache(dataTask: UBURLDataTask)
+
+    /// Tell the caching logic that the result was used
+    func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask)
+
+    /// Tell the caching logic that a new result was cached
+    func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session: URLSession, request: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?)
 }

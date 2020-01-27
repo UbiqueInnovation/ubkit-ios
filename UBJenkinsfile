@@ -24,7 +24,6 @@ pipeline {
 			}
 		}
 		stage("Run Tests") {
-			when { anyOf { branch 'master'; branch 'develop' } }
 			agent {
 				label "ios"
 			}

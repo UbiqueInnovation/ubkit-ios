@@ -11,6 +11,10 @@ class URLSessionDataTaskMock: URLSessionDataTask {
     var completionHandler: (Data?, URLResponse?, Error?) -> Void
     var config: Configuration
     var timeoutInterval: TimeInterval
+    override var priority: Float {
+        get { return 1.0 }
+        set {}
+    }
 
     init(config: Configuration, timeoutInterval: TimeInterval, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
         self.completionHandler = completionHandler

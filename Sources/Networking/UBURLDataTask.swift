@@ -20,6 +20,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// An app-provided description of the current task.
     public let taskDescription: String?
 
+    /// If the task has been started to refresh a previous result
+    private(set) var refresh: Bool = false
+
     /// The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     public let priority: Float
 
@@ -104,8 +107,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // The semaphore ensuring no two threads can call start simultaniously
     private let requestStartSemaphore = DispatchSemaphore(value: 1)
 
-    /// Start the task with the given request. It will cancel any ongoing request
+    // Default start is not a refresh
     public func start() {
+        start(refresh: false)
+    }
+
+    /// Start the task with the given request. It will cancel any ongoing request
+    public func start(refresh: Bool) {
         // Wait for any ongoing request start
         requestStartSemaphore.wait()
 
@@ -114,6 +122,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         // Set the state to waiting execution and launch the task
         state = .waitingExecution
+
+        // update refresh state
+        self.refresh = refresh
 
         // Apply all modification
         requestModifier.modifyRequest(request) { [weak self] result in
@@ -130,6 +141,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                     if self.state == .cancelled {
                         self.state = .finished
                     }
+                    self.requestStartSemaphore.signal()
                     return
                 }
 
@@ -383,7 +395,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// A completion handling block called at the end of the task.
     public typealias CompletionHandlingNullableDataBlock = (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// :nodoc:
-    private let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
+    let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
     /// The completion handlers
     private var _completionHandlers: [CompletionHandlerWrapper] = []
 
@@ -394,9 +406,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// :nodoc:
-    private func notifyCompletion(error: Error, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?) {
+    private func notifyCompletion(error: Error, data: Data?, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?) {
         state = .finished
-        completionHandlers.forEach { $0.fail(error: error, response: response, info: info, callbackQueue: callbackQueue, caller: self) }
+        completionHandlers.forEach { $0.fail(error: error, data: data, response: response, info: info, callbackQueue: callbackQueue, caller: self) }
     }
 
     /// :nodoc:
@@ -424,6 +436,21 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - completionHandler: A completion handler
     public func addCompletionHandler<T>(decoder: UBURLDataTaskDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) {
         let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
+        completionHandlersDispatchQueue.sync {
+            _completionHandlers.append(wrapper)
+        }
+    }
+
+    /// Adds a completion handler that gets the data decoded by the specified decoder and an error decoded
+    ///
+    /// If no data is returned, there will be an error raised and the result will fail.
+    ///
+    /// - Parameters:
+    ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
+    ///   - errorDecoder: The decoder for the body in case of error
+    ///   - completionHandler: A completion handler
+    public func addCompletionHandler<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completionHandler: @escaping CompletionHandlingBlock<T>) {
+        let wrapper = CompletionHandlerWrapper(decoder: decoder, errorDecoder: errorDecoder, completion: completionHandler)
         completionHandlersDispatchQueue.sync {
             _completionHandlers.append(wrapper)
         }
@@ -499,13 +526,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         failureRecoveryStrategy.recoverTask(self, data: data, response: response, error: error) { [weak self] result in
             switch result {
             case .cannotRecover:
-                self?.notifyCompletion(error: error, response: response, info: nil)
+                self?.notifyCompletion(error: error, data: data, response: response, info: nil)
             case let .recoveryOptions(options: options):
-                self?.notifyCompletion(error: options, response: response, info: nil)
+                self?.notifyCompletion(error: options, data: data, response: response, info: nil)
             case let .recovered(data: data, response: response, info: info):
                 self?.notifyCompletion(data: data, response: response, info: info)
             case .restartDataTask:
-                self?.start()
+                self?.start(refresh: false)
             }
         }
     }
@@ -515,7 +542,7 @@ extension UBURLDataTask {
     /// This is a wrapper that holds reference for a completion handler
     private struct CompletionHandlerWrapper {
         private let executionBlock: (Data?, HTTPURLResponse, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
-        private let failureBlock: (Error, HTTPURLResponse?, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
+        private let failureBlock: (Error, Data?, HTTPURLResponse?, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
 
         /// :nodoc:
         init<T>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping CompletionHandlingBlock<T>) {
@@ -540,9 +567,47 @@ extension UBURLDataTask {
             }
 
             // Create a block to be called on failure
-            failureBlock = { error, response, info, callbackQueue, caller in
+            failureBlock = { error, _, response, info, callbackQueue, caller in
                 callbackQueue.addOperation {
                     completion(.failure(error), response, info, caller)
+                }
+            }
+        }
+
+        /// :nodoc:
+        init<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completion: @escaping CompletionHandlingBlock<T>) {
+            // Create the block that gets called when decoding is ready
+            executionBlock = { data, response, info, callbackQueue, caller in
+                guard let data = data else {
+                    callbackQueue.addOperation {
+                        completion(.failure(UBNetworkingError.responseBodyIsEmpty), response, info, caller)
+                    }
+                    return
+                }
+                do {
+                    let decoded = try decoder.decode(data: data, response: response)
+                    callbackQueue.addOperation {
+                        completion(.success(decoded), response, info, caller)
+                    }
+                } catch {
+                    callbackQueue.addOperation {
+                        completion(.failure(error), response, info, caller)
+                    }
+                }
+            }
+
+            // Create a block to be called on failure
+            failureBlock = { error, data, response, info, callbackQueue, caller in
+                let newError: Error
+                if let data = data, let response = response {
+                    var decodedError = try? errorDecoder.decode(data: data, response: response)
+                    decodedError?.baseError = error
+                    newError = decodedError ?? error
+                } else {
+                    newError = error
+                }
+                callbackQueue.addOperation {
+                    completion(.failure(newError), response, info, caller)
                 }
             }
         }
@@ -556,7 +621,7 @@ extension UBURLDataTask {
                 }
             }
             // Create a block to be called on failure
-            failureBlock = { error, response, info, callbackQueue, caller in
+            failureBlock = { error, _, response, info, callbackQueue, caller in
                 callbackQueue.addOperation {
                     completion(.failure(error), response, info, caller)
                 }
@@ -569,8 +634,8 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        func fail(error: Error, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
-            failureBlock(error, response, info, callbackQueue, caller)
+        func fail(error: Error, data: Data?, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
+            failureBlock(error, data, response, info, callbackQueue, caller)
         }
     }
 }

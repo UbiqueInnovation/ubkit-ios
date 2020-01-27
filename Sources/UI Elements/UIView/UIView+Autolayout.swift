@@ -9,14 +9,12 @@ import UIKit
 
 // MARK: - UIView Autolayout Extensions
 
-extension UIView
-{
+extension UIView {
     /// Sets contentHuggingPriority and contentCompressionResistance to highest priority both vertical and horizontal
-    public func ub_setContentPriorityRequired()
-    {
-        self.setContentHuggingPriority(.required, for: .horizontal)
-        self.setContentHuggingPriority(.required, for: .vertical)
-        self.setContentCompressionResistancePriority(.required, for: .horizontal)
-        self.setContentCompressionResistancePriority(.required, for: .vertical)
+    public func ub_setContentPriorityRequired() {
+        setContentHuggingPriority(.required, for: .horizontal)
+        setContentHuggingPriority(.required, for: .vertical)
+        setContentCompressionResistancePriority(.required, for: .horizontal)
+        setContentCompressionResistancePriority(.required, for: .vertical)
     }
 }

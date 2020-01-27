@@ -22,7 +22,7 @@ open class UBButton: UIButton {
 
     public var title: String? {
         didSet {
-            self.setTitle(title, for: .normal)
+            setTitle(title, for: .normal)
         }
     }
 
@@ -69,29 +69,33 @@ open class UBButton: UIButton {
         addTarget(self, action: #selector(touchUp), for: .touchUpInside)
     }
 
-    required public init?(coder _: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
 
         highlightView.frame = bounds.inset(by: UIEdgeInsets(top: highlightYInset, left: highlightXInset, bottom: highlightYInset, right: highlightXInset))
     }
 
-    override public var isHighlighted: Bool {
+    open func setHighlighted(_ highlighted: Bool, animated: Bool = false) {
+        super.isHighlighted = highlighted
+
+        if highlighted {
+            highlightView.alpha = 1.0
+        } else {
+            UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent], animations: {
+                self.highlightView.alpha = 0.0
+            }, completion: nil)
+        }
+    }
+
+    public override var isHighlighted: Bool {
         get { return super.isHighlighted }
 
         set(highlighted) {
-            super.isHighlighted = highlighted
-
-            if highlighted {
-                highlightView.alpha = 1.0
-            } else {
-                UIView.animate(withDuration: 0.4, delay: 0.0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent], animations: {
-                    self.highlightView.alpha = 0.0
-                }, completion: nil)
-            }
+            setHighlighted(highlighted)
         }
     }
 
