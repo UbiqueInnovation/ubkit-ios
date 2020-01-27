@@ -329,6 +329,23 @@
 		AA7A9FF523D1A59D0001E735 /* UBLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF423D1A59D0001E735 /* UBLocationManagerTests.swift */; };
 		AA7A9FF723D1A5DF0001E735 /* MockLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF623D1A5DF0001E735 /* MockLocationManager.swift */; };
 		AA7A9FFA23D1A7E20001E735 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */; };
+		AAB0136B23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0136A23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift */; };
+		AAB0136C23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0136A23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift */; };
+		AAB0136D23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0136A23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift */; };
+		AAB0136E23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0136A23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift */; };
+		AAB0137023DEF228003C91C7 /* UBUserDefaultsStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0136F23DEF228003C91C7 /* UBUserDefaultsStored.swift */; };
+		AAB0137123DEF228003C91C7 /* UBUserDefaultsStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0136F23DEF228003C91C7 /* UBUserDefaultsStored.swift */; };
+		AAB0137223DEF228003C91C7 /* UBUserDefaultsStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0136F23DEF228003C91C7 /* UBUserDefaultsStored.swift */; };
+		AAB0137323DEF228003C91C7 /* UBUserDefaultsStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0136F23DEF228003C91C7 /* UBUserDefaultsStored.swift */; };
+		AAB0137623DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137523DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift */; };
+		AAB0137723DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137523DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift */; };
+		AAB0137823DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137523DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift */; };
+		AAB0137A23DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137923DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift */; };
+		AAB0137B23DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137923DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift */; };
+		AAB0137C23DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137923DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift */; };
+		AAB0137E23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137D23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift */; };
+		AAB0137F23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137D23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift */; };
+		AAB0138023DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137D23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -474,6 +491,11 @@
 		AA7A9FF423D1A59D0001E735 /* UBLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBLocationManagerTests.swift; sourceTree = "<group>"; };
 		AA7A9FF623D1A5DF0001E735 /* MockLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocationManager.swift; sourceTree = "<group>"; };
 		AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBLocationManagerProtocol.swift; sourceTree = "<group>"; };
+		AAB0136A23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBUserDefaultsJSONStored.swift; sourceTree = "<group>"; };
+		AAB0136F23DEF228003C91C7 /* UBUserDefaultsStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBUserDefaultsStored.swift; sourceTree = "<group>"; };
+		AAB0137523DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBUserDefaultsJSONStoredTests.swift; sourceTree = "<group>"; };
+		AAB0137923DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBUserDefaultsStoredTests.swift  .swift"; sourceTree = "<group>"; };
+		AAB0137D23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Test.swift  .swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -785,6 +807,7 @@
 		8EBD479A2240646700CD2639 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				AAB0136923DEF1E0003C91C7 /* Storage */,
 				8EBD48162240773900CD2639 /* Globals */,
 				8E7F74AB2249892E00582E57 /* UI Elements */,
 				AA91DB0323D0757B00E9BEAE /* Location */,
@@ -817,6 +840,7 @@
 		8EBD47DB2240715500CD2639 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				AAB0137423DEF272003C91C7 /* Storage */,
 				8E7F74B82249964800582E57 /* UI Elements */,
 				8E27864C22411DE300430D34 /* Globals */,
 				8EBD481E2240779300CD2639 /* Localization */,
@@ -1007,6 +1031,25 @@
 				AA7A9FF823D1A7890001E735 /* UBLocationManagerProtocol.swift */,
 			);
 			path = Location;
+			sourceTree = "<group>";
+		};
+		AAB0136923DEF1E0003C91C7 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				AAB0136A23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift */,
+				AAB0136F23DEF228003C91C7 /* UBUserDefaultsStored.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		AAB0137423DEF272003C91C7 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				AAB0137523DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift */,
+				AAB0137923DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift */,
+				AAB0137D23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift */,
+			);
+			path = Storage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1461,6 +1504,7 @@
 			files = (
 				8E7F747422454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4846F22427BE500AC8E44 /* HTTPMethod.swift in Sources */,
+				AAB0137023DEF228003C91C7 /* UBUserDefaultsStored.swift in Sources */,
 				8E7F74AE2249897B00582E57 /* UIColor+HEX.swift in Sources */,
 				8EE058DC2252DAC400B2885B /* NetworkTaskRecovery.swift in Sources */,
 				8EFFDCE22254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
@@ -1486,6 +1530,7 @@
 				8E0DB2C52243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,
 				8EE5F787228EE349009D174A /* WindowKeyboardLayoutGuide.swift in Sources */,
+				AAB0136B23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift in Sources */,
 				8E7F7513224AE4C300582E57 /* CronJob.swift in Sources */,
 				8EFFDCC022540A7F002D2DE2 /* Networking+URLSession.swift in Sources */,
 				8EBD48022240770000CD2639 /* Localization.swift in Sources */,
@@ -1542,6 +1587,7 @@
 				8EE058B122520E5900B2885B /* UBURLRequestModifier.swift in Sources */,
 				8EFFDD0A22568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8E7F747522454F1900582E57 /* String+HeaderCharset.swift in Sources */,
+				AAB0136C23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift in Sources */,
 				8EC4847022427BE500AC8E44 /* HTTPMethod.swift in Sources */,
 				8EE058C222526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
 				8E7F74AF2249897B00582E57 /* UIColor+HEX.swift in Sources */,
@@ -1568,6 +1614,7 @@
 				8EBD47FF2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E62240765200CD2639 /* Logger.swift in Sources */,
 				8E0DB2CB2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
+				AAB0137123DEF228003C91C7 /* UBUserDefaultsStored.swift in Sources */,
 				8EBD480B2240770000CD2639 /* Localization+Bundle.swift in Sources */,
 				8EBD47F72240770000CD2639 /* Localization+Formatter.swift in Sources */,
 				8EC484752242813200AC8E44 /* UBURLRequest+Body.swift in Sources */,
@@ -1596,6 +1643,7 @@
 				8E7F747622454F1900582E57 /* String+HeaderCharset.swift in Sources */,
 				8EC4847122427BE500AC8E44 /* HTTPMethod.swift in Sources */,
 				8EE058C322526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
+				AAB0136D23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift in Sources */,
 				8E7F74B02249897B00582E57 /* UIColor+HEX.swift in Sources */,
 				8E52B783229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */,
 				8E7F74802245A06200582E57 /* MIMEType+Standard.swift in Sources */,
@@ -1646,6 +1694,7 @@
 				8EE058E822535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
 				8EE058DE2252DAC400B2885B /* NetworkTaskRecovery.swift in Sources */,
 				8EC4846C22427B9700AC8E44 /* UBURLRequest.swift in Sources */,
+				AAB0137223DEF228003C91C7 /* UBUserDefaultsStored.swift in Sources */,
 				8EE058C822526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8EE058CD22526CEC00B2885B /* UBURLRequestModifier+TokenAuthorization.swift in Sources */,
 				8EFFDCC222540A7F002D2DE2 /* Networking+URLSession.swift in Sources */,
@@ -1664,6 +1713,7 @@
 				8E7F74812245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EE058C922526C8400B2885B /* UBURLRequestModifier+BasicAuthorization.swift in Sources */,
 				8EBD47FD2240770000CD2639 /* Localization+Notification.swift in Sources */,
+				AAB0137323DEF228003C91C7 /* UBUserDefaultsStored.swift in Sources */,
 				8EE058E922535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
 				8EBD47EC2240765200CD2639 /* LoggerGroup.swift in Sources */,
 				8EC484672241C65A00AC8E44 /* HTTPCode.swift in Sources */,
@@ -1682,6 +1732,7 @@
 				8E0DB2D82243F3AF00D5E01E /* HTTPCode+Category.swift in Sources */,
 				8E0DB2DD2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EFFDCD622545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
+				AAB0136E23DEF20B003C91C7 /* UBUserDefaultsJSONStored.swift in Sources */,
 				8EBD48152240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
@@ -1721,7 +1772,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAB0137623DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift in Sources */,
+				AAB0137A23DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift in Sources */,
 				8E7F74BB2249966D00582E57 /* UIColor+HEXTests.swift in Sources */,
+				AAB0137E23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift in Sources */,
 				8EBD483A22408E1000CD2639 /* LocalizationTests.swift in Sources */,
 				8E7F746B22452F8300582E57 /* DataTaskSessionMock.swift in Sources */,
 				8EF90D5E22429D300055A362 /* HTTPRequestBodyTests.swift in Sources */,
@@ -1760,11 +1814,14 @@
 				8EFFDD0622562444002D2DE2 /* TaskAutoRefreshLogicTests.swift in Sources */,
 				8EF90D5F22429D300055A362 /* HTTPRequestBodyTests.swift in Sources */,
 				8E7F74682244650C00582E57 /* HTTPDataTaskTests.swift in Sources */,
+				AAB0137B23DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift in Sources */,
 				8EBD485022410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
+				AAB0137F23DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift in Sources */,
 				8EBD484C2240FFE200CD2639 /* LoggerTests.swift in Sources */,
 				8E278667224144C900430D34 /* GlobalLocalizationTests.swift in Sources */,
 				8E7F74982247F50200582E57 /* HTTPResponseValidatorTests.swift in Sources */,
 				8EFFDCC6225413EB002D2DE2 /* UBSessionTests.swift in Sources */,
+				AAB0137723DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift in Sources */,
 				8E7F749C22480E8600582E57 /* HTTPDataDecoderTests.swift in Sources */,
 				8E27865422411E5600430D34 /* GlobalLoggingTests.swift in Sources */,
 				8EE058BD2252621B00B2885B /* HTTPRequestModifierTests.swift in Sources */,
@@ -1782,10 +1839,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAB0137823DEF2A7003C91C7 /* UBUserDefaultsJSONStoredTests.swift in Sources */,
+				AAB0138023DEF2D9003C91C7 /* UserDefaults+Test.swift  .swift in Sources */,
 				8EBD483C22408E1000CD2639 /* LocalizationTests.swift in Sources */,
 				8E7F746D22452F8300582E57 /* DataTaskSessionMock.swift in Sources */,
 				8EF90D6022429D300055A362 /* HTTPRequestBodyTests.swift in Sources */,
 				8E7F74692244650C00582E57 /* HTTPDataTaskTests.swift in Sources */,
+				AAB0137C23DEF2C6003C91C7 /* UBUserDefaultsStoredTests.swift  .swift in Sources */,
 				8EBD485122410F6300CD2639 /* LoggerGroupTests.swift in Sources */,
 				8EBD484D2240FFE200CD2639 /* LoggerTests.swift in Sources */,
 				8E278668224144C900430D34 /* GlobalLocalizationTests.swift in Sources */,

@@ -236,3 +236,11 @@ The monitoring for the desired location services are started and stopped with
 }
 ```
 
+## UserDefaults Property Wrapper
+
+`UBUserDefaultsStored` is a property wrapper which backs the annotated variable with storage in `UserDefaults`. By default, the `standard` `UserDefaults` are used.
+
+```swift
+@UBUserDefaultsStored(key: "username_key", defaultValue: "")
+var userName: String
+```
