@@ -197,6 +197,44 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask.start()
         wait(for: [ex1, ex2], timeout: 10000)
     }
+
+    func testDoubleStart() {
+        // Load Request with Meteo-specific headers to fill cache
+        let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
+
+        let cache = MeteoAutoRefreshCacheLogic()
+        let conf = UBURLSessionConfiguration(cachingLogic: cache)
+        conf.sessionConfiguration.urlCache = c
+        let session = UBURLSession(configuration: conf)
+
+        // load request to fill cache
+
+        let dataTask = UBURLDataTask(url: url, session: session)
+
+        let ex = expectation(description: "s")
+        dataTask.addCompletionHandler { _, _, _, _ in
+
+            ex.fulfill()
+        }
+        dataTask.start()
+        wait(for: [ex], timeout: 10000)
+
+        // load request again
+
+        let dataTask2 = UBURLDataTask(url: url, session: session)
+
+        let ex2 = expectation(description: "s2")
+        dataTask2.addCompletionHandler { _, _, info, _ in
+
+            XCTAssertNotNil(info)
+            XCTAssert(info!.cacheHit)
+
+            ex2.fulfill()
+        }
+        dataTask2.start()
+        dataTask2.start() // start request again
+        wait(for: [ex2], timeout: 10000)
+    }
 }
 
 class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
