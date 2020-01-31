@@ -51,13 +51,6 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// :nodoc:
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         assert(session == urlSession, "The sessions are not matching")
-        defer {
-            // Clear the collected data
-            serialQueue.sync {
-                tasksData.removeObject(forKey: task)
-                tasks.removeObject(forKey: task)
-            }
-        }
 
         var _ubDataTask: UBURLDataTask?
         var _collectedData: UBURLSessionDelegate.DataHolder?
@@ -66,8 +59,16 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             _collectedData = tasksData.object(forKey: task)
         }
 
-        guard let ubDataTask = _ubDataTask else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == task else {
             return
+        }
+
+        defer {
+            // Clear the collected data
+            serialQueue.sync {
+                tasksData.removeObject(forKey: task)
+                tasks.removeObject(forKey: task)
+            }
         }
 
         guard let collectedData = _collectedData else {
@@ -176,7 +177,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             _collectedData = tasksData.object(forKey: dataTask)
         }
 
-        guard let ubDataTask = _ubDataTask, let dataHolder = _collectedData else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == dataTask, let dataHolder = _collectedData else {
             completionHandler(.cancel)
             return
         }
@@ -202,12 +203,14 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         assert(session == urlSession, "The sessions are not matching")
 
+        var _ubDataTask: UBURLDataTask?
         var _collectedData: UBURLSessionDelegate.DataHolder?
         serialQueue.sync {
+            _ubDataTask = tasks.object(forKey: dataTask)
             _collectedData = tasksData.object(forKey: dataTask)
         }
 
-        guard let dataHolder = _collectedData else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == dataTask, let dataHolder = _collectedData else {
             return
         }
         if dataHolder.data == nil {
@@ -233,12 +236,14 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         assert(session == urlSession, "The sessions are not matching")
 
+        var _ubDataTask: UBURLDataTask?
         var _collectedData: UBURLSessionDelegate.DataHolder?
         serialQueue.sync {
+            _ubDataTask = tasks.object(forKey: task)
             _collectedData = tasksData.object(forKey: task)
         }
 
-        guard let dataHolder = _collectedData else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == task, let dataHolder = _collectedData else {
             completionHandler(request)
             return
         }
@@ -261,12 +266,14 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         assert(session == urlSession, "The sessions are not matching")
 
+        var _ubDataTask: UBURLDataTask?
         var _collectedData: UBURLSessionDelegate.DataHolder?
         serialQueue.sync {
+            _ubDataTask = tasks.object(forKey: task)
             _collectedData = tasksData.object(forKey: task)
         }
 
-        guard let dataHolder = _collectedData else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == task, let dataHolder = _collectedData else {
             return
         }
 

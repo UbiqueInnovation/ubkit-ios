@@ -71,7 +71,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// The underlaying data task
-    private var dataTask: URLSessionDataTask?
+    private(set) var dataTask: URLSessionDataTask?
 
     /// The callback queue where all callbacks take place
     private(set) var callbackQueue: OperationQueue
@@ -447,6 +447,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
         set {
             stateDispatchQueue.sync {
+                print("new state", _state, newValue)
                 _state = newValue
             }
         }

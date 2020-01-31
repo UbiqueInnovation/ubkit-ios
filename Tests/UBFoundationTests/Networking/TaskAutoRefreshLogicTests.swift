@@ -290,6 +290,57 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask3.start()
         wait(for: [ex3], timeout: 10000)
     }
+
+    func testDoubleStart() {
+        // Load Request that changes cached header
+        let url = URL(string: "https://example.com/file.json")!
+
+        let initialResponse = try! BasicResponseProvider(rule: url.absoluteString, body: "Hello, World!", header: BasicResponseProvider.Header(statusCode: 200, headerFields: [
+            "cache-control": "max-age=10000",
+            "etag": "0x8DB4542835F84A7",
+            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
+        ]), timing: .init(headerResponseDelay: 1, bodyResponseDelay: 1))
+
+        initialResponse.addToLocalServer()
+
+        defer {
+            LocalServer.pauseLocalServer()
+        }
+
+        let conf = UBURLSessionConfiguration()
+        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: nil)
+        conf.sessionConfiguration.protocolClasses = [LocalServerURLProtocol.self]
+        let session = UBURLSession(configuration: conf)
+
+        // load request to fill cache
+
+        let dataTask = UBURLDataTask(url: url, session: session)
+
+        let ex = expectation(description: "s")
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
+
+            ex.fulfill()
+        }
+        dataTask.start()
+        wait(for: [ex], timeout: 60)
+
+        // load request again
+
+        let dataTask2 = UBURLDataTask(url: url, session: session)
+
+        let ex2 = expectation(description: "s2")
+        ex2.expectedFulfillmentCount = 2
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
+
+            XCTAssertNotNil(info)
+            XCTAssert(info!.cacheHit)
+
+            ex2.fulfill()
+        }
+        dataTask2.start()
+        dataTask2.start() // start request again
+        wait(for: [ex2], timeout: 60)
+    }
 }
 
 @available(iOS 15.0.0, *)
