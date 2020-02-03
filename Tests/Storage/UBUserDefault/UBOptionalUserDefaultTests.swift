@@ -1,22 +1,23 @@
 //
-//  UBUserDefaultsStoredTests.swift
+//  UBOptionalUserDefaultTests.swift
 //  UBFoundation
 //
-//  Created by Zeno Koller on 14.01.20.
+//  Created by Zeno Koller on 02.02.20.
 //
 
 @testable import UBFoundation
 import XCTest
 
-class UBUserDefaultsStoredTests: XCTestCase {
-    @UBUserDefaultsStored(key: "testString", defaultValue: "Ubique")
-    var testString: String
+class UBOptionalUserDefaultTests: XCTestCase {
 
-    func testDefaultValue() {
+    @UBOptionalUserDefault(key: "testString")
+    var testString: String?
+
+    func testNoDefaultValue() {
         let userDefaults = UserDefaults.makeTestInstance()
         _testString.userDefaults = userDefaults
 
-        XCTAssertEqual(testString, "Ubique")
+        XCTAssertEqual(testString, nil)
     }
 
     func testGet() {
@@ -33,10 +34,5 @@ class UBUserDefaultsStoredTests: XCTestCase {
 
         testString = "Some other value"
         XCTAssertEqual(userDefaults.string(forKey: "testString"), "Some other value")
-    }
-
-    struct User: Codable {
-        var name: String
-        var birthdate: Date
     }
 }
