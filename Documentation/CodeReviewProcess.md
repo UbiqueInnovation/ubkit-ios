@@ -23,7 +23,7 @@ Verify that all methods have a correct level of access control. Only functions a
 ## Documentation and Comments
 - New functions or types with a ACL of `public` or `open` should be documented in a way that ensures proper understanding from the caller. Add in notes, description as needed to remove any ambiguity.
 - `internal` or `private` ACL types must have a simple documentation, unless the naming is very obvious.
-- Functions that do not require documentation should be annotated with `\\\ :nodoc:` to signal that the lack of documentation is intended.
+- Functions that do not require documentation should be annotated with `/// :nodoc:` to signal that the lack of documentation is intended.
 - If the body of a function is complicated, small one line comments are required.
 - If a hack is done or a non-standard coding way is needed. A comment explaining the need and pointing the problem should be present.
 - Run `fastlane documentation` and check for missing documentation.
