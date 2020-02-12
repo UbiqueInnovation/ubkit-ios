@@ -8,7 +8,7 @@ import PackageDescription
 let package = Package(
     name: "UBFoundation",
 	platforms: [
-		.iOS(.v11)
+		.iOS(.v10)
 	],
     products: [
         .library(name: "UBFoundation", targets: ["UBFoundation"]),
