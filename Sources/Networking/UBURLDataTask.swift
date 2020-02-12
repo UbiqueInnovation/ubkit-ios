@@ -149,7 +149,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 dataTask.priority = self.priority
                 dataTask.taskDescription = self.taskDescription
 
-                if #available(iOSApplicationExtension 11.0, *) {
+                if #available(iOS 11.0, *) {
                     // Observe the task progress
                     self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
                         guard let self = self else {
