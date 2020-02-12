@@ -56,6 +56,10 @@ open class UBBaseCachingLogic: UBCachingLogic {
             guard cacheControlDirectives.cachingAllowed else {
                 return nil
             }
+        } else if response.allHeaderFields[nextRefreshHeaderFieldName] == nil, response.allHeaderFields[expiresHeaderFieldName] == nil {
+            // if no cache control headers are set, don't store the cached the response
+            // unless some other cron-logic headers are in use
+            return nil
         }
 
         // Check the status code
@@ -96,6 +100,10 @@ open class UBBaseCachingLogic: UBCachingLogic {
                 session.configuration.urlCache?.removeCachedResponse(for: request)
                 return .miss
             }
+        } else if response.allHeaderFields[nextRefreshHeaderFieldName] == nil, response.allHeaderFields[expiresHeaderFieldName] == nil {
+            // if no cache control headers are set, don't use the cached the response
+            // unless some other cron-logic headers are in use
+            return .miss
         }
 
         // Check that the content language of the cached response is contained in the request accepted language
