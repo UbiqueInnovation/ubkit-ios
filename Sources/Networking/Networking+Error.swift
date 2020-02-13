@@ -40,3 +40,9 @@ public enum UBNetworkingError: Error, Equatable {
     /// No cached data was found
     case noCachedData
 }
+
+/// A structure that encapsulate the error body returned from the backend
+public protocol UBURLDataTaskErrorBody: Error {
+    /// The base error that was initially generated and passed up the stack
+    var baseError: Error? { get set }
+}

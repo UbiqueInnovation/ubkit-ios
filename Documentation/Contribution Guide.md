@@ -55,7 +55,7 @@ To read the changelog you can run
 fastlane open_changelog
 ```
 
-### Versionning
+### Versioning
 Versioning is key to keep track of software releases and dependencies. Maintaining a comprehensive and coherent versioning standard will avoid any confusion later.
 
 #### Versioning conventions
@@ -66,7 +66,7 @@ You can read more about the logic on [Sementic Versioning 2.0.0](https://semver.
 
 In addition to the version a build number can be provided to separate different builds of the same version, specially during development. It should always follow the version and be placed between parenthisis. _Ex: 2.5.3 (1472)_
 
-#### Versionning tools
+#### Versioning tools
 ##### Version bump
 To avoid any human error, we use fastlane to update our version. 
 Just run `fastlane update_version` and follow the instructions.

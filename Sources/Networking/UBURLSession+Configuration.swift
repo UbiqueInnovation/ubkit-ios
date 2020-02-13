@@ -93,7 +93,7 @@ extension URLRequest.NetworkServiceType {
             qos = .background
         case .responsiveData:
             qos = .userInitiated
-        case .video, .voip, .voice, .callSignaling:
+        case .video, .voip, .voice, .callSignaling, .avStreaming, .responsiveAV:
             qos = .userInteractive
         case .default:
             qos = .default

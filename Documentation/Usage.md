@@ -194,3 +194,81 @@ let job = CronJob(fireAt: date) {
     // The cron job to be executed
 }
 ```
+
+## Location Services
+A `UBLocationManager` facilitates asking for the required authorization level for the desired usage (location, significant updates, visits or heading). 
+It can be instantiated with a single usage, which is of type `UBLocationManager.LocationMonitoringUsage`:
+```swift
+let locationManager = UBLocationManager(usage: .location) 
+```
+or a set of usages:
+```swift
+let locationManager = UBLocationManager(usage: [.location, .heading])  
+```
+
+The location manager forwards the updates to the client's `UBLocationManagerDelegate`, similar to the `CLLocationManagerDelegate`.
+
+```swift
+
+class MapViewController: CLLocationManagerDelegate {
+    // ...
+
+    init() {
+        locationManager.delegate = self 
+    }
+    
+    // ... implements delegate methods
+}
+```
+
+The monitoring for the desired location services are started and stopped with 
+
+```swift
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated: animated)
+        
+        // The location manager can ask for the required location permission,
+        // if it has not been granted yet...
+        locationManager.startLocationMonitoring(canAskForPermission: true)
+        
+        // ...or not, where it is assumed that the user has been asked to grant
+        // location permissions at some other point in the application.
+        locationManager.startLocationMonitoring(canAskForPermission: false)
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated: animated)
+        locationManager.stopLocationMonitoring()
+    }
+}
+```
+
+## UserDefaults Property Wrapper
+
+`UBUserDefault` is a property wrapper which backs the annotated variable with storage in `UserDefaults`. By default, the `standard` `UserDefaults` are used.
+
+```swift
+@UBUserDefault(key: "username_key", defaultValue: "")
+var userName: String
+```
+
+For variables without default values, please use `UBOptionalUserDefault` instead:
+
+```swift
+@UBOptionalUserDefault(key: "username_key")
+var userName: String?
+```
+
+To store a variable of type `T` using these property wrappers, it needs to conform to `UBUserDefaultValue`. Plist-Compatible values (e.g. `String`, `Int`, `Array[Double]`, ...)  are supported out of the box.
+
+To store `Codable` types such as `struct User: Codable { ... }`, please conform to `UBCodable` instead of `Codable`:
+
+```swift
+
+struct User: UBCodable { ... }
+
+@UBOptionalUserDefault(key: "user")
+var loggedInUser: User?
+```
+
+To store `RawRepresentable` types such as `enum`s, please conform to `UBRawRepresentable` instead of `RawRepresentable`.

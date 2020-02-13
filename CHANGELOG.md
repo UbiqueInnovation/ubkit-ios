@@ -14,8 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - UIColor from HEX
 - Keyboard Layout Guide
 - Cron Jobs
+- Location Services: Convenience wrapper for authorization 
+- UserDefaults Property Wrapper
 
 ### Changed
+- Return cached metrics
 
 ### Removed
 
