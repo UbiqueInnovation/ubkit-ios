@@ -120,8 +120,7 @@ class UBUserDefaultTests: XCTestCase {
     }
 }
 
-fileprivate extension Date {
-
+private extension Date {
     static var testDate: Date {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")

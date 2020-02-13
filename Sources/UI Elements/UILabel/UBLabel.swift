@@ -34,7 +34,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
 
         super.init(frame: .zero)
 
-        self.font = self.type.font
+        font = self.type.font
         self.textColor = textColor == nil ? self.type.textColor : textColor
         self.textAlignment = textAlignment
         self.numberOfLines = numberOfLines
@@ -80,9 +80,8 @@ open class UBLabel<T: UBLabelType>: UILabel {
             textString = NSMutableAttributedString(string: textContent, attributes: [:])
         }
 
-        if self.isHtmlContent
-        {
-            textString.ub_replaceFonts(with: self.font)
+        if isHtmlContent {
+            textString.ub_replaceFonts(with: font)
         }
 
         // check paragraph style
@@ -115,15 +114,13 @@ open class UBLabel<T: UBLabelType>: UILabel {
     }
 }
 
-extension NSMutableAttributedString
-{
-    func ub_replaceFonts(with font: UIFont)
-    {
+extension NSMutableAttributedString {
+    func ub_replaceFonts(with font: UIFont) {
         // from: https://stackoverflow.com/questions/19921972/
         let baseFontDescriptor = font.fontDescriptor
         var changes = [NSRange: UIFont]()
 
-        enumerateAttribute(.font, in: NSMakeRange(0, length), options: []) { foundFont, range, _ in
+        enumerateAttribute(.font, in: NSRange(location: 0, length: length), options: []) { foundFont, range, _ in
             if let htmlTraits = (foundFont as? UIFont)?.fontDescriptor.symbolicTraits,
                 let adjustedDescriptor = baseFontDescriptor.withSymbolicTraits(htmlTraits) {
                 let newFont = UIFont(descriptor: adjustedDescriptor, size: font.pointSize)
@@ -137,4 +134,3 @@ extension NSMutableAttributedString
         }
     }
 }
-

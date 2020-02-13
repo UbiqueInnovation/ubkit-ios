@@ -150,17 +150,17 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 dataTask.taskDescription = self.taskDescription
 
                 if #available(iOS 11.0, *) {
-                // Observe the task progress
-                self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-                    guard let self = self else {
-                        return
-                    }
+                    // Observe the task progress
+                    self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
+                        guard let self = self else {
+                            return
+                        }
 
-                    self.progress.totalUnitCount = task.progress.totalUnitCount
+                        self.progress.totalUnitCount = task.progress.totalUnitCount
 
-                    self.progress.completedUnitCount = task.progress.completedUnitCount
-                    self.notifyProgress(self.progress.fractionCompleted)
-                })
+                        self.progress.completedUnitCount = task.progress.completedUnitCount
+                        self.notifyProgress(self.progress.fractionCompleted)
+                    })
                 }
 
                 // Observe the task state
@@ -505,49 +505,14 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         return uuid
     }
 
- /// Adds a completion handler that gets the data decoded by the specified decoder and an error decoded
-    ///
-    /// If no data is returned, there will be an error raised and the result will fail.
-    ///
-    /// - Parameters:
-    ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
-    ///   - errorDecoder: The decoder for the body in case of error
-    ///   - completionHandler: A completion handler
-    public func addCompletionHandler<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completionHandler: @escaping CompletionHandlingBlock<T>) {
-        let wrapper = CompletionHandlerWrapper(decoder: decoder, errorDecoder: errorDecoder, completion: completionHandler)
-        completionHandlersDispatchQueue.sync {
-            _completionHandlers.append(wrapper)
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- /// Removes a completion handler
+    /// Removes a completion handler
     ///
     /// - Parameter identifier: The identifier returned when adding the completion block
     public func removeCompletionHandler(identifier: CompletionHandlerIdentifier) {
         return completionHandlersDispatchQueue.sync {
             _ = _completionHandlers.removeValue(forKey: identifier)
-       
+        }
+    }
 
     // MARK: - Validation
 
@@ -683,8 +648,8 @@ extension UBURLDataTask {
                         completion(.success(decoded), response, info, caller)
                     }
                 } catch {
-                callbackQueue.addOperation {
-                    completion(.failure(error), response, info, caller)
+                    callbackQueue.addOperation {
+                        completion(.failure(error), response, info, caller)
                     }
                 }
             }
