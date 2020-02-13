@@ -11,6 +11,33 @@ import XCTest
 class HTTPDataTaskTests: XCTestCase {
     let url = URL(string: "http://ubique.ch")!
 
+    func testSynchronousCalls() {
+        let ex1 = expectation(description: "Waiting for connection")
+
+        let request = UBURLRequest(url: url)
+        let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+
+        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+            URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: 0.1)
+        }
+        let dataTask = UBURLDataTask(request: request, session: mockSession)
+
+        let operationQueue = OperationQueue()
+
+        operationQueue.addOperation {
+            let response = dataTask.startSynchronous()
+            switch response.result {
+            case .success:
+                break
+            case let .failure(error):
+                XCTFail(error.localizedDescription)
+            }
+            ex1.fulfill()
+        }
+
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
     func testCompletionFailure() {
         let ex1 = expectation(description: "Request")
 

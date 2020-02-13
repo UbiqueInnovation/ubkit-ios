@@ -9,7 +9,6 @@
 import XCTest
 
 class UBOptionalUserDefaultTests: XCTestCase {
-
     @UBOptionalUserDefault(key: "testString")
     var testString: String?
 

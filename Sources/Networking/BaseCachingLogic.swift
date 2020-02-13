@@ -120,10 +120,9 @@ open class UBBaseCachingLogic: UBCachingLogic {
         // Check Max Age
         if let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String,
             let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), let maxAge = cacheControlDirectives.maxAge, let responseDateHearder = response.allHeaderFields[dateHeaderFieldName] as? String, let responseDate = dateFormatter.date(from: responseDateHearder) {
-
-			// cacheAge: Round up to next seconds
-			// Rounding is important s.t. re-requests with interval < 1s are not
-			// treated differently that requests after > 1s
+            // cacheAge: Round up to next seconds
+            // Rounding is important s.t. re-requests with interval < 1s are not
+            // treated differently that requests after > 1s
             let cacheAge = Int(ceil(-responseDate.timeIntervalSinceNow))
 
             if cacheAge < 0 {
