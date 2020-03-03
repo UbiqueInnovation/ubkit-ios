@@ -14,6 +14,8 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// Storage of the task data
     private let tasksData = NSMapTable<URLSessionTask, DataHolder>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
+    private let serialQueue: DispatchQueue = DispatchQueue(label: "UBURLSessionDelegate")
+
     /// The url session, for verification purpouses
     weak var urlSession: URLSession?
 
@@ -38,10 +40,12 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
 
     /// Adds a task pair to the list of monitored tasks.
     func addTaskPair(key: URLSessionTask, value: UBURLDataTask, cachedResponse: CachedURLResponse?) {
-        tasks.setObject(value, forKey: key)
-        let dataHolder = DataHolder(key.originalRequest!)
-        dataHolder.cached = cachedResponse
-        tasksData.setObject(dataHolder, forKey: key)
+        serialQueue.sync {
+            tasks.setObject(value, forKey: key)
+            let dataHolder = DataHolder(key.originalRequest!)
+            dataHolder.cached = cachedResponse
+            tasksData.setObject(dataHolder, forKey: key)
+        }
     }
 
     /// :nodoc:
@@ -49,8 +53,10 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         assert(session == urlSession, "The sessions are not matching")
         defer {
             // Clear the collected data
-            tasksData.removeObject(forKey: task)
-            tasks.removeObject(forKey: task)
+            serialQueue.sync {
+                tasksData.removeObject(forKey: task)
+                tasks.removeObject(forKey: task)
+            }
         }
 
         guard let ubDataTask = tasks.object(forKey: task) else {

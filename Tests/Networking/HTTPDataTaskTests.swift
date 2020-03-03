@@ -38,6 +38,16 @@ class HTTPDataTaskTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
 
+    func testManySynchronousCalls() {
+        let queue = OperationQueue()
+        DispatchQueue.concurrentPerform(iterations: 500) { _ in
+            let request = UBURLRequest(url: URL(string: "http://no-cache-but-pie.glitch.me")!)
+            let task = UBURLDataTask(request: request, callbackQueue: queue)
+            let result = task.startSynchronous()
+            XCTAssert(result.info?.cacheHit != true)
+        }
+    }
+
     func testCompletionFailure() {
         let ex1 = expectation(description: "Request")
 
