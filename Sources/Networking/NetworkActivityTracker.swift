@@ -64,7 +64,9 @@ public class UBNetworkActivityTracker {
     ///
     /// - Parameter task: The task to be monitored.
     public func add(_ task: UBURLDataTask) {
-        trackedTasks.add(task)
+        serialQueue.sync {
+            trackedTasks.add(task)
+        }
         updateState()
         task.addStateTransitionObserver { [weak self] _, _, _ in
             self?.updateState()
@@ -75,7 +77,9 @@ public class UBNetworkActivityTracker {
     ///
     /// - Parameter task: The task to be removed.
     public func remove(_ task: UBURLDataTask) {
-        trackedTasks.remove(task)
+        serialQueue.sync {
+            trackedTasks.remove(task)
+        }
         updateState()
     }
 
