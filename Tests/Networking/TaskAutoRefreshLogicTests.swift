@@ -160,6 +160,8 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
+
+            ex2.fulfill()
         }
 
         dataTask2.start()
@@ -194,6 +196,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
+            XCTAssertFalse(info!.refresh)
 
             ex2.fulfill()
         }
