@@ -505,6 +505,25 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         return uuid
     }
 
+    /// Adds a completion handler that gets the data decoded by the specified decoder.
+    /// In case of ab error, the handler gets the error object decoded by the spcified errorDecoder.
+    ///
+    /// If no data is returned, there will be an error raised and the result will fail.
+    ///
+    /// - Parameters:
+    ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
+    ///   - errorDecoder: The decoder to
+    ///   - completionHandler: A completion handler
+    @discardableResult
+    public func addCompletionHandler<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
+        let wrapper = CompletionHandlerWrapper(decoder: decoder, errorDecoder: errorDecoder, completion: completionHandler)
+        let uuid = CompletionHandlerIdentifier()
+        completionHandlersDispatchQueue.sync {
+            _completionHandlers[uuid] = wrapper
+        }
+        return uuid
+    }
+
     /// Removes a completion handler
     ///
     /// - Parameter identifier: The identifier returned when adding the completion block
