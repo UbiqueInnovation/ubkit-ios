@@ -227,6 +227,10 @@
 		8EC4848422428AC500AC8E44 /* HTTPHeaderField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */; };
 		8EC4848522428AC500AC8E44 /* HTTPHeaderField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */; };
 		8EC4848622428AC500AC8E44 /* HTTPHeaderField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */; };
+		8EC4918E2428AEB300DD55DD /* DefaultCachingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4918D2428AEB300DD55DD /* DefaultCachingPolicy.swift */; };
+		8EC4918F2428AEB300DD55DD /* DefaultCachingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4918D2428AEB300DD55DD /* DefaultCachingPolicy.swift */; };
+		8EC491902428AEB300DD55DD /* DefaultCachingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4918D2428AEB300DD55DD /* DefaultCachingPolicy.swift */; };
+		8EC491912428AEB300DD55DD /* DefaultCachingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4918D2428AEB300DD55DD /* DefaultCachingPolicy.swift */; };
 		8EE058A52251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */; };
 		8EE058A62251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */; };
 		8EE058A72251241400B2885B /* NetworkActivityTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */; };
@@ -471,6 +475,7 @@
 		8EC484732242813200AC8E44 /* UBURLRequest+Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UBURLRequest+Body.swift"; sourceTree = "<group>"; };
 		8EC484782242821300AC8E44 /* MIMEType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIMEType.swift; sourceTree = "<group>"; };
 		8EC4848222428AC500AC8E44 /* HTTPHeaderField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderField.swift; sourceTree = "<group>"; };
+		8EC4918D2428AEB300DD55DD /* DefaultCachingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCachingPolicy.swift; sourceTree = "<group>"; };
 		8EE058A42251241400B2885B /* NetworkActivityTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkActivityTrackerTests.swift; sourceTree = "<group>"; };
 		8EE058A822513A5400B2885B /* NetworkActivityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkActivityTracker.swift; sourceTree = "<group>"; };
 		8EE058AF22520E5900B2885B /* UBURLRequestModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBURLRequestModifier.swift; sourceTree = "<group>"; };
@@ -686,6 +691,7 @@
 			isa = PBXGroup;
 			children = (
 				8EFFDD0822568D81002D2DE2 /* CacheControl.swift */,
+				8EC4918D2428AEB300DD55DD /* DefaultCachingPolicy.swift */,
 				8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */,
 				8E52B77B229D69A000633EFA /* BaseCachingLogic.swift */,
 				8E52B780229D6AF100633EFA /* AutoRefreshCacheLogic.swift */,
@@ -1564,6 +1570,7 @@
 				8EE5F789228EE3FE009D174A /* KeyboardInfo.swift in Sources */,
 				8E52B781229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */,
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
+				8EC4918E2428AEB300DD55DD /* DefaultCachingPolicy.swift in Sources */,
 				AA89ACB623E6C26100491180 /* UBOptionalUserDefault.swift in Sources */,
 				8EFFDD0922568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8EE058E622535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
@@ -1634,6 +1641,7 @@
 				8EC4847022427BE500AC8E44 /* HTTPMethod.swift in Sources */,
 				8EE058C222526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
 				8E7F74AF2249897B00582E57 /* UIColor+HEX.swift in Sources */,
+				8EC4918F2428AEB300DD55DD /* DefaultCachingPolicy.swift in Sources */,
 				AA89ACB723E6C26100491180 /* UBOptionalUserDefault.swift in Sources */,
 				8E7F747F2245A06200582E57 /* MIMEType+Standard.swift in Sources */,
 				8EBD47FB2240770000CD2639 /* Localization+Notification.swift in Sources */,
@@ -1712,6 +1720,7 @@
 				8E0DB2DC2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EFFDCDF2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
 				8EE058F7225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
+				8EC491902428AEB300DD55DD /* DefaultCachingPolicy.swift in Sources */,
 				8E101736224F5736006127DA /* CronRule.swift in Sources */,
 				AA89ACB823E6C26100491180 /* UBOptionalUserDefault.swift in Sources */,
 				8E52B77E229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
@@ -1790,6 +1799,7 @@
 				8EBD48112240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786642241269200430D34 /* Localization+Locale.swift in Sources */,
 				8E46FA42224DAED000198321 /* CronJob.swift in Sources */,
+				8EC491912428AEB300DD55DD /* DefaultCachingPolicy.swift in Sources */,
 				AA89ACA723E4555E00491180 /* UBCodable.swift in Sources */,
 				8EBD48012240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E82240765200CD2639 /* Logger.swift in Sources */,

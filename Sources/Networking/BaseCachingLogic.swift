@@ -20,6 +20,9 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
     private let UserInfoKeyMetrics = "UserInfoKeyMetrics"
 
+    /// The default policy for caching when no caching headers are found
+    public var defaultCachingPolicyProvider: DefaultCachingPolicyProvider = DefaultNoCaching()
+
     /// Initializes the caching logic with a policy and a quality of service
     ///
     /// - Parameters:
@@ -56,10 +59,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
             guard cacheControlDirectives.cachingAllowed else {
                 return nil
             }
-        } else if response.allHeaderFields[nextRefreshHeaderFieldName] == nil, response.allHeaderFields[expiresHeaderFieldName] == nil {
-            // if no cache control headers are set, don't store the cached the response
-            // unless some other cron-logic headers are in use
-            return nil
         }
 
         // Check the status code
@@ -74,6 +73,16 @@ open class UBBaseCachingLogic: UBCachingLogic {
             }
             // If successful then cache the data
             var userInfo = [AnyHashable: Any]()
+            if response.allHeaderFields[nextRefreshHeaderFieldName] == nil, response.allHeaderFields[expiresHeaderFieldName] == nil {
+                // if no cache control headers are set, and no cron-logic headers are in use
+                // Use the default caching policy
+                switch defaultCachingPolicyProvider.defaultCaching(response: response) {
+                case .noCache:
+                    return nil
+                case let .cache(userInfo: defaultCachingUserInfo):
+                    userInfo.merge(defaultCachingUserInfo, uniquingKeysWith: { first, _ in first })
+                }
+            }
             if let metrics = metrics {
                 userInfo[UserInfoKeyMetrics] = metrics
             }
@@ -100,10 +109,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
                 session.configuration.urlCache?.removeCachedResponse(for: request)
                 return .miss
             }
-        } else if response.allHeaderFields[nextRefreshHeaderFieldName] == nil, response.allHeaderFields[expiresHeaderFieldName] == nil {
-            // if no cache control headers are set, don't use the cached the response
-            // unless some other cron-logic headers are in use
-            return .miss
         }
 
         // Check that the content language of the cached response is contained in the request accepted language
