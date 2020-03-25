@@ -20,9 +20,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
     private let UserInfoKeyMetrics = "UserInfoKeyMetrics"
 
-    /// The default policy for caching when no caching headers are found
-    public var defaultCachingPolicyProvider: DefaultCachingPolicyProvider = DefaultNoCaching()
-
     /// Initializes the caching logic with a policy and a quality of service
     ///
     /// - Parameters:
@@ -54,13 +51,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
     }
 
     /// :nodoc:
-    open func proposeCachedResponse(for session: URLSession, dataTask _: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
-        if let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String, let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader) {
-            guard cacheControlDirectives.cachingAllowed else {
-                return nil
-            }
-        }
-
+    public func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
         // Check the status code
         let statusCodeCategory = UBHTTPCodeCategory(code: response.statusCode)
         switch statusCodeCategory {
@@ -68,27 +59,46 @@ open class UBBaseCachingLogic: UBCachingLogic {
             // If not success then no caching
             return nil
         case .success:
-            guard let data = data else {
+            guard let encapsulatedData = proposedCacheResponseWhenSuccessfull(for: session, dataTask: dataTask, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics) else {
                 return nil
             }
-            // If successful then cache the data
-            var userInfo = [AnyHashable: Any]()
-            if response.allHeaderFields[nextRefreshHeaderFieldName] == nil, response.allHeaderFields[expiresHeaderFieldName] == nil {
-                // if no cache control headers are set, and no cron-logic headers are in use
-                // Use the default caching policy
-                switch defaultCachingPolicyProvider.defaultCaching(response: response) {
-                case .noCache:
-                    return nil
-                case let .cache(userInfo: defaultCachingUserInfo):
-                    userInfo.merge(defaultCachingUserInfo, uniquingKeysWith: { first, _ in first })
-                }
-            }
-            if let metrics = metrics {
-                userInfo[UserInfoKeyMetrics] = metrics
-            }
-            let cachedResponse = CachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: storagePolicy)
+            let cachedResponse = CachedURLResponse(response: encapsulatedData.response, data: encapsulatedData.data, userInfo: encapsulatedData.userInfo, storagePolicy: storagePolicy)
             return cachedResponse
         }
+    }
+
+    /// Asks the caching logic to provide a cached proposition when successfull.
+    ///
+    /// This function allows the subclassing to customize the proposed cache response in case of a successful response.
+    /// Override this function to change the logic of caching
+    /// Returning `nil` will indicate that the response should not be cached
+    ///
+    /// - Parameters:
+    ///   - session: The session that generated the response
+    ///   - dataTask: The data task that generated the response
+    ///   - ubDataTask: The UBDataTask that wrappes the data task
+    ///   - request: The latest request
+    ///   - response: The latest response
+    ///   - data: The data returned by the response
+    ///   - metrics: The metrics collected by the session during the request
+    /// - Returns: A possible caching response
+    open func proposedCacheResponseWhenSuccessfull(for session: URLSession, dataTask _: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> (response: HTTPURLResponse, data: Data, userInfo: [AnyHashable: Any])? {
+        guard let data = data else {
+            return nil
+        }
+
+        if let cacheControlHeader = response.allHeaderFields[cacheControlHeaderFieldName] as? String, let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader) {
+            guard cacheControlDirectives.cachingAllowed else {
+                return nil
+            }
+        }
+        // If successful then cache the data
+        var userInfo = [AnyHashable: Any]()
+        if let metrics = metrics {
+            userInfo[UserInfoKeyMetrics] = metrics
+        }
+
+        return (response, data, userInfo)
     }
 
     /// :nodoc:
