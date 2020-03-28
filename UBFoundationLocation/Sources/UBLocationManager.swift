@@ -8,6 +8,7 @@
 
 import CoreLocation
 import Foundation
+import UBFoundation
 
 /// An object defining methods that handle events related to GPS location.
 public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
