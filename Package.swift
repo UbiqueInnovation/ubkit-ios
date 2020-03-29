@@ -15,7 +15,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "UBFoundation", path: "Sources"),
-        .testTarget(name: "Tests", dependencies: ["UBFoundation"], path: "Tests"),
-        .testTarget(name: "LocationTests", dependencies: ["UBFoundation", "UBFoundationLocation"], path: "UBFoundationLocation/Tests")
+        .testTarget(name: "Tests", dependencies: ["UBFoundation"], path: "Tests")
+
     ]
 )
