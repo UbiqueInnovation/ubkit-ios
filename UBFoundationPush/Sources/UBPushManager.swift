@@ -5,16 +5,16 @@
 //  Created by Zeno Koller on 23.03.20.
 //
 
+import UBFoundation
 import UIKit
 import UserNotifications
-import UBFoundation
 
 /// Handles requesting push permissions. Clients should customize the following components specific to the client application:
 ///
 /// - `pushRegistrationManager`, which handles registration of push tokens on our server
 /// - `pushHandler`, which handles incoming pushes
 ///
-/// The following calls need to be added to the app delegate: 
+/// The following calls need to be added to the app delegate:
 ///
 ///     import UBFoundationPush
 ///
@@ -173,7 +173,6 @@ open class UBPushManager: NSObject {
 
     /// Needs to be called inside `application(_:didFailToRegisterForRemoteNotificationsWithError:)`
     public func didFailToRegisterForRemoteNotifications(with error: Error) {
-
         pushRegistrationManager.setPushToken(nil)
 
         if let callback = self.permissionRequestCallback {

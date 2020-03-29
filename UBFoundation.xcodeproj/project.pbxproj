@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		245E53052325003000EA245F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 245E53042325003000EA245F /* Foundation.framework */; };
+		24780B4C2430EDD1003BB26C /* UBDeviceUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24780B4B2430EDD1003BB26C /* UBDeviceUUID.swift */; };
 		24B18B1823D1A1F500350130 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B0C23D1A1F500350130 /* UIImage+Helpers.swift */; };
 		24B18B1923D1A1F500350130 /* UBLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B0E23D1A1F500350130 /* UBLabel.swift */; };
 		24B18B1A23D1A1F500350130 /* UIView+Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B18B1023D1A1F500350130 /* UIView+Autolayout.swift */; };
@@ -386,6 +387,7 @@
 
 /* Begin PBXFileReference section */
 		245E53042325003000EA245F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		24780B4B2430EDD1003BB26C /* UBDeviceUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBDeviceUUID.swift; sourceTree = "<group>"; };
 		24B18B0C23D1A1F500350130 /* UIImage+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
 		24B18B0E23D1A1F500350130 /* UBLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UBLabel.swift; sourceTree = "<group>"; };
 		24B18B1023D1A1F500350130 /* UIView+Autolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Autolayout.swift"; sourceTree = "<group>"; };
@@ -573,6 +575,14 @@
 				245E53042325003000EA245F /* Foundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		24780B4A2430EDA0003BB26C /* DeviceUUID */ = {
+			isa = PBXGroup;
+			children = (
+				24780B4B2430EDD1003BB26C /* UBDeviceUUID.swift */,
+			);
+			path = DeviceUUID;
 			sourceTree = "<group>";
 		};
 		24B18B0B23D1A1F500350130 /* UIImage */ = {
@@ -1051,6 +1061,7 @@
 		AAB0136923DEF1E0003C91C7 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				24780B4A2430EDA0003BB26C /* DeviceUUID */,
 				AA89ACBA23E6C27000491180 /* UBUserDefault */,
 			);
 			path = Storage;
@@ -1559,6 +1570,7 @@
 				8EBD480E2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786612241269200430D34 /* Localization+Locale.swift in Sources */,
 				AA89AC9A23E44DF400491180 /* UBPListValue.swift in Sources */,
+				24780B4C2430EDD1003BB26C /* UBDeviceUUID.swift in Sources */,
 				24B18B1C23D1A1F500350130 /* UITableView+Helpers.swift in Sources */,
 				8EBD47FE2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E52240765200CD2639 /* Logger.swift in Sources */,

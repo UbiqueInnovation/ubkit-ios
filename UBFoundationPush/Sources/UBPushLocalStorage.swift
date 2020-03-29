@@ -6,11 +6,10 @@
 //  Copyright © 2020 Ubique Apps & Technology. All rights reserved.
 //
 
-import UIKit
 import UBFoundation
+import UIKit
 
 struct UBPushLocalStorage {
-
     static var shared = UBPushLocalStorage()
 
     /// The push token obtained from Apple
@@ -24,8 +23,4 @@ struct UBPushLocalStorage {
     /// The last registration date of the current push token
     @UBOptionalUserDefault(key: "UBPushRegistrationManager_LastRegistrationDate")
     var lastRegistrationDate: Date?
-
-    /// The push token UUID for this device
-    @UBOptionalUserDefault(key: "UBPushRegistrationManager_DeviceUUID")
-    var deviceUUID: String?
 }
