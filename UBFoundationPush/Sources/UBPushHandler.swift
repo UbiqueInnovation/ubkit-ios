@@ -5,9 +5,9 @@
 //  Created by Zeno Koller on 23.03.20.
 //
 
+import UBFoundation
 import UIKit
 import UserNotifications
-import UBFoundation
 
 /// Handles incoming push notifications. Clients should subclass `UBPushHandler` and set it in `UBPushManager` as
 ///

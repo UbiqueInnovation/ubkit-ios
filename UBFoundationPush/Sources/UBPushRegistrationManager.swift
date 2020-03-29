@@ -5,8 +5,8 @@
 //  Created by Zeno Koller on 23.03.20.
 //
 
-import UIKit
 import UBFoundation
+import UIKit
 
 /// Handles registration of push tokens on our server
 /// Clients can either create a pushRegistrationManager with a `registrationUrl`"
@@ -112,7 +112,7 @@ open class UBPushRegistrationManager {
 
         var request = UBURLRequest(url: registrationUrl, method: .post, timeoutInterval: 30.0)
         do {
-            try request.setHTTPJSONBody(Request(deviceUUID: self.deviceUUID, pushToken: pushToken))
+            try request.setHTTPJSONBody(Request(deviceUUID: pushDeviceUUID, pushToken: pushToken))
         } catch {
             UBPushManager.logger.error("Could not set push registration request body: \(error.localizedDescription)")
             return nil
@@ -141,13 +141,8 @@ open class UBPushRegistrationManager {
     // MARK: - UUID
 
     /// :nodoc:
-    private var deviceUUID: String {
-        if let uuid = UBPushLocalStorage.shared.deviceUUID {
-            return uuid
-        } else {
-            UBPushLocalStorage.shared.deviceUUID = UUID().uuidString
-            return self.deviceUUID
-        }
+    open var pushDeviceUUID: String {
+        UBDeviceUUID.get(storage: .userDefaults)
     }
 }
 
