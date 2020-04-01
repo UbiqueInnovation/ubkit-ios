@@ -8,24 +8,18 @@
 import Foundation
 
 public struct UBDeviceUUID {
-    public enum Storage {
-        case userDefaults
-    }
 
-    public static func getUUID(storage: Storage) -> String {
-        switch storage {
-        case .userDefaults:
-            if let uuid = userDefaultsDeviceUUID {
-                return uuid
-            } else {
-                let uuid = UUID().uuidString
-                userDefaultsDeviceUUID = uuid
-                return uuid
-            }
+    public static func getUUID() -> String {
+        if let uuid = keychainDeviecUUID {
+            return uuid
+        } else {
+            let uuid = UUID().uuidString
+            keychainDeviecUUID = uuid
+            return uuid
         }
     }
 
-    /// The push token UUID for this device
-    @UBOptionalUserDefault(key: "UBDeviceUUID")
-    private static var userDefaultsDeviceUUID: String?
+    /// The push token UUID for this device stored in the Keychain
+    @UBKeychainStored(key: "UBDeviceUUID", accessibility: .whenUnlockedThisDeviceOnly)
+    private static var keychainDeviecUUID: String?
 }

@@ -142,7 +142,7 @@ open class UBPushRegistrationManager {
 
     /// :nodoc:
     open var pushDeviceUUID: String {
-        UBDeviceUUID.getUUID(storage: .userDefaults)
+        UBDeviceUUID.getUUID()
     }
 }
 
