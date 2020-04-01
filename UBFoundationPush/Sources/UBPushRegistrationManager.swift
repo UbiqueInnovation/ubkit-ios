@@ -58,7 +58,7 @@ open class UBPushRegistrationManager {
     }
 
     /// :nodoc:
-    private func invalidate() {
+    func invalidate() {
         UBPushLocalStorage.shared.isValid = false
         sendPushRegistration()
     }
