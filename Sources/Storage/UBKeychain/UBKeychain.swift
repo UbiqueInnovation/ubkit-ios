@@ -7,7 +7,26 @@
 
 import Foundation
 
-class UBKeychain {
+public class UBKeychain {
+
+    /// Helper function for deleting all of the items in the keychain.
+    /// iOS sometimes fails to delete all the items as the app is uninstalled, which results
+    ///
+    /// The app may choose to delete all the items to prevent undesirable behaviour.
+    public static func deleteAllItems() -> Bool {
+        let secClasses =  [
+            kSecClassGenericPassword,
+            kSecClassInternetPassword,
+            kSecClassCertificate,
+            kSecClassKey,
+            kSecClassIdentity,
+        ]
+        return secClasses.allSatisfy { secClass in
+            let spec: NSDictionary = [kSecClass as String: secClass]
+            let status = SecItemDelete(spec as CFDictionary)
+            return status == errSecSuccess || status == errSecItemNotFound
+        }
+    }
 
     /// :nodoc:
     @discardableResult
