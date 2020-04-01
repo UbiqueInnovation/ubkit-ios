@@ -9,8 +9,7 @@ import Foundation
 
 /// Backs a string variable with storage in Keychain.
 /// The value is optional, thus if no value has previously been stored, nil
-/// will be returned. The accessibility of the value is determined by the
-/// accessibility property.
+/// will be returned. The accessibility property determines where the value can be accessed.
 ///
 /// Usage:
 ///       @UBKeychainStored(key: "password_key", accessibility: .whenUnlockedThisDeviceOnly)
