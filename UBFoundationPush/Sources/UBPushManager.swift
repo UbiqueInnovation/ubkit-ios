@@ -89,10 +89,13 @@ open class UBPushManager: NSObject {
         super.init()
 
         UNUserNotificationCenter.current().delegate = self
+
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
 
-    // MARK: - Configuration
+    // MARK: - App Delegate
 
+    /// Needs to be called inside `applicationDidFinishLaunchingWithOptions(_:launchOptions:)`
     public func didFinishLaunchingWithOptions(_ launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
                                               pushHandler: UBPushHandler,
                                               pushRegistrationManager: UBPushRegistrationManager) {
@@ -100,6 +103,12 @@ open class UBPushManager: NSObject {
         self.pushRegistrationManager = pushRegistrationManager
         self.pushRegistrationManager.sendPushRegistrationIfOutdated()
         self.pushHandler.handleLaunchOptions(launchOptions)
+    }
+
+    /// Needs to be called upon `applicationDidBecomeActiveNotification`
+    @objc
+    private func applicationDidBecomeActive() {
+        self.pushRegistrationManager.sendPushRegistrationIfOutdated()
     }
 
     // MARK: - Push Permission Request Flow
