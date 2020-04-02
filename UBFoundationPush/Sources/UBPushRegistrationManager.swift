@@ -58,7 +58,7 @@ open class UBPushRegistrationManager {
     }
 
     /// :nodoc:
-    private func invalidate() {
+    func invalidate() {
         UBPushLocalStorage.shared.isValid = false
         sendPushRegistration()
     }
@@ -142,7 +142,7 @@ open class UBPushRegistrationManager {
 
     /// :nodoc:
     open var pushDeviceUUID: String {
-        UBDeviceUUID.getUUID(storage: .userDefaults)
+        UBDeviceUUID.getUUID()
     }
 }
 

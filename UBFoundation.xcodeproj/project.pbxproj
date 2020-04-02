@@ -327,6 +327,9 @@
 		8EFFDD0A22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
 		8EFFDD0B22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
 		8EFFDD0C22568D81002D2DE2 /* CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFDD0822568D81002D2DE2 /* CacheControl.swift */; };
+		AA4FCC252433AF3100070672 /* UBKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4FCC242433AF3100070672 /* UBKeychain.swift */; };
+		AA4FCC272433B1BA00070672 /* UBKeychainStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4FCC262433B1BA00070672 /* UBKeychainStored.swift */; };
+		AA653A322434B8D6005ED137 /* UBKeychainAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA653A312434B8D6005ED137 /* UBKeychainAccessibility.swift */; };
 		AA89AC9523E44D0300491180 /* UBUserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA89AC9423E44D0300491180 /* UBUserDefaultValue.swift */; };
 		AA89AC9623E44D0300491180 /* UBUserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA89AC9423E44D0300491180 /* UBUserDefaultValue.swift */; };
 		AA89AC9723E44D0300491180 /* UBUserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA89AC9423E44D0300491180 /* UBUserDefaultValue.swift */; };
@@ -503,6 +506,9 @@
 		8EFFDCFF22560A51002D2DE2 /* CachingLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingLogic.swift; sourceTree = "<group>"; };
 		8EFFDD0422562444002D2DE2 /* TaskAutoRefreshLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAutoRefreshLogicTests.swift; sourceTree = "<group>"; };
 		8EFFDD0822568D81002D2DE2 /* CacheControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheControl.swift; sourceTree = "<group>"; };
+		AA4FCC242433AF3100070672 /* UBKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBKeychain.swift; sourceTree = "<group>"; };
+		AA4FCC262433B1BA00070672 /* UBKeychainStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UBKeychainStored.swift; path = ../UBUserDefault/UBKeychainStored.swift; sourceTree = "<group>"; };
+		AA653A312434B8D6005ED137 /* UBKeychainAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBKeychainAccessibility.swift; sourceTree = "<group>"; };
 		AA89AC9423E44D0300491180 /* UBUserDefaultValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBUserDefaultValue.swift; sourceTree = "<group>"; };
 		AA89AC9923E44DF400491180 /* UBPListValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBPListValue.swift; sourceTree = "<group>"; };
 		AA89ACA323E4555E00491180 /* UBCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UBCodable.swift; sourceTree = "<group>"; };
@@ -1045,6 +1051,16 @@
 			name = Session;
 			sourceTree = "<group>";
 		};
+		AA4FCC232433AF1100070672 /* UBKeychain */ = {
+			isa = PBXGroup;
+			children = (
+				AA4FCC262433B1BA00070672 /* UBKeychainStored.swift */,
+				AA653A312434B8D6005ED137 /* UBKeychainAccessibility.swift */,
+				AA4FCC242433AF3100070672 /* UBKeychain.swift */,
+			);
+			path = UBKeychain;
+			sourceTree = "<group>";
+		};
 		AA89ACBA23E6C27000491180 /* UBUserDefault */ = {
 			isa = PBXGroup;
 			children = (
@@ -1071,6 +1087,7 @@
 		AAB0136923DEF1E0003C91C7 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				AA4FCC232433AF1100070672 /* UBKeychain */,
 				24780B4A2430EDA0003BB26C /* DeviceUUID */,
 				AA89ACBA23E6C27000491180 /* UBUserDefault */,
 			);
@@ -1547,6 +1564,7 @@
 				8EBD47FA2240770000CD2639 /* Localization+Notification.swift in Sources */,
 				8EE058F5225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
 				8EBD47E92240765200CD2639 /* LoggerGroup.swift in Sources */,
+				AA4FCC252433AF3100070672 /* UBKeychain.swift in Sources */,
 				8EC484642241C65A00AC8E44 /* HTTPCode.swift in Sources */,
 				8E7F747922459D7700582E57 /* MIMEType+Parameter.swift in Sources */,
 				24B18B1B23D1A1F500350130 /* UIView+Shadows.swift in Sources */,
@@ -1554,6 +1572,7 @@
 				8E0DB2D02243EABB00D5E01E /* HTTPURLResponse+Networking.swift in Sources */,
 				8EE058C122526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,
 				8EBD48182240773900CD2639 /* GlobalLogging.swift in Sources */,
+				AA653A322434B8D6005ED137 /* UBKeychainAccessibility.swift in Sources */,
 				8EE5F789228EE3FE009D174A /* KeyboardInfo.swift in Sources */,
 				8E52B781229D6AF100633EFA /* AutoRefreshCacheLogic.swift in Sources */,
 				8EC4848322428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
@@ -1561,6 +1580,7 @@
 				8EFFDD0922568D81002D2DE2 /* CacheControl.swift in Sources */,
 				8EE058E622535A7E00B2885B /* NetworkTaskRecovery+Options.swift in Sources */,
 				8EFFDCD322545F2E002D2DE2 /* UBURLSession+Info.swift in Sources */,
+				AA4FCC272433B1BA00070672 /* UBKeychainStored.swift in Sources */,
 				8E0DB2C52243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				AA89AC9523E44D0300491180 /* UBUserDefaultValue.swift in Sources */,
 				8EBD4859224119AF00CD2639 /* Logger+Error.swift in Sources */,

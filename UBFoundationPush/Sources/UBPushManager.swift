@@ -192,6 +192,13 @@ open class UBPushManager: NSObject {
             }
         }
     }
+
+    // MARK: - Push Registration
+
+    /// Invalidates the current push registration, forcing a new registration request
+    public func invalidatePushRegistration() {
+        pushRegistrationManager.invalidate()
+    }
 }
 
 // MARK: - UNNotificationCenterDelegate
