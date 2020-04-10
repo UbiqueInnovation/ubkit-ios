@@ -6,7 +6,7 @@
 //
 
 import CoreLocation
-@testable import UBFoundation
+@testable import UBFoundationLocation
 import XCTest
 
 class UBLocationManagerTests: XCTestCase {

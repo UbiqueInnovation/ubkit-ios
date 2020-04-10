@@ -7,7 +7,7 @@
 
 import CoreLocation
 import Foundation
-import UBFoundation
+import UBFoundationLocation
 
 class MockLocationManager: UBLocationManagerProtocol {
     /// The sequence of authorizationStatues that is traversed when requesting Authorization
@@ -24,6 +24,10 @@ class MockLocationManager: UBLocationManagerProtocol {
     var isMonitoringSignificantLocationChanges: Bool = false
     var isMonitoringVisits: Bool = false
     var isUpdatingHeading: Bool = false
+    var allowsBackgroundLocationUpdates: Bool = false
+    var pausesLocationUpdatesAutomatically: Bool = true
+    var activityType: CLActivityType = .fitness
+    var showsBackgroundLocationIndicator: Bool = true
 
     // MARK: - UBLocationManagerProtocol properties
 

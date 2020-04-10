@@ -17,6 +17,10 @@ public protocol UBLocationManagerProtocol {
     var distanceFilter: CLLocationDistance { get set }
     var desiredAccuracy: CLLocationAccuracy { get set }
     var headingFilter: CLLocationDegrees { get set }
+    var activityType: CLActivityType { get set }
+    var allowsBackgroundLocationUpdates: Bool { get set }
+    var pausesLocationUpdatesAutomatically: Bool { get set }
+    var showsBackgroundLocationIndicator: Bool { get set }
 
     // Starting / stopping updates
 
