@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA3DCE7F2440AD67005EC4A7 /* UBLocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9157B7242B8E9B00C8C670 /* UBLocationManagerProtocol.swift */; };
 		AA91578E242B8D9600C8C670 /* UBFoundationLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA915784242B8D9600C8C670 /* UBFoundationLocation.framework */; };
 		AA915795242B8D9600C8C670 /* UBFoundationLocation.h in Headers */ = {isa = PBXBuildFile; fileRef = AA915787242B8D9600C8C670 /* UBFoundationLocation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA9157B8242B8E9B00C8C670 /* UBLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9157B6242B8E9A00C8C670 /* UBLocationManager.swift */; };
@@ -15,7 +16,6 @@
 		AAA7BB0C242B9457001290E2 /* UBFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7BB0A242B9457001290E2 /* UBFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AAA7BB0E242B94AD001290E2 /* UBLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9157BE242B8ECB00C8C670 /* UBLocationManagerTests.swift */; };
 		AAA7BB0F242B94B1001290E2 /* MockLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9157BF242B8ECB00C8C670 /* MockLocationManager.swift */; };
-		AAA7BB10242B94CE001290E2 /* MockLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9157BF242B8ECB00C8C670 /* MockLocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -236,7 +236,6 @@
 			files = (
 				AA9157B8242B8E9B00C8C670 /* UBLocationManager.swift in Sources */,
 				AA9157B9242B8E9B00C8C670 /* UBLocationManagerProtocol.swift in Sources */,
-				AAA7BB10242B94CE001290E2 /* MockLocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAA7BB0F242B94B1001290E2 /* MockLocationManager.swift in Sources */,
+				AA3DCE7F2440AD67005EC4A7 /* UBLocationManagerProtocol.swift in Sources */,
 				AAA7BB0E242B94AD001290E2 /* UBLocationManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,9 +7,9 @@
 
 import CoreLocation
 import Foundation
-import UBFoundationLocation
 
 class MockLocationManager: UBLocationManagerProtocol {
+
     /// The sequence of authorizationStatues that is traversed when requesting Authorization
     var authorizationStatuses: [CLAuthorizationStatus] = []
 
@@ -21,12 +21,29 @@ class MockLocationManager: UBLocationManagerProtocol {
     }
 
     var isUpdatingLocation: Bool = false
+
     var isMonitoringSignificantLocationChanges: Bool = false
+
     var isMonitoringVisits: Bool = false
+
     var isUpdatingHeading: Bool = false
+
     var allowsBackgroundLocationUpdates: Bool = false
-    var pausesLocationUpdatesAutomatically: Bool = true
+
+    private var _pausesLocationUpdatesAutomatically: Bool = false
+
+    @available(iOS 11.0, *)
+    var pausesLocationUpdatesAutomatically: Bool {
+        get {
+            _pausesLocationUpdatesAutomatically
+        }
+        set {
+            _pausesLocationUpdatesAutomatically = newValue
+        }
+    }
+
     var activityType: CLActivityType = .fitness
+
     var showsBackgroundLocationIndicator: Bool = true
 
     // MARK: - UBLocationManagerProtocol properties

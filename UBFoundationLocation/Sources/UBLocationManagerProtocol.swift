@@ -20,6 +20,7 @@ public protocol UBLocationManagerProtocol {
     var activityType: CLActivityType { get set }
     var allowsBackgroundLocationUpdates: Bool { get set }
     var pausesLocationUpdatesAutomatically: Bool { get set }
+    @available(iOS 11, *)
     var showsBackgroundLocationIndicator: Bool { get set }
 
     // Starting / stopping updates
