@@ -29,6 +29,7 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
 public extension UBLocationManagerDelegate {
     func locationManager(_: UBLocationManager, grantedPermission _: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
     func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
+    func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
     func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
 }
 
