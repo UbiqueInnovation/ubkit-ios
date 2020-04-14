@@ -188,7 +188,7 @@ open class UBLocationManager: NSObject {
         locationManager.headingFilter = kCLHeadingFilterNone
         locationManager.activityType = .fitness
 
-        // Only applies if the `Always` authorization is granted.
+        // Only applies if the "Always" authorization is granted and `allowsBackgroundLocationUpdates`
         if #available(iOS 11.0, *) {
             locationManager.showsBackgroundLocationIndicator = true
         }
