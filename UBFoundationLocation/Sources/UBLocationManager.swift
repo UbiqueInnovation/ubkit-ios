@@ -120,11 +120,7 @@ open class UBLocationManager: NSObject {
     /// For usage `.location`, the maximum time to wait for a location update from the underlying location manager.
     /// If no update has happened, we call `locationManager(_:didUpdateLocations)` with the most recent
     /// location from the underlying location manager, if it is not older than maximumLastLocationTimestampSeconds
-    public var timeout: TimeInterval {
-        didSet {
-            startLocationTimer()
-        }
-    }
+    public private(set) var timeout: TimeInterval
     /// The default value for `timeout`
     public static var defaultTimeout: TimeInterval = 2
     /// :nodoc:
@@ -287,7 +283,12 @@ open class UBLocationManager: NSObject {
 
         if usage.contains(.location) {
             locationManager.startUpdatingLocation()
-            startLocationTimer()
+            locationTimer?.invalidate()
+            locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] _ in
+                guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
+                self.timedOut = true
+                self.delegate?.locationManager(self, didUpdateLocations: [location])
+            })
         }
         if usage.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.startMonitoringSignificantLocationChanges()
@@ -298,15 +299,6 @@ open class UBLocationManager: NSObject {
         if usage.contains(.heading) {
             locationManager.startUpdatingHeading()
         }
-    }
-
-    private func startLocationTimer() {
-        locationTimer?.invalidate()
-        locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] _ in
-            guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
-            self.timedOut = true
-            self.delegate?.locationManager(self, didUpdateLocations: [location])
-        })
     }
 }
 
