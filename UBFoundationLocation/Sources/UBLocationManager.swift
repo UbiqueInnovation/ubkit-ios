@@ -65,8 +65,8 @@ open class UBLocationManager: NSObject {
         }
     }
 
-    /// Should the points be filtered, such that all the returned points are within `desiredAccuracy`?
-    public var enforceDesiredAccuracy: Bool = true
+    /// The accuracy used for filtering points. If not set, `desiredAccuracy` will be used instead.
+    public var filteredAccuracy: CLLocationAccuracy? = nil
 
     /// The distance filter of the underlying `CLLocationManager`
     public var distanceFilter: CLLocationDistance {
@@ -323,13 +323,15 @@ extension UBLocationManager: CLLocationManagerDelegate {
     public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let results: [CLLocation]
 
-        if enforceDesiredAccuracy, !timedOut {
-            results = locations.filter { (location) -> Bool in
-                location.horizontalAccuracy < desiredAccuracy
-            }
-        } else {
+        if timedOut {
             results = locations
+        } else {
+            let targetAccuracy = filteredAccuracy ?? desiredAccuracy
+            results = locations.filter { (location) -> Bool in
+                location.horizontalAccuracy < targetAccuracy
+            }
         }
+        
         if let lastLocation = results.last {
             self.lastLocation = lastLocation
 
