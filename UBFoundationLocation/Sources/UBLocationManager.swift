@@ -24,10 +24,6 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: UBLocationManager, didVisit visit: CLVisit)
     /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didFailWithError error: Error)
-    /// :nodoc:
-    func locationManagerDidPauseLocationUpdates(_ manager: UBLocationManager)
-    /// :nodoc:
-    func locationManagerDidResumeLocationUpdates(_ manager: UBLocationManager)
 }
 
 public extension UBLocationManagerDelegate {
@@ -35,8 +31,6 @@ public extension UBLocationManagerDelegate {
     func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
     func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
     func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
-    func locationManagerDidPauseLocationUpdates(_: UBLocationManager) {}
-    func locationManagerDidResumeLocationUpdates(_: UBLocationManager) {}
 }
 
 /// A convenience wrapper for `CLLocationManager` which facilitates obtaining the required authorization
@@ -352,14 +346,6 @@ extension UBLocationManager: CLLocationManagerDelegate {
         // monitoring as it could be some temporary error and we just have to
         // wait for the next event
         delegate?.locationManager(self, didFailWithError: error)
-    }
-
-    public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
-        delegate?.locationManagerDidPauseLocationUpdates(self)
-    }
-
-    public func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
-        delegate?.locationManagerDidResumeLocationUpdates(self)
     }
 }
 
