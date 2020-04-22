@@ -195,7 +195,7 @@ open class UBLocationManager: NSObject {
         locationManager.delegate = self
         locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.headingFilter = kCLHeadingFilterNone
-        locationManager.activityType = .fitness
+        locationManager.activityType = .other
 
         // Only applies if the "Always" authorization is granted and `allowsBackgroundLocationUpdates`
         if #available(iOS 11.0, *) {
