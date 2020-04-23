@@ -314,7 +314,8 @@ extension UBLocationManager: CLLocationManagerDelegate {
         } else {
             let targetAccuracy = filteredAccuracy ?? desiredAccuracy
             results = locations.filter { (location) -> Bool in
-                location.horizontalAccuracy < targetAccuracy
+                // A negative value indicates that the latitude and longitude are invalid
+                location.horizontalAccuracy >= 0 && location.horizontalAccuracy < targetAccuracy
             }
         }
         
