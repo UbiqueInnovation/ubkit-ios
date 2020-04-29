@@ -3,6 +3,7 @@
 //  UBFoundation iOS Tests
 //
 //  Created by Zeno Koller on 17.01.20.
+//  Copyright © 2020 Ubique. All rights reserved.
 //
 
 import CoreLocation

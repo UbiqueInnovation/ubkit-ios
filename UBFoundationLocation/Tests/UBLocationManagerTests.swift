@@ -26,7 +26,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined, .authorizedWhenInUse]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
@@ -35,7 +35,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined, .authorizedAlways]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
@@ -44,7 +44,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined, .denied]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(!mockLocationManager.isUpdatingLocation)
     }
@@ -53,7 +53,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.denied, .authorizedWhenInUse]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
@@ -62,7 +62,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.denied, .authorizedAlways]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
@@ -71,7 +71,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.denied, .denied]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(!mockLocationManager.isUpdatingLocation)
     }
@@ -80,7 +80,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: false)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: false)
 
         XCTAssert(!mockLocationManager.isUpdatingLocation)
     }
@@ -89,7 +89,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: false)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: false)
 
         XCTAssert(!mockLocationManager.isUpdatingLocation)
     }
@@ -98,7 +98,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.authorizedWhenInUse]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: false)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: false)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
@@ -107,7 +107,7 @@ class UBLocationManagerTests: XCTestCase {
         let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.authorizedAlways]
 
-        sut.startLocationMonitoring(for: .location(background: false), canAskForPermission: false)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: false)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
@@ -116,5 +116,9 @@ class UBLocationManagerTests: XCTestCase {
         let sut = UBLocationManager(locationManager: mockLocationManager)
         mockLocationManager.delegate = sut
         return sut
+    }
+
+    func makeDelegate() -> UBLocationManagerDelegate {
+        return MockLocationManagerDelegate()
     }
 }
