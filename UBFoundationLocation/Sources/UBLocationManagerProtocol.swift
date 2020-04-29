@@ -11,7 +11,6 @@ import Foundation
 /// Enables supplying a mock location manager to `UBLocationManager`
 public protocol UBLocationManagerProtocol {
     // Properties
-
     var location: CLLocation? { get }
     var delegate: CLLocationManagerDelegate? { get set }
     var distanceFilter: CLLocationDistance { get set }
@@ -20,11 +19,10 @@ public protocol UBLocationManagerProtocol {
     var activityType: CLActivityType { get set }
     var allowsBackgroundLocationUpdates: Bool { get set }
     var pausesLocationUpdatesAutomatically: Bool { get set }
-    @available(iOS 11, *)
+    @available(iOS 11.0, *)
     var showsBackgroundLocationIndicator: Bool { get set }
 
     // Starting / stopping updates
-
     func startUpdatingLocation()
     func stopUpdatingLocation()
     func startMonitoringSignificantLocationChanges()
@@ -35,7 +33,6 @@ public protocol UBLocationManagerProtocol {
     func stopUpdatingHeading()
 
     // Authorization
-
     func requestWhenInUseAuthorization()
     func requestAlwaysAuthorization()
 

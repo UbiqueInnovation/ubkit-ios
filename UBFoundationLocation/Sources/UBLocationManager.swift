@@ -36,7 +36,6 @@ public extension UBLocationManagerDelegate {
 /// A convenience wrapper for `CLLocationManager` which facilitates obtaining the required authorization
 /// for the desired usage (defined as a set of `UBLocationManager.LocationMonitoringUsage`)
 open class UBLocationManager: NSObject {
-
     /// :nodoc:
     public weak var delegate: UBLocationManagerDelegate? {
         didSet {
@@ -60,7 +59,7 @@ open class UBLocationManager: NSObject {
     }
 
     /// The accuracy used for filtering points. If not set, `desiredAccuracy` will be used instead.
-    public var filteredAccuracy: CLLocationAccuracy? = nil
+    public var filteredAccuracy: CLLocationAccuracy?
 
     /// The distance filter of the underlying `CLLocationManager`
     public var distanceFilter: CLLocationDistance {
@@ -318,7 +317,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
                 location.horizontalAccuracy >= 0 && location.horizontalAccuracy < targetAccuracy
             }
         }
-        
+
         if let lastLocation = results.last {
             self.lastLocation = lastLocation
 
