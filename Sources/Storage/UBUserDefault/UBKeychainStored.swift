@@ -17,7 +17,6 @@ import Foundation
 ///
 @propertyWrapper
 public struct UBKeychainStored {
-
     /// The key for the value
     public let key: String
 

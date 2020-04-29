@@ -8,7 +8,6 @@
 import Foundation
 
 public struct UBDeviceUUID {
-
     public static func getUUID() -> String {
         if let uuid = keychainDeviecUUID {
             return uuid

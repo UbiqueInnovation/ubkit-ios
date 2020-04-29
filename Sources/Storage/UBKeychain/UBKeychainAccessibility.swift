@@ -93,8 +93,8 @@ extension UBKeychainAccessibility: RawRepresentable {
             case String(kSecAttrAccessibleAfterFirstUnlock):
                 self = .afterFirstUnlock
             #if !targetEnvironment(macCatalyst)
-            case String(kSecAttrAccessibleAlways):
-                self = .always
+                case String(kSecAttrAccessibleAlways):
+                    self = .always
             #endif
             case String(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly):
                 self = .whenPasscodeSetThisDeviceOnly
@@ -103,8 +103,8 @@ extension UBKeychainAccessibility: RawRepresentable {
             case String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly):
                 self = .afterFirstUnlockThisDeviceOnly
             #if !targetEnvironment(macCatalyst)
-            case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
-                self = .alwaysThisDeviceOnly
+                case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
+                    self = .alwaysThisDeviceOnly
             #endif
             default:
                 return nil
@@ -116,16 +116,16 @@ extension UBKeychainAccessibility: RawRepresentable {
             case String(kSecAttrAccessibleAfterFirstUnlock):
                 self = .afterFirstUnlock
             #if !targetEnvironment(macCatalyst)
-            case String(kSecAttrAccessibleAlways):
-                self = .always
+                case String(kSecAttrAccessibleAlways):
+                    self = .always
             #endif
             case String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly):
                 self = .whenUnlockedThisDeviceOnly
             case String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly):
                 self = .afterFirstUnlockThisDeviceOnly
             #if !targetEnvironment(macCatalyst)
-            case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
-                self = .alwaysThisDeviceOnly
+                case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
+                    self = .alwaysThisDeviceOnly
             #endif
             default:
                 return nil
@@ -140,8 +140,8 @@ extension UBKeychainAccessibility: RawRepresentable {
         case .afterFirstUnlock:
             return String(kSecAttrAccessibleAfterFirstUnlock)
         #if !targetEnvironment(macCatalyst)
-        case .always:
-            return String(kSecAttrAccessibleAlways)
+            case .always:
+                return String(kSecAttrAccessibleAlways)
         #endif
         case .whenPasscodeSetThisDeviceOnly:
             if #available(OSX 10.10, *) {
@@ -154,8 +154,8 @@ extension UBKeychainAccessibility: RawRepresentable {
         case .afterFirstUnlockThisDeviceOnly:
             return String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
         #if !targetEnvironment(macCatalyst)
-        case .alwaysThisDeviceOnly:
-            return String(kSecAttrAccessibleAlwaysThisDeviceOnly)
+            case .alwaysThisDeviceOnly:
+                return String(kSecAttrAccessibleAlwaysThisDeviceOnly)
         #endif
         }
     }
