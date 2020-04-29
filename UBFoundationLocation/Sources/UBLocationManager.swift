@@ -243,16 +243,24 @@ open class UBLocationManager: NSObject {
         }
     }
 
-    /// Stops monitoring all location service events and removes the delegate
-    public func stopLocationMonitoring(removingDelegate delegate: UBLocationManagerDelegate) {
+    /// Stops monitoring location service events and removes the delegate
+    public func stopLocationMonitoring(forDelegate delegate: UBLocationManagerDelegate) {
         let id = ObjectIdentifier(delegate)
-        delegateWrappers.removeValue(forKey: id)
+        if let delegate = delegateWrappers.removeValue(forKey: id) {
+            stopLocationMonitoring(delegate.usage)
+        }
 
-        stopLocationMonitoring()
+        for delegate in delegates {
+            startLocationMonitoring(for: usage, delegate: delegate, canAskForPermission: false)
+        }
+
+        assert(!delegateWrappers.isEmpty || usage == [])
     }
 
     /// Stops monitoring all location service events
-    private func stopLocationMonitoring() {
+    private func stopLocationMonitoring(_ usage: LocationMonitoringUsage? = nil) {
+        let usage = usage ?? self.usage
+
         timedOut = false
         locationTimer?.invalidate()
         locationTimer = nil
