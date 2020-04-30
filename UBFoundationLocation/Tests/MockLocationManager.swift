@@ -7,7 +7,7 @@
 
 import CoreLocation
 import Foundation
-import UBFoundation
+import UBFoundationLocation
 
 class MockLocationManager: UBLocationManagerProtocol {
     /// The sequence of authorizationStatues that is traversed when requesting Authorization
@@ -21,8 +21,11 @@ class MockLocationManager: UBLocationManagerProtocol {
     }
 
     var isUpdatingLocation: Bool = false
+
     var isMonitoringSignificantLocationChanges: Bool = false
+
     var isMonitoringVisits: Bool = false
+
     var isUpdatingHeading: Bool = false
 
     // MARK: - UBLocationManagerProtocol properties
@@ -31,13 +34,14 @@ class MockLocationManager: UBLocationManagerProtocol {
         CLLocation(latitude: 47.376794, longitude: 8.543733)
     }
 
-    weak var delegate: CLLocationManagerDelegate?
-
+    var delegate: CLLocationManagerDelegate?
     var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
-
     var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
-
     var headingFilter: CLLocationDegrees = kCLHeadingFilterNone
+    var activityType: CLActivityType = .fitness
+    var allowsBackgroundLocationUpdates: Bool = false
+    var pausesLocationUpdatesAutomatically: Bool = false
+    var showsBackgroundLocationIndicator: Bool = false
 
     // MARK: - Starting / stopping location services
 

@@ -9,7 +9,6 @@ import Foundation
 
 /// Convenience wrapper for Keychain
 public class UBKeychain {
-
     /// Sets an item in the Keychain.
     ///
     /// - Parameters:
@@ -29,12 +28,13 @@ public class UBKeychain {
     @discardableResult
     static func set(_ value: Data, key: String, accessibility: UBKeychainAccessibility) -> Bool {
         let query = [
-            kSecAttrAccount as String : key,
-            kSecValueData as String   : value,
-            kSecAttrAccessible as String : accessibility.rawValue,
+            kSecAttrAccount as String: key,
+            kSecValueData as String: value,
+            kSecAttrAccessible as String: accessibility.rawValue,
             // We use genericPassword instead of internet password because
             // the value is not assiciated with a server
-            kSecClass as String       : kSecClassGenericPassword] as [String : Any]
+            kSecClass as String: kSecClassGenericPassword
+        ] as [String: Any]
 
         SecItemDelete(query as CFDictionary)
         let status = SecItemAdd(query as CFDictionary, nil)
@@ -59,12 +59,13 @@ public class UBKeychain {
     /// :nodoc:
     static func getData(_ key: String) -> Data? {
         let query = [
-            kSecAttrAccount as String : key,
-            kSecClass as String       : kSecClassGenericPassword,
-            kSecReturnData as String  : true,
-            kSecMatchLimit as String  : kSecMatchLimitOne ] as [String : Any]
+            kSecAttrAccount as String: key,
+            kSecClass as String: kSecClassGenericPassword,
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ] as [String: Any]
 
-        var result: AnyObject? = nil
+        var result: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &result)
 
         if status == errSecSuccess {
@@ -80,8 +81,9 @@ public class UBKeychain {
     /// - Returns: Whether deleting the value succeded
     public static func delete(_ key: String) -> Bool {
         let query = [
-            kSecAttrAccount as String : key,
-            kSecMatchLimit as String  : kSecMatchLimitOne ] as [String : Any]
+            kSecAttrAccount as String: key,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ] as [String: Any]
 
         let status = SecItemDelete(query as CFDictionary)
         return status == errSecSuccess || status == errSecItemNotFound
@@ -94,12 +96,12 @@ public class UBKeychain {
     ///
     /// - Returns: Whether deleting the value succeded
     public static func deleteAllItems() -> Bool {
-        let secClasses =  [
+        let secClasses = [
             kSecClassGenericPassword,
             kSecClassInternetPassword,
             kSecClassCertificate,
             kSecClassKey,
-            kSecClassIdentity,
+            kSecClassIdentity
         ]
         return secClasses.allSatisfy { secClass in
             let query: NSDictionary = [kSecClass as String: secClass]
@@ -107,6 +109,4 @@ public class UBKeychain {
             return status == errSecSuccess || status == errSecItemNotFound
         }
     }
-
 }
-

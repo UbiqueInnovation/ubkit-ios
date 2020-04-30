@@ -6,7 +6,7 @@
 //
 
 import CoreLocation
-@testable import UBFoundation
+@testable import UBFoundationLocation
 import XCTest
 
 class UBLocationManagerTests: XCTestCase {
@@ -23,98 +23,102 @@ class UBLocationManagerTests: XCTestCase {
     }
 
     func testAuthorizationForLocationOnNewInstall_WhenInUseGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined, .authorizedWhenInUse]
 
-        sut.startLocationMonitoring(canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
     func testAuthorizationForLocationOnNewInstall_AlwaysGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined, .authorizedAlways]
 
-        sut.startLocationMonitoring(canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
     func testAuthorizationForLocationOnNewInstall_NotGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined, .denied]
 
-        sut.startLocationMonitoring(canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(!mockLocationManager.isUpdatingLocation)
     }
 
     func testAuthorizationForLocationAfterRevoking_WhenInUseGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.denied, .authorizedWhenInUse]
 
-        sut.startLocationMonitoring(canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
     func testAuthorizationForLocationAfterRevoking_AlwaysGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.denied, .authorizedAlways]
 
-        sut.startLocationMonitoring(canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
     func testAuthorizationForLocationAfterRevoking_NotGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.denied, .denied]
 
-        sut.startLocationMonitoring(canAskForPermission: true)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: true)
 
         XCTAssert(!mockLocationManager.isUpdatingLocation)
     }
 
     func testNoAuthorizationForLocationOnNewInstall_NotGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined]
 
-        sut.startLocationMonitoring(canAskForPermission: false)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: false)
 
         XCTAssert(!mockLocationManager.isUpdatingLocation)
     }
 
     func testNoAuthorizationForLocationAfterRevoking_NotGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.notDetermined]
 
-        sut.startLocationMonitoring(canAskForPermission: false)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: false)
 
         XCTAssert(!mockLocationManager.isUpdatingLocation)
     }
 
     func testNoAuthorizationForLocation_WhenInUseGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.authorizedWhenInUse]
 
-        sut.startLocationMonitoring(canAskForPermission: false)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: false)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
     func testNoAuthorizationForLocation_AlwaysGranted() {
-        let sut = makeSut(forUsage: .location)
+        let sut = makeSut()
         mockLocationManager.authorizationStatuses = [.authorizedAlways]
 
-        sut.startLocationMonitoring(canAskForPermission: false)
+        sut.startLocationMonitoring(for: .location(background: false), delegate: makeDelegate(), canAskForPermission: false)
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
-    func makeSut(forUsage usage: UBLocationManager.LocationMonitoringUsage) -> UBLocationManager {
-        let sut = UBLocationManager(usage: usage, locationManager: mockLocationManager)
+    func makeSut() -> UBLocationManager {
+        let sut = UBLocationManager(locationManager: mockLocationManager)
         mockLocationManager.delegate = sut
         return sut
+    }
+
+    func makeDelegate() -> UBLocationManagerDelegate {
+        return MockLocationManagerDelegate()
     }
 }

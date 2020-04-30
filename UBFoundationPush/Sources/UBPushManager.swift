@@ -108,7 +108,7 @@ open class UBPushManager: NSObject {
     /// Needs to be called upon `applicationDidBecomeActiveNotification`
     @objc
     private func applicationDidBecomeActive() {
-        self.pushRegistrationManager.sendPushRegistrationIfOutdated()
+        pushRegistrationManager.sendPushRegistrationIfOutdated()
     }
 
     // MARK: - Push Permission Request Flow
