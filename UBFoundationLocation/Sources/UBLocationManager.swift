@@ -35,7 +35,11 @@ public extension UBLocationManagerDelegate {
 
 /// A convenience wrapper for `CLLocationManager` which facilitates obtaining the required authorization
 /// for the desired usage (defined as a set of `UBLocationManager.LocationMonitoringUsage`)
-open class UBLocationManager: NSObject {
+public class UBLocationManager: NSObject {
+
+    /// The shared location manager.
+    public static let shared = UBLocationManager()
+
     /// :nodoc:
     private var delegateWrappers: [ObjectIdentifier: UBLocationManagerDelegateWrapper] = [:]
 
@@ -169,13 +173,9 @@ open class UBLocationManager: NSObject {
     ///
     /// - Parameters:
     ///   - locationManager: The underlying location manager
-    ///   - timeout: The maximum time to wait for a location update from the underlying location manager. If
-    ///   no update has happened, we call `locationManager(_:didUpdateLocations)` with the most recent
-    ///   location from the underlying location manager, if it is not older than maximumLastLocationTimestampSeconds
-    public init(locationManager: UBLocationManagerProtocol = CLLocationManager(),
-                timeout: TimeInterval = UBLocationManager.defaultTimeout) {
+     init(locationManager: UBLocationManagerProtocol = CLLocationManager()) {
         self.locationManager = locationManager
-        self.timeout = timeout
+        self.timeout = Self.defaultTimeout
 
         super.init()
 
@@ -311,7 +311,10 @@ open class UBLocationManager: NSObject {
         locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] _ in
             guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
             self.timedOut = true
-            self.delegate?.locationManager(self, didUpdateLocations: [location])
+
+            for delegate in self.delegates {
+                delegate.locationManager(self, didUpdateLocations: [location])
+            }
         })
     }
 }
