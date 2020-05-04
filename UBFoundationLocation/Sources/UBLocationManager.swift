@@ -131,11 +131,6 @@ public class UBLocationManager: NSObject {
     /// :nodoc:
     var timedOut: Bool = false
 
-    /// Does the location manager have the required authorization level for the desired `usage`?
-    public var hasRequiredAuthorizationLevel: Bool {
-        Self.hasRequiredAuthorizationLevel(forUsage: usage)
-    }
-
     /// Does the location manager have the required authorization level for `usage`?
     public static func hasRequiredAuthorizationLevel(forUsage usage: LocationMonitoringUsage) -> Bool {
         let authorizationStatus = CLLocationManager.authorizationStatus()
@@ -325,7 +320,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
             startLocationMonitoring(for: usage, delegate: delegate, canAskForPermission: false)
         }
 
-        if hasRequiredAuthorizationLevel {
+        if Self.hasRequiredAuthorizationLevel(forUsage: usage) {
             let permission: LocationMonitoringUsage.AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
             for delegate in delegates {
                 delegate.locationManager(self, grantedPermission: permission)
