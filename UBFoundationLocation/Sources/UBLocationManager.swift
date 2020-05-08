@@ -307,9 +307,7 @@ public class UBLocationManager: NSObject {
             guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
             self.timedOut = true
 
-            for delegate in self.delegates {
-                delegate.locationManager(self, didUpdateLocations: [location])
-            }
+            self.notifyDelegates(withLocations: [location])
         })
     }
 }
@@ -341,14 +339,22 @@ extension UBLocationManager: CLLocationManagerDelegate {
             }
         }
 
-        if let lastLocation = results.last {
-            self.lastLocation = lastLocation
-
+        if !results.isEmpty {
             locationTimer?.invalidate()
             locationTimer = nil
-            for delegate in delegates {
-                delegate.locationManager(self, didUpdateLocations: results)
-            }
+        }
+
+        notifyDelegates(withLocations: results)
+    }
+
+    private func notifyDelegates(withLocations locations: [CLLocation]) {
+        guard let lastLocation = locations.last else {
+            return
+        }
+        self.lastLocation = lastLocation
+
+        for delegate in delegates {
+            delegate.locationManager(self, didUpdateLocations: locations)
         }
     }
 
