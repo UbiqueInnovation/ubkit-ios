@@ -31,6 +31,7 @@ open class UBPushRegistrationManager {
 
     /// :nodoc:
     private var task: UBURLDataTask?
+    private var backgroundTask = UIBackgroundTaskIdentifier.invalid
 
     // MARK: - Initialization
 
@@ -70,9 +71,15 @@ open class UBPushRegistrationManager {
             return
         }
 
-        var backgroundTask = UIBackgroundTaskIdentifier.invalid
-        backgroundTask = UIApplication.shared.beginBackgroundTask {
-            UIApplication.shared.endBackgroundTask(backgroundTask)
+        if backgroundTask == .invalid {
+            backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                if self.backgroundTask != .invalid {
+                    UIApplication.shared.endBackgroundTask(self.backgroundTask)
+                }
+            }
         }
 
         task = UBURLDataTask(request: registrationRequest)
@@ -93,8 +100,8 @@ open class UBPushRegistrationManager {
                 UBPushManager.logger.info("\(String(describing: self)) ended with error: \(error.localizedDescription)")
             }
 
-            if backgroundTask != .invalid {
-                UIApplication.shared.endBackgroundTask(backgroundTask)
+            if self.backgroundTask != .invalid {
+                UIApplication.shared.endBackgroundTask(self.backgroundTask)
             }
         }
         task?.start()
