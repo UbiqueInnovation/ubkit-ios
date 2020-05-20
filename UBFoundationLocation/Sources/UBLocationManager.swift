@@ -54,6 +54,9 @@ public class UBLocationManager: NSObject {
             .reduce([]) { $0.union($1) }
     }
 
+    /// Allows logging all the changes in authorization status, separately from any delegates
+    public var logLocationPermissionChange: ((CLAuthorizationStatus) -> Void)?
+
     /// The desired location accuracy of the underlying `CLLocationManager`
     public var desiredAccuracy: CLLocationAccuracy {
         get { locationManager.desiredAccuracy }
@@ -314,6 +317,8 @@ public class UBLocationManager: NSObject {
 
 extension UBLocationManager: CLLocationManagerDelegate {
     public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
+        logLocationPermissionChange?(authorization)
+
         for delegate in delegates {
             startLocationMonitoring(for: usage, delegate: delegate, canAskForPermission: false)
         }
