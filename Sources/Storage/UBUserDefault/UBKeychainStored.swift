@@ -34,7 +34,6 @@ public struct UBKeychainStored {
             return UBKeychain.get(key)
         }
         set {
-            guard let newValue = newValue else { return }
             UBKeychain.set(newValue, key: key, accessibility: accessibility)
         }
     }

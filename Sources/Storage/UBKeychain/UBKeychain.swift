@@ -17,11 +17,15 @@ public class UBKeychain {
     ///     - accessibility: Determines where the value can be accessed
     /// - Returns: Whether setting the value succeded
     @discardableResult
-    public static func set(_ value: String, key: String, accessibility: UBKeychainAccessibility) -> Bool {
-        guard let data = value.data(using: .utf8, allowLossyConversion: false) else {
-            return false
+    public static func set(_ value: String?, key: String, accessibility: UBKeychainAccessibility) -> Bool {
+        if let v = value {
+            guard let data = v.data(using: .utf8, allowLossyConversion: false) else {
+                return false
+            }
+            return UBKeychain.set(data, key: key, accessibility: accessibility)
         }
-        return UBKeychain.set(data, key: key, accessibility: accessibility)
+
+        return UBKeychain.delete(key)
     }
 
     /// :nodoc:
@@ -32,7 +36,7 @@ public class UBKeychain {
             kSecValueData as String: value,
             kSecAttrAccessible as String: accessibility.rawValue,
             // We use genericPassword instead of internet password because
-            // the value is not assiciated with a server
+            // the value is not associated with a server
             kSecClass as String: kSecClassGenericPassword
         ] as [String: Any]
 
