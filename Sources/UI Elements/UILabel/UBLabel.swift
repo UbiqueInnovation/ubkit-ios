@@ -44,7 +44,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override var text: String? {
+    override public var text: String? {
         didSet { update() }
     }
 

@@ -85,7 +85,7 @@ open class UBPushManager: NSObject {
     // MARK: - Initialization
 
     /// :nodoc:
-    private override init() {
+    override private init() {
         super.init()
 
         UNUserNotificationCenter.current().delegate = self
@@ -120,7 +120,7 @@ open class UBPushManager: NSObject {
     ///     - callback: The callback for handling the result of the request
     public func requestPushPermissions(includingCritical: Bool = false,
                                        callback: @escaping PermissionRequestCallback) {
-        if let previousCallback = self.permissionRequestCallback {
+        if let previousCallback = permissionRequestCallback {
             Self.logger.error("Tried to request push permissions while other request pending")
             previousCallback(.nonRecoverableFailure)
             permissionRequestCallback = nil
@@ -174,7 +174,7 @@ open class UBPushManager: NSObject {
 
         pushRegistrationManager.setPushToken(tokenString)
 
-        if let callback = self.permissionRequestCallback {
+        if let callback = permissionRequestCallback {
             callback(.success)
             permissionRequestCallback = nil
         }
@@ -184,7 +184,7 @@ open class UBPushManager: NSObject {
     public func didFailToRegisterForRemoteNotifications(with error: Error) {
         pushRegistrationManager.setPushToken(nil)
 
-        if let callback = self.permissionRequestCallback {
+        if let callback = permissionRequestCallback {
             callback(.nonRecoverableFailure)
             permissionRequestCallback = nil
         }

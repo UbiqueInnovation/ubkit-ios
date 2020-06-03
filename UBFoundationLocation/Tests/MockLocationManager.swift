@@ -34,7 +34,7 @@ class MockLocationManager: UBLocationManagerProtocol {
         CLLocation(latitude: 47.376794, longitude: 8.543733)
     }
 
-    var delegate: CLLocationManagerDelegate?
+    weak var delegate: CLLocationManagerDelegate?
     var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
     var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
     var headingFilter: CLLocationDegrees = kCLHeadingFilterNone

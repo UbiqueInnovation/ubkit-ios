@@ -77,7 +77,7 @@ open class UBButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    open override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
         highlightView.frame = bounds.inset(by: UIEdgeInsets(top: highlightYInset, left: highlightXInset, bottom: highlightYInset, right: highlightXInset))
@@ -95,7 +95,7 @@ open class UBButton: UIButton {
         }
     }
 
-    public override var isHighlighted: Bool {
+    override public var isHighlighted: Bool {
         get { return super.isHighlighted }
 
         set(highlighted) {

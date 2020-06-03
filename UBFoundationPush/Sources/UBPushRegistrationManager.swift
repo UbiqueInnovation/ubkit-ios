@@ -66,7 +66,7 @@ open class UBPushRegistrationManager {
 
     /// :nodoc:
     private func sendPushRegistration(completion: ((Error) -> Void)? = nil) {
-        guard let registrationRequest = self.pushRegistrationRequest else {
+        guard let registrationRequest = pushRegistrationRequest else {
             completion?(UBPushManagerError.registrationRequestMissing)
             return
         }
