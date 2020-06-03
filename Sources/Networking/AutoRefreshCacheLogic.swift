@@ -66,7 +66,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     }
 
     /// :nodoc:
-    open override func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
+    override open func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
         // Get the super cached response
         let cachedURLResponse = super.proposeCachedResponse(for: session, dataTask: dataTask, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics)
 
@@ -76,7 +76,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
 
     /// :nodoc:
 
-    public override func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session _: URLSession, request _: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?) {
+    override public func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session _: URLSession, request _: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?) {
         if cachedURLResponse != nil ||
             response == UBStandardHTTPCode.notModified {
             // If there is a response or the response is not modified, reschedule the cron job
@@ -89,14 +89,14 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
 
     /// :nodoc:
 
-    public override func hasMissedCache(dataTask: UBURLDataTask) {
+    override public func hasMissedCache(dataTask: UBURLDataTask) {
         // If we have a miss in the cache then we cancel any cron jobs
         cancelRefreshCronJob(for: dataTask)
     }
 
     /// :nodoc:
 
-    public override func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
+    override public func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
         scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics)
     }
 }
