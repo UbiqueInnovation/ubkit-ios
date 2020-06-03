@@ -3,6 +3,7 @@
 //  UBFoundation iOS Tests
 //
 //  Created by Zeno Koller on 17.01.20.
+//  Copyright © 2020 Ubique. All rights reserved.
 //
 
 import CoreLocation
@@ -11,15 +12,18 @@ import Foundation
 /// Enables supplying a mock location manager to `UBLocationManager`
 public protocol UBLocationManagerProtocol {
     // Properties
-
     var location: CLLocation? { get }
     var delegate: CLLocationManagerDelegate? { get set }
     var distanceFilter: CLLocationDistance { get set }
     var desiredAccuracy: CLLocationAccuracy { get set }
     var headingFilter: CLLocationDegrees { get set }
+    var activityType: CLActivityType { get set }
+    var allowsBackgroundLocationUpdates: Bool { get set }
+    var pausesLocationUpdatesAutomatically: Bool { get set }
+    @available(iOS 11.0, *)
+    var showsBackgroundLocationIndicator: Bool { get set }
 
     // Starting / stopping updates
-
     func startUpdatingLocation()
     func stopUpdatingLocation()
     func startMonitoringSignificantLocationChanges()
@@ -30,7 +34,6 @@ public protocol UBLocationManagerProtocol {
     func stopUpdatingHeading()
 
     // Authorization
-
     func requestWhenInUseAuthorization()
     func requestAlwaysAuthorization()
 
