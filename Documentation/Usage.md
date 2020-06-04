@@ -170,6 +170,22 @@ Networking.addNetworkActivityStateObserver { (newState) in
 }
 ```
 
+### Modify Caching
+You can create a modified Cache Logic to cache more data. Default should be to modify requests headers! Only use this if we don't control the backend component.
+```swift
+public class MapDataCacheLogic: UBAutoRefreshCacheLogic {
+    static let session = UBURLSession(configuration: UBURLSessionConfiguration(cachingLogic: MapDataCacheLogic()))
+
+    override public func shouldWriteToCache(allowed _: Bool, data _: Data, response _: HTTPURLResponse) -> Bool {
+        true
+    }
+
+    override public func modifyCacheResult(proposed _: UBCacheResult, possible: UBCacheResult, reason _: UBBaseCachingLogic.CacheDecisionReason) -> UBCacheResult {
+        return possible // use cached data forever
+    }
+}
+```
+
 ## UIColor from HEX
 If you need to instanciate a color from a HEX value or you need to output a color as a HEX string you can use.
 ```swift

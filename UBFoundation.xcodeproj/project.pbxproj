@@ -48,6 +48,10 @@
 		8E101735224F5736006127DA /* CronRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E101733224F5736006127DA /* CronRule.swift */; };
 		8E101736224F5736006127DA /* CronRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E101733224F5736006127DA /* CronRule.swift */; };
 		8E101737224F5736006127DA /* CronRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E101733224F5736006127DA /* CronRule.swift */; };
+		8E23EBAF242BAC50002765AB /* HTTPMutableURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E23EBAE242BAC50002765AB /* HTTPMutableURLResponse.swift */; };
+		8E23EBB0242BAC50002765AB /* HTTPMutableURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E23EBAE242BAC50002765AB /* HTTPMutableURLResponse.swift */; };
+		8E23EBB1242BAC50002765AB /* HTTPMutableURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E23EBAE242BAC50002765AB /* HTTPMutableURLResponse.swift */; };
+		8E23EBB2242BAC50002765AB /* HTTPMutableURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E23EBAE242BAC50002765AB /* HTTPMutableURLResponse.swift */; };
 		8E27864922411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
 		8E27864A22411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
 		8E27864B22411CC600430D34 /* LoggingTestBundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E27864822411CC600430D34 /* LoggingTestBundle */; };
@@ -408,6 +412,7 @@
 		8E0DB2D42243F3AF00D5E01E /* HTTPCode+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPCode+Category.swift"; sourceTree = "<group>"; };
 		8E0DB2D92243F3CD00D5E01E /* HTTPCode+Standard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPCode+Standard.swift"; sourceTree = "<group>"; };
 		8E101733224F5736006127DA /* CronRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CronRule.swift; sourceTree = "<group>"; };
+		8E23EBAE242BAC50002765AB /* HTTPMutableURLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMutableURLResponse.swift; sourceTree = "<group>"; };
 		8E27864822411CC600430D34 /* LoggingTestBundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoggingTestBundle; sourceTree = "<group>"; };
 		8E27865222411E5600430D34 /* GlobalLoggingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLoggingTests.swift; sourceTree = "<group>"; };
 		8E2786562241227A00430D34 /* GlobalLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLocalization.swift; sourceTree = "<group>"; };
@@ -687,6 +692,7 @@
 			children = (
 				8E0DB2CF2243EABB00D5E01E /* HTTPURLResponse+Networking.swift */,
 				8E0DB2C92243D95900D5E01E /* HTTPURLResponse+Validator.swift */,
+				8E23EBAE242BAC50002765AB /* HTTPMutableURLResponse.swift */,
 			);
 			name = Response;
 			sourceTree = "<group>";
@@ -1605,6 +1611,7 @@
 				24B18B1C23D1A1F500350130 /* UITableView+Helpers.swift in Sources */,
 				8EBD47FE2240770000CD2639 /* Language.swift in Sources */,
 				8EBD47E52240765200CD2639 /* Logger.swift in Sources */,
+				8E23EBAF242BAC50002765AB /* HTTPMutableURLResponse.swift in Sources */,
 				8E0DB2CA2243D95900D5E01E /* HTTPURLResponse+Validator.swift in Sources */,
 				8EE058A922513A5400B2885B /* NetworkActivityTracker.swift in Sources */,
 				8EBD480A2240770000CD2639 /* Localization+Bundle.swift in Sources */,
@@ -1659,6 +1666,7 @@
 				8EBD48192240773900CD2639 /* GlobalLogging.swift in Sources */,
 				8EC4848422428AC500AC8E44 /* HTTPHeaderField.swift in Sources */,
 				AA89AC9623E44D0300491180 /* UBUserDefaultValue.swift in Sources */,
+				8E23EBB0242BAC50002765AB /* HTTPMutableURLResponse.swift in Sources */,
 				8E0DB2C62243D00E00D5E01E /* UBURLDataTask+Decoder.swift in Sources */,
 				8EBD4858224119AE00CD2639 /* Logger+Error.swift in Sources */,
 				8EBD48032240770000CD2639 /* Localization.swift in Sources */,
@@ -1725,6 +1733,7 @@
 				8E0DB2DC2243F3CD00D5E01E /* HTTPCode+Standard.swift in Sources */,
 				8EFFDCDF2254AEB9002D2DE2 /* UBURLSession+Delegate.swift in Sources */,
 				8EE058F7225367CC00B2885B /* NetworkTaskRecovery+Option.swift in Sources */,
+				8E23EBB1242BAC50002765AB /* HTTPMutableURLResponse.swift in Sources */,
 				8E101736224F5736006127DA /* CronRule.swift in Sources */,
 				AA89ACB823E6C26100491180 /* UBOptionalUserDefault.swift in Sources */,
 				8E52B77E229D69A000633EFA /* BaseCachingLogic.swift in Sources */,
@@ -1828,6 +1837,7 @@
 				8EBD48092240770000CD2639 /* Localization+String.swift in Sources */,
 				8EFFDCEA2254CA18002D2DE2 /* UBURLSession+Configuration.swift in Sources */,
 				8E27865F2241230E00430D34 /* GlobalNotificationCenter.swift in Sources */,
+				8E23EBB2242BAC50002765AB /* HTTPMutableURLResponse.swift in Sources */,
 				8E27865A2241227A00430D34 /* GlobalLocalization.swift in Sources */,
 				AA89AC9823E44D0300491180 /* UBUserDefaultValue.swift in Sources */,
 				8EE058C422526C4500B2885B /* UBURLRequestModifier+Group.swift in Sources */,

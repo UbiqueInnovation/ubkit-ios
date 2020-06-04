@@ -160,6 +160,50 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
+            ex2.fulfill()
+        }
+
+        dataTask2.start()
+        wait(for: [ex2], timeout: 10000)
+    }
+
+    func testCacheModifier() {
+        startTasks(session: Networking.sharedSession, secondShouldCache: false)
+
+        let cache = SwisstopoMapAutorefreshCacheLogic()
+        let conf = UBURLSessionConfiguration(cachingLogic: cache)
+        let session = UBURLSession(configuration: conf)
+
+        startTasks(session: session, secondShouldCache: true)
+    }
+
+    private func startTasks(session: UBURLSession, secondShouldCache: Bool) {
+        let url = URL(string: "http://no-cache-but-pie.glitch.me")!
+
+        // load request to (not) fill cache
+
+        let dataTask = UBURLDataTask(url: url, session: session)
+
+        let ex = expectation(description: "s")
+        dataTask.addCompletionHandler { _, _, _, _ in
+
+            ex.fulfill()
+        }
+        dataTask.start()
+        wait(for: [ex], timeout: 10000)
+
+        dataTask.cancel() // make sure that cron doesn't trigger
+
+        // load request again
+
+        let dataTask2 = UBURLDataTask(url: url, session: session)
+
+        let ex2 = expectation(description: "s2")
+        dataTask2.addCompletionHandler { _, _, info, _ in
+
+            XCTAssert(info != nil)
+            XCTAssert(info!.cacheHit == secondShouldCache)
+            ex2.fulfill()
         }
 
         dataTask2.start()
@@ -193,41 +237,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask2.addCompletionHandler { _, _, info, _ in
 
             XCTAssert(info != nil)
-            XCTAssertFalse(info!.cacheHit)
-
-            ex2.fulfill()
-        }
-        dataTask2.start()
-        wait(for: [ex2], timeout: 10000)
-    }
-
-    func testSwisstopoNoCacheHeaders() {
-        // Load Request with default headers and no cache
-
-        let url = URL(string: "https://app-test-ws.Swisstopo-app.ch/v1/location/search?searchText=Test")!
-
-        // load request to (not) fill cache
-
-        let dataTask = UBURLDataTask(url: url)
-
-        let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
-
-            ex.fulfill()
-        }
-        dataTask.start()
-        wait(for: [ex], timeout: 10000)
-
-        dataTask.cancel() // make sure that cron doesn't trigger
-
-        // load request again
-
-        let dataTask2 = UBURLDataTask(url: url)
-
-        let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
-
-            XCTAssertNotNil(info)
             XCTAssertFalse(info!.cacheHit)
 
             ex2.fulfill()
@@ -327,5 +336,15 @@ class RegaAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
         } else {
             return nil
         }
+    }
+}
+
+class SwisstopoMapAutorefreshCacheLogic: UBAutoRefreshCacheLogic {
+    override func shouldWriteToCache(allowed _: Bool, data _: Data, response _: HTTPURLResponse) -> Bool {
+        return true
+    }
+
+    override func modifyCacheResult(proposed _: UBCacheResult, possible: UBCacheResult, reason _: UBBaseCachingLogic.CacheDecisionReason) -> UBCacheResult {
+        return possible
     }
 }

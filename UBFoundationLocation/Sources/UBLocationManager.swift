@@ -36,7 +36,6 @@ public extension UBLocationManagerDelegate {
 /// A convenience wrapper for `CLLocationManager` which facilitates obtaining the required authorization
 /// for the desired usage (defined as a set of `UBLocationManager.LocationMonitoringUsage`)
 public class UBLocationManager: NSObject {
-
     /// The shared location manager.
     public static let shared = UBLocationManager()
 
@@ -44,7 +43,7 @@ public class UBLocationManager: NSObject {
     private var delegateWrappers: [ObjectIdentifier: UBLocationManagerDelegateWrapper] = [:]
 
     private var delegates: [UBLocationManagerDelegate] {
-        delegateWrappers.values.compactMap({ $0.delegate })
+        delegateWrappers.values.compactMap { $0.delegate }
     }
 
     /// The union of the usages for all the delegaets
@@ -127,6 +126,7 @@ public class UBLocationManager: NSObject {
             startLocationTimer()
         }
     }
+
     /// The default value for `timeout`
     public static var defaultTimeout: TimeInterval = 2
     /// :nodoc:
@@ -171,9 +171,9 @@ public class UBLocationManager: NSObject {
     ///
     /// - Parameters:
     ///   - locationManager: The underlying location manager
-     init(locationManager: UBLocationManagerProtocol = CLLocationManager()) {
+    init(locationManager: UBLocationManagerProtocol = CLLocationManager()) {
         self.locationManager = locationManager
-        self.timeout = Self.defaultTimeout
+        timeout = Self.defaultTimeout
 
         super.init()
 

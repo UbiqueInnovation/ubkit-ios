@@ -10,16 +10,15 @@ import CoreLocation
 import UBFoundationLocation
 
 class MockLocationManagerDelegate: NSObject, UBLocationManagerDelegate {
+    func locationManager(_: UBLocationManager, grantedPermission _: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
 
-    func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
+    func locationManager(_: UBLocationManager, requiresPermission _: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
 
-    func locationManager(_ manager: UBLocationManager, requiresPermission permission: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
+    func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
 
-    func locationManager(_ manager: UBLocationManager, didUpdateLocations locations: [CLLocation]) {}
+    func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
 
-    func locationManager(_ manager: UBLocationManager, didUpdateHeading newHeading: CLHeading) {}
+    func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
 
-    func locationManager(_ manager: UBLocationManager, didVisit visit: CLVisit) {}
-
-    func locationManager(_ manager: UBLocationManager, didFailWithError error: Error) {}
+    func locationManager(_: UBLocationManager, didFailWithError _: Error) {}
 }
