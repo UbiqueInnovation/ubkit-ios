@@ -67,6 +67,9 @@ open class UBBaseCachingLogic: UBCachingLogic {
         }
     }
 
+    /// Asks the caching logic if data should be stored in the cache
+    /// The default implementation returns true iff allowed
+    /// Subclass may return true for all data to cache more data
     open func shouldWriteToCache(allowed: Bool, data _: Data, response _: HTTPURLResponse) -> Bool {
         return allowed
     }
@@ -112,10 +115,19 @@ open class UBBaseCachingLogic: UBCachingLogic {
         return (response, data, userInfo)
     }
 
+    /// Modify decision on whether cached result can still be used
+    /// - Parameters
+    ///     - proposed: The cache result from the caching logic
+    ///     - possible: A `.hit` cache result that could be used if logic didn't decide for `.miss` or `.expired`
+    ///     - reason: Why the proposed result was chosen
+    /// - Returns: The cached result that will be returned from the networking Task
+    ///
+    /// Most common usage will be to return `possible` for all cases to enable cache forever or replace a `.expired` with `.hit` based on age to extend cache duration
     open func modifyCacheResult(proposed: UBCacheResult, possible _: UBCacheResult, reason _: CacheDecisionReason) -> UBCacheResult {
         return proposed
     }
 
+    /// Different decisions that can be made by caching logic
     public enum CacheDecisionReason {
         case cachingNotAllowed
         case contentLanguageNotAccepted(_ language: String)
