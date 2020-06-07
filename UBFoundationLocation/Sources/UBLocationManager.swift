@@ -340,7 +340,10 @@ extension UBLocationManager: CLLocationManagerDelegate {
             let targetAccuracy = filteredAccuracy ?? desiredAccuracy
             results = locations.filter { (location) -> Bool in
                 // A negative value indicates that the latitude and longitude are invalid
-                location.horizontalAccuracy >= 0 && location.horizontalAccuracy < targetAccuracy
+                location.horizontalAccuracy >= 0 &&
+                location.horizontalAccuracy < targetAccuracy &&
+                // GPS  may return 0 to indicate no location
+                location.coordinate.latitude != 0 && location.coordinate.longitude != 0
             }
         }
 
