@@ -336,7 +336,6 @@
 		AA0B58792490BEB300A86BF8 /* Bundle+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0B58762490BEB300A86BF8 /* Bundle+Helpers.swift */; };
 		AA0B587A2490BEB300A86BF8 /* Bundle+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0B58762490BEB300A86BF8 /* Bundle+Helpers.swift */; };
 		AA0B5889249106DA00A86BF8 /* UBURLRequest+UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0B5888249106DA00A86BF8 /* UBURLRequest+UserAgent.swift */; };
-		AA0B588A249106DD00A86BF8 /* UBURLRequest+UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0B5888249106DA00A86BF8 /* UBURLRequest+UserAgent.swift */; };
 		AA0B588B249106DD00A86BF8 /* UBURLRequest+UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0B5888249106DA00A86BF8 /* UBURLRequest+UserAgent.swift */; };
 		AA0B588C249106DE00A86BF8 /* UBURLRequest+UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0B5888249106DA00A86BF8 /* UBURLRequest+UserAgent.swift */; };
 		AA4FCC252433AF3100070672 /* UBKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4FCC242433AF3100070672 /* UBKeychain.swift */; };
@@ -375,6 +374,7 @@
 		AAB0137E23DEF2D9003C91C7 /* UserDefaults+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137D23DEF2D9003C91C7 /* UserDefaults+Test.swift */; };
 		AAB0137F23DEF2D9003C91C7 /* UserDefaults+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137D23DEF2D9003C91C7 /* UserDefaults+Test.swift */; };
 		AAB0138023DEF2D9003C91C7 /* UserDefaults+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB0137D23DEF2D9003C91C7 /* UserDefaults+Test.swift */; };
+		AACA77F224B5CBEA00E71F60 /* UBURLRequest+UserAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0B5888249106DA00A86BF8 /* UBURLRequest+UserAgent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1700,7 +1700,7 @@
 				8E101735224F5736006127DA /* CronRule.swift in Sources */,
 				8EBD48132240770000CD2639 /* Localization+Error.swift in Sources */,
 				8EFFDCE32254B0DB002D2DE2 /* UBURLSession+ServerTrustEvaluation.swift in Sources */,
-				AA0B588A249106DD00A86BF8 /* UBURLRequest+UserAgent.swift in Sources */,
+				AACA77F224B5CBEA00E71F60 /* UBURLRequest+UserAgent.swift in Sources */,
 				8EBD480F2240770000CD2639 /* Localization+Languages.swift in Sources */,
 				8E2786622241269200430D34 /* Localization+Locale.swift in Sources */,
 				8EBD47FF2240770000CD2639 /* Language.swift in Sources */,
