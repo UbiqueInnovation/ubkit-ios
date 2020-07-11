@@ -339,13 +339,17 @@ extension UBLocationManager: CLLocationManagerDelegate {
         } else {
             // if desiredAccuracy is kCLLocationAccuracyBest (-1), the filter will always fail,
             // so we use next higher level of accuracy instead
-            let targetAccuracy = filteredAccuracy ?? (desiredAccuracy == -1 ? 10 : desiredAccuracy)
-            results = locations.filter { (location) -> Bool in
-                // A negative value indicates that the latitude and longitude are invalid
-                location.horizontalAccuracy >= 0 &&
-                location.horizontalAccuracy < targetAccuracy &&
-                // GPS  may return 0 to indicate no location
-                location.coordinate.latitude != 0 && location.coordinate.longitude != 0
+            if let targetAccuracy = filteredAccuracy {
+                results = locations.filter { (location) -> Bool in
+                    // A negative value indicates that the latitude and longitude are invalid
+                    location.horizontalAccuracy >= 0 &&
+                    location.horizontalAccuracy < targetAccuracy &&
+                    // GPS  may return 0 to indicate no location
+                    location.coordinate.latitude != 0 && location.coordinate.longitude != 0
+                }
+            }
+            else {
+                results = locations
             }
         }
 
