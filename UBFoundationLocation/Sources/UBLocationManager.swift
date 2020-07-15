@@ -24,6 +24,9 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: UBLocationManager, didVisit visit: CLVisit)
     /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didFailWithError error: Error)
+
+    /// If set, the locations returned for this delegate will be filtered for the given accuracy
+    var locationManagerFilterAccuracy: CLLocationAccuracy? { get }
 }
 
 public extension UBLocationManagerDelegate {
@@ -332,25 +335,12 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let results: [CLLocation]
-
-        if timedOut {
-            results = locations
-        } else {
-            // if desiredAccuracy is kCLLocationAccuracyBest (-1), the filter will always fail,
-            // so we use next higher level of accuracy instead
-            if let targetAccuracy = filteredAccuracy {
-                results = locations.filter { (location) -> Bool in
-                    // A negative value indicates that the latitude and longitude are invalid
-                    location.horizontalAccuracy >= 0 &&
-                    location.horizontalAccuracy < targetAccuracy &&
-                    // GPS  may return 0 to indicate no location
-                    location.coordinate.latitude != 0 && location.coordinate.longitude != 0
-                }
-            }
-            else {
-                results = locations
-            }
+        // remove invalid locations
+        let results: [CLLocation] = locations.filter { (location) -> Bool in
+            // A negative value indicates that the latitude and longitude are invalid
+            location.horizontalAccuracy >= 0 &&
+            // GPS  may return 0 to indicate no location
+            location.coordinate.latitude != 0 && location.coordinate.longitude != 0
         }
 
         if !results.isEmpty {
@@ -362,13 +352,20 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     private func notifyDelegates(withLocations locations: [CLLocation]) {
-        guard let lastLocation = locations.last else {
-            return
-        }
+        guard let lastLocation = locations.last else { return }
         self.lastLocation = lastLocation
 
         for delegate in delegates {
-            delegate.locationManager(self, didUpdateLocations: locations)
+
+            let filteredLocations: [CLLocation]
+            if let filteredAccuracy = delegate.locationManagerFilterAccuracy {
+                let targetAccuracy = (filteredAccuracy > 0 ? filteredAccuracy : 10)
+                filteredLocations = locations.filter { $0.horizontalAccuracy < targetAccuracy }
+            } else {
+                filteredLocations = locations
+            }
+            
+            delegate.locationManager(self, didUpdateLocations: filteredLocations)
         }
     }
 
@@ -389,7 +386,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         if (error as! CLError).code == CLError.denied {
             // Location updates are not authorized.
             for delegate in delegates {
-                stopLocationMonitoring()
+                stopLocationMonitoring(forDelegate: delegate)
             }
         }
 

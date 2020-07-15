@@ -21,4 +21,6 @@ class MockLocationManagerDelegate: NSObject, UBLocationManagerDelegate {
     func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
 
     func locationManager(_: UBLocationManager, didFailWithError _: Error) {}
+
+    var locationManagerFilterAccuracy: CLLocationAccuracy? { nil }
 }
