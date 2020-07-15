@@ -12,10 +12,10 @@ import UBFoundation
 /// An object defining methods that handle events related to GPS location.
 public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
     /// Notifies the delegate that the permission level for the desired usage has been granted.
-    func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel)
+    func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.AuthorizationLevel, accuracy: UBLocationManager.AccuracyLevel)
     func locationManager(permissionDeniedFor manager: UBLocationManager)
     /// Notifies the delegate that the desired usage requires a permission level (`permission`) which has not been granted.
-    func locationManager(_ manager: UBLocationManager, requiresPermission permission: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel)
+    func locationManager(_ manager: UBLocationManager, requiresPermission permission: UBLocationManager.AuthorizationLevel)
     /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didUpdateLocations locations: [CLLocation])
     /// :nodoc:
@@ -30,8 +30,8 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
 }
 
 public extension UBLocationManagerDelegate {
-    func locationManager(_: UBLocationManager, grantedPermission _: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
     func locationManager(permissionDeniedFor _: UBLocationManager) {}
+    func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.AuthorizationLevel, accuracy: UBLocationManager.AccuracyLevel) {}
     func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
     func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
     func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
@@ -76,6 +76,14 @@ public class UBLocationManager: NSObject {
         get { locationManager.distanceFilter }
         set {
             locationManager.distanceFilter = newValue
+        }
+    }
+
+    public var accuracyLevel: UBLocationManager.AccuracyLevel {
+        if #available(iOS 14.0, *) {
+            return (locationManager as? CLLocationManager)?.accuracyAuthorization.accuracyLevel ?? .full
+        } else {
+            return .full
         }
     }
 
@@ -204,7 +212,7 @@ public class UBLocationManager: NSObject {
     ///   - usage: The desired usage. Can also be an array, e.g. `[.location(background: false), .heading(background: true)]`
     ///   - canAskForPermission: Whether the location manager can ask for the required permission on its own behalf
     public func startLocationMonitoring(for usage: LocationMonitoringUsage, delegate: UBLocationManagerDelegate, canAskForPermission: Bool) {
-        func requestPermission(for authorizationLevel: LocationMonitoringUsage.AuthorizationLevel) {
+        func requestPermission(for authorizationLevel: AuthorizationLevel) {
             switch authorizationLevel {
             case .always:
                 locationManager.requestAlwaysAuthorization()
@@ -320,7 +328,8 @@ public class UBLocationManager: NSObject {
 }
 
 extension UBLocationManager: CLLocationManagerDelegate {
-    public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
+
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
         logLocationPermissionChange?(authorization)
 
         for delegate in delegates {
@@ -328,9 +337,10 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
 
         if Self.hasRequiredAuthorizationLevel(forUsage: usage) {
-            let permission: LocationMonitoringUsage.AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
+            let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
+
             for delegate in delegates {
-                delegate.locationManager(self, grantedPermission: permission)
+                delegate.locationManager(self, grantedPermission: permission, accuracy: accuracyLevel)
             }
         }
         if authorization == .denied {
@@ -341,6 +351,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
         // remove invalid locations
         let results: [CLLocation] = locations.filter { (location) -> Bool in
             // A negative value indicates that the latitude and longitude are invalid
@@ -405,6 +416,19 @@ extension UBLocationManager: CLLocationManagerDelegate {
 }
 
 extension UBLocationManager {
+    /// An authorization level granted by the user which allows starting location services
+    public enum AuthorizationLevel: Int {
+        /// User authorized the app to start location services while it is in use
+        case whenInUse
+        /// User authorized the app to start location services at any time
+        case always
+    }
+
+    /// Defines the level of accuracy granted by the user.
+    public enum AccuracyLevel: Int {
+        case reduced, full
+    }
+
     /// Defines the usage for `UBLocationManager`. Can be a combination of the defined options.
     public struct LocationMonitoringUsage: OptionSet {
         public let rawValue: UInt8
@@ -439,14 +463,6 @@ extension UBLocationManager {
         /// Monitors visits
         public static let visits = LocationMonitoringUsage(rawValue: 1 << 5)
 
-        /// An authorization level granted by the user which allows starting location services
-        public enum AuthorizationLevel: Int {
-            /// User authorized the app to start location services while it is in use
-            case whenInUse
-            /// User authorized the app to start location services at any time
-            case always
-        }
-
         /// :nodoc:
         public var minimumAuthorizationLevelRequired: AuthorizationLevel {
             if contains(.significantChange) || contains(.visits) || requiresBackgroundLocation {
@@ -464,6 +480,19 @@ extension UBLocationManager {
         /// :nodoc:
         public var containsHeading: Bool {
             contains(.heading(background: true)) || contains(.heading(background: false))
+        }
+    }
+}
+
+fileprivate extension CLAccuracyAuthorization {
+    var accuracyLevel: UBLocationManager.AccuracyLevel {
+        switch self {
+        case .fullAccuracy:
+            return .full
+        case .reducedAccuracy:
+            return .reduced
+        @unknown default:
+            fatalError("Level of accuracy not handled")
         }
     }
 }
