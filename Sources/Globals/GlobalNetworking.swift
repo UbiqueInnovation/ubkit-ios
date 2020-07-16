@@ -16,6 +16,9 @@ public enum Networking {
     /// The global network activity tracker instance
     static let global = UBNetworkActivityTracker()
 
+    /// Activate global tracking UI should be updated with tracking state
+    static var globalActivityTracking = false
+
     /// The global network activity state
     public static var globalNetworkActivityState: UBNetworkActivityTracker.NetworkActivityState {
         return global.networkActivityState
@@ -25,6 +28,7 @@ public enum Networking {
     ///
     /// - Parameter block: The block to be called when the state changes
     public static func addGlobalNetworkActivityStateObserver(_ block: @escaping UBNetworkActivityTracker.StateObservationBlock) {
+        Self.globalActivityTracking = true
         return global.addStateObserver(block)
     }
 
@@ -32,7 +36,9 @@ public enum Networking {
     ///
     /// - Parameter task: The task to add.
     public static func addToGlobalNetworkActivity(_ task: UBURLDataTask) {
-        global.add(task)
+        if globalActivityTracking {
+            global.add(task)
+        }
     }
 
     /// Removes a task from global network activity
