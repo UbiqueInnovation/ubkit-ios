@@ -39,6 +39,8 @@ public enum UBNetworkingError: Error, Equatable {
     case requestRedirected
     /// No cached data was found
     case noCachedData
+    /// Synchronous task timed out
+    case timedOut
 }
 
 /// A structure that encapsulate the error body returned from the backend
