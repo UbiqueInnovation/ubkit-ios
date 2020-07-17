@@ -100,6 +100,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         dataTaskStateObservation = nil
         dataTask?.cancel()
         requestStartSemaphore.signal()
+        synchronousStartSemaphore.signal()
     }
 
     // MARK: - Startin and stopping
