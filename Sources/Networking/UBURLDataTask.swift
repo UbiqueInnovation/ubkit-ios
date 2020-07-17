@@ -439,7 +439,16 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         start()
-        synchronousStartSemaphore.wait()
+
+        // timeout should fire to completion handler, but never called for cancelled requests
+        // semaphore timeout to avoid deadlock
+        let timeout = Int(request.timeoutInterval * 2.0)
+        let waitResult = synchronousStartSemaphore.wait(timeout: DispatchTime.now() + DispatchTimeInterval.seconds(timeout))
+
+        if waitResult == .timedOut {
+            return (Result.failure(UBNetworkingError.timedOut), nil, nil, self)
+        }
+
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
         guard let unwrappedResult = fetchedResult else {
@@ -464,7 +473,16 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         start()
-        synchronousStartSemaphore.wait()
+
+        // timeout should fire to completion handler, but never called for cancelled requests
+        // semaphore timeout to avoid deadlock
+        let timeout = Int(request.timeoutInterval * 2.0)
+        let waitResult = synchronousStartSemaphore.wait(timeout: DispatchTime.now() + DispatchTimeInterval.seconds(timeout))
+
+        if waitResult == .timedOut {
+            return (Result.failure(UBNetworkingError.timedOut), nil, nil, self)
+        }
+
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
         guard let unwrappedResult = fetchedResult else {
