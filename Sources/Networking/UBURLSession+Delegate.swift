@@ -59,11 +59,18 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             }
         }
 
-        guard let ubDataTask = tasks.object(forKey: task) else {
+        var _ubDataTask: UBURLDataTask?
+        var _collectedData: UBURLSessionDelegate.DataHolder?
+        serialQueue.sync {
+            _ubDataTask = tasks.object(forKey: task)
+            _collectedData = tasksData.object(forKey: task)
+        }
+
+        guard let ubDataTask = _ubDataTask else {
             return
         }
 
-        guard let collectedData = tasksData.object(forKey: task) else {
+        guard let collectedData = _collectedData else {
             ubDataTask.dataTaskCompleted(data: nil, response: nil, error: error, info: nil)
             return
         }
@@ -127,7 +134,13 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// :nodoc:
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         assert(session == urlSession, "The sessions are not matching")
-        guard let dataHolder = tasksData.object(forKey: task) else {
+
+        var _collectedData: UBURLSessionDelegate.DataHolder?
+        serialQueue.sync {
+            _collectedData = tasksData.object(forKey: task)
+        }
+
+        guard let dataHolder = _collectedData else {
             return
         }
         dataHolder.metrics = metrics
@@ -137,7 +150,14 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         assert(session == urlSession, "The sessions are not matching")
 
-        guard let ubDataTask = tasks.object(forKey: dataTask), let dataHolder = tasksData.object(forKey: dataTask) else {
+        var _ubDataTask: UBURLDataTask?
+        var _collectedData: UBURLSessionDelegate.DataHolder?
+        serialQueue.sync {
+            _ubDataTask = tasks.object(forKey: dataTask)
+            _collectedData = tasksData.object(forKey: dataTask)
+        }
+
+        guard let ubDataTask = _ubDataTask, let dataHolder = _collectedData else {
             completionHandler(.cancel)
             return
         }
@@ -162,7 +182,13 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// :nodoc:
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         assert(session == urlSession, "The sessions are not matching")
-        guard let dataHolder = tasksData.object(forKey: dataTask) else {
+
+        var _collectedData: UBURLSessionDelegate.DataHolder?
+        serialQueue.sync {
+            _collectedData = tasksData.object(forKey: dataTask)
+        }
+
+        guard let dataHolder = _collectedData else {
             return
         }
         if dataHolder.data == nil {
@@ -188,7 +214,12 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         assert(session == urlSession, "The sessions are not matching")
 
-        guard let dataHolder = tasksData.object(forKey: task) else {
+        var _collectedData: UBURLSessionDelegate.DataHolder?
+        serialQueue.sync {
+            _collectedData = tasksData.object(forKey: task)
+        }
+
+        guard let dataHolder = _collectedData else {
             completionHandler(request)
             return
         }
@@ -211,7 +242,12 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         assert(session == urlSession, "The sessions are not matching")
 
-        guard let dataHolder = tasksData.object(forKey: task) else {
+        var _collectedData: UBURLSessionDelegate.DataHolder?
+        serialQueue.sync {
+            _collectedData = tasksData.object(forKey: task)
+        }
+
+        guard let dataHolder = _collectedData else {
             return
         }
 
