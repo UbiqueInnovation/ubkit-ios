@@ -339,8 +339,8 @@ extension UBLocationManager: CLLocationManagerDelegate {
         let results: [CLLocation] = locations.filter { (location) -> Bool in
             // A negative value indicates that the latitude and longitude are invalid
             location.horizontalAccuracy >= 0 &&
-            // GPS  may return 0 to indicate no location
-            location.coordinate.latitude != 0 && location.coordinate.longitude != 0
+                // GPS  may return 0 to indicate no location
+                location.coordinate.latitude != 0 && location.coordinate.longitude != 0
         }
 
         if !results.isEmpty {
@@ -356,7 +356,6 @@ extension UBLocationManager: CLLocationManagerDelegate {
         self.lastLocation = lastLocation
 
         for delegate in delegates {
-
             let filteredLocations: [CLLocation]
             if let filteredAccuracy = delegate.locationManagerFilterAccuracy {
                 let targetAccuracy = (filteredAccuracy > 0 ? filteredAccuracy : 10)
@@ -364,7 +363,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
             } else {
                 filteredLocations = locations
             }
-            
+
             delegate.locationManager(self, didUpdateLocations: filteredLocations)
         }
     }

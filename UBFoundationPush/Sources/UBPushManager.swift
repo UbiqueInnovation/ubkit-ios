@@ -205,8 +205,14 @@ open class UBPushManager: NSObject {
     // MARK: - Push Registration
 
     /// Invalidates the current push registration, forcing a new registration request
+    @available(*, deprecated, renamed: "invalidateAndResendPushRegistration")
     public func invalidatePushRegistration() {
         pushRegistrationManager.invalidate()
+    }
+
+    /// Invalidates the current push registration, forcing a new registration request
+    public func invalidateAndResendPushRegistration(completion: ((Error?) -> Void)? = nil) {
+        pushRegistrationManager.invalidate(completion: completion)
     }
 }
 

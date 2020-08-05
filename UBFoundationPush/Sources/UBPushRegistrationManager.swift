@@ -46,7 +46,9 @@ open class UBPushRegistrationManager {
 
         // we could receive the same push token again
         // only send registration if push token has changed
-        if oldToken != nil || oldToken != pushToken {
+        if (oldToken == nil && pushToken != nil)
+            || (oldToken != nil && oldToken != pushToken)
+            || (oldToken != nil && oldToken == pushToken && !UBPushLocalStorage.shared.isValid) {
             UBPushLocalStorage.shared.pushToken = pushToken
             invalidate()
         }
@@ -59,13 +61,13 @@ open class UBPushRegistrationManager {
     }
 
     /// :nodoc:
-    func invalidate() {
+    func invalidate(completion: ((Error?) -> Void)? = nil) {
         UBPushLocalStorage.shared.isValid = false
-        sendPushRegistration()
+        sendPushRegistration(completion: completion)
     }
 
     /// :nodoc:
-    private func sendPushRegistration(completion: ((Error) -> Void)? = nil) {
+    private func sendPushRegistration(completion: ((Error?) -> Void)? = nil) {
         guard let registrationRequest = pushRegistrationRequest else {
             completion?(UBPushManagerError.registrationRequestMissing)
             return
@@ -91,6 +93,7 @@ open class UBPushRegistrationManager {
             switch result {
             case let .success(responseString):
                 self.validate()
+                completion?(nil)
 
                 UBPushManager.logger.info("\(String(describing: self)) ended with result: \(responseString)")
 

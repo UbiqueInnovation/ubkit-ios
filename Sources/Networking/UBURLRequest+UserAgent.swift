@@ -6,13 +6,12 @@
 //
 
 #if os(iOS) || os(tvOS)
-import UIKit
+    import UIKit
 #elseif os(watchOS)
-import WatchKit
+    import WatchKit
 #endif
 
 extension UBURLRequest {
-
     public mutating func setDefaultUserAgent() {
         setHTTPHeaderField(UBHTTPHeaderField(key: .userAgent, value: UBURLRequest.userAgent))
     }
@@ -24,12 +23,12 @@ extension UBURLRequest {
 
         let systemVersion: String
         #if os(iOS) || os(tvOS)
-        systemVersion = UIDevice.current.systemVersion
+            systemVersion = UIDevice.current.systemVersion
         #elseif os(watchOS)
-        systemVersion = WKInterfaceDevice.current().systemVersion
+            systemVersion = WKInterfaceDevice.current().systemVersion
         #elseif os(macOS)
-        let osv = ProcessInfo.processInfo.operatingSystemVersion
-        systemVersion = "macOS \(osv.majorVersion).\(osv.minorVersion).\(osv.patchVersion)"
+            let osv = ProcessInfo.processInfo.operatingSystemVersion
+            systemVersion = "macOS \(osv.majorVersion).\(osv.minorVersion).\(osv.patchVersion)"
         #endif
 
         let header = [bundleId, appVersion, os, systemVersion].joined(separator: ";")
