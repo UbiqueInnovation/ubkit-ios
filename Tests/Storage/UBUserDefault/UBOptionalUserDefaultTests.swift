@@ -27,11 +27,22 @@ class UBOptionalUserDefaultTests: XCTestCase {
         XCTAssertEqual(testString, "Some value")
     }
 
-    func testSet() {
+    func testSetToValue() {
         let userDefaults = UserDefaults.makeTestInstance()
         _testString.userDefaults = userDefaults
 
         testString = "Some other value"
         XCTAssertEqual(userDefaults.string(forKey: "testString"), "Some other value")
+    }
+
+    func testSetToNil() {
+        let userDefaults = UserDefaults.makeTestInstance()
+        _testString.userDefaults = userDefaults
+
+        testString = "Non-nil value"
+        XCTAssertEqual(userDefaults.string(forKey: "testString"), "Non-nil value")
+
+        testString = nil
+        XCTAssertEqual(userDefaults.string(forKey: "testString"), nil)
     }
 }
