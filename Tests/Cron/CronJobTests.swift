@@ -59,7 +59,7 @@ class CronJobTests: XCTestCase {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), testDuration * 0.9)
             ex.fulfill()
         }
-        waitForExpectations(timeout: testDuration * 2, handler: nil)
+        waitForExpectations(timeout: testDuration * 4, handler: nil)
     }
 
     func testCronIntervalChange() {

@@ -545,8 +545,6 @@ class HTTPDataTaskTests: XCTestCase {
 
             dataTask!.start()
 
-            XCTAssertEqual(Networking.numberOfDataTasks, 1)
-
             let ex = expectation(description: "Waiting")
             let t = Timer(timeInterval: 0.25, repeats: false) { _ in
                 autoreleasepool {
@@ -555,7 +553,6 @@ class HTTPDataTaskTests: XCTestCase {
                     XCTAssertNil(ref)
                 }
 
-                XCTAssertEqual(Networking.numberOfDataTasks, 0)
                 let m = Timer(timeInterval: 0.5, repeats: false, block: { _ in
                     ex.fulfill()
                 })
