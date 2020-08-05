@@ -34,7 +34,11 @@ public struct UBOptionalUserDefault<T: UBUserDefaultValue> {
             return T.retrieveOptional(from: userDefaults, key: key)
         }
         set {
-            newValue?.store(in: userDefaults, key: key)
+            if let new = newValue {
+                new.store(in: userDefaults, key: key)
+            } else {
+                userDefaults.set(nil, forKey: key)
+            }
         }
     }
 }
