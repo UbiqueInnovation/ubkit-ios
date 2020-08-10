@@ -14,6 +14,7 @@ import UBFoundation
 public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
     /// Notifies the delegate that the permission level for the desired usage has been granted.
     func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel)
+    func locationManager(permissionDeniedFor manager: UBLocationManager)
     /// Notifies the delegate that the desired usage requires a permission level (`permission`) which has not been granted.
     func locationManager(_ manager: UBLocationManager, requiresPermission permission: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel)
     /// :nodoc:
@@ -31,6 +32,7 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
 
 public extension UBLocationManagerDelegate {
     func locationManager(_: UBLocationManager, grantedPermission _: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
+    func locationManager(permissionDeniedFor _: UBLocationManager) {}
     func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
     func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
     func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
@@ -330,6 +332,11 @@ extension UBLocationManager: CLLocationManagerDelegate {
             let permission: LocationMonitoringUsage.AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
             for delegate in delegates {
                 delegate.locationManager(self, grantedPermission: permission)
+            }
+        }
+        if authorization == .denied {
+            for delegate in delegates {
+                delegate.locationManager(permissionDeniedFor: self)
             }
         }
     }
