@@ -10,9 +10,9 @@ import CoreLocation
 import UBLocation
 
 class MockLocationManagerDelegate: NSObject, UBLocationManagerDelegate {
-    func locationManager(_: UBLocationManager, grantedPermission _: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
+    func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.AuthorizationLevel, accuracy: UBLocationManager.AccuracyLevel) {}
 
-    func locationManager(_: UBLocationManager, requiresPermission _: UBLocationManager.LocationMonitoringUsage.AuthorizationLevel) {}
+    func locationManager(_: UBLocationManager, requiresPermission _: UBLocationManager.AuthorizationLevel) {}
 
     func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
 
