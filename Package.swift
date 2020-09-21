@@ -10,10 +10,10 @@ let package = Package(
         .watchOS(.v5),
     ],
     products: [
-        .library(name: "UBFoundation", targets: ["UBFoundation"]),
-        .library(name: "UBUserInterface", targets: ["UBUserInterface"]),
-        .library(name: "UBLocation", targets: ["UBLocation"]),
-        .library(name: "UBPush", targets: ["UBPush"]),
+        .library(name: "UBFoundation", type: .dynamic, targets: ["UBFoundation"]),
+        .library(name: "UBUserInterface", type: .dynamic, targets: ["UBUserInterface"]),
+        .library(name: "UBLocation", type: .dynamic, targets: ["UBLocation"]),
+        .library(name: "UBPush", type: .dynamic, targets: ["UBPush"]),
     ],
     dependencies: [],
     targets: [
