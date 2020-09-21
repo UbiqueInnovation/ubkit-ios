@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "UBFoundation",
+    name: "UBKit",
     platforms: [
         .iOS(.v10),
         .watchOS(.v5),
@@ -24,6 +24,5 @@ let package = Package(
         .testTarget( name: "UBFoundationTests", dependencies: ["UBFoundation"]),
         .testTarget( name: "UBUserInterfaceTests", dependencies: ["UBUserInterface"]),
         .testTarget(name: "UBLocationTests", dependencies: ["UBLocation"]),
-        .testTarget(name: "UBPushTests", dependencies: ["UBPush"]),
     ]
 )
