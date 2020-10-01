@@ -85,6 +85,11 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             return
         }
 
+        if let error = error {
+            ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: error, info: nil)
+            return
+        }
+
         // Execute the caching logic
         let cachedResponse = executeCachingLogic(cachingLogic: cachingLogic, session: session, task: task, ubDataTask: ubDataTask, request: collectedData.request, response: response, data: collectedData.data, metrics: collectedData.metrics)
 
