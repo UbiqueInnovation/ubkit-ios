@@ -87,10 +87,19 @@ open class UBPushHandler {
         didReceive(ubNotification, whileActive: true)
     }
 
-    /// Handlers the user's response to an incoming notification.
+    /// Handles the user's response to an incoming notification.
     public func handleDidReceiveResponse(_ response: UNNotificationResponse, completionHandler _: @escaping () -> Void) {
         let ubNotification = UBPushNotification(response.notification.request.content.userInfo)
         didReceive(ubNotification, whileActive: false)
+    }
+
+    /// Handles e.g. silent pushes that arrive in legacy method `AppDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)`
+    /// From Apple documentation:
+    ///     As soon as you finish processing the notification, you must call the block in the handler parameter or your app will be terminated.
+    public func handleDidReceiveResponse(_ userInfo: [AnyHashable: Any], completionHandler: @escaping () -> Void) {
+        let ubNotification = UBPushNotification(userInfo)
+        didReceive(ubNotification, whileActive: UIApplication.shared.applicationState == .active)
+        completionHandler()
     }
 
     // MARK: - Helpers
@@ -142,7 +151,14 @@ public struct UBPushNotification {
     public let userInfo: [AnyHashable: Any]
 
     public var isSilentPush: Bool {
-        (userInfo["aps"] as? [String: Any])?["alert"] == nil
+        guard let aps = userInfo["aps"] as? [String: Any] else {
+            return false
+        }
+
+        return aps["alert"] == nil &&
+            aps["sound"] == nil &&
+            aps["badge"] == nil &&
+            (aps["content-available"] as? Int) == 1
     }
 
     init(_ userInfo: [AnyHashable: Any]) {
