@@ -7,29 +7,47 @@
 
 import UIKit
 
-// MARK: - UBLabelType Protocol
+// MARK: - UBLabelType
 
-public protocol UBLabelType {
-    var font: UIFont { get }
-    var textColor: UIColor { get }
-    var lineSpacing: CGFloat { get }
-    var letterSpacing: CGFloat? { get }
+public struct UBLabelType {
 
-    var isUppercased: Bool { get }
+    public var font: UIFont
+    public var textColor: UIColor
+    public var lineSpacing: CGFloat
+    public var letterSpacing: CGFloat?
+
+    public var isUppercased: Bool
 
     /// between [0.0,1.0]: 0.0 disabled, 1.0 most hyphenation
-    var hyphenationFactor: Float { get }
+    public var hyphenationFactor: Float
 
-    var lineBreakMode: NSLineBreakMode { get }
+    public var lineBreakMode: NSLineBreakMode
+
+    public init(font: UIFont,
+                textColor: UIColor,
+                lineSpacing: CGFloat,
+                letterSpacing: CGFloat?,
+                isUppercased: Bool,
+                hyphenationFactor: Float,
+                lineBreakMode: NSLineBreakMode) {
+        self.font = font
+        self.textColor = textColor
+        self.lineSpacing = lineSpacing
+        self.letterSpacing = letterSpacing
+        self.isUppercased = isUppercased
+        self.hyphenationFactor = hyphenationFactor
+        self.lineBreakMode = lineBreakMode
+    }
+
 }
 
 // MARK: - UBLabel
 
-open class UBLabel<T: UBLabelType>: UILabel {
-    private let type: T
+open class UBLabel: UILabel {
+    private let type: UBLabelType
 
-    /// Simple way to initialize Label with T and optional textColor to override standard color of type. Standard multiline and left-aligned.
-    public init(_ type: T, textColor: UIColor? = nil, numberOfLines: Int = 0, textAlignment: NSTextAlignment = .left) {
+    /// Simple way to initialize Label with UBLabelType and optional textColor to override standard color of type. Standard multiline and left-aligned.
+    public init(_ type: UBLabelType, textColor: UIColor? = nil, numberOfLines: Int = 0, textAlignment: NSTextAlignment = .left) {
         self.type = type
 
         super.init(frame: .zero)
