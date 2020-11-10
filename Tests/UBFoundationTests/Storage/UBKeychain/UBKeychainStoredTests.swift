@@ -24,7 +24,7 @@ class UBKeychainStoredTests: XCTestCase {
 
         let mockKeychain = MockKeychain()
 
-        let value = UBKeychainStored<String>(key: "testKey", defaultValue: "defaultValue", accessibility: .whenUnlocked, keychain: mockKeychain)
+        var value = UBKeychainStored<String>(key: "testKey", defaultValue: "defaultValue", accessibility: .whenUnlocked, keychain: mockKeychain)
 
         value.wrappedValue = "newValue"
 
@@ -37,7 +37,7 @@ class UBKeychainStoredTests: XCTestCase {
 
         let mockKeychain = MockKeychain()
 
-        let value = UBKeychainStored<String?>(key: "testKey", defaultValue: "defaultValue", accessibility: .whenUnlocked, keychain: mockKeychain)
+        var value = UBKeychainStored<String?>(key: "testKey", defaultValue: "defaultValue", accessibility: .whenUnlocked, keychain: mockKeychain)
 
         XCTAssertEqual(value.wrappedValue, "defaultValue")
 
@@ -52,7 +52,7 @@ class UBKeychainStoredTests: XCTestCase {
 
         _ = mockKeychain.set("oldValue", key: "testKey", accessibility: .whenUnlocked)
 
-        let value = UBKeychainStored<String?>(key: "testKey", defaultValue: nil, accessibility: .whenUnlocked, keychain: mockKeychain)
+        var value = UBKeychainStored<String?>(key: "testKey", defaultValue: nil, accessibility: .whenUnlocked, keychain: mockKeychain)
 
         XCTAssertEqual(value.wrappedValue, "oldValue")
 
@@ -70,7 +70,7 @@ class UBKeychainStoredTests: XCTestCase {
 
         let user = User(name: "name", birthdate: .init())
 
-        let value = UBKeychainStored<User?>(key: "testKey", defaultValue: nil, accessibility: .whenUnlocked, keychain: mockKeychain)
+        var value = UBKeychainStored<User?>(key: "testKey", defaultValue: nil, accessibility: .whenUnlocked, keychain: mockKeychain)
 
         XCTAssertEqual(value.wrappedValue, nil)
 
@@ -84,7 +84,7 @@ class UBKeychainStoredTests: XCTestCase {
 
         let userDefault = User(name: "name", birthdate: .init())
 
-        let value = UBKeychainStored<User?>(key: "testKey", defaultValue: userDefault, accessibility: .whenUnlocked, keychain: mockKeychain)
+        var value = UBKeychainStored<User?>(key: "testKey", defaultValue: userDefault, accessibility: .whenUnlocked, keychain: mockKeychain)
 
         XCTAssertEqual(value.wrappedValue, userDefault)
 
