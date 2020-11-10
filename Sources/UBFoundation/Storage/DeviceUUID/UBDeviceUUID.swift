@@ -19,6 +19,6 @@ public struct UBDeviceUUID {
     }
 
     /// The push token UUID for this device stored in the Keychain
-    @UBKeychainStored(key: "UBDeviceUUID", accessibility: .whenUnlockedThisDeviceOnly)
+    @UBKeychainStored(key: "UBDeviceUUID", defaultValue: nil, accessibility: .whenUnlockedThisDeviceOnly)
     private static var keychainDeviecUUID: String?
 }

@@ -7,8 +7,62 @@
 
 import Foundation
 
+/// Keychain protocol to make unit testing possible
+public protocol UBKeychainProtocol {
+    /// Sets a string item in the Keychain.
+    ///
+    /// - Parameters:
+    ///     - value: The value to be set
+    ///     - key: The key referring to the value
+    ///     - accessibility: Determines where the value can be accessed
+    /// - Returns: Whether setting the value succeded
+    @discardableResult
+    func set(_ value: String, key: String, accessibility: UBKeychainAccessibility) -> Bool
+
+    /// Sets a data item in the Keychain.
+    ///
+    /// - Parameters:
+    ///     - value: The value to be set
+    ///     - key: The key referring to the value
+    ///     - accessibility: Determines where the value can be accessed
+    /// - Returns: Whether setting the value succeded
+    @discardableResult
+    func set(_ value: Data, key: String, accessibility: UBKeychainAccessibility) -> Bool
+
+    /// Retrieves an item from the Keychain
+    ///
+    /// - Parameters:
+    ///     - key: The key referring to the value
+    /// - Returns: The value, if it exists
+    func get(_ key: String) -> String?
+
+    /// Retrieves data item from the Keychain
+    ///
+    /// - Parameters:
+    ///     - key: The key referring to the value
+    /// - Returns: The value, if it exists
+    func getData(_ key: String) -> Data?
+
+    /// Delete a specific item in the Keychain.
+    /// - Parameters:
+    ///     - key: The key referring to the value
+    /// - Returns: Whether deleting the value succeded
+    func delete(_ key: String) -> Bool
+
+    /// Deletes all of the items in the keychain.
+    /// iOS sometimes fails to delete all the items as the app is uninstalled, which results
+    ///
+    /// The app may choose to delete all the items to prevent undesirable behaviour.
+    ///
+    /// - Returns: Whether deleting the value succeded
+    func deleteAllItems() -> Bool
+}
+
 /// Convenience wrapper for Keychain
-public class UBKeychain {
+public class UBKeychain: UBKeychainProtocol {
+
+    static var shared = UBKeychain()
+    
     /// Sets an item in the Keychain.
     ///
     /// - Parameters:
@@ -17,16 +71,16 @@ public class UBKeychain {
     ///     - accessibility: Determines where the value can be accessed
     /// - Returns: Whether setting the value succeded
     @discardableResult
-    public static func set(_ value: String, key: String, accessibility: UBKeychainAccessibility) -> Bool {
+    public func set(_ value: String, key: String, accessibility: UBKeychainAccessibility) -> Bool {
         guard let data = value.data(using: .utf8, allowLossyConversion: false) else {
             return false
         }
-        return UBKeychain.set(data, key: key, accessibility: accessibility)
+        return set(data, key: key, accessibility: accessibility)
     }
 
     /// :nodoc:
     @discardableResult
-    static func set(_ value: Data, key: String, accessibility: UBKeychainAccessibility) -> Bool {
+    public func set(_ value: Data, key: String, accessibility: UBKeychainAccessibility) -> Bool {
         let query = [
             kSecAttrAccount as String: key,
             kSecValueData as String: value,
@@ -46,7 +100,7 @@ public class UBKeychain {
     /// - Parameters:
     ///     - key: The key referring to the value
     /// - Returns: The value, if it exists
-    public static func get(_ key: String) -> String? {
+    public func get(_ key: String) -> String? {
         guard let data = getData(key) else {
             return nil
         }
@@ -57,7 +111,7 @@ public class UBKeychain {
     }
 
     /// :nodoc:
-    static func getData(_ key: String) -> Data? {
+    public func getData(_ key: String) -> Data? {
         let query = [
             kSecAttrAccount as String: key,
             kSecClass as String: kSecClassGenericPassword,
@@ -79,7 +133,7 @@ public class UBKeychain {
     /// - Parameters:
     ///     - key: The key referring to the value
     /// - Returns: Whether deleting the value succeded
-    public static func delete(_ key: String) -> Bool {
+    public func delete(_ key: String) -> Bool {
         let query = [
             kSecAttrAccount as String: key,
             kSecMatchLimit as String: kSecMatchLimitOne
@@ -95,7 +149,7 @@ public class UBKeychain {
     /// The app may choose to delete all the items to prevent undesirable behaviour.
     ///
     /// - Returns: Whether deleting the value succeded
-    public static func deleteAllItems() -> Bool {
+    public func deleteAllItems() -> Bool {
         let secClasses = [
             kSecClassGenericPassword,
             kSecClassInternetPassword,
