@@ -30,7 +30,7 @@ public struct UBKeychainStored<Value: Codable> {
     /// keychain instance to use
     public let keychain: UBKeychainProtocol
 
-    init(key: String, defaultValue: Value, accessibility: UBKeychainAccessibility, keychain: UBKeychainProtocol = UBKeychain.shared) {
+    public init(key: String, defaultValue: Value, accessibility: UBKeychainAccessibility, keychain: UBKeychainProtocol = UBKeychain.shared) {
         self.key = key
         self.accessibility = accessibility
         self.defaultValue = defaultValue

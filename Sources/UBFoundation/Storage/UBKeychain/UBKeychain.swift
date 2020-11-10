@@ -61,7 +61,7 @@ public protocol UBKeychainProtocol {
 /// Convenience wrapper for Keychain
 public class UBKeychain: UBKeychainProtocol {
 
-    static var shared = UBKeychain()
+    public static var shared = UBKeychain()
     
     /// Sets an item in the Keychain.
     ///
