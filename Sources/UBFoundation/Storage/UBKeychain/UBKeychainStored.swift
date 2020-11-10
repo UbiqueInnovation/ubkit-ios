@@ -16,7 +16,7 @@ import Foundation
 /// private static var keychainDeviecUUID: String?
 ///
 @propertyWrapper
-class UBKeychainStored<Value: Codable> {
+public struct UBKeychainStored<Value: Codable> {
 
     /// The key for the value
     public let key: String
@@ -37,7 +37,7 @@ class UBKeychainStored<Value: Codable> {
         self.keychain = keychain
     }
 
-    var wrappedValue: Value {
+    public var wrappedValue: Value {
         get {
             guard let data = keychain.getData(key) else { return defaultValue }
             let decoder = JSONDecoder()
