@@ -21,6 +21,11 @@ open class UBPushRegistrationManager {
         UBPushLocalStorage.shared.pushToken
     }
 
+    // The URL session to use, can be overwritten by the app
+    open var session: UBURLSession {
+        Networking.sharedSession
+    }
+
     /// The url needed for the registration request
     private var registrationUrl: URL?
 
@@ -84,7 +89,7 @@ open class UBPushRegistrationManager {
             }
         }
 
-        task = UBURLDataTask(request: registrationRequest)
+        task = UBURLDataTask(request: registrationRequest, session: session)
         task?.addCompletionHandler(decoder: UBHTTPStringDecoder()) { [weak self] result, _, _, _ in
             guard let self = self else {
                 return
