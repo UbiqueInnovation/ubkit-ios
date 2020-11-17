@@ -62,6 +62,8 @@ public protocol UBKeychainProtocol {
 public class UBKeychain: UBKeychainProtocol {
 
     public static var shared = UBKeychain()
+
+    private let logger = UBLogging.frameworkLoggerFactory(category: "UBKeychain")
     
     /// Sets an item in the Keychain.
     ///
@@ -92,6 +94,11 @@ public class UBKeychain: UBKeychainProtocol {
 
         SecItemDelete(query as CFDictionary)
         let status = SecItemAdd(query as CFDictionary, nil)
+
+        if status != errSecSuccess {
+            logger.error("SecItemDelete returned status:\(status)")
+        }
+
         return status == errSecSuccess
     }
 
@@ -125,6 +132,7 @@ public class UBKeychain: UBKeychainProtocol {
         if status == errSecSuccess {
             return result as? Data
         } else {
+            logger.error("SecItemCopyMatching returned status:\(status)")
             return nil
         }
     }
@@ -140,6 +148,9 @@ public class UBKeychain: UBKeychainProtocol {
         ] as [String: Any]
 
         let status = SecItemDelete(query as CFDictionary)
+        if !(status == errSecSuccess || status == errSecItemNotFound) {
+            logger.error("SecItemDelete returned status:\(status)")
+        }
         return status == errSecSuccess || status == errSecItemNotFound
     }
 
@@ -160,6 +171,11 @@ public class UBKeychain: UBKeychainProtocol {
         return secClasses.allSatisfy { secClass in
             let query: NSDictionary = [kSecClass as String: secClass]
             let status = SecItemDelete(query as CFDictionary)
+
+            if !(status == errSecSuccess || status == errSecItemNotFound) {
+                logger.error("SecItemDelete returned status:\(status)")
+            }
+            
             return status == errSecSuccess || status == errSecItemNotFound
         }
     }
