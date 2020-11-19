@@ -168,6 +168,6 @@ private extension UBPushRegistrationManager {
     struct Request: Codable {
         let deviceUUID: String
         let pushToken: String
-        let type = "IOS"
+        var type = "IOS"
     }
 }

@@ -36,18 +36,18 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     /// - Parameter allHeaderFields: The header fiealds.
     /// - Returns: The next refresh date. `nil` if no next refresh date is available
     open func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
-        guard let responseDateHeader = allHeaderFields[dateHeaderFieldName] as? String, let responseDate = dateFormatter.date(from: responseDateHeader) else {
+        guard let responseDateHeader = allHeaderFields.getCaseInsensitiveValue(key: dateHeaderFieldName) as? String, let responseDate = dateFormatter.date(from: responseDateHeader) else {
             // If we cannot find a date in the response header then we cannot comput the next refresh date
             return nil
         }
-        guard let nextRefreshDateHeader = allHeaderFields[nextRefreshHeaderFieldName] as? String, let nextRefreshDate = dateFormatter.date(from: nextRefreshDateHeader) else {
+        guard let nextRefreshDateHeader = allHeaderFields.getCaseInsensitiveValue(key: nextRefreshHeaderFieldName) as? String, let nextRefreshDate = dateFormatter.date(from: nextRefreshDateHeader) else {
             // If we cannot find the next refresh header then we return nil
             return nil
         }
 
         // This is the date that we are not allowed to make requests before.
         let backoffInterval: TimeInterval
-        if let backoffHeader = allHeaderFields[backoffIntervalHeaderFieldName] as? String, let interval = TimeInterval(backoffHeader) {
+        if let backoffHeader = allHeaderFields.getCaseInsensitiveValue(key: backoffIntervalHeaderFieldName) as? String, let interval = TimeInterval(backoffHeader) {
             backoffInterval = interval
         } else {
             backoffInterval = 60
