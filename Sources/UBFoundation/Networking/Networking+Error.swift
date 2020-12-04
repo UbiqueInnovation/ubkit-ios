@@ -41,6 +41,8 @@ public enum UBNetworkingError: Error, Equatable {
     case noCachedData
     /// Synchronous task timed out
     case timedOut
+    /// Canceled request
+    case canceled
 }
 
 /// A structure that encapsulate the error body returned from the backend

@@ -23,6 +23,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// If the task has been started to refresh a previous result
     private(set) var refresh: Bool = false
 
+    /// If the task is running synchronous
+    private(set) var isSynchronous: Bool = false
+
     /// The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     public let priority: Float
 
@@ -43,7 +46,22 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private var dataTask: URLSessionDataTask?
 
     /// The callback queue where all callbacks take place
-    private let callbackQueue: OperationQueue
+    private(set) var callbackQueue: OperationQueue
+
+    private lazy var syncTasksCallbackQueue: OperationQueue = {
+        let q = OperationQueue()
+        q.name = "UBURLDataTask Sync Callback Queue"
+        return q
+    }()
+
+    private func getCallbackQueue() -> OperationQueue {
+        if isSynchronous {
+            return self.syncTasksCallbackQueue
+        }
+        else {
+            return callbackQueue
+        }
+    }
 
     // MARK: - Initializers
 
@@ -87,7 +105,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - taskDescription: An app-provided description of the current task.
     ///   - priority: The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     ///   - session: The session for the task creation
-    ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue
+    ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue. Ignored for synchronous tasks.
     public convenience init(url: URL, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = Networking.sharedSession, callbackQueue: OperationQueue = .main) {
         self.init(request: UBURLRequest(url: url), taskDescription: taskDescription, priority: priority, session: session, callbackQueue: callbackQueue)
     }
@@ -183,12 +201,15 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
     }
 
-    /// Cancel the current request
     public func cancel() {
         cancel(notifyCompletion: false)
     }
+
     /// Cancel the current request
     public func cancel(notifyCompletion: Bool) {
+
+
+
         dataTaskProgressObservation = nil
         dataTaskStateObservation = nil
         requestModifier.cancelCurrentModification()
@@ -218,6 +239,11 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - response: The response received with the data
     ///   - error: The error in case of failure
     func dataTaskCompleted(data: Data?, response: HTTPURLResponse?, error: Error?, info: UBNetworkingTaskInfo?) {
+
+        guard state != .cancelled else {
+            return // don't parse response after cancellation
+        }
+
         // Check for Task error
         guard error == nil else {
             if (error! as NSError).code == NSURLErrorCancelled {
@@ -349,7 +375,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// :nodoc:
     private func notifyStateTransition(old: State, new: State) {
-        callbackQueue.addOperation { [weak self] in
+        getCallbackQueue().addOperation { [weak self] in
             guard let self = self else {
                 return
             }
@@ -385,7 +411,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// :nodoc:
     private func notifyProgress(_ progress: Double) {
-        callbackQueue.addOperation { [weak self] in
+        getCallbackQueue().addOperation { [weak self] in
             guard let self = self else {
                 return
             }
@@ -426,13 +452,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private func notifyCompletion(error: Error, data: Data?, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?) {
         state = .finished
-        completionHandlers.forEach { $0.fail(error: error, data: data, response: response, info: info, callbackQueue: callbackQueue, caller: self) }
+        completionHandlers.forEach { $0.fail(error: error, data: data, response: response, info: info, callbackQueue: getCallbackQueue(), caller: self) }
     }
 
     /// :nodoc:
     private func notifyCompletion(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?) {
         state = .finished
-        completionHandlers.forEach { $0.parse(data: data, response: response, info: info, callbackQueue: self.callbackQueue, caller: self) }
+        completionHandlers.forEach { $0.parse(data: data, response: response, info: info, callbackQueue: self.getCallbackQueue(), caller: self) }
     }
 
     /// A semaphore to ensure when starting a task in synchronous mode, to block the current thread
@@ -445,6 +471,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     @discardableResult
     public func startSynchronous<T>(decoder: UBURLDataTaskDecoder<T>) -> (result: Result<T, Error>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
+
+        isSynchronous = true
+
         var fetchedResult: (Result<T, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
 
         let completionBlockIdentifier = addCompletionHandler(decoder: decoder) { [weak self] result, response, taskInfo, dataTask in
@@ -470,6 +499,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         synchronousStartSemaphore.signal()
+
+
+        isSynchronous = false
+
         return unwrappedResult
     }
 
@@ -479,6 +512,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     @discardableResult
     public func startSynchronous() -> (result: Result<Data?, Error>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
+
+        isSynchronous = true
+
         var fetchedResult: (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
 
         let completionBlockIdentifier = addCompletionHandler { [weak self] result, response, taskInfo, dataTask in
@@ -504,6 +540,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         synchronousStartSemaphore.signal()
+
+        isSynchronous = false
+
         return unwrappedResult
     }
 
