@@ -185,6 +185,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// Cancel the current request
     public func cancel() {
+        cancel(notifyCompletion: false)
+    }
+    /// Cancel the current request
+    public func cancel(notifyCompletion: Bool) {
         dataTaskProgressObservation = nil
         dataTaskStateObservation = nil
         requestModifier.cancelCurrentModification()
@@ -194,7 +198,16 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         case .initial, .parsing, .finished, .cancelled:
             break
         case .fetching, .waitingExecution:
+            // don't change request state if currently starting
+            requestStartSemaphore.wait()
             state = .cancelled
+            requestStartSemaphore.signal()
+        }
+
+
+
+        if notifyCompletion {
+            self.notifyCompletion(error: UBNetworkingError.canceled, data: nil, response: nil, info: nil)
         }
     }
 
