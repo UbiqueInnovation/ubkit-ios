@@ -51,6 +51,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private lazy var syncTasksCallbackQueue: OperationQueue = {
         let q = OperationQueue()
         q.name = "UBURLDataTask Sync Callback Queue"
+        q.qualityOfService = .userInitiated
         return q
     }()
 
