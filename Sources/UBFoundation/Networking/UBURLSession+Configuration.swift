@@ -35,7 +35,7 @@ public class UBURLSessionConfiguration {
         self.hostsServerTrusts = hostsServerTrusts
         self.defaultServerTrust = defaultServerTrust
         self.allowRedirections = allowRedirections
-        self.cachingLogic = cachingLogic ?? UBBaseCachingLogic(qos: sessionConfiguration.networkServiceType.equivalentDispatchQOS)
+        self.cachingLogic = cachingLogic ?? UBAutoRefreshCacheLogic(qos: sessionConfiguration.networkServiceType.equivalentDispatchQOS)
 
         applyDefaultHeaders(configuration: sessionConfiguration)
     }
