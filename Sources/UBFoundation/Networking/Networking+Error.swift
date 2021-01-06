@@ -51,6 +51,19 @@ public protocol UBURLDataTaskErrorBody: Error {
     var baseError: Error? { get set }
 }
 
+// MARK: - Connectivity
+
+extension Error {
+
+    public var ub_isNotConnectedError: Bool {
+        if let error = self as? NSError, error.domain == NSURLErrorDomain, error.code == NSURLErrorNotConnectedToInternet {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
 // MARK: - UBCodedError
 
 extension UBNetworkingError: UBCodedError {
