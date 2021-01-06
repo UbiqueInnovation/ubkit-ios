@@ -50,3 +50,30 @@ public protocol UBURLDataTaskErrorBody: Error {
     /// The base error that was initially generated and passed up the stack
     var baseError: Error? { get set }
 }
+
+// MARK: - UBCodedError
+
+extension UBNetworkingError: UBCodedError {
+    static let prefix = "[NE]"
+    public var errorCode: String {
+        switch self {
+        case .certificateValidationFailed: return Self.prefix + "CVF"
+        case .couldNotCreateURL: return Self.prefix + "CNCU"
+        case .couldNotDecodeBody: return Self.prefix + "CNDB"
+        case .couldNotEncodeBody: return Self.prefix + "CNEB"
+        case .malformedURL: return Self.prefix + "MALURL"
+        case .missingURL: return Self.prefix + "MIURL"
+        case .noCachedData: return Self.prefix + "NOCACHE"
+        case .notHTTPResponse: return Self.prefix + "NOHTTPR"
+        case let .requestFailed(httpStatusCode: status): return Self.prefix + "RF\(status)"
+        case .requestRedirected: return Self.prefix + "RR"
+        case .responseBodyIsEmpty: return Self.prefix + "RBIE"
+        case .responseBodyIsNotEmpty: return Self.prefix + "RBINE"
+        case .responseMIMETypeValidationFailed: return Self.prefix + "RMIMETVF"
+        case let .responseStatusValidationFailed(status: status): return Self.prefix + "RSVF\(status)"
+        case .timedOut: return Self.prefix + "TIMEDOUT"
+        case .unexpected: return Self.prefix + "UNEXP"
+        case .canceled: return Self.prefix + "CANCELLED"
+        }
+    }
+}
