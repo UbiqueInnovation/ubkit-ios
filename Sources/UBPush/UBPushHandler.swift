@@ -82,15 +82,17 @@ open class UBPushHandler {
     }
 
     /// Handles a notification that arrived while the app was running in the foreground.
-    public func handleWillPresentNotification(_ notification: UNNotification, completionHandler _: @escaping (UNNotificationPresentationOptions) -> Void) {
+    public func handleWillPresentNotification(_ notification: UNNotification, completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let ubNotification = UBPushNotification(notification.request.content.userInfo)
         didReceive(ubNotification, whileActive: true)
+        completionHandler([])
     }
 
     /// Handles the user's response to an incoming notification.
-    public func handleDidReceiveResponse(_ response: UNNotificationResponse, completionHandler _: @escaping () -> Void) {
+    public func handleDidReceiveResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
         let ubNotification = UBPushNotification(response.notification.request.content.userInfo)
         didReceive(ubNotification, whileActive: false)
+        completionHandler()
     }
 
     /// Handles e.g. silent pushes that arrive in legacy method `AppDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)`
