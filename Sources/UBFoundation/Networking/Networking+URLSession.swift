@@ -17,7 +17,7 @@ extension URLSession: UBDataTaskURLSession {
             }
             var error = baseError
             if error == nil, (response is HTTPURLResponse) == false {
-                error = UBNetworkingError.notHTTPResponse
+                error = UBUnexpectedNetworkingError.notHTTPResponse
             }
 
             if let r = response as? HTTPURLResponse {

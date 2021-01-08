@@ -52,7 +52,7 @@ public struct UBHTTPResponseContentTypeValidator: UBHTTPURLResponseValidator {
     /// :nodoc:
     public func validateHTTPResponse(_ response: HTTPURLResponse) throws {
         guard let value = response.ub_getHeaderField(key: .contentType), let receivedMIME = UBMIMEType(string: value), expectedMIMEType.isEqual(receivedMIME, ignoreParameter: true) else {
-            throw UBNetworkingError.responseMIMETypeValidationFailed
+            throw UBUnexpectedNetworkingError.responseMIMETypeValidationFailed
         }
     }
 }
@@ -110,11 +110,11 @@ public struct UBHTTPResponseStatusValidator: UBHTTPURLResponseValidator {
         switch type {
         case let .category(category):
             guard category == response.statusCode.ub_httpCodeCategory else {
-                throw UBNetworkingError.responseStatusValidationFailed(status: response.statusCode)
+                throw UBUnexpectedNetworkingError.responseStatusValidationFailed(status: response.statusCode)
             }
         case let .multipleStatusCode(statuses):
             guard statuses.contains(response.statusCode) else {
-                throw UBNetworkingError.responseStatusValidationFailed(status: response.statusCode)
+                throw UBUnexpectedNetworkingError.responseStatusValidationFailed(status: response.statusCode)
             }
         }
     }

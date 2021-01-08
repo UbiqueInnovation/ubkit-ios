@@ -229,7 +229,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
 
         if notifyCompletion {
-            self.notifyCompletion(error: UBNetworkingError.canceled, data: nil, response: nil, info: nil)
+            self.notifyCompletion(error: .unexpected(.canceled), data: nil, response: nil, info: nil)
         }
     }
 
@@ -259,7 +259,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         guard let unwrappedResponse = response else {
-            attemptRecovery(data: data, response: response, error: UBNetworkingError.notHTTPResponse)
+            attemptRecovery(data: data, response: response, error: UBUnexpectedNetworkingError.notHTTPResponse)
             return
         }
 
@@ -432,7 +432,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: - Completion
 
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingBlock<T> = (Result<T, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingBlock<T> = (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// A completion handling block called at the end of the task.
     public typealias CompletionHandlingNullableDataBlock = (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// :nodoc:
@@ -451,7 +451,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// :nodoc:
-    private func notifyCompletion(error: Error, data: Data?, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?) {
+    private func notifyCompletion(error: UBNetworkingError, data: Data?, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?) {
         state = .finished
         completionHandlers.forEach { $0.fail(error: error, data: data, response: response, info: info, callbackQueue: getCallbackQueue(), caller: self) }
     }
@@ -470,12 +470,12 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// - Parameter decoder: A decoder for the response
     /// - Returns: The result of the task
     @discardableResult
-    public func startSynchronous<T>(decoder: UBURLDataTaskDecoder<T>) -> (result: Result<T, Error>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
+    public func startSynchronous<T>(decoder: UBURLDataTaskDecoder<T>) -> (result: Result<T, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
 
         isSynchronous = true
 
-        var fetchedResult: (Result<T, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
+        var fetchedResult: (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
 
         let completionBlockIdentifier = addCompletionHandler(decoder: decoder) { [weak self] result, response, taskInfo, dataTask in
             fetchedResult = (result, response, taskInfo, dataTask)
@@ -490,13 +490,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         let waitResult = synchronousStartSemaphore.wait(timeout: DispatchTime.now() + DispatchTimeInterval.seconds(timeout))
 
         if waitResult == .timedOut {
-            return (Result.failure(UBNetworkingError.timedOut), nil, nil, self)
+            return (.failure(.unexpected(.semaphoreTimedOut)), nil, nil, self)
         }
 
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
         guard let unwrappedResult = fetchedResult else {
-            return (Result.failure(UBNetworkingError.unexpected), nil, nil, self)
+            return (.failure(UBNetworkingError.unexpected(.unwrapError)), nil, nil, self)
         }
 
         synchronousStartSemaphore.signal()
@@ -537,7 +537,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
         guard let unwrappedResult = fetchedResult else {
-            return (Result.failure(UBNetworkingError.unexpected), nil, nil, self)
+            return (Result.failure(UBUnexpectedNetworkingError.unwrapError), nil, nil, self)
         }
 
         synchronousStartSemaphore.signal()
@@ -675,9 +675,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         failureRecoveryStrategy.recoverTask(self, data: data, response: response, error: error) { [weak self] result in
             switch result {
             case .cannotRecover:
-                self?.notifyCompletion(error: error, data: data, response: response, info: nil)
+                self?.notifyCompletion(error: UBNetworkingError(error), data: data, response: response, info: nil)
             case let .recoveryOptions(options: options):
-                self?.notifyCompletion(error: options, data: data, response: response, info: nil)
+                let error = UBNetworkingError(options)
+                self?.notifyCompletion(error: error, data: data, response: response, info: nil)
             case let .recovered(data: data, response: response, info: info):
                 self?.notifyCompletion(data: data, response: response, info: info)
             case .restartDataTask:
@@ -691,7 +692,7 @@ extension UBURLDataTask {
     /// This is a wrapper that holds reference for a completion handler
     private struct CompletionHandlerWrapper {
         private let executionBlock: (Data?, HTTPURLResponse, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
-        private let failureBlock: (Error, Data?, HTTPURLResponse?, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
+        private let failureBlock: (UBNetworkingError, Data?, HTTPURLResponse?, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
 
         /// :nodoc:
         init<T>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping CompletionHandlingBlock<T>) {
@@ -699,7 +700,7 @@ extension UBURLDataTask {
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
                     callbackQueue.addOperation {
-                        completion(.failure(UBNetworkingError.responseBodyIsEmpty), response, info, caller)
+                        completion(.failure(UBNetworkingError.unexpected(.responseBodyIsEmpty)), response, info, caller)
                     }
                     return
                 }
@@ -710,7 +711,7 @@ extension UBURLDataTask {
                     }
                 } catch {
                     callbackQueue.addOperation {
-                        completion(.failure(error), response, info, caller)
+                        completion(.failure(UBNetworkingError(error)), response, info, caller)
                     }
                 }
             }
@@ -718,7 +719,7 @@ extension UBURLDataTask {
             // Create a block to be called on failure
             failureBlock = { error, _, response, info, callbackQueue, caller in
                 callbackQueue.addOperation {
-                    completion(.failure(error), response, info, caller)
+                    completion(.failure(UBNetworkingError(error)), response, info, caller)
                 }
             }
         }
@@ -729,7 +730,7 @@ extension UBURLDataTask {
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
                     callbackQueue.addOperation {
-                        completion(.failure(UBNetworkingError.responseBodyIsEmpty), response, info, caller)
+                        completion(.failure(UBNetworkingError.unexpected(.responseBodyIsEmpty)), response, info, caller)
                     }
                     return
                 }
@@ -740,7 +741,7 @@ extension UBURLDataTask {
                     }
                 } catch {
                     callbackQueue.addOperation {
-                        completion(.failure(error), response, info, caller)
+                        completion(.failure(UBNetworkingError(error)), response, info, caller)
                     }
                 }
             }
@@ -756,7 +757,7 @@ extension UBURLDataTask {
                     newError = error
                 }
                 callbackQueue.addOperation {
-                    completion(.failure(newError), response, info, caller)
+                    completion(.failure(UBNetworkingError(newError)), response, info, caller)
                 }
             }
         }
@@ -783,7 +784,7 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        func fail(error: Error, data: Data?, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
+        func fail(error: UBNetworkingError, data: Data?, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
             failureBlock(error, data, response, info, callbackQueue, caller)
         }
     }

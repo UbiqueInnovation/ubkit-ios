@@ -64,7 +64,7 @@ public struct UBHTTPRequestBodyURLEncoder: URLRequestBodyConvertible {
             left.key < right.key
         }).map { URLQueryItem(name: $0, value: $1) }
         guard let query = urlComponents.query, let data = query.data(using: encoding) else {
-            throw UBNetworkingError.couldNotEncodeBody
+            throw UBUnexpectedNetworkingError.couldNotEncodeBody
         }
         var mime: UBMIMEType = .formUrlencoded
         if sendEncoding {

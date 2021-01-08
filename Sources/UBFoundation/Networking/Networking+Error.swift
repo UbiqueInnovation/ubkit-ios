@@ -9,8 +9,19 @@ import Foundation
 
 /// Networking errors
 public enum UBNetworkingError: Error, Equatable {
+    /// Not connected to the internet
+    case notConnected
+    /// The connection timed out
+    case timedOut
+    /// The certificate validation process failed
+    case certificateValidationFailed
+    /// Something unexpected happened and we probably need to do something
+    case unexpected(UBUnexpectedNetworkingError)
+}
+
+public enum UBUnexpectedNetworkingError: Error, Equatable {
     /// An unexpected error means that something extraordinary happened
-    case unexpected
+    case unwrapError
     /// The URL is missing in the request
     case missingURL
     /// The URL is malformed and cannot be interpretade
@@ -31,18 +42,20 @@ public enum UBNetworkingError: Error, Equatable {
     case responseBodyIsEmpty
     /// The response body is not empty. Expected it to be empty
     case responseBodyIsNotEmpty
-    /// The certificate validation process failed
-    case certificateValidationFailed
     /// The request has failed with a status code
     case requestFailed(httpStatusCode: Int)
     /// The request got redirected
     case requestRedirected
     /// No cached data was found
     case noCachedData
-    /// Synchronous task timed out
-    case timedOut
+    /// The synchronous task semaphore timed out
+    case semaphoreTimedOut
     /// Canceled request
     case canceled
+    /// Recovery failed
+    case recoveryFailed
+    /// Other error from NSURLErrorDomain
+    case otherNSURLError(NSError)
 }
 
 /// A structure that encapsulate the error body returned from the backend
@@ -51,15 +64,23 @@ public protocol UBURLDataTaskErrorBody: Error {
     var baseError: Error? { get set }
 }
 
-// MARK: - Connectivity
+extension UBNetworkingError {
 
-extension Error {
-
-    public var ub_isNotConnectedError: Bool {
-        if let error = self as? NSError, error.domain == NSURLErrorDomain, error.code == NSURLErrorNotConnectedToInternet {
-            return true
-        } else {
-            return false
+    init(_ error: Error) {
+        switch error {
+        case let error as UBNetworkingError:
+            self = error
+        case let error as UBUnexpectedNetworkingError:
+            self =  UBNetworkingError.unexpected(error)
+        case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet:
+            self = .notConnected
+        case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorTimedOut:
+            self = .timedOut
+        case let _ as RecoverableError:
+            self = UBNetworkingError.unexpected(.recoveryFailed)
+        case let error as NSError:
+            let otherError = UBUnexpectedNetworkingError.otherNSURLError(error)
+            self = .unexpected(otherError)
         }
     }
 }
@@ -70,7 +91,19 @@ extension UBNetworkingError: UBCodedError {
     static let prefix = "[NE]"
     public var errorCode: String {
         switch self {
+        case .notConnected: return Self.prefix + "NOCONN"
+        case .timedOut: return Self.prefix + "TIMEDOUT"
         case .certificateValidationFailed: return Self.prefix + "CVF"
+        case .unexpected(let error): return error.errorCode
+        }
+    }
+}
+
+
+extension UBUnexpectedNetworkingError: UBCodedError {
+    static let prefix = "[NE]"
+    public var errorCode: String {
+        switch self {
         case .couldNotCreateURL: return Self.prefix + "CNCU"
         case .couldNotDecodeBody: return Self.prefix + "CNDB"
         case .couldNotEncodeBody: return Self.prefix + "CNEB"
@@ -84,9 +117,11 @@ extension UBNetworkingError: UBCodedError {
         case .responseBodyIsNotEmpty: return Self.prefix + "RBINE"
         case .responseMIMETypeValidationFailed: return Self.prefix + "RMIMETVF"
         case let .responseStatusValidationFailed(status: status): return Self.prefix + "RSVF\(status)"
-        case .timedOut: return Self.prefix + "TIMEDOUT"
-        case .unexpected: return Self.prefix + "UNEXP"
+        case .unwrapError: return Self.prefix + "UNWRP"
+        case .semaphoreTimedOut: return Self.prefix + "SEMTIMEOUT"
         case .canceled: return Self.prefix + "CANCELLED"
+        case .recoveryFailed: return Self.prefix + "RECF"
+        case .otherNSURLError(let error): return Self.prefix + "NSURL \(error.code)"
         }
     }
 }

@@ -34,19 +34,19 @@ public struct UBURLRequestBodyMultipart: URLRequestBodyConvertible {
     /// :nodoc:
     public func httpRequestBody() throws -> UBURLRequestBody {
         guard parameters.isEmpty == false || payloads.isEmpty == false else {
-            throw UBNetworkingError.couldNotEncodeBody
+            throw UBUnexpectedNetworkingError.couldNotEncodeBody
         }
 
         var data: Data = Data()
 
         guard let boundaryPrefix = "--\(boundary)\r\n".data(using: encoding) else {
-            throw UBNetworkingError.couldNotEncodeBody
+            throw UBUnexpectedNetworkingError.couldNotEncodeBody
         }
 
         for parameter in parameters {
             guard let header = "Content-Disposition: form-data; name=\"\(parameter.name)\"\r\n\r\n".data(using: encoding),
                 let value = "\(parameter.value)\r\n".data(using: encoding) else {
-                throw UBNetworkingError.couldNotEncodeBody
+                throw UBUnexpectedNetworkingError.couldNotEncodeBody
             }
             data.append(boundaryPrefix)
             data.append(header)
@@ -55,7 +55,7 @@ public struct UBURLRequestBodyMultipart: URLRequestBodyConvertible {
 
         for payload in payloads {
             guard let header = "Content-Disposition: form-data; name=\"\(payload.name)\"; filename=\"\(payload.fileName)\"\r\n".data(using: encoding), let contentType = "Content-Type: \(payload.mimeType.stringValue)\r\n\r\n".data(using: encoding), let ending = "\r\n".data(using: encoding) else {
-                throw UBNetworkingError.couldNotEncodeBody
+                throw UBUnexpectedNetworkingError.couldNotEncodeBody
             }
             data.append(boundaryPrefix)
             data.append(header)
@@ -66,7 +66,7 @@ public struct UBURLRequestBodyMultipart: URLRequestBodyConvertible {
 
         let endingString = "--" + boundary + "--\r\n"
         guard let ending = endingString.data(using: encoding) else {
-            throw UBNetworkingError.couldNotEncodeBody
+            throw UBUnexpectedNetworkingError.couldNotEncodeBody
         }
         data.append(ending)
 

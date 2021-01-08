@@ -208,14 +208,14 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public mutating func setQueryParameters(_ parameters: [URLQueryItem]) throws {
         guard let url = url else {
-            throw UBNetworkingError.missingURL
+            throw UBUnexpectedNetworkingError.missingURL
         }
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            throw UBNetworkingError.malformedURL(url: url)
+            throw UBUnexpectedNetworkingError.malformedURL(url: url)
         }
         urlComponents.queryItems = parameters
         guard let newURL = urlComponents.url else {
-            throw UBNetworkingError.couldNotCreateURL
+            throw UBUnexpectedNetworkingError.couldNotCreateURL
         }
         self.url = newURL
     }
@@ -226,10 +226,10 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public func allQueryParameters() throws -> [URLQueryItem] {
         guard let url = url else {
-            throw UBNetworkingError.missingURL
+            throw UBUnexpectedNetworkingError.missingURL
         }
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            throw UBNetworkingError.malformedURL(url: url)
+            throw UBUnexpectedNetworkingError.malformedURL(url: url)
         }
         return urlComponents.queryItems ?? []
     }
