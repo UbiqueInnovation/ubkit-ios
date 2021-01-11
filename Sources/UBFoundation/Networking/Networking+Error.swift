@@ -8,7 +8,7 @@
 import Foundation
 
 /// Networking errors
-public enum UBNetworkingError: Error, Equatable {
+public enum UBNetworkingError: LocalizedError, Equatable {
     /// Not connected to the internet
     case notConnected
     /// The connection timed out
@@ -19,6 +19,7 @@ public enum UBNetworkingError: Error, Equatable {
     case unexpected(UBUnexpectedNetworkingError)
 }
 
+public enum UBUnexpectedNetworkingError: LocalizedError, Equatable {
     /// The URL is missing in the request
     case missingURL
     /// The URL is malformed and cannot be interpretade
