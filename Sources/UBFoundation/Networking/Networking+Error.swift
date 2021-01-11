@@ -15,13 +15,10 @@ public enum UBNetworkingError: Error, Equatable {
     case timedOut
     /// The certificate validation process failed
     case certificateValidationFailed
-    /// Something unexpected happened and we probably need to do something
+    /// We cannot provide actionable information to the user. It is likely that something is broken on our end
     case unexpected(UBUnexpectedNetworkingError)
 }
 
-public enum UBUnexpectedNetworkingError: Error, Equatable {
-    /// An unexpected error means that something extraordinary happened
-    case unwrapError
     /// The URL is missing in the request
     case missingURL
     /// The URL is malformed and cannot be interpretade
@@ -52,8 +49,10 @@ public enum UBUnexpectedNetworkingError: Error, Equatable {
     case semaphoreTimedOut
     /// Canceled request
     case canceled
-    /// Recovery failed
+    /// Recovery failed (should never happen)
     case recoveryFailed
+    /// Failed to unwrap an optional (should never happen)
+    case unwrapError
     /// Other error from NSURLErrorDomain
     case otherNSURLError(NSError)
 }
