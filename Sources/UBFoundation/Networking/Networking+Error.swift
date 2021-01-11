@@ -75,7 +75,7 @@ extension UBNetworkingError {
             self = .notConnected
         case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorTimedOut:
             self = .timedOut
-        case let _ as RecoverableError:
+        case _ as RecoverableError:
             self = UBNetworkingError.unexpected(.recoveryFailed)
         case let error as NSError:
             let otherError = UBUnexpectedNetworkingError.otherNSURLError(error)
