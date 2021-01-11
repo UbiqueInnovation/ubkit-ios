@@ -48,27 +48,41 @@ class HTTPMutableURLResponse {
         return HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: httpVersion, headerFields: allHeaderFields)
     }
 
-    /// Returns the header field for the key
+    /// Returns the header field for the key. The search is case insensitive.
+    ///
+    /// - Parameter key: A key
+    /// - Returns: The value associated with the key
+    public func getHeaderField(key: UBHTTPHeaderField.StandardKeys) -> String? {
+        return getHeaderField(key: key.rawValue)
+    }
+
+    /// Returns the header field for the key. The search is case insensitive.
     ///
     /// - Parameter key: A standard key
     /// - Returns: The value associated with the key
-    public func getHeaderField(key: UBHTTPHeaderField.StandardKeys) -> String? {
-        return allHeaderFields[key.rawValue]
+    public func getHeaderField(key: String) -> String? {
+        return allHeaderFields.getCaseInsensitiveValue(key: key)
     }
 
-    /// Set the header field value for the key
+    /// Set the header field value for the key. The key is case insensitive and will replace values with matching results.
     ///
     /// - Parameter key: A standard key
     /// - Parameter value: A value to set
     /// - Returns: The value associated with the key
     public func setHeaderField(value: String, key: UBHTTPHeaderField.StandardKeys) {
-        return allHeaderFields[key.rawValue] = value
+        return allHeaderFields.setValue(value, forCaseInsensitiveKey: key.rawValue)
     }
 
-    /// Remove a header field
+    /// Remove a header field. The search of a key is insensitive
     /// - Parameter key: A standard key
     public func removeHeaderField(key: UBHTTPHeaderField.StandardKeys) {
-        allHeaderFields.removeValue(forKey: key.rawValue)
+        removeHeaderField(key: key.rawValue)
+    }
+
+    /// Remove a header field. The search of a key is insensitive
+    /// - Parameter key: A key
+    public func removeHeaderField(key: String) {
+        allHeaderFields.removeCaseInsensitiveValue(key: key)
     }
 }
 
