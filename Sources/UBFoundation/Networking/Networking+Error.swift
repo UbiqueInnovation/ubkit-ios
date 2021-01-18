@@ -16,7 +16,7 @@ public enum UBNetworkingError: LocalizedError, Equatable {
     /// The certificate validation process failed
     case certificateValidationFailed
     /// We cannot provide actionable information to the user. It is likely that something is broken on our end
-    case internal(UBInternalNetworkingError)
+    case `internal`(UBInternalNetworkingError)
 }
 
 public enum UBInternalNetworkingError: LocalizedError, Equatable {
