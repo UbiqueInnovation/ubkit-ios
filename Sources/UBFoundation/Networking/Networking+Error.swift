@@ -87,41 +87,44 @@ extension UBNetworkingError {
 
 // MARK: - UBCodedError
 
+private let errorCodePrefix = "[NE]"
+
 extension UBNetworkingError: UBCodedError {
-    static let prefix = "[NE]"
     public var errorCode: String {
         switch self {
-        case .notConnected: return Self.prefix + "NOCONN"
-        case .timedOut: return Self.prefix + "TIMEDOUT"
-        case .certificateValidationFailed: return Self.prefix + "CVF"
-        case .unexpected(let error): return error.errorCode
+        case .notConnected: return "\(errorCodePrefix)NOCONN"
+        case .timedOut: return "\(errorCodePrefix)TIMEDOUT"
+        case .certificateValidationFailed: return "\(errorCodePrefix)CVF"
+        case .internal(let error): return error.errorCode
         }
     }
 }
 
 
-extension UBUnexpectedNetworkingError: UBCodedError {
-    static let prefix = "[NE]"
+extension UBInternalNetworkingError: UBCodedError {
     public var errorCode: String {
-        switch self {
-        case .couldNotCreateURL: return Self.prefix + "CNCU"
-        case .couldNotDecodeBody: return Self.prefix + "CNDB"
-        case .couldNotEncodeBody: return Self.prefix + "CNEB"
-        case .malformedURL: return Self.prefix + "MALURL"
-        case .missingURL: return Self.prefix + "MIURL"
-        case .noCachedData: return Self.prefix + "NOCACHE"
-        case .notHTTPResponse: return Self.prefix + "NOHTTPR"
-        case let .requestFailed(httpStatusCode: status): return Self.prefix + "RF\(status)"
-        case .requestRedirected: return Self.prefix + "RR"
-        case .responseBodyIsEmpty: return Self.prefix + "RBIE"
-        case .responseBodyIsNotEmpty: return Self.prefix + "RBINE"
-        case .responseMIMETypeValidationFailed: return Self.prefix + "RMIMETVF"
-        case let .responseStatusValidationFailed(status: status): return Self.prefix + "RSVF\(status)"
-        case .unwrapError: return Self.prefix + "UNWRP"
-        case .semaphoreTimedOut: return Self.prefix + "SEMTIMEOUT"
-        case .canceled: return Self.prefix + "CANCELLED"
-        case .recoveryFailed: return Self.prefix + "RECF"
-        case .otherNSURLError(let error): return Self.prefix + "NSURL \(error.code)"
-        }
+        let postfix: String = {
+            switch self {
+            case .couldNotCreateURL: return "CNCU"
+            case .couldNotDecodeBody: return "CNDB"
+            case .couldNotEncodeBody: return "CNEB"
+            case .malformedURL: return "MALURL"
+            case .missingURL: return "MIURL"
+            case .noCachedData: return "NOCACHE"
+            case .notHTTPResponse: return "NOHTTPR"
+            case let .requestFailed(httpStatusCode: status): return "RF\(status)"
+            case .requestRedirected: return "RR"
+            case .responseBodyIsEmpty: return "RBIE"
+            case .responseBodyIsNotEmpty: return "RBINE"
+            case .responseMIMETypeValidationFailed: return "RMIMETVF"
+            case let .responseStatusValidationFailed(status: status): return "RSVF\(status)"
+            case .unwrapError: return "UNWRP"
+            case .synchronousTimedOut: return "SEMTIMEOUT"
+            case .canceled: return "CANCELLED"
+            case .recoveryFailed: return "RECF"
+            case .otherNSURLError(let error): return "NSURL \(error.code)"
+            }
+        }()
+        return "\(errorCodePrefix)\(postfix)"
     }
 }
