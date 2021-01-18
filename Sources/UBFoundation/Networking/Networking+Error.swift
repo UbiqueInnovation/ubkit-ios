@@ -16,10 +16,10 @@ public enum UBNetworkingError: LocalizedError, Equatable {
     /// The certificate validation process failed
     case certificateValidationFailed
     /// We cannot provide actionable information to the user. It is likely that something is broken on our end
-    case unexpected(UBUnexpectedNetworkingError)
+    case internal(UBInternalNetworkingError)
 }
 
-public enum UBUnexpectedNetworkingError: LocalizedError, Equatable {
+public enum UBInternalNetworkingError: LocalizedError, Equatable {
     /// The URL is missing in the request
     case missingURL
     /// The URL is malformed and cannot be interpretade
@@ -47,7 +47,7 @@ public enum UBUnexpectedNetworkingError: LocalizedError, Equatable {
     /// No cached data was found
     case noCachedData
     /// The synchronous task semaphore timed out
-    case semaphoreTimedOut
+    case synchronousTimedOut
     /// Canceled request
     case canceled
     /// Recovery failed (should never happen)
@@ -70,17 +70,17 @@ extension UBNetworkingError {
         switch error {
         case let error as UBNetworkingError:
             self = error
-        case let error as UBUnexpectedNetworkingError:
-            self =  UBNetworkingError.unexpected(error)
+        case let error as UBInternalNetworkingError:
+            self =  UBNetworkingError.internal(error)
         case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet:
             self = .notConnected
         case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorTimedOut:
             self = .timedOut
         case _ as RecoverableError:
-            self = UBNetworkingError.unexpected(.recoveryFailed)
+            self = UBNetworkingError.internal(.recoveryFailed)
         case let error as NSError:
-            let otherError = UBUnexpectedNetworkingError.otherNSURLError(error)
-            self = .unexpected(otherError)
+            let otherError = UBInternalNetworkingError.otherNSURLError(error)
+            self = .internal(otherError)
         }
     }
 }

@@ -229,7 +229,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
 
         if notifyCompletion {
-            self.notifyCompletion(error: .unexpected(.canceled), data: nil, response: nil, info: nil)
+            self.notifyCompletion(error: .internal(.canceled), data: nil, response: nil, info: nil)
         }
     }
 
@@ -259,7 +259,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         guard let unwrappedResponse = response else {
-            attemptRecovery(data: data, response: response, error: UBUnexpectedNetworkingError.notHTTPResponse)
+            attemptRecovery(data: data, response: response, error: UBInternalNetworkingError.notHTTPResponse)
             return
         }
 
@@ -490,13 +490,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         let waitResult = synchronousStartSemaphore.wait(timeout: DispatchTime.now() + DispatchTimeInterval.seconds(timeout))
 
         if waitResult == .timedOut {
-            return (.failure(.unexpected(.semaphoreTimedOut)), nil, nil, self)
+            return (.failure(.internal(.synchronousTimedOut)), nil, nil, self)
         }
 
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
         guard let unwrappedResult = fetchedResult else {
-            return (.failure(UBNetworkingError.unexpected(.unwrapError)), nil, nil, self)
+            return (.failure(UBNetworkingError.internal(.unwrapError)), nil, nil, self)
         }
 
         synchronousStartSemaphore.signal()
@@ -537,7 +537,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
         guard let unwrappedResult = fetchedResult else {
-            return (Result.failure(UBUnexpectedNetworkingError.unwrapError), nil, nil, self)
+            return (Result.failure(UBInternalNetworkingError.unwrapError), nil, nil, self)
         }
 
         synchronousStartSemaphore.signal()
@@ -700,7 +700,7 @@ extension UBURLDataTask {
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
                     callbackQueue.addOperation {
-                        completion(.failure(UBNetworkingError.unexpected(.responseBodyIsEmpty)), response, info, caller)
+                        completion(.failure(UBNetworkingError.internal(.responseBodyIsEmpty)), response, info, caller)
                     }
                     return
                 }
@@ -730,7 +730,7 @@ extension UBURLDataTask {
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
                     callbackQueue.addOperation {
-                        completion(.failure(UBNetworkingError.unexpected(.responseBodyIsEmpty)), response, info, caller)
+                        completion(.failure(UBNetworkingError.internal(.responseBodyIsEmpty)), response, info, caller)
                     }
                     return
                 }
