@@ -111,9 +111,9 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         guard response.statusCode == UBHTTPCodeCategory.success else {
             let responseError: Error
             if response.statusCode == UBHTTPCodeCategory.redirection, allowsRedirection == false {
-                responseError = UBNetworkingError.requestRedirected
+                responseError = UBInternalNetworkingError.requestRedirected
             } else {
-                responseError = UBNetworkingError.requestFailed(httpStatusCode: response.statusCode)
+                responseError = UBInternalNetworkingError.requestFailed(httpStatusCode: response.statusCode)
             }
             #if os(watchOS)
                 let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.refresh)
@@ -170,7 +170,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         dataHolder.response = response
 
         guard let httpRespnse = response as? HTTPURLResponse else {
-            dataHolder.error = UBNetworkingError.notHTTPResponse
+            dataHolder.error = UBInternalNetworkingError.notHTTPResponse
             completionHandler(.cancel)
             return
         }

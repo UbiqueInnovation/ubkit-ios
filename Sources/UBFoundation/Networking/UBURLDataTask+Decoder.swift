@@ -42,7 +42,7 @@ public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String> {
     public init(encoding: String.Encoding = .utf8) {
         super.init { (data, _) -> String in
             guard let string = String(data: data, encoding: encoding) else {
-                throw UBNetworkingError.couldNotDecodeBody
+                throw UBInternalNetworkingError.couldNotDecodeBody
             }
             return string
         }

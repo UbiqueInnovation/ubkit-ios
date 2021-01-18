@@ -86,7 +86,7 @@ public class UBURLSession: UBDataTaskURLSession {
              (.returnCacheDataDontLoad, .miss):
             sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
             owner.completionHandlersDispatchQueue.sync {
-                owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
+                owner.dataTaskCompleted(data: nil, response: nil, error: UBInternalNetworkingError.noCachedData, info: nil)
             }
             return nil
 
