@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol UBCodedError: Error {
+public protocol UBCodedError {
     var errorCode: String { get }
 }
