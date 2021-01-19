@@ -14,7 +14,7 @@ public enum UBNetworkingTaskRecoveryResult {
     /// The strategy has finished successfully and could recover the data
     case recovered(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?)
     /// The strategy could offer different options of recovery
-    case recoveryOptions(options: RecoverableError)
+    case recoveryOptions(options: UBNetworkTaskRecoveryOptions)
     /// Cannot recover the failure
     case cannotRecover
 }

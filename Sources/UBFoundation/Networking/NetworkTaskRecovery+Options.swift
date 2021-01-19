@@ -8,7 +8,7 @@
 import Foundation
 
 /// A set of options to recover from a network task failure
-public struct UBNetworkTaskRecoveryOptions: RecoverableError {
+public struct UBNetworkTaskRecoveryOptions: RecoverableError, Equatable {
     /// The original error that the object try to recover from
     public let originalError: Error
     /// :nodoc:
@@ -42,4 +42,10 @@ public struct UBNetworkTaskRecoveryOptions: RecoverableError {
     public func cancelOngoingRecovery() {
         _recoveryOptions.forEach { $0.cancelOngoingRecovery() }
     }
+
+    public static func == (lhs: UBNetworkTaskRecoveryOptions, rhs: UBNetworkTaskRecoveryOptions) -> Bool {
+        (lhs.originalError as NSError) == (rhs.originalError as NSError) &&
+        lhs.recoveryOptions == rhs.recoveryOptions
+    }
+
 }
