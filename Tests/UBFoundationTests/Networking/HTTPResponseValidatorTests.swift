@@ -30,7 +30,7 @@ class HTTPResponseValidatorTests: XCTestCase {
 
         let validator = UBHTTPResponseValidatorBlock { _ in
             ex.fulfill()
-            throw UBNetworkingError.missingURL
+            throw UBInternalNetworkingError.missingURL
         }
 
         let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
@@ -62,7 +62,7 @@ class HTTPResponseValidatorTests: XCTestCase {
         let response404 = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "1.1", headerFields: nil)!
 
         XCTAssertThrowsError(try validator.validateHTTPResponse(response404), "") { error in
-            XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseStatusValidationFailed(status: 404))
+            XCTAssertEqual(error as? UBInternalNetworkingError, UBInternalNetworkingError.responseStatusValidationFailed(status: 404))
         }
         XCTAssertNoThrow(try validator.validateHTTPResponse(response200))
         XCTAssertNoThrow(try validator.validateHTTPResponse(response201))
@@ -75,7 +75,7 @@ class HTTPResponseValidatorTests: XCTestCase {
         let response500 = HTTPURLResponse(url: url, statusCode: 500, httpVersion: "1.1", headerFields: nil)!
 
         XCTAssertThrowsError(try validator.validateHTTPResponse(response200), "") { error in
-            XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseStatusValidationFailed(status: 200))
+            XCTAssertEqual(error as? UBInternalNetworkingError, UBInternalNetworkingError.responseStatusValidationFailed(status: 200))
         }
         XCTAssertNoThrow(try validator.validateHTTPResponse(response500))
     }
@@ -88,7 +88,7 @@ class HTTPResponseValidatorTests: XCTestCase {
         let response404 = HTTPURLResponse(url: url, statusCode: 404, httpVersion: "1.1", headerFields: nil)!
 
         XCTAssertThrowsError(try validator.validateHTTPResponse(response404), "") { error in
-            XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseStatusValidationFailed(status: 404))
+            XCTAssertEqual(error as? UBInternalNetworkingError, UBInternalNetworkingError.responseStatusValidationFailed(status: 404))
         }
         XCTAssertNoThrow(try validator.validateHTTPResponse(response200))
         XCTAssertNoThrow(try validator.validateHTTPResponse(response201))

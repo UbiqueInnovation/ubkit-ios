@@ -71,7 +71,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail()
             case let .failure(error):
-                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.requestRedirected)
+                XCTAssertEqual(error, UBNetworkingError.internal(.requestRedirected))
             }
             ex.fulfill()
         }
@@ -110,7 +110,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail()
             case let .failure(error):
-                XCTAssertEqual(error as? Err, Err.x)
+                XCTAssertEqual(error, UBNetworkingError.internal(.otherNSURLError(Err.x as NSError)))
             }
             ex.fulfill()
         }
@@ -151,7 +151,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail("Certificate Pinning should have failed")
             case let .failure(error):
-                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.certificateValidationFailed)
+                XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -171,7 +171,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail("Certificate Pinning should have failed")
             case let .failure(error):
-                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.certificateValidationFailed)
+                XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -191,7 +191,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail("Certificate Pinning should have failed")
             case let .failure(error):
-                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.certificateValidationFailed)
+                XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -211,7 +211,7 @@ class UBSessionTests: XCTestCase {
             case .success:
                 XCTFail("Certificate Pinning should have failed")
             case let .failure(error):
-                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.certificateValidationFailed)
+                XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
