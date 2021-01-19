@@ -434,7 +434,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// A completion handling block called at the end of the task.
     public typealias CompletionHandlingBlock<T> = (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingNullableDataBlock = (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingNullableDataBlock = (Result<Data?, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// :nodoc:
     let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
 
@@ -511,12 +511,12 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///
     /// - Returns: The result of the task
     @discardableResult
-    public func startSynchronous() -> (result: Result<Data?, Error>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
+    public func startSynchronous() -> (result: Result<Data?, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
 
         isSynchronous = true
 
-        var fetchedResult: (Result<Data?, Error>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
+        var fetchedResult: (Result<Data?, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
 
         let completionBlockIdentifier = addCompletionHandler { [weak self] result, response, taskInfo, dataTask in
             fetchedResult = (result, response, taskInfo, dataTask)
@@ -531,13 +531,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         let waitResult = synchronousStartSemaphore.wait(timeout: DispatchTime.now() + DispatchTimeInterval.seconds(timeout))
 
         if waitResult == .timedOut {
-            return (Result.failure(UBNetworkingError.timedOut), nil, nil, self)
+            return (Result.failure(.timedOut), nil, nil, self)
         }
 
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
         guard let unwrappedResult = fetchedResult else {
-            return (Result.failure(UBInternalNetworkingError.unwrapError), nil, nil, self)
+            return (Result.failure(.internal(.unwrapError)), nil, nil, self)
         }
 
         synchronousStartSemaphore.signal()
