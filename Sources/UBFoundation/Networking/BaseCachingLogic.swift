@@ -51,6 +51,26 @@ open class UBBaseCachingLogic: UBCachingLogic {
     }
 
     /// :nodoc:
+    public func proposeUpdatedCachedResponse(_ currentCachedResponse: CachedURLResponse, newResponse: HTTPURLResponse) -> CachedURLResponse? {
+        guard let httpURLResponse = currentCachedResponse.response as? HTTPURLResponse,
+              let mutableResponse = HTTPMutableURLResponse(httpURLResponse) else {
+            return nil
+        }
+
+        // Override header fields only if present in the new response
+        for (key, value) in newResponse.allHeaderFields {
+            guard let key = key as? String, let value = value as? String else {
+                continue
+            }
+            mutableResponse.setHeaderField(value: value, key: key)
+        }
+        guard let newCacheResponse = mutableResponse.urlResponse else {
+            return nil
+        }
+        return CachedURLResponse(response: newCacheResponse, data: currentCachedResponse.data, userInfo: currentCachedResponse.userInfo, storagePolicy: currentCachedResponse.storagePolicy)
+    }
+
+    /// :nodoc:
     public func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
         // Check the status code
         let statusCodeCategory = UBHTTPCodeCategory(code: response.statusCode)

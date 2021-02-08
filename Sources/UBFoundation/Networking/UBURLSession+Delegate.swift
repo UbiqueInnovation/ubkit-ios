@@ -100,6 +100,11 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             #else
                 let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true, refresh: ubDataTask.refresh)
             #endif
+
+            // Update the cache if needed
+            if let newCachedResponse = cachingLogic?.proposeUpdatedCachedResponse(cached, newResponse: response) {
+                session.configuration.urlCache?.storeCachedResponse(newCachedResponse, for: collectedData.request)
+            }
             ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: info)
             if let response = cached.response as? HTTPURLResponse {
                 cachingLogic?.hasUsed(response: response, metrics: collectedData.metrics, request: collectedData.request, dataTask: ubDataTask)
