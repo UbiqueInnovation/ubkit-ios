@@ -18,17 +18,14 @@ end
 
 desc "Run the unit tests."
 lane :tests do
-    # Run tests tvOS
-    run_tests(
-        scheme: "UBFoundation tvOS",
-        code_coverage: false,
-        output_types: "junit",
-        output_files: "report-tvos.junit"
+    spm(
+      command: "generate-xcodeproj"
     )
+
     # Run tests iOS
     run_tests(
-        scheme: "UBFoundation iOS",
-        code_coverage: false,
+        sdk: "iphonesimulator",
+        device: "iPhone SE (2nd generation)",
         output_types: "junit",
         output_files: "report-ios.junit"
     )
