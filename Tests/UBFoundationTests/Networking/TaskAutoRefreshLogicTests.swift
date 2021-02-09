@@ -343,7 +343,9 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         // load request again
 
         let dataTask2 = UBURLDataTask(url: url, session: session)
-
+        dataTask2.addStateTransitionObserver { _, to, _ in
+            XCTAssert(to != .fetching) // never make the request
+        }
         let (_, _, info, _ ) = dataTask2.startSynchronous()
 
         XCTAssert(info != nil)
