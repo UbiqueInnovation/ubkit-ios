@@ -91,7 +91,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         }
 
         // Execute the caching logic
-        let cachedResponse = executeCachingLogic(cachingLogic: cachingLogic, session: session, task: task, ubDataTask: ubDataTask, request: collectedData.request, response: response, data: collectedData.data, metrics: collectedData.metrics)
+        let cachedResponse = executeCachingLogic(cachingLogic: cachingLogic, session: session, task: task, ubDataTask: ubDataTask, request: collectedData.request, response: response, data: collectedData.data, metrics: collectedData.metrics, error: error)
 
         // If not modified return the cached data
         if response.statusCode == UBStandardHTTPCode.notModified, let cached = collectedData.cached {
@@ -102,8 +102,9 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             #endif
 
             // Update the cache if needed
-            if let newCachedResponse = cachingLogic?.proposeUpdatedCachedResponse(cached, newResponse: response) {
-                session.configuration.urlCache?.storeCachedResponse(newCachedResponse, for: collectedData.request)
+            if let newCachedResponse = cachingLogic?.proposeUpdatedCachedResponse(cached, newResponse: response),
+               let request = task.currentRequest {
+                session.configuration.urlCache?.storeCachedResponse(newCachedResponse, for: request)
             }
             ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: info)
             if let response = cached.response as? HTTPURLResponse {
@@ -299,12 +300,12 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         }
     }
 
-    private func executeCachingLogic(cachingLogic: UBCachingLogic?, session: URLSession, task: URLSessionTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
+    private func executeCachingLogic(cachingLogic: UBCachingLogic?, session: URLSession, task: URLSessionTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?, error: Error?) -> CachedURLResponse? {
         guard let cachingLogic = cachingLogic, let task = task as? URLSessionDataTask, let originalRequest = task.originalRequest else {
             return nil
         }
 
-        let proposedResponse = cachingLogic.proposeCachedResponse(for: session, dataTask: task, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics)
+        let proposedResponse = cachingLogic.proposeCachedResponse(for: session, dataTask: task, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics, error: error)
 
         if let proposedResponse = proposedResponse {
             // If there is a proposed caching, cache it

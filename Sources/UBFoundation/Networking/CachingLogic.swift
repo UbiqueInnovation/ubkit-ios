@@ -33,8 +33,9 @@ public protocol UBCachingLogic {
     ///   - response: The latest response
     ///   - data: The data returned by the response
     ///   - metrics: The metrics collected by the session during the request
+    ///   - error: Error if the request failed
     /// - Returns: A possible caching response
-    func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse?
+    func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?, error: Error?) -> CachedURLResponse?
 
     /// Asks the caching logic to provide a cached proposition based on an existing cached response but with updating the relevent fields based on a newer request.
     ///
