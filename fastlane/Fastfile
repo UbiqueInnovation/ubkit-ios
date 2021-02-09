@@ -1,4 +1,7 @@
-# This file contains the fastlane.tools configuration
+import_from_git(url: "git@bitbucket.org:ubique-innovation/fastlane-ios.git", branch: "master")
+
+# Xcode Version to use for builds
+ENV["XCVERSION"] = "~> 12"
 
 desc "Setup the project."
 lane :setup do
