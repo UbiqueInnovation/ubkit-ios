@@ -27,7 +27,8 @@ lane :tests do
         sdk: "iphonesimulator",
         device: "iPhone SE (2nd generation)",
         output_types: "junit",
-        output_files: "report-ios.junit"
+        output_files: "report-ios.junit",
+        fail_build: false
     )
 end
 
