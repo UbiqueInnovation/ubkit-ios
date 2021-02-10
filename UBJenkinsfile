@@ -39,7 +39,7 @@ pipeline {
 					}
 					post {
 						always {
-							junit skipPublishingChecks: true, testResults: "fastlane/test_output/*.junit"
+							junit skipPublishingChecks: true, testResults: "build/testresults.xml"
 						}
 					}
 				}

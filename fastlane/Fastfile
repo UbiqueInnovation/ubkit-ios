@@ -18,18 +18,19 @@ end
 
 desc "Run the unit tests."
 lane :tests do
-    spm(
-      command: "generate-xcodeproj"
+    # Use xcodebuild directly as Fastlane's scan does not yet support pure SPM projects 
+    # See https://github.com/fastlane/fastlane/discussions/17362
+
+    xcodebuild(
+        scheme: "UBKit-Package",
+        xcargs: "-sdk iphoneos -destination 'platform=iOS Simulator,name=iPhone SE (2nd generation)' -resultBundlePath ./build/testresults.xcresult test",
+        buildlog_path: "./build/"
     )
 
-    # Run tests iOS
-    run_tests(
-        sdk: "iphonesimulator",
-        device: "iPhone SE (2nd generation)",
-        output_types: "junit",
-        output_files: "report-ios.junit",
-        fail_build: false
-    )
+    trainer(
+        output_directory: "./build/",
+        path: "./build/",
+        fail_build: false)
 end
 
 desc "Deploy the framework."
