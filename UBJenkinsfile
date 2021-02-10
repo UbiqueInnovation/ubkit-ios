@@ -17,7 +17,7 @@ pipeline {
 					}
 				}
 				stage("Documentation") {
-					when { anyOf { branch 'master'; branch 'develop' } }
+					/*when { anyOf { branch 'master'; branch 'develop' } }*/
 					agent {
 						label"ios"
 					}
