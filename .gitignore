@@ -12,5 +12,8 @@ fastlane/test_output
 /.swiftpm
 
 # Documentation
-Documentation/html
+Documentation/UBFoundation
+Documentation/UBPush
+Documentation/UBLocation
+Documentation/UBUserInterface
 

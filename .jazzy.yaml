@@ -3,10 +3,9 @@
 # Find more about jazzy on https://github.com/realm/jazzy
 # To generate documentation please run `fastlane documentation`
 
-module: UBFoundation
 author: Ubique
-author_url: http://ubique.ch
-copyright: '© 2019 [Ubique](http://ubique.ch)'
+author_url: http://www.ubique.ch
+copyright: '© 2019 [Ubique Innovation AG](http://www.ubique.ch)'
 
 theme: fullwidth
 
@@ -23,6 +22,13 @@ min_acl: public
 
 readme: "README.md"
 
+swift_build_tool: "xcodebuild"
+build_tool_arguments: 
+  - -scheme
+  - UBKit-Package
+  - -sdk
+  - iphoneos
+
 # Add more documentation
 documentation:
   - "Documentation/Contribution Guide.md"
@@ -32,10 +38,3 @@ documentation:
   - "LICENSE.md"
   - "fastlane/README.md"
 
-# Exclude some files
-exclude:
-  - "*/UBFoundation.h" # No need to document this
-  - "*/Globals/*"
-
-# Output of the documentation
-output: ./Documentation/html
