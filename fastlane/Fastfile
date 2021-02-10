@@ -13,7 +13,13 @@ end
 
 desc "Opens the documentation."
 lane :documentation do
-    jazzy
+    Dir.chdir("..") do
+        # Run jazzy for each module separately 
+        sh "jazzy --module UBFoundation --output ./Documentation/UBFoundation/"
+        sh "jazzy --module UBLocation --output ./Documentation/UBLocation/"
+        sh "jazzy --module UBPush --output ./Documentation/UBPush/"
+        sh "jazzy --module UBUserInterface --output ./Documentation/UBUserInterface/"
+    end
 end
 
 desc "Run the unit tests."
