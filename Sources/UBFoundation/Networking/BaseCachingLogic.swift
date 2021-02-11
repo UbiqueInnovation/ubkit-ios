@@ -51,7 +51,31 @@ open class UBBaseCachingLogic: UBCachingLogic {
     }
 
     /// :nodoc:
-    public func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
+    public func proposeUpdatedCachedResponse(_ currentCachedResponse: CachedURLResponse, newResponse: HTTPURLResponse) -> CachedURLResponse? {
+        guard let httpURLResponse = currentCachedResponse.response as? HTTPURLResponse,
+              let mutableResponse = HTTPMutableURLResponse(httpURLResponse) else {
+            return nil
+        }
+
+        // Override header fields only if present in the new response
+        for (key, value) in newResponse.allHeaderFields {
+            guard let key = key as? String, let value = value as? String else {
+                continue
+            }
+            mutableResponse.setHeaderField(value: value, key: key)
+        }
+        guard let newCacheResponse = mutableResponse.urlResponse else {
+            return nil
+        }
+        return CachedURLResponse(response: newCacheResponse, data: currentCachedResponse.data, userInfo: currentCachedResponse.userInfo, storagePolicy: currentCachedResponse.storagePolicy)
+    }
+
+    /// :nodoc:
+    public func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?, error: Error?) -> CachedURLResponse? {
+        // Don't cache request errors
+        if error != nil {
+            return nil
+        }
         // Check the status code
         let statusCodeCategory = UBHTTPCodeCategory(code: response.statusCode)
         switch statusCodeCategory {
@@ -90,9 +114,10 @@ open class UBBaseCachingLogic: UBCachingLogic {
     ///   - metrics: The metrics collected by the session during the request
     /// - Returns: A possible caching response
     open func proposedCacheResponseWhenSuccessfull(for _: URLSession, dataTask _: URLSessionDataTask, ubDataTask _: UBURLDataTask, request _: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> (response: HTTPURLResponse, data: Data, userInfo: [AnyHashable: Any])? {
-        guard let data = data else {
-            return nil
-        }
+
+
+        // Note: Data can be nil, if a successful response body was empty
+        let data = data ?? Data()
 
         if let cacheControlHeader = response.ub_getHeaderField(key: cacheControlHeaderFieldName), let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader) {
             if !cacheControlDirectives.cachingAllowed {
