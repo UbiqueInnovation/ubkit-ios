@@ -85,6 +85,12 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             return
         }
 
+        // Return more specific error if available (collectedData.error holds original error before cancelling request)
+        if let collectedError = collectedData.error {
+            ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: collectedError, info: nil)
+            return
+        }
+
         if let error = error {
             ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: error, info: nil)
             return

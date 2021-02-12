@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -21,8 +21,14 @@ let package = Package(
         .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
-        .testTarget( name: "UBFoundationTests", dependencies: ["UBFoundation"]),
-        .testTarget( name: "UBUserInterfaceTests", dependencies: ["UBUserInterface"]),
-        .testTarget(name: "UBLocationTests", dependencies: ["UBLocation"]),
+        .testTarget(name: "UBFoundationTests",
+                        dependencies: ["UBFoundation"],
+                        resources: [
+                            .copy("TestResources"),
+                        ]),
+        .testTarget(name: "UBUserInterfaceTests",
+                    dependencies: ["UBUserInterface"]),
+        .testTarget(name: "UBLocationTests",
+                    dependencies: ["UBLocation"]),
     ]
 )

@@ -54,7 +54,7 @@ class LoggerTests: XCTestCase {
     }
 
     func testNoBundleIdentifier() {
-        let testBundlePath = Bundle(for: LoggerTests.self).path(forResource: "LoggingTestBundle", ofType: nil)!
+        let testBundlePath = Bundle.module.path(forResource: "TestResources/LoggingTestBundle", ofType: nil)!
         let testBundle = Bundle(path: testBundlePath)!
         XCTAssertThrowsError(try UBLogger(category: "Failing", bundle: testBundle), "Should have failed because of missing bundle identifier") { error in
             XCTAssertEqual(error as? UBLoggingError, UBLoggingError.bundelIdentifierNotFound)
