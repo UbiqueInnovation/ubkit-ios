@@ -282,23 +282,23 @@ open class UBBaseCachingLogic: UBCachingLogic {
     // MARK: - Header fields keys
 
     /// The next refresh header field name
-    open var nextRefreshHeaderFieldName: String {
-        "X-Next-Refresh"
+    open var nextRefreshHeaderFieldName: [String] {
+        return [UBHTTPHeaderField.StandardKeys.nextRefresh.rawValue, UBHTTPHeaderField.AmazonKeys.nextRefresh.rawValue, UBHTTPHeaderField.MSKeys.nextRefresh.rawValue]
     }
 
     /// The backoff interval header field name
-    open var backoffIntervalHeaderFieldName: String {
-        "Backoff"
+    open var backoffIntervalHeaderFieldName: [String] {
+        return [UBHTTPHeaderField.StandardKeys.backoff.rawValue, UBHTTPHeaderField.AmazonKeys.backoff.rawValue, UBHTTPHeaderField.MSKeys.backoff.rawValue]
     }
 
     /// The cache control header field name
-    open var cacheControlHeaderFieldName: String {
-        UBHTTPHeaderField.StandardKeys.cacheControl.rawValue
+    open var cacheControlHeaderFieldName: [String] {
+        return [UBHTTPHeaderField.StandardKeys.cacheControl.rawValue, UBHTTPHeaderField.AmazonKeys.cacheControl.rawValue]
     }
 
     /// The expires header field name
-    open var expiresHeaderFieldName: String {
-        UBHTTPHeaderField.StandardKeys.expires.rawValue
+    open var expiresHeaderFieldName: [String] {
+        return [UBHTTPHeaderField.StandardKeys.expires.rawValue, UBHTTPHeaderField.AmazonKeys.expires.rawValue, UBHTTPHeaderField.MSKeys.expires.rawValue]
     }
 
     /// The age header field name

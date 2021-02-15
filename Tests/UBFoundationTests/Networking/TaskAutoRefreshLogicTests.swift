@@ -499,6 +499,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 }
 
 class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
+<<<<<<< HEAD
     override var nextRefreshHeaderFieldName: String {
         "x-amz-meta-next-refresh"
     }
@@ -519,6 +520,8 @@ class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
         "Etag"
     }
 
+=======
+>>>>>>> 6369279 (add most used cache header keys aligned to Android networking library)
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
@@ -530,26 +533,6 @@ class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
 }
 
 class RegaAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
-    override var nextRefreshHeaderFieldName: String {
-        "x-ms-meta-nextrefresh"
-    }
-
-    override var backoffIntervalHeaderFieldName: String {
-        "x-ms-meta-backoff"
-    }
-
-    override var expiresHeaderFieldName: String {
-        "x-ms-meta-bestbefore"
-    }
-
-    override var cacheControlHeaderFieldName: String {
-        "Cache-Control"
-    }
-
-    override var eTagHeaderFieldName: String {
-        "Etag"
-    }
-
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
@@ -561,26 +544,6 @@ class RegaAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
 }
 
 class SwisstopoVectorRefreshCacheLogic: UBAutoRefreshCacheLogic {
-    override var nextRefreshHeaderFieldName: String {
-        "x-ms-meta-nextrefresh"
-    }
-
-    override var backoffIntervalHeaderFieldName: String {
-        "x-ms-meta-backoff"
-    }
-
-    override var expiresHeaderFieldName: String {
-        "x-ms-meta-bestbefore"
-    }
-
-    override var cacheControlHeaderFieldName: String {
-        "Cache-Control"
-    }
-
-    override var eTagHeaderFieldName: String {
-        "Etag"
-    }
-
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {

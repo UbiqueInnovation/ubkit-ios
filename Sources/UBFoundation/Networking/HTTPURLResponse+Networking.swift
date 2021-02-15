@@ -27,4 +27,12 @@ public extension HTTPURLResponse {
             return allHeaderFields.getCaseInsensitiveValue(key: headerKey) as? String
         }
     }
+
+    /// Returns the header field for the key
+    ///
+    /// - Parameter key: List of keys
+    /// - Returns: First matching value with one of the keys
+    public func ub_getHeaderField(key headerKeys: [String]) -> String? {
+        return headerKeys.compactMap { ub_getHeaderField(key: $0) }.first
+    }
 }

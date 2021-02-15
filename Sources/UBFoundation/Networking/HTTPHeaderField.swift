@@ -90,5 +90,30 @@ public extension UBHTTPHeaderField {
         case lastModified = "Last-Modified"
         /// User Agent header field key
         case userAgent = "User-Agent"
+        /// Backoff header field key
+        case backoff = "Backoff"
+        /// Next refresh header field key
+        case nextRefresh = "X-Next-Refresh"
+    }
+
+    /// Amazon Header Keys
+    enum AmazonKeys: String {
+        /// Next refresh header field key
+        case nextRefresh = "x-amz-meta-next-refresh"
+        /// Backoff header field key
+        case backoff = "x-amz-meta-backoff"
+        /// Expires header field key
+        case expires = "x-amz-meta-best-before"
+        /// Cache Control header field key
+        case cacheControl = "x-amz-meta-cache"
+    }
+
+    enum MSKeys : String {
+        /// Next refresh header field key
+        case nextRefresh = "x-ms-meta-nextrefresh"
+        /// Expires header field key
+        case expires = "x-ms-meta-bestbefore"
+        /// Backoff header field key
+        case backoff = "x-ms-meta-backoff"
     }
 }
