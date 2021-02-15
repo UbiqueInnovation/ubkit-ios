@@ -321,7 +321,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let (_, _, info4, _ ) = dataTask4.startSynchronous()
         XCTAssert(info4 != nil)
         XCTAssert(info4!.cacheHit) // in cache again
-
     }
 
     func testEmptyCache() {
@@ -355,26 +354,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 }
 
 class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
-    override var nextRefreshHeaderFieldName: String {
-        return "x-amz-meta-next-refresh"
-    }
-
-    override var backoffIntervalHeaderFieldName: String {
-        return "x-amz-meta-backoff"
-    }
-
-    override var expiresHeaderFieldName: String {
-        return "x-amz-meta-best-before"
-    }
-
-    override var cacheControlHeaderFieldName: String {
-        return "x-amz-meta-cache"
-    }
-
-    override var eTagHeaderFieldName: String {
-        return "Etag"
-    }
-
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
@@ -386,26 +365,6 @@ class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
 }
 
 class RegaAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
-    override var nextRefreshHeaderFieldName: String {
-        return "x-ms-meta-nextrefresh"
-    }
-
-    override var backoffIntervalHeaderFieldName: String {
-        return "x-ms-meta-backoff"
-    }
-
-    override var expiresHeaderFieldName: String {
-        return "x-ms-meta-bestbefore"
-    }
-
-    override var cacheControlHeaderFieldName: String {
-        return "Cache-Control"
-    }
-
-    override var eTagHeaderFieldName: String {
-        return "Etag"
-    }
-
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
@@ -417,26 +376,6 @@ class RegaAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
 }
 
 class SwisstopoVectorRefreshCacheLogic: UBAutoRefreshCacheLogic {
-    override var nextRefreshHeaderFieldName: String {
-        return "x-ms-meta-nextrefresh"
-    }
-
-    override var backoffIntervalHeaderFieldName: String {
-        return "x-ms-meta-backoff"
-    }
-
-    override var expiresHeaderFieldName: String {
-        return "x-ms-meta-bestbefore"
-    }
-
-    override var cacheControlHeaderFieldName: String {
-        return "Cache-Control"
-    }
-
-    override var eTagHeaderFieldName: String {
-        return "Etag"
-    }
-
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
