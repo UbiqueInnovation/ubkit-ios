@@ -9,7 +9,7 @@ import Foundation
 
 /// Networking errors
 public enum UBNetworkingError: LocalizedError, Equatable {
-    /// Not connected to the internet
+    /// Not connected to the internet (e.g., airplane mode, data not allowed)
     case notConnected
     /// The connection timed out
     case timedOut
@@ -73,6 +73,8 @@ extension UBNetworkingError {
         case let error as UBInternalNetworkingError:
             self =  UBNetworkingError.internal(error)
         case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet:
+            self = .notConnected
+        case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorDataNotAllowed:
             self = .notConnected
         case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorTimedOut:
             self = .timedOut
