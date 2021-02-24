@@ -42,13 +42,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// A representation of the overall task progress.
     public var progress: Progress {
         get {
-            if #available(iOS 11.0, *) {
-                if let p = self.dataTask?.progress {
-                    return p
-                }
+            guard #available(iOS 11.0, * ), let progress = dataTask?.progress else {
+              return Progress(totalUnitCount: 0)
             }
-
-            return Progress(totalUnitCount: 0)
+            return progress
         }
     }
 
