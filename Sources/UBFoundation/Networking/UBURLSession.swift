@@ -48,7 +48,8 @@ public class UBURLSession: UBDataTaskURLSession {
 
         // Check if we have a caching logic otherwise return a task
         // Only if not a refresh task
-        guard !owner.refresh, let cacheResult = sessionDelegate.cachingLogic?.cachedResponse(urlSession, request: request.getRequest(), dataTask: owner) else {
+        guard owner.flags.contains(.ignoreCache) == false,
+              let cacheResult = sessionDelegate.cachingLogic?.cachedResponse(urlSession, request: request.getRequest(), dataTask: owner) else {
             return createTask(request.getRequest())
         }
 

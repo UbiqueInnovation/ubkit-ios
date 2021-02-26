@@ -20,11 +20,23 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// An app-provided description of the current task.
     public let taskDescription: String?
 
-    /// If the task has been started to refresh a previous result
-    private(set) var refresh: Bool = false
+    /// Flags that will dictate how the data task will behave
+    public struct Flags: OptionSet {
+        public let rawValue: Int
 
-    /// If the task is running synchronous
-    private(set) var isSynchronous: Bool = false
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+
+        /// The request will ignore caches and always load from network
+        public static let ignoreCache = Flags(rawValue: 1 << 0)
+        /// A task that got triggered by the system without user interaction
+        public static let systemTriggered = Flags(rawValue: 1 << 1)
+        /// If the task is running synchronous
+        public static let synchronous = Flags(rawValue: 1 << 2)
+    }
+
+    public private(set) var flags: Flags = []
 
     /// The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     public let priority: Float
@@ -63,7 +75,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }()
 
     private func getCallbackQueue() -> OperationQueue {
-        if isSynchronous {
+        if flags.contains(.synchronous) {
             return self.syncTasksCallbackQueue
         }
         else {
@@ -131,11 +143,21 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     // Default start is not a refresh
     public func start() {
-        start(refresh: false)
+        start(ignoreCache: false)
     }
 
     /// Start the task with the given request. It will cancel any ongoing request
-    public func start(refresh: Bool) {
+    public func start(ignoreCache: Bool) {
+        if ignoreCache {
+            flags.insert(.ignoreCache)
+        } else {
+            flags.remove(.ignoreCache)
+        }
+        start(flags: flags)
+    }
+
+    /// Start the task with the given request. It will cancel any ongoing request
+    func start(flags: Flags) {
         // Wait for any ongoing request start
         requestStartSemaphore.wait()
 
@@ -145,8 +167,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         // Set the state to waiting execution and launch the task
         state = .waitingExecution
 
-        // update refresh state
-        self.refresh = refresh
+        self.flags = flags
 
         // Apply all modification
         requestModifier.modifyRequest(request) { [weak self] result in
@@ -477,7 +498,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     public func startSynchronous<T>(decoder: UBURLDataTaskDecoder<T>) -> (result: Result<T, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
 
-        isSynchronous = true
+        flags.insert(.synchronous)
 
         var fetchedResult: (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
 
@@ -506,7 +527,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         synchronousStartSemaphore.signal()
 
 
-        isSynchronous = false
+        flags.remove(.synchronous)
 
         return unwrappedResult
     }
@@ -518,7 +539,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     public func startSynchronous() -> (result: Result<Data?, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
 
-        isSynchronous = true
+        flags.insert(.synchronous)
 
         var fetchedResult: (Result<Data?, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
 
@@ -546,7 +567,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         synchronousStartSemaphore.signal()
 
-        isSynchronous = false
+        flags.remove(.synchronous)
 
         return unwrappedResult
     }
@@ -686,7 +707,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             case let .recovered(data: data, response: response, info: info):
                 self?.notifyCompletion(data: data, response: response, info: info)
             case .restartDataTask:
-                self?.start(refresh: false)
+                self?.start(ignoreCache: false)
             }
         }
     }

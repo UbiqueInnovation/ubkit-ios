@@ -79,7 +79,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             #if os(watchOS)
                 let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.refresh)
             #else
-                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.refresh)
+                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
             #endif
             ubDataTask.dataTaskCompleted(data: collectedData.data, response: nil, error: collectedData.error ?? error, info: info)
             return
@@ -104,7 +104,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             #if os(watchOS)
                 let info = UBNetworkingTaskInfo(cacheHit: true, refresh: ubDataTask.refresh)
             #else
-                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true, refresh: ubDataTask.refresh)
+                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true, refresh: ubDataTask.flags.contains(.ignoreCache))
             #endif
 
             // Update the cache if needed
@@ -130,7 +130,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             #if os(watchOS)
                 let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.refresh)
             #else
-                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.refresh)
+                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
             #endif
             ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: responseError, info: info)
             return
@@ -139,7 +139,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         #if os(watchOS)
             let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.refresh)
         #else
-            let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.refresh)
+            let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
         #endif
         ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: collectedData.error ?? error, info: info)
 
