@@ -26,7 +26,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         }
         // Schedule a new job
         let job = UBCronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
-            task?.start(refresh: true)
+            task?.start(flags: [.systemTriggered, .ignoreCache])
         }
         refreshJobs.setObject(job, forKey: task)
     }
