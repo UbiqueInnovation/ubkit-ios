@@ -193,10 +193,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 dataTask.taskDescription = self.taskDescription
 
                 if #available(iOS 11.0, *) {
-                    dataTask.progress.isCancellable = true
-                    dataTask.progress.cancellationHandler = { [weak self] in
-                        self?.cancel()
-                    }
 
                     // Observe the task progress
                     self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
