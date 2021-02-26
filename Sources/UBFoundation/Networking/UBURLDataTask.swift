@@ -40,7 +40,14 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// A representation of the overall task progress.
-    public let progress: Progress
+    public var progress: Progress {
+        get {
+            guard #available(iOS 11.0, * ), let progress = dataTask?.progress else {
+              return Progress(totalUnitCount: 0)
+            }
+            return progress
+        }
+    }
 
     /// The underlaying data task
     private var dataTask: URLSessionDataTask?
@@ -84,13 +91,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         self.taskDescription = taskDescription
         self.priority = priority
         self.callbackQueue = callbackQueue
-        progress = Progress(totalUnitCount: 0)
         _state = .initial
 
-        progress.isCancellable = true
-        progress.cancellationHandler = { [weak self] in
-            self?.cancel()
-        }
         // Add the created task to the global network activity
         Networking.addToGlobalNetworkActivity(self)
     }
@@ -170,16 +172,18 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 dataTask.taskDescription = self.taskDescription
 
                 if #available(iOS 11.0, *) {
+                    dataTask.progress.isCancellable = true
+                    dataTask.progress.cancellationHandler = { [weak self] in
+                        self?.cancel()
+                    }
+
                     // Observe the task progress
                     self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
                         guard let self = self else {
                             return
                         }
 
-                        self.progress.totalUnitCount = task.progress.totalUnitCount
-
-                        self.progress.completedUnitCount = task.progress.completedUnitCount
-                        self.notifyProgress(self.progress.fractionCompleted)
+                        self.notifyProgress(task.progress.fractionCompleted)
                     })
                 }
 
