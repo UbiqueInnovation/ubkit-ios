@@ -11,6 +11,14 @@ import SwiftUI
 @available(iOS 13.0, *)
 public extension Text {
 
+    /**
+     Styles a SwiftUI `Text` view with the values specified in a given `UBLabelType`, with the option to override specific style attributes.
+
+     - Parameter labelType: The label type whose parameters should be applied to the text.
+     - Parameter color: If not `nil`, this color takes precedence over the label type's `textColor`.
+     - Parameter numberOfLines: The maximum numer of lines the label is allowed to have. Specify `nil` to allow for an infinite number of lines.
+     - Parameter textAlignment: The text alignment that should be used for the label. Default is `leading`.
+     */
     func style(_ labelType: UBLabelType,
                color: Color? = nil,
                numberOfLines: Int? = nil,
