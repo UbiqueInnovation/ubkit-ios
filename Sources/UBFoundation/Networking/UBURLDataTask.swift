@@ -364,6 +364,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                  (.waitingExecution, .fetching), // Start task
                  (.waitingExecution, .cancelled), // Cancel task
                  (.waitingExecution, .parsing), // Returned from cache
+                 (.waitingExecution, .finished), //RecoverStrategy cannotRecover a RequestModifier
                  (.fetching, .parsing), // Data received
                  (.fetching, .finished), // Error received
                  (.fetching, .cancelled), // Cancel task
