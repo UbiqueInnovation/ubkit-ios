@@ -12,12 +12,14 @@ let package = Package(
     products: [
         .library(name: "UBFoundation", targets: ["UBFoundation"]),
         .library(name: "UBUserInterface", targets: ["UBUserInterface"]),
+        .library(name: "UBUserInterfaceSwiftUI", targets: ["UBUserInterfaceSwiftUI"]),
         .library(name: "UBLocation", targets: ["UBLocation"]),
         .library(name: "UBPush", targets: ["UBPush"]),
     ],
     dependencies: [],
     targets: [
         .target(name: "UBFoundation"),
+        .target(name: "UBUserInterfaceSwiftUI", dependencies: ["UBUserInterface"]),
         .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
