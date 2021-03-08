@@ -24,6 +24,10 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
     func locationManager(_ manager: UBLocationManager, didVisit visit: CLVisit)
     /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didFailWithError error: Error)
+    /// :nodoc:
+    func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager)
+    /// :nodoc:
+    func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager)
 
     /// If set, the locations returned for this delegate will be filtered for the given accuracy
     var locationManagerFilterAccuracy: CLLocationAccuracy? { get }
@@ -177,6 +181,9 @@ public class UBLocationManager: NSObject {
     /// The last heading update received from the system.
     public private(set) var lastHeading: CLHeading?
 
+    /// State of pause/resume
+    private var isPaused : Bool = false
+
     // MARK: - Initialization
 
     /// Creates a `UBLocationManager` which facilitates obtaining location permissions
@@ -264,8 +271,22 @@ public class UBLocationManager: NSObject {
             stopLocationMonitoring(delegate.usage)
         }
 
-        for delegate in delegates {
-            startLocationMonitoring(for: usage, delegate: delegate, canAskForPermission: false)
+        restartAllDelegates()
+    }
+
+    /// Restarts location services if location services are pausable and paused
+    public func restartIfNeeded() {
+        guard self.isPaused, self.pausesLocationUpdatesAutomatically else { return }
+
+        restartAllDelegates()
+    }
+
+    /// Restarts all delegates with their corresponding usage
+    private func restartAllDelegates() {
+        for wrapper in delegateWrappers.values {
+            if let delegate = wrapper.delegate {
+                startLocationMonitoring(for: wrapper.usage, delegate: delegate, canAskForPermission: false)
+            }
         }
 
         assert(!delegateWrappers.isEmpty || usage == [])
@@ -412,6 +433,14 @@ extension UBLocationManager: CLLocationManagerDelegate {
         for delegate in delegates {
             delegate.locationManager(self, didFailWithError: error)
         }
+    }
+
+    public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+        self.isPaused = true
+    }
+
+    public func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
+        self.isPaused = false
     }
 }
 
