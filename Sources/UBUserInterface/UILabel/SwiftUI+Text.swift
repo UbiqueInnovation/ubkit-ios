@@ -5,6 +5,8 @@
 //  Created by Matthias Felix on 21.10.20.
 //
 
+#if (arch(arm64) || arch(x86_64))
+
 import Foundation
 import SwiftUI
 
@@ -43,3 +45,5 @@ public extension Text {
     }
 
 }
+
+#endif
