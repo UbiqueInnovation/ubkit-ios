@@ -21,7 +21,7 @@ public extension Text {
      - Parameter numberOfLines: The maximum numer of lines the label is allowed to have. Specify `nil` to allow for an infinite number of lines.
      - Parameter textAlignment: The text alignment that should be used for the label. Default is `leading`.
      */
-    func style(_ labelType: UBLabelType,
+    func ub_style(_ labelType: UBLabelType,
                color: Color? = nil,
                numberOfLines: Int? = nil,
                textAlignment: TextAlignment = .leading) -> some View {
