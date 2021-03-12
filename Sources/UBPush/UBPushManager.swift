@@ -12,6 +12,7 @@ import UserNotifications
 /// Handles requesting push permissions. Clients should customize the following components specific to the client application:
 ///
 /// - `pushRegistrationManager`, which handles registration of push tokens on our server
+/// - `additionalPushRegistrationManagers`, allows to handle several push configurations on our servers
 /// - `pushHandler`, which handles incoming pushes
 ///
 /// The following calls need to be added to the app delegate:
@@ -40,6 +41,13 @@ import UserNotifications
 ///        UBPushManager.shared.didFailToRegisterForRemoteNotifications(with: error)
 ///    }
 ///
+///    func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+///         UBPushManager.shared.pushHandler.handleDidReceiveResponse(userInfo) {
+///             completionHandler(.newData)
+///         }
+///     }
+///
+
 open class UBPushManager: NSObject {
     static let logger: UBLogger = UBPushLogging.frameworkLoggerFactory(category: "PushManager")
 
@@ -62,10 +70,32 @@ open class UBPushManager: NSObject {
     /// Handles registration of push tokens on our server
     public var pushRegistrationManager = UBPushRegistrationManager() {
         didSet {
-            if let token = UBPushLocalStorage.shared.pushToken {
+            if let token = UBPushTokenStorage.shared.pushToken {
                 pushRegistrationManager.setPushToken(token)
             }
         }
+    }
+
+    public var additionalPushRegistrationManagers : [UBPushRegistrationManager] = [] {
+        didSet {
+            if let token = UBPushTokenStorage.shared.pushToken {
+                for additional in additionalPushRegistrationManagers {
+                    additional.setPushToken(token)
+                }
+            }
+        }
+    }
+
+    private struct UBPushTokenStorage {
+        static var shared = UBPushTokenStorage()
+
+        /// The push token obtained from Apple
+        @UBOptionalUserDefault(key: "UBPushManager_Token")
+        var pushToken: String?
+    }
+
+    private var allPushRegistrationManagers : [UBPushRegistrationManager] {
+        return [pushRegistrationManager] + self.additionalPushRegistrationManagers
     }
 
     /// Handles incoming pushes
@@ -73,7 +103,7 @@ open class UBPushManager: NSObject {
 
     /// The push token for this device
     public var pushToken: String? {
-        UBPushLocalStorage.shared.pushToken
+        UBPushTokenStorage.shared.pushToken
     }
 
     /// The permission request callback of a pending permission requist, if any.
@@ -98,10 +128,16 @@ open class UBPushManager: NSObject {
     /// Needs to be called inside `applicationDidFinishLaunchingWithOptions(_:launchOptions:)`
     public func didFinishLaunchingWithOptions(_ launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
                                               pushHandler: UBPushHandler,
-                                              pushRegistrationManager: UBPushRegistrationManager) {
+                                              pushRegistrationManager: UBPushRegistrationManager,
+                                              additionalPushRegistrationManagers: [UBPushRegistrationManager] = []) {
         self.pushHandler = pushHandler
         self.pushRegistrationManager = pushRegistrationManager
-        self.pushRegistrationManager.sendPushRegistrationIfOutdated()
+        self.additionalPushRegistrationManagers = additionalPushRegistrationManagers
+
+        for prm in self.allPushRegistrationManagers {
+            prm.sendPushRegistrationIfOutdated()
+        }
+
         self.pushHandler.handleLaunchOptions(launchOptions)
 
         // Request APNS token on startup
@@ -111,7 +147,9 @@ open class UBPushManager: NSObject {
     /// Needs to be called upon `applicationDidBecomeActiveNotification`
     @objc
     private func applicationDidBecomeActive() {
-        pushRegistrationManager.sendPushRegistrationIfOutdated()
+        for aprm in self.allPushRegistrationManagers {
+            aprm.sendPushRegistrationIfOutdated()
+        }
     }
 
     // MARK: - Push Permission Request Flow
@@ -125,7 +163,6 @@ open class UBPushManager: NSObject {
             }
         }
     }
-
 
     /// Requests push permissions
     ///
@@ -186,7 +223,13 @@ open class UBPushManager: NSObject {
     public func didRegisterForRemoteNotificationsWithDeviceToken(_ token: Data) {
         let tokenString = token.hexString
 
-        pushRegistrationManager.setPushToken(tokenString)
+        // set global token
+        UBPushTokenStorage.shared.pushToken = tokenString
+
+        // for all registration managers
+        for prm in self.allPushRegistrationManagers {
+            prm.setPushToken(tokenString)
+        }
 
         if let callback = permissionRequestCallback {
             callback(.success)
@@ -196,7 +239,13 @@ open class UBPushManager: NSObject {
 
     /// Needs to be called inside `application(_:didFailToRegisterForRemoteNotificationsWithError:)`
     public func didFailToRegisterForRemoteNotifications(with error: Error) {
-        pushRegistrationManager.setPushToken(nil)
+        // set global token
+        UBPushTokenStorage.shared.pushToken = nil
+
+        // for all registration managers
+        for prm in self.allPushRegistrationManagers {
+            prm.setPushToken(nil)
+        }
 
         if let callback = permissionRequestCallback {
             callback(.nonRecoverableFailure)
@@ -221,12 +270,16 @@ open class UBPushManager: NSObject {
     /// Invalidates the current push registration, forcing a new registration request
     @available(*, deprecated, renamed: "invalidateAndResendPushRegistration")
     public func invalidatePushRegistration() {
-        pushRegistrationManager.invalidate()
+        for prm in self.allPushRegistrationManagers {
+            prm.invalidate()
+        }
     }
 
     /// Invalidates the current push registration, forcing a new registration request
     public func invalidateAndResendPushRegistration(completion: ((Error?) -> Void)? = nil) {
-        pushRegistrationManager.invalidate(completion: completion)
+        for prm in self.allPushRegistrationManagers {
+            prm.invalidate(completion: completion)
+        }
     }
 }
 

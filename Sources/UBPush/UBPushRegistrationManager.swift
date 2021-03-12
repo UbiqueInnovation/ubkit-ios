@@ -18,7 +18,7 @@ import UIKit
 open class UBPushRegistrationManager {
     /// The push token for this device, if any
     public var pushToken: String? {
-        UBPushLocalStorage.shared.pushToken
+        self.pushLocalStorage.pushToken
     }
 
     // The URL session to use, can be overwritten by the app
@@ -28,6 +28,9 @@ open class UBPushRegistrationManager {
 
     /// The url needed for the registration request
     private var registrationUrl: URL?
+
+    /// Push local storage
+    private var pushLocalStorage : UBPushRegistrationLocalStorage
 
     /// :nodoc:
     private var maxRegistrationAge: TimeInterval {
@@ -41,33 +44,34 @@ open class UBPushRegistrationManager {
     // MARK: - Initialization
 
     /// Creates push registration manager for the provided `registrationUrl`
-    public init(registrationUrl: URL? = nil) {
+    public init(pushLocalStorage : UBPushRegistrationLocalStorage? = nil, registrationUrl: URL? = nil) {
+        self.pushLocalStorage = pushLocalStorage ?? UBPushRegistrationStandardLocalStorage.shared
         self.registrationUrl = registrationUrl
     }
 
     /// Sets the push token for the device, which starts a push registration
     func setPushToken(_ pushToken: String?) {
-        let oldToken = UBPushLocalStorage.shared.pushToken
+        let oldToken = self.pushLocalStorage.pushToken
 
         // we could receive the same push token again
         // only send registration if push token has changed
         if (oldToken == nil && pushToken != nil)
             || (oldToken != nil && oldToken != pushToken)
-            || (oldToken != nil && oldToken == pushToken && !UBPushLocalStorage.shared.isValid) {
-            UBPushLocalStorage.shared.pushToken = pushToken
+            || (oldToken != nil && oldToken == pushToken && !self.pushLocalStorage.isValid) {
+            self.pushLocalStorage.pushToken = pushToken
             invalidate()
         }
     }
 
     /// :nodoc:
     private func validate() {
-        UBPushLocalStorage.shared.isValid = true
-        UBPushLocalStorage.shared.lastRegistrationDate = Date()
+        self.pushLocalStorage.isValid = true
+        self.pushLocalStorage.lastRegistrationDate = Date()
     }
 
     /// :nodoc:
     func invalidate(completion: ((Error?) -> Void)? = nil) {
-        UBPushLocalStorage.shared.isValid = false
+        self.pushLocalStorage.isValid = false
         sendPushRegistration(completion: completion)
     }
 
@@ -120,7 +124,7 @@ open class UBPushRegistrationManager {
     /// implement a custom registration request
     open var pushRegistrationRequest: UBURLRequest? {
         guard
-            let pushToken = UBPushLocalStorage.shared.pushToken,
+            let pushToken = self.pushLocalStorage.pushToken,
             let registrationUrl = self.registrationUrl else {
             return nil
         }
@@ -137,7 +141,7 @@ open class UBPushRegistrationManager {
 
     /// :nodoc:
     func sendPushRegistrationIfOutdated() {
-        if !UBPushLocalStorage.shared.isValid {
+        if !self.pushLocalStorage.isValid {
             sendPushRegistration()
         } else {
             let justPushed = UBPushManager.shared.pushHandler.lastPushed.map { lastPushed in
@@ -145,7 +149,7 @@ open class UBPushRegistrationManager {
                 return lastPushed > fifteenSecondsAgo
             } ?? false
 
-            let outdated = -(UBPushLocalStorage.shared.lastRegistrationDate?.timeIntervalSinceNow ?? 0) > maxRegistrationAge
+            let outdated = -(self.pushLocalStorage.lastRegistrationDate?.timeIntervalSinceNow ?? 0) > maxRegistrationAge
 
             if outdated, !justPushed {
                 invalidate()
