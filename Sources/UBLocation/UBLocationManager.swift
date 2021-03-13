@@ -112,15 +112,6 @@ public class UBLocationManager: NSObject {
         }
     }
 
-    /// Indicates whether the location manager object may pause location updates to save battery.
-    /// The default value is `true`.
-    public var pausesLocationUpdatesAutomatically: Bool {
-        get { locationManager.pausesLocationUpdatesAutomatically }
-        set {
-            locationManager.pausesLocationUpdatesAutomatically = newValue
-        }
-    }
-
     /// Does this location manager use the location in the background?
     public var usesLocationInBackground: Bool {
         return usage.requiresBackgroundLocation
@@ -199,6 +190,7 @@ public class UBLocationManager: NSObject {
         locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.headingFilter = kCLHeadingFilterNone
         locationManager.activityType = .other
+        locationManager.pausesLocationUpdatesAutomatically = false
 
         // Only applies if the "Always" authorization is granted and `allowsBackgroundLocationUpdates`
         if #available(iOS 11.0, *) {
