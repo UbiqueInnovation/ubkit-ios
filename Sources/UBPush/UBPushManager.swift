@@ -12,7 +12,7 @@ import UserNotifications
 /// Handles requesting push permissions. Clients should customize the following components specific to the client application:
 ///
 /// - `pushRegistrationManager`, which handles registration of push tokens on our server
-/// - `additionalPushRegistrationManagers`, allows to handle several push configurations on our servers
+/// - `additionalPushRegistrationManagers`, allows to handle several push configurations on our server
 /// - `pushHandler`, which handles incoming pushes
 ///
 /// The following calls need to be added to the app delegate:
@@ -33,19 +33,17 @@ import UserNotifications
 ///                                              pushRegistrationManager: pushRegistrationManager)
 ///         }
 ///
-///    func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-///        UBPushManager.shared.didRegisterForRemoteNotificationsWithDeviceToken(deviceToken)
-///    }
-///
-///    func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-///        UBPushManager.shared.didFailToRegisterForRemoteNotifications(with: error)
-///    }
-///
-///    func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-///         UBPushManager.shared.pushHandler.handleDidReceiveResponse(userInfo) {
-///             completionHandler(.newData)
+///         func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+///               UBPushManager.shared.didRegisterForRemoteNotificationsWithDeviceToken(deviceToken)
 ///         }
-///     }
+///
+///         func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+///               UBPushManager.shared.didFailToRegisterForRemoteNotifications(with: error)
+///         }
+///
+///         func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+///             UBPushManager.shared.pushHandler.handleDidReceiveResponse(userInfo, fetchCompletinHandler: completionHandler)
+///         }
 ///
 
 open class UBPushManager: NSObject {

@@ -56,8 +56,8 @@ open class UBPushHandler {
         UBPushManager.logger.error("Subclasses of UBPushHandler should override UBPushHandler.showInAppPushAlert(withTitle:proposedMessage:notification:)")
     }
 
-    /// Override to update local data (e.g. current warnings) after every remote notification.
-    open func updateLocalData(withSilent _: Bool, remoteNotification _: UBPushNotification) {
+    /// Override to update local data (e.g. current warnings) after every remote notification. It's the clients responsibility to call the fetchCompletionHandler appropriately, if set
+    open func updateLocalData(withSilent _: Bool, remoteNotification _: UBPushNotification, fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         UBPushManager.logger.error("Subclasses of UBPushHandler should override updateLocalData(withSilent:remoteNotification:)")
     }
 
@@ -98,23 +98,22 @@ open class UBPushHandler {
     /// Handles e.g. silent pushes that arrive in legacy method `AppDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)`
     /// From Apple documentation:
     ///     As soon as you finish processing the notification, you must call the block in the handler parameter or your app will be terminated.
-    public func handleDidReceiveResponse(_ userInfo: [AnyHashable: Any], completionHandler: @escaping () -> Void) {
+    public func handleDidReceiveResponse(_ userInfo: [AnyHashable: Any], fetchCompletinHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let ubNotification = UBPushNotification(userInfo)
-        didReceive(ubNotification, whileActive: UIApplication.shared.applicationState == .active)
-        completionHandler()
+        didReceive(ubNotification, whileActive: UIApplication.shared.applicationState == .active, fetchCompletionHandler: fetchCompletinHandler)
     }
 
     // MARK: - Helpers
 
-    private func didReceive(_ notification: UBPushNotification, whileActive isActive: Bool) {
+    private func didReceive(_ notification: UBPushNotification, whileActive isActive: Bool, fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)? = nil) {
         lastPushed = Date()
 
         if !notification.isSilentPush {
-            updateLocalData(withSilent: false, remoteNotification: notification)
+            updateLocalData(withSilent: false, remoteNotification: notification, fetchCompletionHandler: fetchCompletionHandler)
             showNonSilent(notification, isActive: isActive)
 
         } else {
-            updateLocalData(withSilent: true, remoteNotification: notification)
+            updateLocalData(withSilent: true, remoteNotification: notification, fetchCompletionHandler: fetchCompletionHandler)
         }
     }
 
