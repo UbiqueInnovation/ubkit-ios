@@ -163,6 +163,10 @@ open class UBPushRegistrationManager {
     open var pushDeviceUUID: String {
         UBDeviceUUID.getUUID()
     }
+
+    open var isValid : Bool {
+        self.pushLocalStorage.isValid
+    }
 }
 
 // MARK: - Push Registration Request
