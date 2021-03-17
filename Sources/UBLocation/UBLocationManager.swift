@@ -256,9 +256,7 @@ public class UBLocationManager: NSObject {
             stopLocationMonitoring(delegate.usage)
         }
 
-        for delegate in delegates {
-            startLocationMonitoring(for: usage, delegate: delegate, canAskForPermission: false)
-        }
+        self.startLocationMonitoringForAllDelegates()
 
         assert(!delegateWrappers.isEmpty || usage == [])
     }
@@ -317,6 +315,14 @@ public class UBLocationManager: NSObject {
             self.notifyDelegates(withLocations: [location])
         })
     }
+
+    private func startLocationMonitoringForAllDelegates() {
+        for wrapper in delegateWrappers.values {
+            if let delegate = wrapper.delegate {
+                startLocationMonitoring(for: wrapper.usage, delegate: delegate, canAskForPermission: false)
+            }
+        }
+    }
 }
 
 extension UBLocationManager: CLLocationManagerDelegate {
@@ -324,9 +330,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
         logLocationPermissionChange?(authorization)
 
-        for delegate in delegates {
-            startLocationMonitoring(for: usage, delegate: delegate, canAskForPermission: false)
-        }
+        self.startLocationMonitoringForAllDelegates()
 
         if Self.hasRequiredAuthorizationLevel(forUsage: usage) {
             let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
