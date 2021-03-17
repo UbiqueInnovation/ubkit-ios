@@ -15,7 +15,7 @@ import UIKit
 ///
 /// or subclass `UBPushRegistrationManager`, overriding `pushRegistrationRequest` if they
 /// require a custom registration request.
-open class UBPushRegistrationManager {
+open class UBPushRegistrationManager: NSObject {
     /// The push token for this device, if any
     public var pushToken: String? {
         self.pushLocalStorage.pushToken
@@ -47,6 +47,8 @@ open class UBPushRegistrationManager {
     public init(pushLocalStorage : UBPushRegistrationLocalStorage? = nil, registrationUrl: URL? = nil) {
         self.pushLocalStorage = pushLocalStorage ?? UBPushRegistrationStandardLocalStorage.shared
         self.registrationUrl = registrationUrl
+        
+        super.init()
     }
 
     /// Sets the push token for the device, which starts a push registration
@@ -64,13 +66,13 @@ open class UBPushRegistrationManager {
     }
 
     /// :nodoc:
-    private func validate() {
+    public func validate() {
         self.pushLocalStorage.isValid = true
         self.pushLocalStorage.lastRegistrationDate = Date()
     }
 
     /// :nodoc:
-    func invalidate(completion: ((Error?) -> Void)? = nil) {
+    public func invalidate(completion: ((Error?) -> Void)? = nil) {
         self.pushLocalStorage.isValid = false
         sendPushRegistration(completion: completion)
     }
