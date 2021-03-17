@@ -90,7 +90,7 @@ open class UBPushHandler {
 
     /// Handles the user's response to an incoming notification.
     public func handleDidReceiveResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
-        let ubNotification = UBPushNotification(response.notification.request.content.userInfo)
+        let ubNotification = UBPushNotification(response.notification.request.content.userInfo, responseActionIdentifier: response.actionIdentifier)
         didReceive(ubNotification, whileActive: false)
         completionHandler()
     }
@@ -150,6 +150,7 @@ open class UBPushHandler {
 /// A convenience wrapper for the notification received via a push message.
 public struct UBPushNotification {
     public let userInfo: [AnyHashable: Any]
+    public let responseActionIdentifier: String?
 
     public var isSilentPush: Bool {
         guard let aps = userInfo["aps"] as? [String: Any] else {
@@ -162,8 +163,9 @@ public struct UBPushNotification {
             (aps["content-available"] as? Int) == 1
     }
 
-    init(_ userInfo: [AnyHashable: Any]) {
+    init(_ userInfo: [AnyHashable: Any], responseActionIdentifier: String? = nil) {
         self.userInfo = userInfo
+        self.responseActionIdentifier = responseActionIdentifier
     }
 
     /// Tries to convert `userInfo` to a `Decodable` type `T`
