@@ -35,6 +35,11 @@ open class UBPushHandler {
         true
     }
 
+    /// Categories to register
+    open var notificationCategories : Set<UNNotificationCategory> {
+        return Set()
+    }
+
     /// Overrride to show an application-specific alert/popup in response to a push
     /// arriving while the application is running.
     open func showInAppPushAlert(withTitle proposedTitle: String, proposedMessage: String, notification: UBPushNotification) {

@@ -157,7 +157,10 @@ open class UBPushManager: NSObject {
     private func registerForPushNotification() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             if settings.authorizationStatus == .authorized {
-                DispatchQueue.main.async { UIApplication.shared.registerForRemoteNotifications() }
+                UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
+                
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications() }
             }
         }
     }
@@ -200,6 +203,8 @@ open class UBPushManager: NSObject {
                     self.permissionRequestCallback = nil
                 }
             }
+
+            UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
 
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()
