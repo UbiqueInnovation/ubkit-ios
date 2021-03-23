@@ -150,6 +150,19 @@ open class UBPushManager: NSObject {
         }
     }
 
+    // MARK: - Migration
+
+    /// Update push token from a previous version directly
+    public func migratePushToken(currentToken : String) {
+        // set global token
+        UBPushTokenStorage.shared.pushToken = currentToken
+
+        // for all registration managers
+        for prm in self.allPushRegistrationManagers {
+            prm.setPushToken(currentToken)
+        }
+    }
+
     // MARK: - Push Permission Request Flow
 
     /// Requests APNS token (if .authorized)
