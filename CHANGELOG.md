@@ -6,15 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- UBLabel.attributedText respects attributes of label type 
 
 ### Changed
-
 
 ### Removed
 
 ### Fixed
 
+## 1.1.1
+### Added
+- UBLabel.attributedText respects attributes of label type 
 
 ## 1.1
 ### Added
