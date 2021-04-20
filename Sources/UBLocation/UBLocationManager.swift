@@ -291,7 +291,7 @@ public class UBLocationManager: NSObject {
         }
     }
 
-    /// Start monitoring location service events (varies by `usage`)
+    /// Permission request to get state of location permission (varies by `usage`)
     ///
     /// - Parameters:
     ///   - usage: The desired usage.
