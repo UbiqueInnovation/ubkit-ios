@@ -42,7 +42,7 @@ import UserNotifications
 ///         }
 ///
 ///         func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-///             UBPushManager.shared.pushHandler.handleDidReceiveResponse(userInfo, fetchCompletinHandler: completionHandler)
+///             UBPushManager.shared.pushHandler.handleDidReceiveResponse(userInfo, fetchCompletionHandler: completionHandler)
 ///         }
 ///
 

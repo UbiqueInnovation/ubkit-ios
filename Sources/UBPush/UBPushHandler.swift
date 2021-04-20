@@ -103,9 +103,9 @@ open class UBPushHandler {
     /// Handles e.g. silent pushes that arrive in legacy method `AppDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)`
     /// From Apple documentation:
     ///     As soon as you finish processing the notification, you must call the block in the handler parameter or your app will be terminated.
-    public func handleDidReceiveResponse(_ userInfo: [AnyHashable: Any], fetchCompletinHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    public func handleDidReceiveResponse(_ userInfo: [AnyHashable: Any], fetchCompletionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let ubNotification = UBPushNotification(userInfo)
-        didReceive(ubNotification, whileActive: UIApplication.shared.applicationState == .active, fetchCompletionHandler: fetchCompletinHandler)
+        didReceive(ubNotification, whileActive: UIApplication.shared.applicationState == .active, fetchCompletionHandler: fetchCompletionHandler)
     }
 
     // MARK: - Helpers
