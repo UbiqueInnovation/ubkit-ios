@@ -35,6 +35,11 @@ open class UBPushHandler {
         true
     }
 
+    /// Categories to register
+    open var notificationCategories : Set<UNNotificationCategory> {
+        return Set()
+    }
+
     /// Overrride to show an application-specific alert/popup in response to a push
     /// arriving while the application is running.
     open func showInAppPushAlert(withTitle proposedTitle: String, proposedMessage: String, notification: UBPushNotification) {
@@ -56,8 +61,8 @@ open class UBPushHandler {
         UBPushManager.logger.error("Subclasses of UBPushHandler should override UBPushHandler.showInAppPushAlert(withTitle:proposedMessage:notification:)")
     }
 
-    /// Override to update local data (e.g. current warnings) after every remote notification.
-    open func updateLocalData(withSilent _: Bool, remoteNotification _: UBPushNotification) {
+    /// Override to update local data (e.g. current warnings) after every remote notification. It's the clients responsibility to call the fetchCompletionHandler appropriately, if set
+    open func updateLocalData(withSilent _: Bool, remoteNotification _: UBPushNotification, fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         UBPushManager.logger.error("Subclasses of UBPushHandler should override updateLocalData(withSilent:remoteNotification:)")
     }
 
@@ -90,7 +95,7 @@ open class UBPushHandler {
 
     /// Handles the user's response to an incoming notification.
     public func handleDidReceiveResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
-        let ubNotification = UBPushNotification(response.notification.request.content.userInfo)
+        let ubNotification = UBPushNotification(response.notification.request.content.userInfo, responseActionIdentifier: response.actionIdentifier)
         didReceive(ubNotification, whileActive: false)
         completionHandler()
     }
@@ -98,23 +103,22 @@ open class UBPushHandler {
     /// Handles e.g. silent pushes that arrive in legacy method `AppDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)`
     /// From Apple documentation:
     ///     As soon as you finish processing the notification, you must call the block in the handler parameter or your app will be terminated.
-    public func handleDidReceiveResponse(_ userInfo: [AnyHashable: Any], completionHandler: @escaping () -> Void) {
+    public func handleDidReceiveResponse(_ userInfo: [AnyHashable: Any], fetchCompletionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let ubNotification = UBPushNotification(userInfo)
-        didReceive(ubNotification, whileActive: UIApplication.shared.applicationState == .active)
-        completionHandler()
+        didReceive(ubNotification, whileActive: UIApplication.shared.applicationState == .active, fetchCompletionHandler: fetchCompletionHandler)
     }
 
     // MARK: - Helpers
 
-    private func didReceive(_ notification: UBPushNotification, whileActive isActive: Bool) {
+    private func didReceive(_ notification: UBPushNotification, whileActive isActive: Bool, fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)? = nil) {
         lastPushed = Date()
 
         if !notification.isSilentPush {
-            updateLocalData(withSilent: false, remoteNotification: notification)
+            updateLocalData(withSilent: false, remoteNotification: notification, fetchCompletionHandler: fetchCompletionHandler)
             showNonSilent(notification, isActive: isActive)
 
         } else {
-            updateLocalData(withSilent: true, remoteNotification: notification)
+            updateLocalData(withSilent: true, remoteNotification: notification, fetchCompletionHandler: fetchCompletionHandler)
         }
     }
 
@@ -151,6 +155,7 @@ open class UBPushHandler {
 /// A convenience wrapper for the notification received via a push message.
 public struct UBPushNotification {
     public let userInfo: [AnyHashable: Any]
+    public let responseActionIdentifier: String?
 
     public var isSilentPush: Bool {
         guard let aps = userInfo["aps"] as? [String: Any] else {
@@ -163,8 +168,9 @@ public struct UBPushNotification {
             (aps["content-available"] as? Int) == 1
     }
 
-    init(_ userInfo: [AnyHashable: Any]) {
+    init(_ userInfo: [AnyHashable: Any], responseActionIdentifier: String? = nil) {
         self.userInfo = userInfo
+        self.responseActionIdentifier = responseActionIdentifier
     }
 
     /// Tries to convert `userInfo` to a `Decodable` type `T`
