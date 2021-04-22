@@ -42,7 +42,7 @@ open class UBPushHandler {
 
     /// Overrride to show an application-specific alert/popup in response to a push
     /// arriving while the application is running.
-    open func showInAppPushAlert(withTitle proposedTitle: String, proposedMessage: String, notification: UBPushNotification) {
+    open func showInAppPushAlert(withTitle proposedTitle: String, proposedMessage: String, notification: UBPushNotification, shouldPresentCompletionHandler: ((UNNotificationPresentationOptions) -> Void)? = nil) {
         let alertController = UIAlertController(title: proposedTitle, message: proposedMessage, preferredStyle: .alert)
 
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
@@ -53,6 +53,9 @@ open class UBPushHandler {
 
         UIApplication.shared.delegate?.window??.rootViewController?
             .present(alertController, animated: true)
+
+        // Tell notification center not to show anything (banner,...)
+        shouldPresentCompletionHandler?([])
     }
 
     /// Override to present detail view after app is started when user responded to a push.
@@ -89,8 +92,8 @@ open class UBPushHandler {
     /// Handles a notification that arrived while the app was running in the foreground.
     public func handleWillPresentNotification(_ notification: UNNotification, completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let ubNotification = UBPushNotification(notification.request.content.userInfo)
-        didReceive(ubNotification, whileActive: true)
-        completionHandler([])
+        // Let app decide (by overriding) whether and how to show a banner or not
+        didReceive(ubNotification, whileActive: true, shouldPresentCompletionHandler: completionHandler)
     }
 
     /// Handles the user's response to an incoming notification.
@@ -110,19 +113,18 @@ open class UBPushHandler {
 
     // MARK: - Helpers
 
-    private func didReceive(_ notification: UBPushNotification, whileActive isActive: Bool, fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)? = nil) {
+    private func didReceive(_ notification: UBPushNotification, whileActive isActive: Bool, fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)? = nil, shouldPresentCompletionHandler: ((UNNotificationPresentationOptions) -> Void)? = nil) {
         lastPushed = Date()
 
         if !notification.isSilentPush {
             updateLocalData(withSilent: false, remoteNotification: notification, fetchCompletionHandler: fetchCompletionHandler)
-            showNonSilent(notification, isActive: isActive)
-
+            showNonSilent(notification, isActive: isActive, shouldPresentCompletionHandler: shouldPresentCompletionHandler)
         } else {
             updateLocalData(withSilent: true, remoteNotification: notification, fetchCompletionHandler: fetchCompletionHandler)
         }
     }
 
-    private func showNonSilent(_ notification: UBPushNotification, isActive: Bool) {
+    private func showNonSilent(_ notification: UBPushNotification, isActive: Bool, shouldPresentCompletionHandler: ((UNNotificationPresentationOptions) -> Void)? = nil) {
         // Non-silent push while active
         // Show alert
         if isActive {
@@ -138,7 +140,7 @@ open class UBPushHandler {
                 message = ""
             }
 
-            showInAppPushAlert(withTitle: appName, proposedMessage: message, notification: notification)
+            showInAppPushAlert(withTitle: appName, proposedMessage: message, notification: notification, shouldPresentCompletionHandler: shouldPresentCompletionHandler)
         }
         // Non-silent push while running in background
         // App will be launched because user selected "show more"
