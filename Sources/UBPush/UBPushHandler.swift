@@ -43,19 +43,12 @@ open class UBPushHandler {
     /// Overrride to show an application-specific alert/popup in response to a push
     /// arriving while the application is running.
     open func showInAppPushAlert(withTitle proposedTitle: String, proposedMessage: String, notification: UBPushNotification, shouldPresentCompletionHandler: ((UNNotificationPresentationOptions) -> Void)? = nil) {
-        let alertController = UIAlertController(title: proposedTitle, message: proposedMessage, preferredStyle: .alert)
-
-        alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
-
-        alertController.addAction(UIAlertAction(title: "Details", style: .default) { [weak self] _ in
-            self?.showInAppPushDetails(for: notification)
-        })
-
-        UIApplication.shared.delegate?.window??.rootViewController?
-            .present(alertController, animated: true)
-
-        // Tell notification center not to show anything (banner,...)
-        shouldPresentCompletionHandler?([])
+        // Show notification banner also when app is already in foreground
+        if #available(iOS 14.0, *) {
+            shouldPresentCompletionHandler?([.banner, .sound])
+        } else {
+            shouldPresentCompletionHandler?([.alert, .sound])
+        }
     }
 
     /// Override to present detail view after app is started when user responded to a push.
