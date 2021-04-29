@@ -221,14 +221,14 @@ let job = CronJob(fireAt: date) {
 var userName: String
 ```
 
-For variables without default values, please use `UBOptionalUserDefault` instead:
+For optional types without a default value, please set `defaultValue` to nil:
 
 ```swift
-@UBOptionalUserDefault(key: "username_key")
-var userName: String?
+@UBUserDefault(key: "maybeAnInteger", defaultValue: nil)
+var maybeAnInteger: Int?
 ```
 
-To store a variable of type `T` using these property wrappers, it needs to conform to `UBUserDefaultValue`. Plist-Compatible values (e.g. `String`, `Int`, `Array[Double]`, ...)  are supported out of the box.
+To store a variable of type `T` using these property wrappers, it needs to conform to `UBUserDefaultValue`. Plist-Compatible values (instances or collections of Data, String, Number, Date, Array, or Dictionary) are supported out of the box.
 
 To store `Codable` types such as `struct User: Codable { ... }`, please conform to `UBCodable` instead of `Codable`:
 

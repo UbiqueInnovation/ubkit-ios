@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- UBUserDefaults 2.0 (support for Codable arrays, deprecation of UBOptionalUserDefault)
 
 ### Changed
 

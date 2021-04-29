@@ -21,7 +21,7 @@ open class UBPushHandler {
         set { storedLastPushed = newValue }
     }
 
-    @UBOptionalUserDefault(key: "UBPushHandler_LastPushed")
+    @UBUserDefault(key: "UBPushHandler_LastPushed", defaultValue: nil)
     private var storedLastPushed: Date?
 
     // MARK: - Initialization

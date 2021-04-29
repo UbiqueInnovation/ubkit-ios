@@ -7,16 +7,16 @@
 
 import Foundation
 
-/// Backs a variable of type `T?` with storage in UserDefaults, where `T` conforms to
-/// `UBUserDefaultValue`.
-/// For variables with default values, please use `UBUserDefault` instead.
+
+/// Deprecated, please use @UBUserDefault(key: "something", defaultValue: nil) instead.
 ///
 /// Usage:
 ///       @UBOptionalUserDefault(key: "username_key")
 ///       var userName: String?
 ///
 @propertyWrapper
-public struct UBOptionalUserDefault<T: UBUserDefaultValue> {
+@available(*, deprecated, message: "lease use @UBUserDefault(key: \"something\", defaultValue: nil) instead")
+public struct UBOptionalUserDefault<Value: UBUserDefaultValue> {
     /// The key of the UserDefaults entry
     public let key: String
     /// The UserDefaults used for storage
@@ -29,16 +29,13 @@ public struct UBOptionalUserDefault<T: UBUserDefaultValue> {
     }
 
     /// :nodoc:
-    public var wrappedValue: T? {
+    public var wrappedValue: Value? {
         get {
-            return T.retrieveOptional(from: userDefaults, key: key)
+            userDefaults.object(forKey: key).flatMap(Value.init(with:))
         }
         set {
-            if let new = newValue {
-                new.store(in: userDefaults, key: key)
-            } else {
-                userDefaults.set(nil, forKey: key)
-            }
+            newValue.object().map { userDefaults.set($0, forKey: key) }
+                ?? userDefaults.removeObject(forKey: key)
         }
     }
 }
