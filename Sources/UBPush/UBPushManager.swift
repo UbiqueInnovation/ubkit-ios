@@ -88,7 +88,7 @@ open class UBPushManager: NSObject {
         static var shared = UBPushTokenStorage()
 
         /// The push token obtained from Apple
-        @UBOptionalUserDefault(key: "UBPushManager_Token")
+        @UBUserDefault(key: "UBPushManager_Token", defaultValue: nil)
         var pushToken: String?
     }
 

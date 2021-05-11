@@ -236,7 +236,7 @@ To store `Codable` types such as `struct User: Codable { ... }`, please conform 
 
 struct User: UBCodable { ... }
 
-@UBOptionalUserDefault(key: "user")
+@UBUserDefault(key: "user", defaultValue: nil)
 var loggedInUser: User?
 ```
 
