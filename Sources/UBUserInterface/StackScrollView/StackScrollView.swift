@@ -16,6 +16,8 @@ public class StackScrollView: UIView {
     public let stackView = UIStackView()
     public let scrollView = UIScrollView()
 
+    private var addedViewControllers : [UIView : UIViewController] = [:]
+
     // MARK: - Initialization
 
     public init(axis: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0) {
@@ -151,13 +153,15 @@ public class StackScrollView: UIView {
     /// Adds the view of another view controller to the stack view, taking care of adding the view controller as a child as well
     /// - Parameters:
     ///    - viewController: The view controller whose view should be added to the stack view
-    ///    - parent: The view controller will be added as child to this parent if present
+    ///    - parent: The view controller will be added as child to this parent
     ///    - size: If specified, the view will have this height or width, depending on the stack view's orientation
     ///    - index: If specified, the view will be inserted to this index in the stack view instead of added at the end
-    public func addArrangedViewController(_ viewController: UIViewController, parent: UIViewController?, size: CGFloat? = nil, index: Int? = nil) {
-        parent?.addChild(viewController)
+    public func addArrangedViewController(_ viewController: UIViewController, parent: UIViewController, size: CGFloat? = nil, index: Int? = nil) {
+        parent.addChild(viewController)
         addArrangedView(viewController.view, size: size, index: index)
         viewController.didMove(toParent: parent)
+
+        self.addedViewControllers[viewController.view] = viewController
     }
 
     /// Adds a spacer view of the specified size to the stack view
@@ -177,15 +181,26 @@ public class StackScrollView: UIView {
     /// - Parameters:
     ///    - view: The view to remove
     public func removeView(_ view: UIView) {
-        stackView.removeArrangedSubview(view)
-        view.removeFromSuperview()
+        if let vc = addedViewControllers[view] {
+            vc.willMove(toParent: nil)
+            view.removeFromSuperview()
+            vc.removeFromParent()
+            addedViewControllers.removeValue(forKey: view)
+        } else {
+            view.removeFromSuperview()
+        }
+    }
+
+    /// Removes a viewController from the stack view
+    /// - Parameters:
+    ///    - viewController: The viewController to remove
+    public func removeViewCotroller(_ viewController: UIViewController) {
+        self.removeView(viewController.view)
     }
 
     /// Removes all views from the stack view
     public func removeAllViews() {
-        for v in stackView.arrangedSubviews {
-            removeView(v)
-        }
+        stackView.arrangedSubviews.forEach { removeView($0) }
     }
 
     /// Scrolls a specific area of the content so that it is visible in the receiver.
