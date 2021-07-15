@@ -31,7 +31,7 @@ public class StackScrollView: UIView {
             scrollView.alwaysBounceHorizontal = true
             scrollView.showsHorizontalScrollIndicator = false
         @unknown default:
-            break
+            fatalError()
         }
 
         // Add scrollView
@@ -57,7 +57,7 @@ public class StackScrollView: UIView {
         case .horizontal:
             stackViewContainer.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
         @unknown default:
-            break
+            fatalError()
         }
 
         stackView.axis = axis
@@ -97,7 +97,7 @@ public class StackScrollView: UIView {
             case .horizontal:
                 view.widthAnchor.constraint(equalToConstant: s).isActive = true
             @unknown default:
-                break
+                fatalError()
             }
         }
 
@@ -144,7 +144,7 @@ public class StackScrollView: UIView {
             view.topAnchor.constraint(greaterThanOrEqualTo: v.topAnchor, constant: inset).isActive = true
             view.bottomAnchor.constraint(lessThanOrEqualTo: v.bottomAnchor, constant: -inset).isActive = true
         @unknown default:
-            break
+            fatalError()
         }
 
         addArrangedView(v)
