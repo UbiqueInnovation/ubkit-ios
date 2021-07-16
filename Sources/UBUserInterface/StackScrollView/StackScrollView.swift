@@ -26,10 +26,8 @@ public class StackScrollView: UIView {
         switch axis {
         case .vertical:
             scrollView.alwaysBounceVertical = true
-            scrollView.showsVerticalScrollIndicator = false
         case .horizontal:
             scrollView.alwaysBounceHorizontal = true
-            scrollView.showsHorizontalScrollIndicator = false
         @unknown default:
             fatalError()
         }
@@ -37,19 +35,23 @@ public class StackScrollView: UIView {
         // Add scrollView
         addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
 
         // Add stackViewContainer and stackView
         scrollView.addSubview(stackViewContainer)
 
         stackViewContainer.translatesAutoresizingMaskIntoConstraints = false
-        stackViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-        stackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        stackViewContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
-        stackViewContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            stackViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            stackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            stackViewContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            stackViewContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
+        ])
 
         switch axis {
         case .vertical:
@@ -64,13 +66,14 @@ public class StackScrollView: UIView {
         stackView.spacing = spacing
         stackViewContainer.addSubview(stackView)
 
-        stackView.ub_setContentPriorityRequired()
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        stackView.topAnchor.constraint(equalTo: stackViewContainer.topAnchor).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: stackViewContainer.bottomAnchor).isActive = true
-        stackView.centerXAnchor.constraint(equalTo: stackViewContainer.centerXAnchor).isActive = true
-        stackView.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: stackViewContainer.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: stackViewContainer.bottomAnchor),
+            stackView.centerXAnchor.constraint(equalTo: stackViewContainer.centerXAnchor),
+            stackView.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor)
+        ])
     }
 
     @available(*, unavailable)
@@ -87,8 +90,6 @@ public class StackScrollView: UIView {
     ///    - index: If specified, the view will be inserted at the specified index. If nil, the view will be added to the end of the stack view
     ///    - inset: If specified, the view will be put into a wrapper view with the specified insets, and the wrapper view will be added to the stack view
     public func addArrangedView(_ view: UIView, size: CGFloat? = nil, index: Int? = nil, inset: UIEdgeInsets? = nil) {
-        var view = view
-
         view.translatesAutoresizingMaskIntoConstraints = false
         if let s = size {
             switch stackView.axis {
@@ -101,21 +102,24 @@ public class StackScrollView: UIView {
             }
         }
 
+        let subView: UIView
         if let inset = inset {
-            let wrapper = UIView()
-            wrapper.addSubview(view)
-            wrapper.translatesAutoresizingMaskIntoConstraints = false
-            view.topAnchor.constraint(equalTo: wrapper.topAnchor, constant: inset.top).isActive = true
-            view.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor, constant: -inset.bottom).isActive = true
-            view.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor, constant: inset.left).isActive = true
-            view.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor, constant: -inset.right).isActive = true
-            view = wrapper
+            subView = UIView()
+            subView.addSubview(view)
+            NSLayoutConstraint.activate([
+                view.topAnchor.constraint(equalTo: subView.topAnchor, constant: inset.top),
+                view.bottomAnchor.constraint(equalTo: subView.bottomAnchor, constant: -inset.bottom),
+                view.leadingAnchor.constraint(equalTo: subView.leadingAnchor, constant: inset.left),
+                view.trailingAnchor.constraint(equalTo: subView.trailingAnchor, constant: -inset.right)
+            ])
+        } else {
+            subView = view
         }
 
         if let i = index {
-            stackView.insertArrangedSubview(view, at: i)
+            stackView.insertArrangedSubview(subView, at: i)
         } else {
-            stackView.addArrangedSubview(view)
+            stackView.addArrangedSubview(subView)
         }
     }
 
@@ -126,23 +130,26 @@ public class StackScrollView: UIView {
     public func addArrangedViewCentered(_ view: UIView, inset: CGFloat = 0) {
         let v = UIView()
         v.addSubview(view)
-        v.translatesAutoresizingMaskIntoConstraints = false
 
         view.translatesAutoresizingMaskIntoConstraints = false
 
         switch stackView.axis {
         case .vertical:
-            view.topAnchor.constraint(equalTo: v.topAnchor).isActive = true
-            view.bottomAnchor.constraint(equalTo: v.bottomAnchor).isActive = true
-            view.centerXAnchor.constraint(equalTo: v.centerXAnchor).isActive = true
-            view.leadingAnchor.constraint(greaterThanOrEqualTo: v.leadingAnchor, constant: inset).isActive = true
-            view.trailingAnchor.constraint(lessThanOrEqualTo: v.trailingAnchor, constant: -inset).isActive = true
+            NSLayoutConstraint.activate([
+                view.topAnchor.constraint(equalTo: v.topAnchor),
+                view.bottomAnchor.constraint(equalTo: v.bottomAnchor),
+                view.centerXAnchor.constraint(equalTo: v.centerXAnchor),
+                view.leadingAnchor.constraint(greaterThanOrEqualTo: v.leadingAnchor, constant: inset),
+                view.trailingAnchor.constraint(lessThanOrEqualTo: v.trailingAnchor, constant: -inset)
+            ])
         case .horizontal:
-            view.leadingAnchor.constraint(equalTo: v.leadingAnchor).isActive = true
-            view.trailingAnchor.constraint(equalTo: v.trailingAnchor).isActive = true
-            view.centerYAnchor.constraint(equalTo: v.centerYAnchor).isActive = true
-            view.topAnchor.constraint(greaterThanOrEqualTo: v.topAnchor, constant: inset).isActive = true
-            view.bottomAnchor.constraint(lessThanOrEqualTo: v.bottomAnchor, constant: -inset).isActive = true
+            NSLayoutConstraint.activate([
+                view.leadingAnchor.constraint(equalTo: v.leadingAnchor),
+                view.trailingAnchor.constraint(equalTo: v.trailingAnchor),
+                view.centerYAnchor.constraint(equalTo: v.centerYAnchor),
+                view.topAnchor.constraint(greaterThanOrEqualTo: v.topAnchor, constant: inset),
+                view.bottomAnchor.constraint(lessThanOrEqualTo: v.bottomAnchor, constant: -inset)
+            ])
         @unknown default:
             fatalError()
         }
