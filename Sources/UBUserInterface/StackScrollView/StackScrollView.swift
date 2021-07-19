@@ -128,33 +128,33 @@ public class StackScrollView: UIView {
     ///    - view: The view to be added
     ///    - inset: If specified, the view will be inset from the horizontal or vertical edges by this amount
     public func addArrangedViewCentered(_ view: UIView, inset: CGFloat = 0) {
-        let v = UIView()
-        v.addSubview(view)
+        let wrapper = UIView()
+        wrapper.addSubview(view)
 
         view.translatesAutoresizingMaskIntoConstraints = false
 
         switch stackView.axis {
         case .vertical:
             NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: v.topAnchor),
-                view.bottomAnchor.constraint(equalTo: v.bottomAnchor),
-                view.centerXAnchor.constraint(equalTo: v.centerXAnchor),
-                view.leadingAnchor.constraint(greaterThanOrEqualTo: v.leadingAnchor, constant: inset),
-                view.trailingAnchor.constraint(lessThanOrEqualTo: v.trailingAnchor, constant: -inset)
+                view.topAnchor.constraint(equalTo: wrapper.topAnchor),
+                view.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor),
+                view.centerXAnchor.constraint(equalTo: wrapper.centerXAnchor),
+                view.leadingAnchor.constraint(greaterThanOrEqualTo: wrapper.leadingAnchor, constant: inset),
+                view.trailingAnchor.constraint(lessThanOrEqualTo: wrapper.trailingAnchor, constant: -inset)
             ])
         case .horizontal:
             NSLayoutConstraint.activate([
-                view.leadingAnchor.constraint(equalTo: v.leadingAnchor),
-                view.trailingAnchor.constraint(equalTo: v.trailingAnchor),
-                view.centerYAnchor.constraint(equalTo: v.centerYAnchor),
-                view.topAnchor.constraint(greaterThanOrEqualTo: v.topAnchor, constant: inset),
-                view.bottomAnchor.constraint(lessThanOrEqualTo: v.bottomAnchor, constant: -inset)
+                view.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor),
+                view.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor),
+                view.centerYAnchor.constraint(equalTo: wrapper.centerYAnchor),
+                view.topAnchor.constraint(greaterThanOrEqualTo: wrapper.topAnchor, constant: inset),
+                view.bottomAnchor.constraint(lessThanOrEqualTo: wrapper.bottomAnchor, constant: -inset)
             ])
         @unknown default:
             fatalError()
         }
 
-        addArrangedView(v)
+        addArrangedView(wrapper)
     }
 
     /// Adds the view of another view controller to the stack view, taking care of adding the view controller as a child as well
