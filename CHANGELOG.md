@@ -6,13 +6,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- UBUserDefaults 2.0 (support for Codable arrays, removal of UBOptionalUserDefault)
 
 ### Changed
 
 ### Removed
 
 ### Fixed
+
+## 1.2.0
+### Added
+- UBUserDefaults 2.0 (support for Codable arrays, removal of UBOptionalUserDefault)
+- Image tinting `ub_withColor`
+- Added a new UI element: `UIStackView` in a `UIScrollView` named `UIStackScrollView`
+
+### Changed
+- Push notification handeling is now relying on the system UI view and not a custom UIAlertView
+
+### Fixed
+- Multi-Push Registration
 
 ## 1.1.1
 ### Added
