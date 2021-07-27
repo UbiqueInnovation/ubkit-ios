@@ -15,6 +15,7 @@ import UIKit
 ///
 /// or subclass `UBPushRegistrationManager`, overriding `pushRegistrationRequest` if they
 /// require a custom registration request.
+@available(iOSApplicationExtension, unavailable)
 open class UBPushRegistrationManager: NSObject {
     /// The push token for this device, if any
     public var pushToken: String? {
@@ -173,6 +174,7 @@ open class UBPushRegistrationManager: NSObject {
 
 // MARK: - Push Registration Request
 
+@available(iOSApplicationExtension, unavailable)
 private extension UBPushRegistrationManager {
     /// Data POSTed to the registrationUrl in the default implementation
     struct Request: Codable {

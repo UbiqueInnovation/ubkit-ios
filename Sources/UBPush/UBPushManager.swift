@@ -45,7 +45,7 @@ import UserNotifications
 ///             UBPushManager.shared.pushHandler.handleDidReceiveResponse(userInfo, fetchCompletionHandler: completionHandler)
 ///         }
 ///
-
+@available(iOSApplicationExtension, unavailable)
 open class UBPushManager: NSObject {
     static let logger: UBLogger = UBPushLogging.frameworkLoggerFactory(category: "PushManager")
 
@@ -300,7 +300,7 @@ open class UBPushManager: NSObject {
 }
 
 // MARK: - UNNotificationCenterDelegate
-
+@available(iOSApplicationExtension, unavailable)
 extension UBPushManager: UNUserNotificationCenterDelegate {
     /// :nodoc:
     public func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -314,7 +314,7 @@ extension UBPushManager: UNUserNotificationCenterDelegate {
 }
 
 // MARK: - Permission Request Result with Settings URL
-
+@available(iOSApplicationExtension, unavailable)
 private extension UBPushManager.PermissionRequestResult {
     /// :nodoc:
     static var failure: UBPushManager.PermissionRequestResult {

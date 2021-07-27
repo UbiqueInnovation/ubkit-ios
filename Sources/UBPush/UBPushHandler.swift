@@ -14,6 +14,7 @@ import UserNotifications
 ///     UBPushManager.shared.pushHandler = SubclassedPushHanlder()
 ///
 /// to implement app-specific behaviour.
+@available(iOSApplicationExtension, unavailable)
 open class UBPushHandler {
     /// Date of last push message. Override to modify app state after every push (e.g. wipe cache)
     public var lastPushed: Date? {
