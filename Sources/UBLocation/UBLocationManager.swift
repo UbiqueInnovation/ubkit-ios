@@ -427,6 +427,14 @@ public class UBLocationManager: NSObject {
 
 extension UBLocationManager: CLLocationManagerDelegate {
 
+    public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+        logger.error("locationManager:locationManagerDidPauseLocationUpdates", accessLevel: .public)
+    }
+
+    public func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
+        logger.error("locationManager:locationManagerDidResumeLocationUpdates", accessLevel: .public)
+    }
+
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
         logger.error("locationManager:didChangeAuthorization: " + String(authorization.rawValue), accessLevel: .public)
 
