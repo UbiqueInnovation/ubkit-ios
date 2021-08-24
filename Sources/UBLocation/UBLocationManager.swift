@@ -522,15 +522,6 @@ extension UBLocationManager: CLLocationManagerDelegate {
     public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
         logger.error("locationManager:didFailWithError: " + error.localizedDescription, accessLevel: .public)
 
-        if (error as! CLError).code == CLError.denied {
-            logger.error("locationManager:didFailWithError:CLError.denied -> stopLocationMonitoring()", accessLevel: .public)
-
-            // Location updates are not authorized.
-            for delegate in delegates {
-                stopLocationMonitoring(forDelegate: delegate)
-            }
-        }
-
         // This might be some temporary error. Just report it but do not stop
         // monitoring as it could be some temporary error and we just have to
         // wait for the next event
