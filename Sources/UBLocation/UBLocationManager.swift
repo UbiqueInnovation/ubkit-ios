@@ -257,6 +257,24 @@ public class UBLocationManager: NSObject {
         }
     }
 
+    /// Restart any monitoring that's used by a delegate.
+    /// This method can be called as a safety measure to ensure location updates
+    /// A good place to call this method is a location button in map app
+    public func restartLocationMonitoring() {
+        if usage.containsLocation {
+            locationManager.startUpdatingLocation()
+        }
+        if usage.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
+            locationManager.startMonitoringSignificantLocationChanges()
+        }
+        if usage.contains(.visits) {
+            locationManager.startMonitoringVisits()
+        }
+        if usage.containsHeading {
+            locationManager.startUpdatingHeading()
+        }
+    }
+
     /// Stops monitoring location service events and removes the delegate
     public func stopLocationMonitoring(forDelegate delegate: UBLocationManagerDelegate) {
         let id = ObjectIdentifier(delegate)
