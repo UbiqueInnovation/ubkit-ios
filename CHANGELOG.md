@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - UBUserDefaults 2.0 (support for Codable arrays, removal of UBOptionalUserDefault)
 - Image tinting `ub_withColor`
 - Added a new UI element: `UIStackView` in a `UIScrollView` named `UIStackScrollView`
+- UBLocationManager restartLocationMonitoring
+- UBUserDefaults support for dictionaries with string keys
+- Added `locationManagerMaxFreshAge` and `locationManager(, locationIsFresh:)` to get notified if no location updates happend for too long
 
 ### Changed
 - Push notification handeling is now relying on the system UI view and not a custom UIAlertView
