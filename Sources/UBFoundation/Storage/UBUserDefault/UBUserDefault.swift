@@ -100,6 +100,19 @@ extension Array: UBUserDefaultValue where Element: UBUserDefaultValue {
     }
 }
 
+// MARK: - Dictionaries
+
+extension Dictionary: UBUserDefaultValue where Key == String, Value: UBUserDefaultValue {
+    public init?(with object: Any) {
+        guard let dict = object as? [String: Any] else { return nil }
+        self = dict.compactMapValues(Value.init(with:))
+    }
+
+    public func object() -> Any? {
+        compactMapValues { $0.object() }
+    }
+}
+
 // MARK: - Optionals
 
 extension Optional: UBUserDefaultValue where Wrapped: UBUserDefaultValue {
