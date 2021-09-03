@@ -91,8 +91,8 @@ public extension UBUserDefaultValue where Self: UBRawRepresentable {
 
 extension Array: UBUserDefaultValue where Element: UBUserDefaultValue {
     public init?(with object: Any) {
-        guard let value = (object as? [Any])?.compactMap(Element.init(with:)) else { return nil }
-        self = value
+        guard let array = object as? [Any] else { return nil }
+        self = array.compactMap(Element.init(with:))
     }
 
     public func object() -> Any? {
