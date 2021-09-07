@@ -27,6 +27,14 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
 
     /// If set, the locations returned for this delegate will be filtered for the given accuracy
     var locationManagerFilterAccuracy: CLLocationAccuracy? { get }
+
+    /// Time interval, after which delegate will be notified if no new location occured
+    var locationManagerMaxFreshAge: TimeInterval? { get }
+
+    /// Called if no new location update was sent for `locationMaxAge`
+    func locationManager(_ manager: UBLocationManager, locationIsFresh: Bool)
+
+
 }
 
 public extension UBLocationManagerDelegate {
@@ -35,6 +43,8 @@ public extension UBLocationManagerDelegate {
     func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
     func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
     func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
+    var locationManagerMaxFreshAge: TimeInterval? { nil }
+    func locationManager(_ manager: UBLocationManager, locationIsFresh: Bool) {}
 }
 
 /// A convenience wrapper for `CLLocationManager` which facilitates obtaining the required authorization
@@ -153,6 +163,11 @@ public class UBLocationManager: NSObject {
     /// :nodoc:
     var timedOut: Bool = false
 
+    private var freshLocationTimers: [Timer] = []
+
+    /// save last send state to avoid constant delegate calls
+    private var lastDelegateFreshState: [ObjectIdentifier: Bool] = [:]
+
     /// Does the location manager have the required authorization level for `usage`?
     public static func hasRequiredAuthorizationLevel(forUsage usage: LocationMonitoringUsage) -> Bool {
         let authorizationStatus = CLLocationManager.authorizationStatus()
@@ -254,6 +269,24 @@ public class UBLocationManager: NSObject {
             delegate.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
         @unknown default:
             fatalError()
+        }
+    }
+
+    /// Restart any monitoring that's used by a delegate.
+    /// This method can be called as a safety measure to ensure location updates
+    /// A good place to call this method is a location button in map app
+    public func restartLocationMonitoring() {
+        if usage.containsLocation {
+            locationManager.startUpdatingLocation()
+        }
+        if usage.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
+            locationManager.startMonitoringSignificantLocationChanges()
+        }
+        if usage.contains(.visits) {
+            locationManager.startMonitoringVisits()
+        }
+        if usage.containsHeading {
+            locationManager.startUpdatingHeading()
         }
     }
 
@@ -372,6 +405,24 @@ public class UBLocationManager: NSObject {
         })
     }
 
+    private func startLocationFreshTimers() {
+        freshLocationTimers.forEach { $0.invalidate() }
+
+        freshLocationTimers = delegates.compactMap { delegate in
+            guard let time = delegate.locationManagerMaxFreshAge else { return nil }
+
+            return Timer.scheduledTimer(withTimeInterval: time, repeats: false, block: { [weak self, weak delegate] _ in
+                guard let self = self, let delegate = delegate else { return }
+
+                let lastState = self.lastDelegateFreshState[ObjectIdentifier(delegate), default: true]
+                if lastState != false {
+                    delegate.locationManager(self, locationIsFresh: false)
+                    self.lastDelegateFreshState[ObjectIdentifier(delegate)] = false
+                }
+            })
+        }
+    }
+
     private func startLocationMonitoringForAllDelegates() {
         for wrapper in delegateWrappers.values {
             if let delegate = wrapper.delegate {
@@ -439,6 +490,8 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
 
         notifyDelegates(withLocations: results)
+
+        startLocationFreshTimers()
     }
 
     private func notifyDelegates(withLocations locations: [CLLocation]) {
@@ -455,6 +508,14 @@ extension UBLocationManager: CLLocationManagerDelegate {
             }
 
             delegate.locationManager(self, didUpdateLocations: filteredLocations)
+            if let maxAge = delegate.locationManagerMaxFreshAge {
+                let fresh = -lastLocation.timestamp.timeIntervalSinceNow < maxAge
+                let lastFresh = lastDelegateFreshState[ObjectIdentifier(delegate), default: true]
+                                                                            if fresh != lastFresh {
+                delegate.locationManager(self, locationIsFresh: fresh)
+                                                                                lastDelegateFreshState[ObjectIdentifier(delegate)] = fresh
+                                                                            }
+            }
         }
     }
 

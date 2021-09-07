@@ -91,12 +91,25 @@ public extension UBUserDefaultValue where Self: UBRawRepresentable {
 
 extension Array: UBUserDefaultValue where Element: UBUserDefaultValue {
     public init?(with object: Any) {
-        guard let value = (object as? [Any])?.compactMap(Element.init(with:)) else { return nil }
-        self = value
+        guard let array = object as? [Any] else { return nil }
+        self = array.compactMap(Element.init(with:))
     }
 
     public func object() -> Any? {
         compactMap { $0.object() }
+    }
+}
+
+// MARK: - Dictionaries
+
+extension Dictionary: UBUserDefaultValue where Key == String, Value: UBUserDefaultValue {
+    public init?(with object: Any) {
+        guard let dict = object as? [String: Any] else { return nil }
+        self = dict.compactMapValues(Value.init(with:))
+    }
+
+    public func object() -> Any? {
+        compactMapValues { $0.object() }
     }
 }
 
