@@ -97,7 +97,8 @@ public class UBKeychain: UBKeychainProtocol {
 
         if status != errSecSuccess {
             if #available(iOS 11.3, *) {
-                logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)")
+                logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                             accessLevel: .public)
             }
         }
 
@@ -135,7 +136,8 @@ public class UBKeychain: UBKeychainProtocol {
             return result as? Data
         } else {
             if #available(iOS 11.3, *) {
-                logger.error("SecItemCopyMatching returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)")
+                logger.error("SecItemCopyMatching returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                             accessLevel: .public)
             }
             return nil
         }
@@ -154,7 +156,8 @@ public class UBKeychain: UBKeychainProtocol {
         let status = SecItemDelete(query as CFDictionary)
         if !(status == errSecSuccess || status == errSecItemNotFound) {
             if #available(iOS 11.3, *) {
-                logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)")
+                logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                             accessLevel: .public)
             }
         }
         return status == errSecSuccess || status == errSecItemNotFound
@@ -180,7 +183,8 @@ public class UBKeychain: UBKeychainProtocol {
 
             if !(status == errSecSuccess || status == errSecItemNotFound) {
                 if #available(iOS 11.3, *) {
-                    logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)")
+                    logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                                 accessLevel: .public)
                 }
             }
             
