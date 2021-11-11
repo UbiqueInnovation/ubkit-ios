@@ -96,7 +96,10 @@ public class UBKeychain: UBKeychainProtocol {
         let status = SecItemAdd(query as CFDictionary, nil)
 
         if status != errSecSuccess {
-            logger.error("SecItemDelete returned status:\(status)")
+            if #available(iOS 11.3, *) {
+                logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                             accessLevel: .public)
+            }
         }
 
         return status == errSecSuccess
@@ -132,7 +135,10 @@ public class UBKeychain: UBKeychainProtocol {
         if status == errSecSuccess {
             return result as? Data
         } else {
-            logger.error("SecItemCopyMatching returned status:\(status)")
+            if #available(iOS 11.3, *) {
+                logger.error("SecItemCopyMatching returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                             accessLevel: .public)
+            }
             return nil
         }
     }
@@ -144,12 +150,15 @@ public class UBKeychain: UBKeychainProtocol {
     public func delete(_ key: String) -> Bool {
         let query = [
             kSecAttrAccount as String: key,
-            kSecMatchLimit as String: kSecMatchLimitOne
+            kSecClass as String: kSecClassGenericPassword,
         ] as [String: Any]
 
         let status = SecItemDelete(query as CFDictionary)
         if !(status == errSecSuccess || status == errSecItemNotFound) {
-            logger.error("SecItemDelete returned status:\(status)")
+            if #available(iOS 11.3, *) {
+                logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                             accessLevel: .public)
+            }
         }
         return status == errSecSuccess || status == errSecItemNotFound
     }
@@ -173,7 +182,10 @@ public class UBKeychain: UBKeychainProtocol {
             let status = SecItemDelete(query as CFDictionary)
 
             if !(status == errSecSuccess || status == errSecItemNotFound) {
-                logger.error("SecItemDelete returned status:\(status)")
+                if #available(iOS 11.3, *) {
+                    logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                                 accessLevel: .public)
+                }
             }
             
             return status == errSecSuccess || status == errSecItemNotFound

@@ -48,7 +48,8 @@ public class UBURLSession: UBDataTaskURLSession {
 
         // Check if we have a caching logic otherwise return a task
         // Only if not a refresh task
-        guard !owner.refresh, let cacheResult = sessionDelegate.cachingLogic?.cachedResponse(urlSession, request: request.getRequest(), dataTask: owner) else {
+        guard owner.flags.contains(.ignoreCache) == false,
+              let cacheResult = sessionDelegate.cachingLogic?.cachedResponse(urlSession, request: request.getRequest(), dataTask: owner) else {
             return createTask(request.getRequest())
         }
 
@@ -86,7 +87,7 @@ public class UBURLSession: UBDataTaskURLSession {
              (.returnCacheDataDontLoad, .miss):
             sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
             owner.completionHandlersDispatchQueue.sync {
-                owner.dataTaskCompleted(data: nil, response: nil, error: UBNetworkingError.noCachedData, info: nil)
+                owner.dataTaskCompleted(data: nil, response: nil, error: UBInternalNetworkingError.noCachedData, info: nil)
             }
             return nil
 

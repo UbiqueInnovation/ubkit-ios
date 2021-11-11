@@ -1,4 +1,7 @@
-# This file contains the fastlane.tools configuration
+import_from_git(url: "git@bitbucket.org:ubique-innovation/fastlane-ios.git", branch: "master")
+
+# Xcode Version to use for builds
+ENV["XCVERSION"] = "~> 12"
 
 desc "Setup the project."
 lane :setup do
@@ -10,25 +13,30 @@ end
 
 desc "Opens the documentation."
 lane :documentation do
-    jazzy
+    Dir.chdir("..") do
+        # Run jazzy for each module separately 
+        sh "jazzy --module UBFoundation --output ./Documentation/UBFoundation/"
+        sh "jazzy --module UBLocation --output ./Documentation/UBLocation/"
+        sh "jazzy --module UBPush --output ./Documentation/UBPush/"
+        sh "jazzy --module UBUserInterface --output ./Documentation/UBUserInterface/"
+    end
 end
 
 desc "Run the unit tests."
 lane :tests do
-    # Run tests tvOS
-    run_tests(
-        scheme: "UBFoundation tvOS",
-        code_coverage: false,
-        output_types: "junit",
-        output_files: "report-tvos.junit"
+    # Use xcodebuild directly as Fastlane's scan does not yet support pure SPM projects 
+    # See https://github.com/fastlane/fastlane/discussions/17362
+
+    xcodebuild(
+        scheme: "UBKit-Package",
+        xcargs: "-sdk iphoneos -destination 'platform=iOS Simulator,name=iPhone SE (2nd generation)' -resultBundlePath ./build/testresults.xcresult test",
+        buildlog_path: "./build/"
     )
-    # Run tests iOS
-    run_tests(
-        scheme: "UBFoundation iOS",
-        code_coverage: false,
-        output_types: "junit",
-        output_files: "report-ios.junit"
-    )
+
+    trainer(
+        output_directory: "./build/",
+        path: "./build/",
+        fail_build: false)
 end
 
 desc "Deploy the framework."

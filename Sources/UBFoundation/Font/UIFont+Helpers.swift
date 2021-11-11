@@ -5,6 +5,8 @@
 //  Created by Marco Zimmermann on 23.09.19.
 //
 
+
+#if os(iOS) || os(tvOS)
 import UIKit
 
 // MARK: - UIFont Helpers
@@ -15,3 +17,4 @@ extension UIFont {
         return ascender - descender
     }
 }
+#endif

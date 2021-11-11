@@ -1,38 +1,43 @@
 pipeline {
 	agent none
 	stages {
-		stage("Install dependencies") {
-			when { anyOf { branch 'master'; branch 'develop' } }
-			agent {
-				label"ios"
-			}
-			steps {
-				sh "gem install jazzy"
-			}
-		}
-		stage("Create Documentation") {
-			when { anyOf { branch 'master'; branch 'develop' } }
-			agent {
-				label"ios"
-			}
-			steps {
-				sh "fastlane documentation"
-				sshagent(credentials: ['ub_docs']) {
-					sh "ssh -o StrictHostKeyChecking=no core@192.168.178.46 'rm -fr /data/html/doc.ubique.ch/ubfoundation/${env.BRANCH_NAME}'"
-					sh "scp -o StrictHostKeyChecking=no -r ./Documentation/html core@192.168.178.46:/data/html/doc.ubique.ch/ubfoundation/${env.BRANCH_NAME}"
+		stage("Build") {
+			parallel {
+				stage("Codequality") {
+					agent {
+						label "ios"
+					}
+					environment {
+						FL_SONAR_LOGIN = credentials("sonarcloudlogin")
+						FL_SONAR_RUNNER_PROJECT_KEY = "ubique-innovation_ubfoundation-swift"
+						FL_SONAR_RUNNER_PROJECT_NAME = "UBFoundation-Swift"
+					}
+					steps {
+						fastlane lane:"codequality"
+					}
 				}
-			}
-		}
-		stage("Run Tests") {
-			agent {
-				label "ios"
-			}
-			steps {
-				sh "fastlane tests"
-			}
-			post {
-				always {
-					junit "fastlane/test_output/*.junit"
+				stage("Documentation") {
+					/*when { anyOf { branch 'master'; branch 'develop' } }*/
+					agent {
+						label"ios"
+					}
+					steps {
+						sh "gem install jazzy"
+						fastlane lane:"documentation"
+					}
+				}
+				stage("Tests") {
+					agent {
+						label "ios"
+					}
+					steps {
+						fastlane lane:"tests"
+					}
+					post {
+						always {
+							junit skipPublishingChecks: true, testResults: "build/testresults.xml"
+						}
+					}
 				}
 			}
 		}

@@ -31,7 +31,7 @@ class DataTaskSessionMock: UBDataTaskURLSession {
             }
             var error = baseError
             if error == nil, (response is HTTPURLResponse) == false {
-                error = UBNetworkingError.notHTTPResponse
+                error = UBNetworkingError.internal(.notHTTPResponse)
             }
             if let r = response as? HTTPURLResponse {
                 do {

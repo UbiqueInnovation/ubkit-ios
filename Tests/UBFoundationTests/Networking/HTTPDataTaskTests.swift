@@ -151,7 +151,7 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
             case let .failure(error):
-                if let recovery = error as? RecoverableError {
+                if case let UBNetworkingError.internal(.recoverableError(recovery)) = error {
                     XCTAssertFalse(recovery.recoveryOptions.isEmpty)
                     recovery.attemptRecovery(optionIndex: 0, resultHandler: { success in
                         XCTAssertTrue(success)
@@ -315,12 +315,12 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addResponseValidator { _ in
-            throw UBNetworkingError.responseMIMETypeValidationFailed
+            throw UBNetworkingError.internal(.responseMIMETypeValidationFailed)
         }
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
             case let .failure(error):
-                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseMIMETypeValidationFailed)
+                XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
             case .success:
                 XCTFail("Should have returned success with empty")
             }
@@ -346,7 +346,7 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
             case let .failure(error):
-                XCTAssertEqual(error as? UBNetworkingError, UBNetworkingError.responseMIMETypeValidationFailed)
+                XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
             case .success:
                 XCTFail("Should have returned success with empty")
             }

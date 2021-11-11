@@ -10,7 +10,7 @@ import XCTest
 
 class LocalizationTests: XCTestCase {
     lazy var testBundle: Bundle = {
-        guard let testBundlePath = Bundle(for: LocalizationTests.self).path(forResource: "LocalizationTestBundle", ofType: nil),
+        guard let testBundlePath = Bundle.module.path(forResource: "TestResources/LocalizationTestBundle", ofType: nil),
             let testBundle = Bundle(path: testBundlePath) else {
             fatalError("No test bundle found")
         }

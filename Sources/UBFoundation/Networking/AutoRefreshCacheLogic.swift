@@ -26,7 +26,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         }
         // Schedule a new job
         let job = UBCronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
-            task?.start(refresh: true)
+            task?.start(flags: [.systemTriggered, .ignoreCache])
         }
         refreshJobs.setObject(job, forKey: task)
     }
@@ -36,18 +36,18 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     /// - Parameter allHeaderFields: The header fiealds.
     /// - Returns: The next refresh date. `nil` if no next refresh date is available
     open func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
-        guard let responseDateHeader = allHeaderFields[dateHeaderFieldName] as? String, let responseDate = dateFormatter.date(from: responseDateHeader) else {
+        guard let responseDateHeader = allHeaderFields.getCaseInsensitiveValue(key: dateHeaderFieldName) as? String, let responseDate = dateFormatter.date(from: responseDateHeader) else {
             // If we cannot find a date in the response header then we cannot comput the next refresh date
             return nil
         }
-        guard let nextRefreshDateHeader = allHeaderFields[nextRefreshHeaderFieldName] as? String, let nextRefreshDate = dateFormatter.date(from: nextRefreshDateHeader) else {
+        guard let nextRefreshDateHeader = allHeaderFields.getCaseInsensitiveValue(key: nextRefreshHeaderFieldName) as? String, let nextRefreshDate = dateFormatter.date(from: nextRefreshDateHeader) else {
             // If we cannot find the next refresh header then we return nil
             return nil
         }
 
         // This is the date that we are not allowed to make requests before.
         let backoffInterval: TimeInterval
-        if let backoffHeader = allHeaderFields[backoffIntervalHeaderFieldName] as? String, let interval = TimeInterval(backoffHeader) {
+        if let backoffHeader = allHeaderFields.getCaseInsensitiveValue(key: backoffIntervalHeaderFieldName) as? String, let interval = TimeInterval(backoffHeader) {
             backoffInterval = interval
         } else {
             backoffInterval = 60
@@ -66,9 +66,9 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     }
 
     /// :nodoc:
-    override open func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> CachedURLResponse? {
+    override open func proposeCachedResponse(for session: URLSession, dataTask: URLSessionDataTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?, error: Error?) -> CachedURLResponse? {
         // Get the super cached response
-        let cachedURLResponse = super.proposeCachedResponse(for: session, dataTask: dataTask, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics)
+        let cachedURLResponse = super.proposeCachedResponse(for: session, dataTask: dataTask, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics, error: error)
 
         // Return the super proposed cache
         return cachedURLResponse

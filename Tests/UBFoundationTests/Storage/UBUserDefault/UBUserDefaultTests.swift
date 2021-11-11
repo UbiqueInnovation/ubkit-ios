@@ -12,11 +12,24 @@ class UBUserDefaultTests: XCTestCase {
     @UBUserDefault(key: "testString", defaultValue: "Ubique")
     var testString: String
 
-    @UBUserDefault(key: "testUser", defaultValue: User(name: "HANS MEIER", birthdate: Date.testDate))
+    @UBUserDefault(key: "testUser", defaultValue: .hansMeier)
     var testUser: User
+
+    @UBUserDefault(key: "testOptionalString", defaultValue: nil)
+    var testOptionalString: String?
+
+    @UBUserDefault(key: "testOptionalUser", defaultValue: nil)
+    var testOptionalUser: User?
 
     @UBUserDefault(key: "testColor", defaultValue: .blue)
     var testColor: Color
+
+    @UBUserDefault(key: "testUsers", defaultValue: [])
+    var testUsers: [User]
+
+    @UBUserDefault(key: "testUserDictionary", defaultValue: [:])
+    var testUserDictionary: [String: User]
+
 
     func testDefaultValue() {
         let userDefaults = UserDefaults.makeTestInstance()
@@ -64,17 +77,14 @@ class UBUserDefaultTests: XCTestCase {
         let userDefaults = UserDefaults.makeTestInstance()
         _testUser.userDefaults = userDefaults
 
-        let insertedUser = User(name: "Hans Meier", birthdate: Date())
-
-        testUser = insertedUser
+        testUser = User.hansMeierReloaded
 
         guard let data = userDefaults.object(forKey: "testUser") as? Data else {
             XCTFail()
             return
         }
         let retrievedUser = try? JSONDecoder().decode(User.self, from: data)
-
-        XCTAssertEqual(retrievedUser, insertedUser)
+        XCTAssertEqual(retrievedUser, User.hansMeierReloaded)
     }
 
     func testDefaultValueRawRepresentable() {
@@ -107,11 +117,111 @@ class UBUserDefaultTests: XCTestCase {
         XCTAssertEqual(Color(rawValue: value), .green)
     }
 
+    func testNilDefaultValue() {
+        let userDefaults = UserDefaults.makeTestInstance()
+        _testOptionalUser.userDefaults = userDefaults
+
+        XCTAssertEqual(testOptionalUser, nil)
+    }
+
+    func testGetOptional() {
+        let userDefaults = UserDefaults.makeTestInstance()
+        _testOptionalUser.userDefaults = userDefaults
+
+        let data = try? JSONEncoder().encode(User.hansMeierReloaded)
+        userDefaults.set(data, forKey: "testOptionalUser")
+        XCTAssertEqual(testOptionalUser, User.hansMeierReloaded)
+    }
+
+    func testSetOptionalToValue() {
+        let userDefaults = UserDefaults.makeTestInstance()
+        _testOptionalUser.userDefaults = userDefaults
+
+        testOptionalUser = User.hansMeierReloaded
+
+        guard let data = userDefaults.object(forKey: "testOptionalUser") as? Data else {
+            XCTFail()
+            return
+        }
+        let retrievedUser = try? JSONDecoder().decode(User.self, from: data)
+        XCTAssertEqual(retrievedUser, User.hansMeierReloaded)
+    }
+
+    func testSetOptionalToNil() {
+        let userDefaults = UserDefaults.makeTestInstance()
+        _testOptionalString.userDefaults = userDefaults
+
+        testOptionalString = "Non-nil value"
+        XCTAssertEqual(userDefaults.string(forKey: "testOptionalString"), "Non-nil value")
+
+        testOptionalString = nil
+        XCTAssertEqual(userDefaults.string(forKey: "testOptionalString"), nil)
+    }
+
+    func testSetCodableArray() {
+        let userDefaults = UserDefaults.makeTestInstance()
+        _testUsers.userDefaults = userDefaults
+
+        let insertedUsers = [
+            User(name: "VRENI MÜLLER", birthdate: Date.testDate),
+            User(name: "HANS MEIER", birthdate: Date.testDate)
+        ]
+
+        testUsers = insertedUsers
+
+        guard let datas = userDefaults.object(forKey: "testUsers") as? [Data] else { XCTFail()
+            return
+        }
+
+        let retrievedUsers = datas.compactMap { try? JSONDecoder().decode(User.self, from: $0) }
+        XCTAssertEqual(retrievedUsers, insertedUsers)
+    }
+
+    func testGetCodableDictionary() {
+        let userDefaults = UserDefaults.makeTestInstance()
+        _testUserDictionary.userDefaults = userDefaults
+
+        let insertedUsers = [
+            "first": User(name: "VRENI MÜLLER", birthdate: Date.testDate),
+            "second": User(name: "HANS MEIER", birthdate: Date.testDate)
+        ]
+
+        let data = insertedUsers.compactMapValues( { try? JSONEncoder().encode($0) })
+
+        userDefaults.set(data, forKey: "testUserDictionary")
+
+        testUserDictionary = insertedUsers
+
+        XCTAssertEqual(testUserDictionary, insertedUsers)
+    }
+
+    func testSetCodableDictionary() {
+        let userDefaults = UserDefaults.makeTestInstance()
+        _testUserDictionary.userDefaults = userDefaults
+
+        let insertedUsers = [
+            "first": User(name: "VRENI MÜLLER", birthdate: Date.testDate),
+            "second": User(name: "HANS MEIER", birthdate: Date.testDate)
+        ]
+
+        testUserDictionary = insertedUsers
+
+        guard let datas = userDefaults.object(forKey: "testUserDictionary") as? [String: Data] else { XCTFail()
+            return
+        }
+
+        let retrievedUsers = datas.compactMapValues { try? JSONDecoder().decode(User.self, from: $0) }
+        XCTAssertEqual(retrievedUsers, insertedUsers)
+    }
+
     // MARK: - Helper types
 
     struct User: UBCodable, Equatable {
         var name: String
         var birthdate: Date
+
+        static var hansMeier = User(name: "HANS MEIER", birthdate: Date.testDate)
+        static var hansMeierReloaded = User(name: "HANS MEIER", birthdate: Date())
     }
 
     enum Color: String, UBRawRepresentable {
