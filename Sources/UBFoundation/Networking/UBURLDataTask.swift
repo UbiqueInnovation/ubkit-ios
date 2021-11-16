@@ -323,15 +323,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: - Request Interceptor
 
     /// The request interceptor
-    private var requestInterceptor: UBURLRequestInterceptor?
-    /// Sets the request interceptor
-    ///
-    /// This modifier will be called everytime before the request is sent, if it returns a result the request will be skipped and the result will be forewarded to the completion block.
-    ///
-    /// - Parameter interceptor: The request interceptor to use
-    public func setRequestInterceptor(_ interceptor: UBURLRequestInterceptor?) {
-        requestInterceptor = interceptor
-    }
+    /// This will be called everytime before the request is sent, if it returns a result the request will be skipped and the result will be forewarded to the completion block.
+    public var requestInterceptor: UBURLRequestInterceptor?
 
     // MARK: - State
 
