@@ -67,16 +67,16 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// The callback queue where all callbacks take place
     private(set) var callbackQueue: OperationQueue
 
-    private lazy var syncTasksCallbackQueue: OperationQueue = {
+    private static var syncTasksCallbackQueue: OperationQueue = {
         let q = OperationQueue()
         q.name = "UBURLDataTask Sync Callback Queue"
-        q.qualityOfService = .userInitiated
+        q.qualityOfService = .userInteractive
         return q
     }()
 
     private func getCallbackQueue() -> OperationQueue {
         if flags.contains(.synchronous) {
-            return self.syncTasksCallbackQueue
+            return Self.syncTasksCallbackQueue
         }
         else {
             return callbackQueue
@@ -422,12 +422,15 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// :nodoc:
     private func notifyStateTransition(old: State, new: State) {
-        getCallbackQueue().addOperation { [weak self] in
-            guard let self = self else {
-                return
+        self.stateTransitionObservers.forEach { observer in
+            getCallbackQueue().addOperation { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                observer(old, new, self)
             }
-            self.stateTransitionObservers.forEach { $0(old, new, self) }
         }
+
     }
 
     /// Add an observer that gets called when the state changes. This observer will be called on the specified callback thread.
@@ -458,11 +461,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// :nodoc:
     private func notifyProgress(_ progress: Double) {
-        getCallbackQueue().addOperation { [weak self] in
-            guard let self = self else {
-                return
+        self.progressObservers.forEach { observer in
+            getCallbackQueue().addOperation { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                observer(self, progress)
             }
-            self.progressObservers.forEach { $0(self, progress) }
         }
     }
 
