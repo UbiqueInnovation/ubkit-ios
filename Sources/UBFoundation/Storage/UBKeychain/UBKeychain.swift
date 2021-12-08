@@ -16,14 +16,21 @@ public class UBKeychain: UBKeychainProtocol {
 
     private let decoder: JSONDecoder
 
+    private let accessGroup: String?
+
     /// Initializer
     /// - Parameters:
+    ///   - accessGroup: the sec keychain accessgroup to query in
+    ///   https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps
+    ///   Starting with iOS 8 appgroups can be used as accessGroups
     ///   - encoder: a optional custom encoder
     ///   - decoder: a optional custom decoder
-    public init(encoder: JSONEncoder = JSONEncoder(),
+    public init(accessGroup: String? = nil,
+                encoder: JSONEncoder = JSONEncoder(),
                 decoder: JSONDecoder = JSONDecoder()) {
         self.encoder = encoder
         self.decoder = decoder
+        self.accessGroup = accessGroup
     }
 
     public var identifier: String = "iOS Keychain"
@@ -177,6 +184,11 @@ public class UBKeychain: UBKeychainProtocol {
         if let accessibility = accessibility {
             query[kSecAttrAccessible as String] = accessibility.rawValue
         }
+
+        if let accessGroup = accessGroup {
+            query[kSecAttrAccessGroup as String] = accessGroup
+        }
+
         return query
     }
 
@@ -196,7 +208,12 @@ public class UBKeychain: UBKeychainProtocol {
             kSecClassIdentity
         ]
         let status: [OSStatus] = secClasses.compactMap { secClass in
-            let query: NSDictionary = [kSecClass as String: secClass]
+            var query: NSDictionary = [kSecClass as String: secClass]
+
+            if let accessGroup = accessGroup {
+                query[kSecAttrAccessGroup as String] = accessGroup
+            }
+            
             let status = SecItemDelete(query as CFDictionary)
 
             if !(status == errSecSuccess || status == errSecItemNotFound) {
