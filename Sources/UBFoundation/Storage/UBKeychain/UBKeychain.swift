@@ -49,6 +49,12 @@ public class UBKeychain: UBKeychainProtocol {
                 let object = try decoder.decode(T.self, from: item)
                 return .success(object)
             } catch {
+                // fallback for old installations since strings used to be stored utf8 encoded
+                // on next write the value will be written JSON encoded
+                if let stringOpt = String(data: item, encoding: .utf8),
+                    let string = stringOpt as? T {
+                    return .success(string)
+                }
                 return .failure(.decodingError(error))
             }
         default:
