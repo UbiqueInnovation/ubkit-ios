@@ -208,7 +208,7 @@ public class UBKeychain: UBKeychainProtocol {
             kSecClassIdentity
         ]
         let status: [OSStatus] = secClasses.compactMap { secClass in
-            var query: NSDictionary = [kSecClass as String: secClass]
+            let query: NSMutableDictionary = [kSecClass as String: secClass]
 
             if let accessGroup = accessGroup {
                 query[kSecAttrAccessGroup as String] = accessGroup
