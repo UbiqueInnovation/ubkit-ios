@@ -7,160 +7,171 @@
 
 import Foundation
 
-/// Keychain protocol to make unit testing possible
-public protocol UBKeychainProtocol {
-    /// Sets a string item in the Keychain.
-    ///
-    /// - Parameters:
-    ///     - value: The value to be set
-    ///     - key: The key referring to the value
-    ///     - accessibility: Determines where the value can be accessed
-    /// - Returns: Whether setting the value succeded
-    @discardableResult
-    func set(_ value: String, key: String, accessibility: UBKeychainAccessibility) -> Bool
+/// Convenience wrapper for Keychain
+public class UBKeychain: UBKeychainProtocol {
 
-    /// Sets a data item in the Keychain.
-    ///
-    /// - Parameters:
-    ///     - value: The value to be set
-    ///     - key: The key referring to the value
-    ///     - accessibility: Determines where the value can be accessed
-    /// - Returns: Whether setting the value succeded
-    @discardableResult
-    func set(_ value: Data, key: String, accessibility: UBKeychainAccessibility) -> Bool
+    private let logger = UBLogging.frameworkLoggerFactory(category: "UBKeychain")
 
-    /// Retrieves an item from the Keychain
-    ///
+    private let encoder: JSONEncoder
+
+    private let decoder: JSONDecoder
+
+    /// Initializer
     /// - Parameters:
-    ///     - key: The key referring to the value
-    /// - Returns: The value, if it exists
-    func get(_ key: String) -> String?
+    ///   - encoder: a optional custom encoder
+    ///   - decoder: a optional custom decoder
+    public init(encoder: JSONEncoder = JSONEncoder(),
+                decoder: JSONDecoder = JSONDecoder()) {
+        self.encoder = encoder
+        self.decoder = decoder
+    }
+
+    public var identifier: String = "iOS Keychain"
+    /// Get a object from the keychain
+    /// - Parameter key: a key object with the type
+    /// - Returns: a result which either contain the error or the object
+    public func get<T: Codable>(for key: UBKeychainKey<T>) -> Result<T, UBKeychainError> {
+        var query = self.query(for: key.key)
+        query[kSecReturnData as String] = kCFBooleanTrue
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+
+        var item: CFTypeRef?
+        let status: OSStatus = SecItemCopyMatching(query as CFDictionary, &item)
+
+        switch status {
+        case errSecItemNotFound:
+            return .failure(.notFound)
+        case noErr:
+            guard let item = item as? Data else {
+                fatalError("Keychain not returning Data")
+            }
+            do {
+                let object = try JSONDecoder().decode(T.self, from: item)
+                return .success(object)
+            } catch {
+                return .failure(.decodingError(error))
+            }
+        default:
+            if #available(iOS 11.3, *) {
+                logger.error("SecItemCopyMatching returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                             accessLevel: .public)
+            }
+            return .failure(.cannotAccess(status))
+        }
+    }
+
 
     /// Retrieves data item from the Keychain
     ///
     /// - Parameters:
     ///     - key: The key referring to the value
-    /// - Returns: The value, if it exists
-    func getData(_ key: String) -> Data?
+    /// - Returns: a result which either contain the error or the data
+    public func getData(_ key: String) -> Result<Data, UBKeychainError> {
+        var query = self.query(for: key)
+        query[kSecReturnData as String] = kCFBooleanTrue
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
 
-    /// Delete a specific item in the Keychain.
-    /// - Parameters:
-    ///     - key: The key referring to the value
-    /// - Returns: Whether deleting the value succeded
-    func delete(_ key: String) -> Bool
+        var item: CFTypeRef?
+        let status: OSStatus = SecItemCopyMatching(query as CFDictionary, &item)
 
-    /// Deletes all of the items in the keychain.
-    /// iOS sometimes fails to delete all the items as the app is uninstalled, which results
-    ///
-    /// The app may choose to delete all the items to prevent undesirable behaviour.
-    ///
-    /// - Returns: Whether deleting the value succeded
-    func deleteAllItems() -> Bool
-}
-
-/// Convenience wrapper for Keychain
-public class UBKeychain: UBKeychainProtocol {
-
-    public static var shared = UBKeychain()
-
-    private let logger = UBLogging.frameworkLoggerFactory(category: "UBKeychain")
-    
-    /// Sets an item in the Keychain.
-    ///
-    /// - Parameters:
-    ///     - value: The value to be set
-    ///     - key: The key referring to the value
-    ///     - accessibility: Determines where the value can be accessed
-    /// - Returns: Whether setting the value succeded
-    @discardableResult
-    public func set(_ value: String, key: String, accessibility: UBKeychainAccessibility) -> Bool {
-        guard let data = value.data(using: .utf8, allowLossyConversion: false) else {
-            return false
-        }
-        return set(data, key: key, accessibility: accessibility)
-    }
-
-    /// :nodoc:
-    @discardableResult
-    public func set(_ value: Data, key: String, accessibility: UBKeychainAccessibility) -> Bool {
-        let query = [
-            kSecAttrAccount as String: key,
-            kSecValueData as String: value,
-            kSecAttrAccessible as String: accessibility.rawValue,
-            // We use genericPassword instead of internet password because
-            // the value is not assiciated with a server
-            kSecClass as String: kSecClassGenericPassword
-        ] as [String: Any]
-
-        SecItemDelete(query as CFDictionary)
-        let status = SecItemAdd(query as CFDictionary, nil)
-
-        if status != errSecSuccess {
-            if #available(iOS 11.3, *) {
-                logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
-                             accessLevel: .public)
+        switch status {
+        case errSecItemNotFound:
+            return .failure(.notFound)
+        case noErr:
+            guard let item = item as? Data else {
+                fatalError("Keychain not returning Data")
             }
-        }
-
-        return status == errSecSuccess
-    }
-
-    /// Retrieves an item from the Keychain
-    ///
-    /// - Parameters:
-    ///     - key: The key referring to the value
-    /// - Returns: The value, if it exists
-    public func get(_ key: String) -> String? {
-        guard let data = getData(key) else {
-            return nil
-        }
-        guard let string = String(data: data, encoding: .utf8) else {
-            return nil
-        }
-        return string
-    }
-
-    /// :nodoc:
-    public func getData(_ key: String) -> Data? {
-        let query = [
-            kSecAttrAccount as String: key,
-            kSecClass as String: kSecClassGenericPassword,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ] as [String: Any]
-
-        var result: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &result)
-
-        if status == errSecSuccess {
-            return result as? Data
-        } else {
+            return .success(item)
+        default:
             if #available(iOS 11.3, *) {
                 logger.error("SecItemCopyMatching returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
                              accessLevel: .public)
             }
-            return nil
+            return .failure(.cannotAccess(status))
         }
     }
 
-    /// Delete a specific item in the Keychain.
+    /// Set a object to the keychain
     /// - Parameters:
-    ///     - key: The key referring to the value
-    /// - Returns: Whether deleting the value succeded
-    public func delete(_ key: String) -> Bool {
-        let query = [
-            kSecAttrAccount as String: key,
-            kSecClass as String: kSecClassGenericPassword,
-        ] as [String: Any]
+    ///   - object: the object to set
+    ///   - key: the keyobject to use
+    /// - Returns: a result which either is successful or contains the error
+    @discardableResult
+    public func set<T: Codable>(_ object: T, for key: UBKeychainKey<T>, accessibility: UBKeychainAccessibility) -> Result<Void, UBKeychainError> {
+        let data: Data
+        do {
+            data = try encoder.encode(object)
+        } catch {
+            return .failure(.encodingError(error))
+        }
+        var query = self.query(for: key.key, accessibility: accessibility)
+        query[kSecValueData as String] = data
 
-        let status = SecItemDelete(query as CFDictionary)
-        if !(status == errSecSuccess || status == errSecItemNotFound) {
+        var status: OSStatus = SecItemCopyMatching(query as CFDictionary, nil)
+
+        switch status {
+        case errSecSuccess:
+            // Item exists so we can update it
+            let attributes = [kSecValueData: data]
+            status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
+            if status != errSecSuccess {
+                if #available(iOS 11.3, *) {
+                    logger.error("SecItemUpdate returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                                 accessLevel: .public)
+                }
+                return .failure(.storingError(status))
+            } else {
+                return .success(())
+            }
+        case errSecItemNotFound:
+            // First time setting item
+            status = SecItemAdd(query as CFDictionary, nil)
+
+            if status != noErr {
+                if #available(iOS 11.3, *) {
+                    logger.error("SecItemAdd returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
+                                 accessLevel: .public)
+                }
+                return .failure(.storingError(status))
+            }
+            return .success(())
+        default:
+            return .failure(.storingError(status))
+        }
+    }
+
+    /// Deletes a object from the keychain
+    /// - Parameter key: the key to delete
+    /// - Returns: a result which either is successful or contains the error
+    @discardableResult
+    public func delete<T>(for key: UBKeychainKey<T>) -> Result<Void, UBKeychainError> {
+        let query = self.query(for: key.key)
+
+        let status: OSStatus = SecItemDelete(query as CFDictionary)
+        switch status {
+        case noErr, errSecItemNotFound:
+            return .success(())
+        default:
             if #available(iOS 11.3, *) {
                 logger.error("SecItemDelete returned status:\(status) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString)",
                              accessLevel: .public)
             }
+            return .failure(.cannotDelete(status))
         }
-        return status == errSecSuccess || status == errSecItemNotFound
+    }
+
+    /// helpermethod to construct the keychain query
+    /// - Parameter key: key to use
+    /// - Returns: the keychain query
+    private func query(for key: String, accessibility: UBKeychainAccessibility? = nil) -> [String: Any] {
+        var query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword as String,
+            kSecAttrAccount as String: key
+        ]
+        if let accessibility = accessibility {
+            query[kSecAttrAccessible as String] = accessibility.rawValue
+        }
+        return query
     }
 
     /// Deletes all of the items in the keychain.
@@ -169,7 +180,8 @@ public class UBKeychain: UBKeychainProtocol {
     /// The app may choose to delete all the items to prevent undesirable behaviour.
     ///
     /// - Returns: Whether deleting the value succeded
-    public func deleteAllItems() -> Bool {
+    @discardableResult
+    public func deleteAllItems()  -> Result<Void, UBKeychainError>  {
         let secClasses = [
             kSecClassGenericPassword,
             kSecClassInternetPassword,
@@ -177,7 +189,7 @@ public class UBKeychain: UBKeychainProtocol {
             kSecClassKey,
             kSecClassIdentity
         ]
-        return secClasses.allSatisfy { secClass in
+        let status: [OSStatus] = secClasses.compactMap { secClass in
             let query: NSDictionary = [kSecClass as String: secClass]
             let status = SecItemDelete(query as CFDictionary)
 
@@ -187,8 +199,17 @@ public class UBKeychain: UBKeychainProtocol {
                                  accessLevel: .public)
                 }
             }
-            
-            return status == errSecSuccess || status == errSecItemNotFound
+
+            if status == errSecSuccess || status == errSecItemNotFound {
+                return nil
+            } else {
+                return status
+            }
+        }
+        if let firstErrror = status.min() {
+            return .failure(.cannotDelete(firstErrror))
+        } else {
+            return .success(())
         }
     }
 }
