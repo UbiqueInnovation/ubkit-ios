@@ -43,11 +43,12 @@ public struct UBKeychainStored<Value: Codable> {
             case let .success(value):
                 return value
             case .failure:
-                // fallback for old installations since strings used to be stored utf8 endoced
+                // fallback for old installations since strings used to be stored utf8 encoded
                 // on next write the value will be written JSON encoded
                 switch keychain.getData(key.key) {
                 case let .success(data):
-                    if let string = String(data: data, encoding: .utf8), string is Value {
+                    if let string = String(data: data, encoding: .utf8),
+                        string is Value {
                         return string as! Value
                     }
                 default:

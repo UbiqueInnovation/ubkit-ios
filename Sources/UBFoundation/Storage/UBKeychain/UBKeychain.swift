@@ -46,7 +46,7 @@ public class UBKeychain: UBKeychainProtocol {
                 fatalError("Keychain not returning Data")
             }
             do {
-                let object = try JSONDecoder().decode(T.self, from: item)
+                let object = try decoder.decode(T.self, from: item)
                 return .success(object)
             } catch {
                 return .failure(.decodingError(error))
