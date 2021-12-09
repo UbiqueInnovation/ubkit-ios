@@ -16,27 +16,12 @@ pipeline {
 						fastlane lane:"codequality"
 					}
 				}
-				stage("Documentation") {
-					/*when { anyOf { branch 'master'; branch 'develop' } }*/
-					agent {
-						label"ios"
-					}
-					steps {
-						sh "gem install jazzy"
-						fastlane lane:"documentation"
-					}
-				}
 				stage("Tests") {
 					agent {
 						label "ios"
 					}
 					steps {
 						fastlane lane:"tests"
-					}
-					post {
-						always {
-							junit skipPublishingChecks: true, testResults: "build/testresults.xml"
-						}
 					}
 				}
 			}
