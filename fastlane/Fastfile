@@ -1,17 +1,29 @@
-import_from_git(url: "git@bitbucket.org:ubique-innovation/fastlane-ios.git", branch: "master")
+default_platform(:ios)
 
-# Xcode Version to use for builds
-ENV["XCVERSION"] = "13.1"
-
-desc "Run the unit tests."
-lane :tests do
-    scan(
+platform :ios do
+  desc "Run the unit tests."
+  lane :tests do
+    begin
+      scan(
         package_path: ".",
         scheme: "UBKit-Package",
         destination: "platform=iOS Simulator,name=iPhone 13 Pro",
         result_bundle: true,
-        output_types: "junit,html",
         output_directory: "./build/"
       )
-end
+    rescue => ex
+      # Do not fail directly but mark it for later
+      ENV["BUILD_RESULT"] = "FAILURE"
+    end
+    
 
+    trainer(
+        output_directory: "./build/",
+        path: "./build/",
+        fail_build: false)
+    
+    if ENV["BUILD_RESULT"] == "FAILURE"
+      UI.crash!("Build or tests failed during xcodebuild step")
+    end
+  end
+end
