@@ -21,6 +21,8 @@ public enum UBKeychainError: Error {
     case cannotAccess(_ status: OSStatus)
     /// a deletion error happend
     case cannotDelete(_ status: OSStatus)
+    /// This error should never happen
+    case keychainNotReturningData
 
     var localizedDescription: String {
         switch self {
@@ -36,6 +38,8 @@ public enum UBKeychainError: Error {
             return "cannotAccess OSStatus: \(status)"
         case let .cannotDelete(status):
             return "cannotDelete OSStatus: \(status)"
+        case .keychainNotReturningData:
+            return "not returning data"
         }
     }
 }

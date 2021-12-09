@@ -50,7 +50,7 @@ public class UBKeychain: UBKeychainProtocol {
             return .failure(.notFound)
         case noErr:
             guard let item = item as? Data else {
-                fatalError("Keychain not returning Data")
+                return .failure(.keychainNotReturningData)
             }
             do {
                 let object = try decoder.decode(T.self, from: item)
@@ -92,7 +92,7 @@ public class UBKeychain: UBKeychainProtocol {
             return .failure(.notFound)
         case noErr:
             guard let item = item as? Data else {
-                fatalError("Keychain not returning Data")
+                return .failure(.keychainNotReturningData)
             }
             return .success(item)
         default:
