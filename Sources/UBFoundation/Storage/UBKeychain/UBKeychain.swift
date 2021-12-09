@@ -26,8 +26,8 @@ public class UBKeychain: UBKeychainProtocol {
     ///   - encoder: a optional custom encoder
     ///   - decoder: a optional custom decoder
     public init(accessGroup: String? = nil,
-                encoder: JSONEncoder = JSONEncoder(),
-                decoder: JSONDecoder = JSONDecoder()) {
+                encoder: JSONEncoder = UBJSONEncoder(),
+                decoder: JSONDecoder = UBJSONDecoder()) {
         self.encoder = encoder
         self.decoder = decoder
         self.accessGroup = accessGroup
