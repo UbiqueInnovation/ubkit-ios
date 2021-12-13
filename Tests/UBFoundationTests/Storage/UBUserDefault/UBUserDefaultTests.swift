@@ -30,7 +30,6 @@ class UBUserDefaultTests: XCTestCase {
     @UBUserDefault(key: "testUserDictionary", defaultValue: [:])
     var testUserDictionary: [String: User]
 
-
     func testDefaultValue() {
         let userDefaults = UserDefaults.makeTestInstance()
         _testString.userDefaults = userDefaults
@@ -164,7 +163,7 @@ class UBUserDefaultTests: XCTestCase {
 
         let insertedUsers = [
             User(name: "VRENI MÜLLER", birthdate: Date.testDate),
-            User(name: "HANS MEIER", birthdate: Date.testDate)
+            User(name: "HANS MEIER", birthdate: Date.testDate),
         ]
 
         testUsers = insertedUsers
@@ -183,10 +182,10 @@ class UBUserDefaultTests: XCTestCase {
 
         let insertedUsers = [
             "first": User(name: "VRENI MÜLLER", birthdate: Date.testDate),
-            "second": User(name: "HANS MEIER", birthdate: Date.testDate)
+            "second": User(name: "HANS MEIER", birthdate: Date.testDate),
         ]
 
-        let data = insertedUsers.compactMapValues( { try? JSONEncoder().encode($0) })
+        let data = insertedUsers.compactMapValues { try? JSONEncoder().encode($0) }
 
         userDefaults.set(data, forKey: "testUserDictionary")
 
@@ -201,7 +200,7 @@ class UBUserDefaultTests: XCTestCase {
 
         let insertedUsers = [
             "first": User(name: "VRENI MÜLLER", birthdate: Date.testDate),
-            "second": User(name: "HANS MEIER", birthdate: Date.testDate)
+            "second": User(name: "HANS MEIER", birthdate: Date.testDate),
         ]
 
         testUserDictionary = insertedUsers

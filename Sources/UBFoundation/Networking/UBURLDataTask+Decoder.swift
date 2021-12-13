@@ -30,7 +30,7 @@ open class UBURLDataTaskDecoder<T> {
     /// - Returns: The decoded object in case of success
     /// - Throws: If the decoding encountered an issue
     public final func decode(data: Data, response: HTTPURLResponse) throws -> T {
-        return try logic(data, response)
+        try logic(data, response)
     }
 }
 
@@ -40,7 +40,7 @@ public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String> {
     ///
     /// - Parameter encoding: The string encoding
     public init(encoding: String.Encoding = .utf8) {
-        super.init { (data, _) -> String in
+        super.init { data, _ -> String in
             guard let string = String(data: data, encoding: encoding) else {
                 throw UBInternalNetworkingError.couldNotDecodeBody
             }
@@ -67,7 +67,7 @@ public class UBHTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
     ///
     /// - Parameter decoder: A JSON decoder
     public init(decoder: JSONDecoder = JSONDecoder()) {
-        super.init { (data, _) -> T in
+        super.init { data, _ -> T in
             try decoder.decode(T.self, from: data)
         }
     }

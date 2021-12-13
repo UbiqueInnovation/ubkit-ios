@@ -1,6 +1,6 @@
 //
 //  UBCodedError.swift
-//  
+//
 //
 //  Created by Zeno Koller on 06.01.21.
 //

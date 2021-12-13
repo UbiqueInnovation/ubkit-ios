@@ -18,18 +18,19 @@ public protocol UBUserDefaultValue {
     func object() -> Any?
 }
 
-extension UBUserDefaultValue {
-    public init?(with object: Any) {
+public extension UBUserDefaultValue {
+    init?(with object: Any) {
         guard let value = object as? Self else { return nil }
         self = value
     }
-    public func object() -> Any? { self }
+
+    func object() -> Any? { self }
 }
 
 // MARK: - Plist-Compatible Values
 
 /// The types that can be stored in `UserDefaults` out of the box.
-protocol UBPListValue : UBUserDefaultValue {}
+protocol UBPListValue: UBUserDefaultValue {}
 
 extension Data: UBPListValue {}
 extension NSData: UBPListValue {}
@@ -123,7 +124,7 @@ extension Optional: UBUserDefaultValue where Wrapped: UBUserDefaultValue {
 
     public func object() -> Any? {
         switch self {
-        case .some(let value):
+        case let .some(value):
             return value.object()
         case .none:
             return nil

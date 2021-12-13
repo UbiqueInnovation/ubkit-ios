@@ -55,7 +55,7 @@ public class UBNetworkActivityTracker {
 
     /// The number of tracked tasks
     public var numberOfTrackedTasks: Int {
-        return trackedTasks.allObjects.count
+        trackedTasks.allObjects.count
     }
 
     // MARK: - Task addition and removal

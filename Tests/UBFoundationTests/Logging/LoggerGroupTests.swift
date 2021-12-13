@@ -16,7 +16,7 @@ class LoggerGroupTests: XCTestCase {
         let group = UBLoggerGroup(loggers: [
             l1,
             try! UBLogger(category: "T2", bundle: Bundle(for: LoggerGroupTests.self)),
-            try! UBLogger(category: "T3", bundle: Bundle(for: LoggerGroupTests.self))
+            try! UBLogger(category: "T3", bundle: Bundle(for: LoggerGroupTests.self)),
         ])
 
         XCTAssertEqual(group.loggers.count, 3)

@@ -43,14 +43,14 @@ public protocol UBLocationManagerProtocol {
 
 extension CLLocationManager: UBLocationManagerProtocol {
     public func authorizationStatus() -> CLAuthorizationStatus {
-        return CLLocationManager.authorizationStatus()
+        CLLocationManager.authorizationStatus()
     }
 
     public func locationServicesEnabled() -> Bool {
-        return CLLocationManager.locationServicesEnabled()
+        CLLocationManager.locationServicesEnabled()
     }
 
     public func significantLocationChangeMonitoringAvailable() -> Bool {
-        return CLLocationManager.significantLocationChangeMonitoringAvailable()
+        CLLocationManager.significantLocationChangeMonitoringAvailable()
     }
 }

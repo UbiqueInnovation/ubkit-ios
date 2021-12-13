@@ -17,7 +17,7 @@ public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
     /// The localization to use for the language list.
     public var localization: UBLocalization {
         get {
-            return serial.sync {
+            serial.sync {
                 _localization
             }
         }
@@ -33,7 +33,7 @@ public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
     /// If the region information (if present) should be appended to the language.
     public var includeRegion: Bool {
         get {
-            return serial.sync {
+            serial.sync {
                 _includeRegion
             }
         }
@@ -65,7 +65,7 @@ public class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
             return
         }
 
-        let languageCodes = languages.map { $0.identifier }
+        let languageCodes = languages.map(\.identifier)
         var components: [String] = []
         for (index, languageCode) in languageCodes.enumerated() {
             let q = 1.0 - (Double(index) * 0.1)

@@ -30,7 +30,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// The URL of the request.
     public var url: URL? {
         get {
-            return _request.url
+            _request.url
         }
         set {
             _request.url = newValue
@@ -40,7 +40,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// The main document URL associated with this request.
     public var mainDocumentURL: URL? {
         get {
-            return _request.mainDocumentURL
+            _request.mainDocumentURL
         }
         set {
             _request.mainDocumentURL = newValue
@@ -52,7 +52,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// If during a connection attempt the request remains idle for longer than the timeout interval, the request is considered to have timed out. The default timeout interval is 60 seconds.
     public var timeoutInterval: TimeInterval {
         get {
-            return _request.timeoutInterval
+            _request.timeoutInterval
         }
         set {
             _request.timeoutInterval = newValue
@@ -62,7 +62,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// A Boolean value indicating whether the request is allowed to use the built-in cellular radios to satisfy the request.
     public var allowsCellularAccess: Bool {
         get {
-            return _request.allowsCellularAccess
+            _request.allowsCellularAccess
         }
         set {
             _request.allowsCellularAccess = newValue
@@ -72,7 +72,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// The service type associated with this request.
     public var networkServiceType: URLRequest.NetworkServiceType {
         get {
-            return _request.networkServiceType
+            _request.networkServiceType
         }
         set {
             _request.networkServiceType = newValue
@@ -81,7 +81,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// A URLRequest representation of the UBURLRequest
     public func getRequest() -> URLRequest {
-        return _request
+        _request
     }
 
     // MARK: - Initializers
@@ -108,7 +108,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// The data sent as the message body of a request, such as for an HTTP POST request.
     public var httpBody: Data? {
-        return _request.httpBody
+        _request.httpBody
     }
 
     /// Clears the HTTP body
@@ -154,7 +154,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// A dictionary containing all the request’s HTTP header fields.
     public var allHTTPHeaderFields: [String: String]? {
-        return _request.allHTTPHeaderFields
+        _request.allHTTPHeaderFields
     }
 
     /// Sets a value for a header field.
@@ -181,7 +181,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// - Parameter field: The header field name to use for the lookup (case-insensitive).
     /// - Returns: The value associated with the header field field, or nil if there is no corresponding header field.
     public func value(forHTTPHeaderField field: String) -> String? {
-        return _request.value(forHTTPHeaderField: field)
+        _request.value(forHTTPHeaderField: field)
     }
 
     // MARK: - URL Parameter
@@ -238,7 +238,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// A textual description of the request.
     public var description: String {
-        return _request.description
+        _request.description
     }
 
     /// A textual description of the request suitable for debugging.
@@ -251,6 +251,6 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// A mirror that reflects the request.
     public var customMirror: Mirror {
-        return _request.customMirror
+        _request.customMirror
     }
 }

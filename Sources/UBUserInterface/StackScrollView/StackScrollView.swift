@@ -1,6 +1,6 @@
 //
 //  StackScrollView.swift
-//  
+//
 //
 //  Created by Matthias Felix on 14.07.21.
 //
@@ -9,14 +9,13 @@ import UIKit
 
 /// Wraps a UIStackView inside a UIScrollView and provides utility methods for adding and removing subviews
 public class StackScrollView: UIView {
-
     // MARK: - Subviews
 
     private let stackViewContainer = UIView()
     public let stackView = UIStackView()
     public let scrollView = UIScrollView()
 
-    private var addedViewControllers : [UIView : UIViewController] = [:]
+    private var addedViewControllers: [UIView: UIViewController] = [:]
 
     // MARK: - Initialization
 
@@ -39,7 +38,7 @@ public class StackScrollView: UIView {
             scrollView.topAnchor.constraint(equalTo: topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
 
         // Add stackViewContainer and stackView
@@ -50,7 +49,7 @@ public class StackScrollView: UIView {
             stackViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
             stackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             stackViewContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            stackViewContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
+            stackViewContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
         ])
 
         switch axis {
@@ -72,7 +71,7 @@ public class StackScrollView: UIView {
             stackView.topAnchor.constraint(equalTo: stackViewContainer.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: stackViewContainer.bottomAnchor),
             stackView.centerXAnchor.constraint(equalTo: stackViewContainer.centerXAnchor),
-            stackView.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor)
+            stackView.widthAnchor.constraint(equalTo: stackViewContainer.widthAnchor),
         ])
     }
 
@@ -110,7 +109,7 @@ public class StackScrollView: UIView {
                 view.topAnchor.constraint(equalTo: subView.topAnchor, constant: inset.top),
                 view.bottomAnchor.constraint(equalTo: subView.bottomAnchor, constant: -inset.bottom),
                 view.leadingAnchor.constraint(equalTo: subView.leadingAnchor, constant: inset.left),
-                view.trailingAnchor.constraint(equalTo: subView.trailingAnchor, constant: -inset.right)
+                view.trailingAnchor.constraint(equalTo: subView.trailingAnchor, constant: -inset.right),
             ])
         } else {
             subView = view
@@ -140,7 +139,7 @@ public class StackScrollView: UIView {
                 view.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor),
                 view.centerXAnchor.constraint(equalTo: wrapper.centerXAnchor),
                 view.leadingAnchor.constraint(greaterThanOrEqualTo: wrapper.leadingAnchor, constant: inset),
-                view.trailingAnchor.constraint(lessThanOrEqualTo: wrapper.trailingAnchor, constant: -inset)
+                view.trailingAnchor.constraint(lessThanOrEqualTo: wrapper.trailingAnchor, constant: -inset),
             ])
         case .horizontal:
             NSLayoutConstraint.activate([
@@ -148,7 +147,7 @@ public class StackScrollView: UIView {
                 view.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor),
                 view.centerYAnchor.constraint(equalTo: wrapper.centerYAnchor),
                 view.topAnchor.constraint(greaterThanOrEqualTo: wrapper.topAnchor, constant: inset),
-                view.bottomAnchor.constraint(lessThanOrEqualTo: wrapper.bottomAnchor, constant: -inset)
+                view.bottomAnchor.constraint(lessThanOrEqualTo: wrapper.bottomAnchor, constant: -inset),
             ])
         @unknown default:
             fatalError()
@@ -216,7 +215,7 @@ public class StackScrollView: UIView {
     }
 
     /// Scrolls the scrollview all the way to the top
-    public func scrollToTop(animated: Bool) {
+    public func scrollToTop(animated _: Bool) {
         var offset = CGPoint(x: -scrollView.contentInset.left, y: -scrollView.contentInset.top)
 
         if #available(iOS 11.0, *) {

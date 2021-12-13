@@ -41,20 +41,20 @@ public struct UBCacheResponseDirective: Hashable {
 
     /// :nodoc:
     public static func == (left: UBCacheResponseDirective, right: Command) -> Bool {
-        return left.command == right
+        left.command == right
     }
 
     /// :nodoc:
     public static func == (left: Command, right: UBCacheResponseDirective) -> Bool {
-        return right == left
+        right == left
     }
 }
 
-extension Array where Element == UBCacheResponseDirective {
+public extension Array where Element == UBCacheResponseDirective {
     /// Initializes and array of cache control commands from a cache control header string
     ///
     /// - Parameter cacheControlHeader: The cache control header string
-    public init?(cacheControlHeader: String) {
+    init?(cacheControlHeader: String) {
         let cacheControlRegex = try! NSRegularExpression(pattern: "([a-z-]+)(=([0-9]+))?", options: [NSRegularExpression.Options.caseInsensitive])
         let matches = cacheControlRegex.matches(in: cacheControlHeader, options: [], range: NSRange(cacheControlHeader.startIndex..., in: cacheControlHeader))
         var result: UBCacheResponseDirectives = []
@@ -75,14 +75,14 @@ extension Array where Element == UBCacheResponseDirective {
     }
 
     /// Checks is cacjing is allowed on the group of cache controle
-    public var cachingAllowed: Bool {
-        return !contains(where: {
+    var cachingAllowed: Bool {
+        !contains(where: {
             $0 == UBCacheResponseDirective.Command.noCache || $0 == UBCacheResponseDirective.Command.noStore
         })
     }
 
     /// Check if there is a max age on the cache control group
-    public var maxAge: Int? {
-        return first(where: { $0 == UBCacheResponseDirective.Command.maxAge || $0 == UBCacheResponseDirective.Command.sMaxAge })?.value
+    var maxAge: Int? {
+        first(where: { $0 == UBCacheResponseDirective.Command.maxAge || $0 == UBCacheResponseDirective.Command.sMaxAge })?.value
     }
 }

@@ -17,7 +17,7 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     private var _modifiers: [UBURLRequestModifier]
     /// The list of modifier in the group
     public var modifiers: [UBURLRequestModifier] {
-        return serialModifiers.sync {
+        serialModifiers.sync {
             _modifiers
         }
     }
@@ -100,7 +100,7 @@ extension UBURLRequestModifierGroup {
         /// :nodoc
         var cancelled: Bool {
             get {
-                return serial.sync {
+                serial.sync {
                     _cancelled
                 }
             }

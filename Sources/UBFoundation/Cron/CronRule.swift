@@ -29,12 +29,12 @@ public enum UBCronRepeatRule: Equatable {
 public struct UBFireAtDateRule: UBCronRule {
     /// :nodoc:
     public var repeatRule: UBCronRepeatRule {
-        return .never
+        .never
     }
 
     /// :nodoc:
     public var deadlineFromNow: DispatchTimeInterval {
-        return date.timeIntervalSinceNow.dispatchTimeInterval
+        date.timeIntervalSinceNow.dispatchTimeInterval
     }
 
     /// :nodoc:
@@ -70,7 +70,7 @@ public struct UBFireAtIntervalRule: UBCronRule {
 
     /// :nodoc:
     public var deadlineFromNow: DispatchTimeInterval {
-        return interval.dispatchTimeInterval
+        interval.dispatchTimeInterval
     }
 
     /// :nodoc:
@@ -106,6 +106,6 @@ public struct UBFireAtIntervalRule: UBCronRule {
 private extension TimeInterval {
     /// :nodoc:
     var dispatchTimeInterval: DispatchTimeInterval {
-        return DispatchTimeInterval.milliseconds(Int(self * 1000))
+        DispatchTimeInterval.milliseconds(Int(self * 1000))
     }
 }

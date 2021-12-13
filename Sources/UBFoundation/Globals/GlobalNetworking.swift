@@ -21,7 +21,7 @@ public enum Networking {
 
     /// The global network activity state
     public static var globalNetworkActivityState: UBNetworkActivityTracker.NetworkActivityState {
-        return global.networkActivityState
+        global.networkActivityState
     }
 
     /// Add an observer for the state of the global network activity
@@ -74,6 +74,6 @@ public enum Networking {
 
     /// The number of data tasks alive
     public static var numberOfDataTasks: Int {
-        return global.numberOfTrackedTasks
+        global.numberOfTrackedTasks
     }
 }

@@ -60,11 +60,10 @@ public protocol UBKeychainProtocol {
 
 /// Convenience wrapper for Keychain
 public class UBKeychain: UBKeychainProtocol {
-
     public static var shared = UBKeychain()
 
     private let logger = UBLogging.frameworkLoggerFactory(category: "UBKeychain")
-    
+
     /// Sets an item in the Keychain.
     ///
     /// - Parameters:
@@ -89,7 +88,7 @@ public class UBKeychain: UBKeychainProtocol {
             kSecAttrAccessible as String: accessibility.rawValue,
             // We use genericPassword instead of internet password because
             // the value is not assiciated with a server
-            kSecClass as String: kSecClassGenericPassword
+            kSecClass as String: kSecClassGenericPassword,
         ] as [String: Any]
 
         SecItemDelete(query as CFDictionary)
@@ -126,7 +125,7 @@ public class UBKeychain: UBKeychainProtocol {
             kSecAttrAccount as String: key,
             kSecClass as String: kSecClassGenericPassword,
             kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
+            kSecMatchLimit as String: kSecMatchLimitOne,
         ] as [String: Any]
 
         var result: AnyObject?
@@ -175,7 +174,7 @@ public class UBKeychain: UBKeychainProtocol {
             kSecClassInternetPassword,
             kSecClassCertificate,
             kSecClassKey,
-            kSecClassIdentity
+            kSecClassIdentity,
         ]
         return secClasses.allSatisfy { secClass in
             let query: NSDictionary = [kSecClass as String: secClass]
@@ -187,7 +186,7 @@ public class UBKeychain: UBKeychainProtocol {
                                  accessLevel: .public)
                 }
             }
-            
+
             return status == errSecSuccess || status == errSecItemNotFound
         }
     }

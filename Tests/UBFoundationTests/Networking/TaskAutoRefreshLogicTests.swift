@@ -295,7 +295,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask2.addStateTransitionObserver { _, to, _ in
             XCTAssert(to != .fetching) // never make the request
         }
-        let (_, _, info, _ ) = dataTask2.startSynchronous()
+        let (_, _, info, _) = dataTask2.startSynchronous()
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit) // in cache
 
@@ -310,7 +310,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
                 seenFetching = true
             }
         }
-        let (_, _, info3, _ ) = dataTask3.startSynchronous()
+        let (_, _, info3, _) = dataTask3.startSynchronous()
 
         XCTAssert(info3 != nil)
         XCTAssert(info3!.cacheHit)
@@ -318,10 +318,9 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         // load request again, should be cached again
         let dataTask4 = UBURLDataTask(url: url, session: session)
-        let (_, _, info4, _ ) = dataTask4.startSynchronous()
+        let (_, _, info4, _) = dataTask4.startSynchronous()
         XCTAssert(info4 != nil)
         XCTAssert(info4!.cacheHit) // in cache again
-
     }
 
     func testEmptyCache() {
@@ -346,33 +345,32 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask2.addStateTransitionObserver { _, to, _ in
             XCTAssert(to != .fetching) // never make the request
         }
-        let (_, _, info, _ ) = dataTask2.startSynchronous()
+        let (_, _, info, _) = dataTask2.startSynchronous()
 
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit)
-
     }
 }
 
 class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     override var nextRefreshHeaderFieldName: String {
-        return "x-amz-meta-next-refresh"
+        "x-amz-meta-next-refresh"
     }
 
     override var backoffIntervalHeaderFieldName: String {
-        return "x-amz-meta-backoff"
+        "x-amz-meta-backoff"
     }
 
     override var expiresHeaderFieldName: String {
-        return "x-amz-meta-best-before"
+        "x-amz-meta-best-before"
     }
 
     override var cacheControlHeaderFieldName: String {
-        return "x-amz-meta-cache"
+        "x-amz-meta-cache"
     }
 
     override var eTagHeaderFieldName: String {
-        return "Etag"
+        "Etag"
     }
 
     // scale relative time for faster unit test
@@ -387,23 +385,23 @@ class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
 
 class RegaAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     override var nextRefreshHeaderFieldName: String {
-        return "x-ms-meta-nextrefresh"
+        "x-ms-meta-nextrefresh"
     }
 
     override var backoffIntervalHeaderFieldName: String {
-        return "x-ms-meta-backoff"
+        "x-ms-meta-backoff"
     }
 
     override var expiresHeaderFieldName: String {
-        return "x-ms-meta-bestbefore"
+        "x-ms-meta-bestbefore"
     }
 
     override var cacheControlHeaderFieldName: String {
-        return "Cache-Control"
+        "Cache-Control"
     }
 
     override var eTagHeaderFieldName: String {
-        return "Etag"
+        "Etag"
     }
 
     // scale relative time for faster unit test
@@ -418,23 +416,23 @@ class RegaAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
 
 class SwisstopoVectorRefreshCacheLogic: UBAutoRefreshCacheLogic {
     override var nextRefreshHeaderFieldName: String {
-        return "x-ms-meta-nextrefresh"
+        "x-ms-meta-nextrefresh"
     }
 
     override var backoffIntervalHeaderFieldName: String {
-        return "x-ms-meta-backoff"
+        "x-ms-meta-backoff"
     }
 
     override var expiresHeaderFieldName: String {
-        return "x-ms-meta-bestbefore"
+        "x-ms-meta-bestbefore"
     }
 
     override var cacheControlHeaderFieldName: String {
-        return "Cache-Control"
+        "Cache-Control"
     }
 
     override var eTagHeaderFieldName: String {
-        return "Etag"
+        "Etag"
     }
 
     // scale relative time for faster unit test
@@ -449,10 +447,10 @@ class SwisstopoVectorRefreshCacheLogic: UBAutoRefreshCacheLogic {
 
 class SwisstopoMapAutorefreshCacheLogic: UBAutoRefreshCacheLogic {
     override func shouldWriteToCache(allowed _: Bool, data _: Data?, response _: HTTPURLResponse) -> Bool {
-        return true
+        true
     }
 
     override func modifyCacheResult(proposed _: UBCacheResult, possible: UBCacheResult, reason _: UBBaseCachingLogic.CacheDecisionReason) -> UBCacheResult {
-        return possible
+        possible
     }
 }

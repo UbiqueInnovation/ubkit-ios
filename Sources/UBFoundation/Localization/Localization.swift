@@ -70,11 +70,11 @@ public class UBLocalization: Codable {
 
 // MARK: - Setting the locale
 
-extension UBLocalization {
+public extension UBLocalization {
     /// Resets the locale to the current locale
     ///
     /// - Parameter baseBundle: The bundle to use
-    public func resetLocaleToCurrent(baseBundle: Bundle = .main) {
+    func resetLocaleToCurrent(baseBundle: Bundle = .main) {
         setLocale(.current, baseBundle: baseBundle)
     }
 
@@ -86,7 +86,7 @@ extension UBLocalization {
     ///   - baseLocale: The base locale to change. All attribute will be copied except the language and region. _Default: current_.
     ///   - baseBundle: The bundle to use
     /// - Throws: A `UBLocalizationError` if the language, region or the combination is not available.
-    public func setLanguage(languageCode: String, regionCode: String? = nil, baseLocale: Locale = .current, baseBundle: Bundle = .main) throws {
+    func setLanguage(languageCode: String, regionCode: String? = nil, baseLocale: Locale = .current, baseBundle: Bundle = .main) throws {
         var localeComponents: [String: String] = Locale.components(fromIdentifier: baseLocale.identifier)
         localeComponents[NSLocale.Key.languageCode.rawValue] = languageCode
 
@@ -106,7 +106,7 @@ extension UBLocalization {
     ///   - localeIdentifier: The locale identifier
     ///   - baseBundle: The bundle to use
     /// - Throws: A `UBLocalizationError` if the identifier is not available
-    public func setLocale(identifier localeIdentifier: String, baseBundle: Bundle = .main) throws {
+    func setLocale(identifier localeIdentifier: String, baseBundle: Bundle = .main) throws {
         let localeComponents = Locale.components(fromIdentifier: localeIdentifier)
         guard let languageCode = localeComponents[NSLocale.Key.languageCode.rawValue], Locale.isoLanguageCodes.contains(languageCode) else {
             UBLocalization.logger.error("The language code is not valid \(localeIdentifier)")
@@ -127,7 +127,7 @@ extension UBLocalization {
     /// - Parameters:
     ///   - locale: The new locale
     ///   - baseBundle: The bundle to use
-    public func setLocale(_ locale: Locale, baseBundle: Bundle) {
+    func setLocale(_ locale: Locale, baseBundle: Bundle) {
         let oldIdentifier = self.locale.identifier
         let newIdentifier = locale.identifier
         let userInfo = [UBLocalizationNotification.oldLocaleKey: self.locale, UBLocalizationNotification.newLocaleKey: locale]
@@ -165,6 +165,6 @@ extension UBLocalization {
 extension UBLocalization: CustomDebugStringConvertible {
     /// :nodoc:
     public var debugDescription: String {
-        return "\(UBLocalization.self) (\(locale.identifier)) [\(localizedBundle?.bundlePath ?? "No bundle")]"
+        "\(UBLocalization.self) (\(locale.identifier)) [\(localizedBundle?.bundlePath ?? "No bundle")]"
     }
 }

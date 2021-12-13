@@ -49,9 +49,9 @@ public struct UBHTTPHeaderField {
 
 // MARK: - Standard Header Keys
 
-extension UBHTTPHeaderField {
+public extension UBHTTPHeaderField {
     /// Standard Header Fields
-    public enum StandardKeys: String {
+    enum StandardKeys: String {
         /// Accept header field key
         case accept = "Accept"
         /// Accept Encoding header field key

@@ -15,9 +15,9 @@ public protocol UBURLRequestTokenAuthorization: UBURLRequestModifier {
     func getToken(completion: @escaping (Result<String, Error>) -> Void)
 }
 
-extension UBURLRequestTokenAuthorization {
+public extension UBURLRequestTokenAuthorization {
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
+    func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         getToken { result in
             var modifierRequest = originalRequest
             switch result {

@@ -9,15 +9,14 @@
 import XCTest
 
 class MockKeychain: UBKeychainProtocol {
-
     var store: [String: Any] = [:]
 
-    func set(_ value: String, key: String, accessibility: UBKeychainAccessibility) -> Bool {
+    func set(_ value: String, key: String, accessibility _: UBKeychainAccessibility) -> Bool {
         store[key] = value.data(using: .utf8)
         return true
     }
 
-    func set(_ value: Data, key: String, accessibility: UBKeychainAccessibility) -> Bool {
+    func set(_ value: Data, key: String, accessibility _: UBKeychainAccessibility) -> Bool {
         store[key] = value
         return true
     }
@@ -37,7 +36,7 @@ class MockKeychain: UBKeychainProtocol {
     }
 
     func delete(_ key: String) -> Bool {
-        (store.removeValue(forKey: key) != nil)
+        store.removeValue(forKey: key) != nil
     }
 
     func deleteAllItems() -> Bool {

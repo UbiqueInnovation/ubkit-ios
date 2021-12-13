@@ -15,10 +15,10 @@ class NetworkActivityTrackerTests: XCTestCase {
         let ex = expectation(description: "Network activity")
         let request = UBURLRequest(url: url)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.3)
         }
-        let mockSession2 = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession2 = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.7)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)

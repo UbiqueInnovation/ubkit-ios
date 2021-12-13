@@ -12,7 +12,7 @@ private let frameworkNotificationCenter = NotificationCenter()
 
 extension NotificationCenter {
     /// The internal notification center for the framework
-    internal static var frameworkDefault: NotificationCenter {
-        return frameworkNotificationCenter
+    static var frameworkDefault: NotificationCenter {
+        frameworkNotificationCenter
     }
 }
