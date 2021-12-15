@@ -19,7 +19,7 @@ import Foundation
 public struct UBKeychainStored<Value: Codable> {
 
     /// The key for the value
-    public let key: String
+    public let key: UBKeychainKey<Value>
 
     /// Defines the circumstances under which a value can be accessed.
     public let accessibility: UBKeychainAccessibility
@@ -30,8 +30,8 @@ public struct UBKeychainStored<Value: Codable> {
     /// keychain instance to use
     public let keychain: UBKeychainProtocol
 
-    public init(key: String, defaultValue: Value, accessibility: UBKeychainAccessibility, keychain: UBKeychainProtocol = UBKeychain.shared) {
-        self.key = key
+    public init(key: String, defaultValue: Value, accessibility: UBKeychainAccessibility, keychain: UBKeychainProtocol = UBKeychain()) {
+        self.key = UBKeychainKey(key)
         self.accessibility = accessibility
         self.defaultValue = defaultValue
         self.keychain = keychain
@@ -39,22 +39,15 @@ public struct UBKeychainStored<Value: Codable> {
 
     public var wrappedValue: Value {
         get {
-            guard let data = keychain.getData(key) else { return defaultValue }
-            let decoder = JSONDecoder()
-            guard let decodedValue = try? decoder.decode(Value.self, from: data) else {
-                // fallback for old installations since strings used to be stored utf8 endoced
-                // on next write the value will be written JSON encoded
-                if let string = String(data: data, encoding: .utf8), string is Value {
-                    return string as! Value
-                }
+            switch keychain.get(for: self.key) {
+            case let .success(value):
+                return value
+            case .failure:
                 return defaultValue
             }
-            return decodedValue
         }
         set {
-            let encoder = JSONEncoder()
-            guard let data = try? encoder.encode(newValue) else { return }
-            keychain.set(data, key: key, accessibility: accessibility)
+            keychain.set(newValue, for: key, accessibility: accessibility)
         }
     }
 }

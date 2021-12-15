@@ -12,36 +12,43 @@ class MockKeychain: UBKeychainProtocol {
 
     var store: [String: Any] = [:]
 
-    func set(_ value: String, key: String, accessibility: UBKeychainAccessibility) -> Bool {
-        store[key] = value.data(using: .utf8)
-        return true
-    }
+    var identifier: String = "MockKeychain"
 
-    func set(_ value: Data, key: String, accessibility: UBKeychainAccessibility) -> Bool {
-        store[key] = value
-        return true
-    }
-
-    func get(_ key: String) -> String? {
-        guard let data = getData(key) else {
-            return nil
+    func get<T: Codable>(for key: UBKeychainKey<T>) -> Result<T, UBKeychainError> {
+        if store.keys.contains(key.key),
+           let i = store[key.key] as? T {
+            return .success(i)
         }
-        guard let string = String(data: data, encoding: .utf8) else {
-            return nil
+        return .failure(.notFound)
+    }
+
+    func getData(_ key: String) -> Result<Data, UBKeychainError> {
+        if let i = store[key] as? Data {
+            return .success(i)
         }
-        return string
+        if let i = store[key] as? String {
+            return .success(i.data(using: .utf8)!)
+        }
+        return .failure(.notFound)
+    }
+    
+    @discardableResult
+    func set<T>(_ object: T, for key: UBKeychainKey<T>, accessibility: UBKeychainAccessibility) -> Result<Void, UBKeychainError> where T : Decodable, T : Encodable {
+        store[key.key] = object
+        return .success(())
     }
 
-    func getData(_ key: String) -> Data? {
-        store[key] as? Data
+    func delete<T>(for key: UBKeychainKey<T>) -> Result<Void, UBKeychainError> {
+        store.removeValue(forKey: key.key)
+        return .success(())
     }
 
-    func delete(_ key: String) -> Bool {
-        (store.removeValue(forKey: key) != nil)
-    }
-
-    func deleteAllItems() -> Bool {
+    func deleteAllItems() -> Result<Void, UBKeychainError> {
         store.removeAll()
-        return true
+        return .success(())
+    }
+
+    func reset() {
+        store.removeAll()
     }
 }
