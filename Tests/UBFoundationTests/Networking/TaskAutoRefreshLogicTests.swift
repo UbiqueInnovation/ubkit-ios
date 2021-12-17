@@ -9,7 +9,6 @@ import UBFoundation
 import XCTest
 
 class TaskAutoRefreshLogicTests: XCTestCase {
-    let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
 
     func testCaching() {
         // Load Request with Meteo-specific headers to enable cache
@@ -18,7 +17,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = MeteoAutoRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = c
+        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
         let session = UBURLSession(configuration: conf)
 
         // load request to fill cache
@@ -56,7 +55,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = MeteoAutoRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = c
+        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
         let session = UBURLSession(configuration: conf)
 
         // load request to fill cache
@@ -94,7 +93,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = RegaAutoRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = c
+        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
         let session = UBURLSession(configuration: conf)
 
         // load request to fill cache
@@ -254,7 +253,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = MeteoAutoRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = c
+        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
         let session = UBURLSession(configuration: conf)
 
         let dataTask = UBURLDataTask(url: url, session: session)
@@ -283,7 +282,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = SwisstopoVectorRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = c
+        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
         let session = UBURLSession(configuration: conf)
 
         // load request to fill cache
@@ -330,7 +329,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = SwisstopoVectorRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = c
+        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
         let session = UBURLSession(configuration: conf)
 
         // load request to fill cache
