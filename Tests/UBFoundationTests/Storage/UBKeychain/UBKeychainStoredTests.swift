@@ -16,7 +16,7 @@ class UBKeychainStoredTests: XCTestCase {
 
         XCTAssertEqual(value.wrappedValue, "defaultValue")
 
-        XCTAssertEqual(mockKeychain.get("testKey"), nil)
+        XCTAssertEqual(try? mockKeychain.get(for: UBKeychainKey<String>("testKey")).get(), nil)
     }
 
     func testStoringOfString() {
@@ -28,7 +28,7 @@ class UBKeychainStoredTests: XCTestCase {
 
         XCTAssertEqual(value.wrappedValue, "newValue")
 
-        XCTAssertEqual(mockKeychain.get("testKey"), "\"newValue\"")
+        XCTAssertEqual(try? mockKeychain.get(for: UBKeychainKey<String>("testKey")).get(), "newValue")
     }
 
     func testStoringOptionalString() {
@@ -46,7 +46,7 @@ class UBKeychainStoredTests: XCTestCase {
     func testMigratingOfOldStrings() {
         let mockKeychain = MockKeychain()
 
-        _ = mockKeychain.set("oldValue", key: "testKey", accessibility: .whenUnlocked)
+        mockKeychain.set("oldValue", for: UBKeychainKey<String>("testKey"), accessibility: .whenUnlocked)
 
         var value = UBKeychainStored<String?>(key: "testKey", defaultValue: nil, accessibility: .whenUnlocked, keychain: mockKeychain)
 
