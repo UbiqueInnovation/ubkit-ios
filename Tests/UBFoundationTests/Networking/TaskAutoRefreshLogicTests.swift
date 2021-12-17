@@ -16,20 +16,35 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = MeteoAutoRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
+        let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
+        c.removeAllCachedResponses()
+        conf.sessionConfiguration.urlCache = c
         let session = UBURLSession(configuration: conf)
+
+        let res = expectation(description: "res")
+        session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
 
         // load request to fill cache
 
-        let dataTask = UBURLDataTask(url: url, session: session)
+        var dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
-
+        ex.assertForOverFulfill = false
+        dataTask?.addCompletionHandler { _, _, _, _ in
             ex.fulfill()
+            dataTask?.cancel() // make sure that cron doesn't trigger
+            dataTask = nil
         }
-        dataTask.start()
+        dataTask?.start()
         wait(for: [ex], timeout: 10000)
+
+        dataTask?.cancel() // make sure that cron doesn't trigger
+        dataTask = nil
+
+        sleep(5)
 
         // load request again
 
@@ -54,8 +69,15 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = MeteoAutoRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
+        let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
+        conf.sessionConfiguration.urlCache = c
         let session = UBURLSession(configuration: conf)
+
+        let res = expectation(description: "res")
+        session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
 
         // load request to fill cache
 
@@ -92,8 +114,15 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = RegaAutoRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
+        let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
+        conf.sessionConfiguration.urlCache = c
         let session = UBURLSession(configuration: conf)
+
+        let res = expectation(description: "res")
+        session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
 
         // load request to fill cache
 
@@ -137,17 +166,26 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         // load request to (not) fill cache
 
-        let dataTask = UBURLDataTask(url: url)
+        var dataTask: UBURLDataTask? = UBURLDataTask(url: url)
+
+        let res = expectation(description: "res")
+        dataTask?.session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler { _, _, _, _ in
 
             ex.fulfill()
+            dataTask?.cancel()
+            dataTask = nil
         }
-        dataTask.start()
+        dataTask?.start()
         wait(for: [ex], timeout: 10000)
 
-        dataTask.cancel() // make sure that cron doesn't trigger
+        dataTask?.cancel() // make sure that cron doesn't trigger
+        dataTask = nil
 
         // load request again
 
@@ -172,6 +210,12 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
         let session = UBURLSession(configuration: conf)
 
+        let res = expectation(description: "res")
+        session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
+
         startTasks(session: session, secondShouldCache: true)
     }
 
@@ -180,17 +224,25 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         // load request to (not) fill cache
 
-        let dataTask = UBURLDataTask(url: url, session: session)
+        var dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
+
+        let res = expectation(description: "res")
+        dataTask?.session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
-
+        dataTask?.addCompletionHandler { _, _, _, _ in
+            dataTask?.cancel() // make sure that cron doesn't trigger
+            dataTask = nil
             ex.fulfill()
         }
-        dataTask.start()
+        dataTask?.start()
         wait(for: [ex], timeout: 10000)
 
-        dataTask.cancel() // make sure that cron doesn't trigger
+        dataTask?.cancel() // make sure that cron doesn't trigger
+        dataTask = nil
 
         // load request again
 
@@ -216,6 +268,12 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         // load request to fill cache
 
         let dataTask = UBURLDataTask(url: url)
+
+        let res = expectation(description: "res")
+        dataTask.session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
         dataTask.addCompletionHandler { _, _, _, _ in
@@ -252,8 +310,16 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = MeteoAutoRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
+        let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
+        c.removeAllCachedResponses()
+        conf.sessionConfiguration.urlCache = c
         let session = UBURLSession(configuration: conf)
+
+        let res = expectation(description: "res")
+        session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
 
         let dataTask = UBURLDataTask(url: url, session: session)
 
@@ -281,38 +347,48 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = SwisstopoVectorRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
+        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: nil)
         let session = UBURLSession(configuration: conf)
 
+        let res = expectation(description: "res")
+        session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
+
         // load request to fill cache
-        let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.startSynchronous()
+        var dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
+        dataTask?.startSynchronous()
+        dataTask?.cancel()
+        dataTask = nil
 
         // immediately load request again, should be cached
         let dataTask2 = UBURLDataTask(url: url, session: session)
         dataTask2.addStateTransitionObserver { _, to, _ in
-            XCTAssertEqual(to, .fetching) // never make the request
+            XCTAssert(to != .fetching) // never make the request
         }
         let (_, _, info, _) = dataTask2.startSynchronous()
         XCTAssert(info != nil)
-        XCTAssertEqual(info!.cacheHit, true) // in cache
+        XCTAssert(info!.cacheHit) // in cache
 
         // Cache should only be valid for 60 seconds
         sleep(70)
 
         // load request again, now request should return 302
-        let dataTask3 = UBURLDataTask(url: url, session: session)
+        var dataTask3: UBURLDataTask? = UBURLDataTask(url: url, session: session)
         var seenFetching = false
-        dataTask3.addStateTransitionObserver { _, to, _ in
+        dataTask3?.addStateTransitionObserver { _, to, _ in
             if to == .fetching {
                 seenFetching = true
             }
         }
-        let (_, _, info3, _) = dataTask3.startSynchronous()
+        let (_, _, info3, _) = dataTask3!.startSynchronous()
 
         XCTAssert(info3 != nil)
         XCTAssert(info3!.cacheHit)
         XCTAssert(seenFetching) // in cache, but request for 302
+        dataTask3?.cancel()
+        dataTask3 = nil
 
         // load request again, should be cached again
         let dataTask4 = UBURLDataTask(url: url, session: session)
@@ -328,8 +404,16 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let cache = SwisstopoVectorRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 0)
+        let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
+        c.removeAllCachedResponses()
+        conf.sessionConfiguration.urlCache = c
         let session = UBURLSession(configuration: conf)
+
+        let res = expectation(description: "res")
+        session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
 
         // load request to fill cache
 
