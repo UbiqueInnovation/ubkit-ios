@@ -9,7 +9,6 @@ import UBFoundation
 import XCTest
 
 class TaskAutoRefreshLogicTests: XCTestCase {
-
     func testCaching() {
         // Load Request with Meteo-specific headers to enable cache
 

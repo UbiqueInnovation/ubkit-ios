@@ -1,6 +1,6 @@
 //
 //  UBJSONDecoder.swift
-//  
+//
 //
 //  Created by Stefan Mitterrutzner on 09.12.21.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 public class UBJSONDecoder: JSONDecoder {
-    public override func decode<T>(_ type: T.Type, from data: Data) throws -> T where T : Decodable {
+    override public func decode<T>(_ type: T.Type, from data: Data) throws -> T where T: Decodable {
         if #available(iOS 13.1, *) {
             return try super.decode(type, from: data)
         } else {
@@ -19,8 +19,7 @@ public class UBJSONDecoder: JSONDecoder {
                 T.self == Bool.self ||
                 T.self == String.self ||
                 T.self == String?.self,
-               let encodedString = String(data: data, encoding: .utf8)
-            {
+                let encodedString = String(data: data, encoding: .utf8) {
                 let wrappedElement = "[\(encodedString)]"
                 if let data = wrappedElement.data(using: .utf8),
                    let collection = try? super.decode([T].self, from: data),
