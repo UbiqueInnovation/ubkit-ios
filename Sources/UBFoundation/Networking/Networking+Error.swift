@@ -65,13 +65,12 @@ public protocol UBURLDataTaskErrorBody: Error {
 }
 
 extension UBNetworkingError {
-
     init(_ error: Error) {
         switch error {
         case let error as UBNetworkingError:
             self = error
         case let error as UBInternalNetworkingError:
-            self =  UBNetworkingError.internal(error)
+            self = UBNetworkingError.internal(error)
         case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet:
             self = .notConnected
         case let error as NSError where error.domain == NSURLErrorDomain && error.code == NSURLErrorDataNotAllowed:
@@ -97,11 +96,10 @@ extension UBNetworkingError: UBCodedError {
         case .notConnected: return "\(errorCodePrefix)NOCONN"
         case .timedOut: return "\(errorCodePrefix)TIMEDOUT"
         case .certificateValidationFailed: return "\(errorCodePrefix)CVF"
-        case .internal(let error): return error.errorCode
+        case let .internal(error): return error.errorCode
         }
     }
 }
-
 
 extension UBInternalNetworkingError: UBCodedError {
     public var errorCode: String {
@@ -124,7 +122,7 @@ extension UBInternalNetworkingError: UBCodedError {
             case .synchronousTimedOut: return "SEMTIMEOUT"
             case .canceled: return "CANCELLED"
             case .recoverableError: return "REC"
-            case .otherNSURLError(let error): return "NSURL \(error.code)"
+            case let .otherNSURLError(error): return "NSURL \(error.code)"
             }
         }()
         return "\(errorCodePrefix)\(postfix)"

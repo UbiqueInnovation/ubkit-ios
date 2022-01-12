@@ -43,22 +43,20 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// :nodoc:
     public var description: String {
-        return taskDescription ?? request.description
+        taskDescription ?? request.description
     }
 
     /// :nodoc:
     public var debugDescription: String {
-        return request.debugDescription
+        request.debugDescription
     }
 
     /// A representation of the overall task progress.
     public var progress: Progress {
-        get {
-            guard #available(iOS 11.0, * ), let progress = dataTask?.progress else {
-              return Progress(totalUnitCount: 0)
-            }
-            return progress
+        guard #available(iOS 11.0, *), let progress = dataTask?.progress else {
+            return Progress(totalUnitCount: 0)
         }
+        return progress
     }
 
     /// The underlaying data task
@@ -77,8 +75,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private func getCallbackQueue() -> OperationQueue {
         if flags.contains(.synchronous) {
             return self.syncTasksCallbackQueue
-        }
-        else {
+        } else {
             return callbackQueue
         }
     }
@@ -195,7 +192,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                     dataTask.taskDescription = self.taskDescription
 
                     if #available(iOS 11.0, *) {
-
                         // Observe the task progress
                         self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
                             guard let self = self else {
@@ -221,7 +217,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                     self.dataTask = dataTask
                     self.requestStartSemaphore.signal()
                     dataTask.resume()
-
                 }
 
                 if let interceptor = self.requestInterceptor {
@@ -246,9 +241,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// Cancel the current request
     public func cancel(notifyCompletion: Bool) {
-
-
-
         dataTaskProgressObservation = nil
         dataTaskStateObservation = nil
         requestModifier.cancelCurrentModification()
@@ -264,8 +256,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             requestStartSemaphore.signal()
         }
 
-
-
         if notifyCompletion {
             self.notifyCompletion(error: .internal(.canceled), data: nil, response: nil, info: nil)
         }
@@ -278,7 +268,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - response: The response received with the data
     ///   - error: The error in case of failure
     func dataTaskCompleted(data: Data?, response: HTTPURLResponse?, error: Error?, info: UBNetworkingTaskInfo?) {
-
         guard state != .cancelled else {
             return // don't parse response after cancellation
         }
@@ -319,7 +308,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         requestModifier.append(modifier)
     }
 
-
     // MARK: - Request Interceptor
 
     /// The request interceptor
@@ -338,7 +326,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private var _stateTransitionObservers: [StateTransitionObservationBlock] = []
     /// Holds the state observers
     private var stateTransitionObservers: [StateTransitionObservationBlock] {
-        return stateTransitionObserversQueue.sync {
+        stateTransitionObserversQueue.sync {
             _stateTransitionObservers
         }
     }
@@ -388,7 +376,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                  (.waitingExecution, .fetching), // Start task
                  (.waitingExecution, .cancelled), // Cancel task
                  (.waitingExecution, .parsing), // Returned from cache
-                 (.waitingExecution, .finished), //RecoverStrategy cannotRecover a RequestModifier
+                 (.waitingExecution, .finished), // RecoverStrategy cannotRecover a RequestModifier
                  (.fetching, .parsing), // Data received
                  (.fetching, .finished), // Error received
                  (.fetching, .cancelled), // Cancel task
@@ -409,7 +397,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// The current state of the task
     public private(set) var state: State {
         get {
-            return stateDispatchQueue.sync {
+            stateDispatchQueue.sync {
                 _state
             }
         }
@@ -451,7 +439,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private var _progressObservers: [ProgressObservationBlock] = []
     /// The progress observers
     private var progressObservers: [ProgressObservationBlock] {
-        return progressObserversDispatchQueue.sync {
+        progressObserversDispatchQueue.sync {
             _progressObservers
         }
     }
@@ -491,8 +479,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private var _completionHandlers: [CompletionHandlerIdentifier: CompletionHandlerWrapper] = [:]
 
     private var completionHandlers: [CompletionHandlerWrapper] {
-        return completionHandlersDispatchQueue.sync {
-            _completionHandlers.map { $0.value }
+        completionHandlersDispatchQueue.sync {
+            _completionHandlers.map(\.value)
         }
     }
 
@@ -546,7 +534,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         synchronousStartSemaphore.signal()
-
 
         flags.remove(.synchronous)
 
@@ -646,7 +633,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///
     /// - Parameter identifier: The identifier returned when adding the completion block
     public func removeCompletionHandler(identifier: CompletionHandlerIdentifier) {
-        return completionHandlersDispatchQueue.sync {
+        completionHandlersDispatchQueue.sync {
             _ = _completionHandlers.removeValue(forKey: identifier)
         }
     }
@@ -659,7 +646,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private var _responseValidators: [UBHTTPURLResponseValidator] = []
     /// The validators
     private var responseValidators: [UBHTTPURLResponseValidator] {
-        return responseValidatorsDispatchQueue.sync {
+        responseValidatorsDispatchQueue.sync {
             _responseValidators
         }
     }

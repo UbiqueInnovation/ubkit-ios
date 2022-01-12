@@ -119,6 +119,6 @@ class UBLocationManagerTests: XCTestCase {
     }
 
     func makeDelegate() -> UBLocationManagerDelegate {
-        return MockLocationManagerDelegate()
+        MockLocationManagerDelegate()
     }
 }

@@ -46,7 +46,7 @@ class WindowKeyboardLayoutGuide: UILayoutGuide {
                 topConstraint,
                 owningView.leadingAnchor.constraint(equalTo: leadingAnchor),
                 owningView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                owningView.bottomAnchor.constraint(equalTo: bottomAnchor)
+                owningView.bottomAnchor.constraint(equalTo: bottomAnchor),
             ])
             owningView.setNeedsLayout()
         }
@@ -59,8 +59,8 @@ extension WindowKeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
         guard let owningView = owningView,
-            let window = owningView as? UIWindow,
-            let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else {
+              let window = owningView as? UIWindow,
+              let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else {
             return
         }
 

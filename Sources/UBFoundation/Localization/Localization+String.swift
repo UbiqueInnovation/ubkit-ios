@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
     /// Returns a localized version of the string using the passed localization.
     ///
     /// This method will use the bundle of the passed localization object to resolve the string.
@@ -18,7 +18,7 @@ extension String {
     /// - Parameter localization: The localization to use
     /// - Returns: The localized string
     /// - Throws: `UBLocalizationError` if there is no bundle in the localization
-    public func ub_localized(localization: UBLocalization) throws -> String {
+    func ub_localized(localization: UBLocalization) throws -> String {
         let comment: String = ""
         guard let bundle = localization.localizedBundle else {
             UBLocalization.logger.error("Bundle not found for \(localization.debugDescription)")
@@ -32,7 +32,7 @@ extension String {
     /// If no localization is found the string is returned.
     ///
     /// - Note:Use it only for apps as it uses the main bundle to get localizations. In case of a framework please refer to the function `func localized(localization:)` and pass in your framework localization.
-    public var ub_localized: String {
+    var ub_localized: String {
         do {
             return try ub_localized(localization: UBAppLocalization)
         } catch {

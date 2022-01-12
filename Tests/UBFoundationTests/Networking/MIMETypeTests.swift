@@ -33,7 +33,7 @@ class MIMETypeTests: XCTestCase {
             "application/json; charset=UTF-8",
             "application/vnd.omads-email+xml",
             "application/clue_info+xml",
-            "audio/vnd.nuera.ecelp4800"
+            "audio/vnd.nuera.ecelp4800",
         ]
         // Test the successful standard format
         for test in successTestData {
@@ -57,7 +57,7 @@ class MIMETypeTests: XCTestCase {
             "application/clue@info+xml", // Not allowed character
             "application/json; charset", // Parameter malformatted
             "application/json; charset=", // Parameter malformatted
-            "application/json; =utf-8" // Parameter malformatted
+            "application/json; =utf-8", // Parameter malformatted
         ]
         for test in failureTestData {
             XCTAssertNil(UBMIMEType(string: test))

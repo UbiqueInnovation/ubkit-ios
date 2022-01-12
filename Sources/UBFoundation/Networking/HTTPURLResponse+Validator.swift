@@ -95,7 +95,7 @@ public struct UBHTTPResponseStatusValidator: UBHTTPURLResponseValidator {
     ///
     /// - Parameter statusCodes: An array of status codes
     public init(_ statusCodes: [UBStandardHTTPCode]) {
-        self.init(statusCodes.map { $0.rawValue })
+        self.init(statusCodes.map(\.rawValue))
     }
 
     /// Initializes the validator

@@ -20,13 +20,13 @@ class LanguageTests: XCTestCase {
         ("en_CH", "English (Switzerland)", "anglais (Suisse)", "English (Switzerland)"),
         ("fr_CH", "French (Switzerland)", "français (Suisse)", "français (Suisse)"),
         ("it_CH", "Italian (Switzerland)", "italien (Suisse)", "italiano (Svizzera)"),
-        ("de_CH", "German (Switzerland)", "allemand (Suisse)", "Deutsch (Schweiz)")
+        ("de_CH", "German (Switzerland)", "allemand (Suisse)", "Deutsch (Schweiz)"),
     ]
 
     let testFalseData: [String] = [
         "xx",
         "fr/dc",
-        "123"
+        "123",
     ]
 
     func testDisplayNameSuccess() {

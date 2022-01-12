@@ -9,14 +9,14 @@ import Foundation
 
 // MARK: - HTTP code integer
 
-extension Int {
+public extension Int {
     /// Get the http category
-    public var ub_httpCodeCategory: UBHTTPCodeCategory {
-        return UBHTTPCodeCategory(code: self)
+    var ub_httpCodeCategory: UBHTTPCodeCategory {
+        UBHTTPCodeCategory(code: self)
     }
 
     /// Get the standard http code
-    public var ub_standardHTTPCode: UBStandardHTTPCode? {
-        return UBStandardHTTPCode(rawValue: self)
+    var ub_standardHTTPCode: UBStandardHTTPCode? {
+        UBStandardHTTPCode(rawValue: self)
     }
 }

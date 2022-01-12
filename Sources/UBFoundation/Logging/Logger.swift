@@ -144,11 +144,11 @@ public class UBLogger {
     }
 }
 
-extension UBLogger {
+public extension UBLogger {
     // MARK: - Access Level
 
     /// The access level of the log
-    public enum AccessLevel {
+    enum AccessLevel {
         /// Use public for no sensitive data
         case `public`
         /// Use private for sensitive data
@@ -158,7 +158,7 @@ extension UBLogger {
     // MARK: - Log Level
 
     /// The log level
-    public enum LogLevel {
+    enum LogLevel {
         /// This will ensure a minimum log. Only the message is logged
         case `default`
         /// This will log extra information about the thread, file, method and line number of each log

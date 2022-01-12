@@ -13,7 +13,7 @@ class HTTPCodeTests: XCTestCase {
         let testData: [(status: Int, standard: UBStandardHTTPCode?)] = [
             (200, .ok),
             (404, .notFound),
-            (2000, nil)
+            (2000, nil),
         ]
 
         for data in testData {
@@ -33,7 +33,7 @@ class HTTPCodeTests: XCTestCase {
             (300, .redirection),
             (404, .clientError),
             (501, .serverError),
-            (150, .informational)
+            (150, .informational),
         ]
 
         for data in testData {

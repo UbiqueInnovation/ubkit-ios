@@ -263,14 +263,14 @@ extension UBCronJob {
 extension UBCronJob: CustomDebugStringConvertible {
     /// :nodoc:
     public var debugDescription: String {
-        return "Cron Job <\(name ?? identifier.uuidString)> \(state)"
+        "Cron Job <\(name ?? identifier.uuidString)> \(state)"
     }
 }
 
 extension UBCronJob: Hashable {
     /// :nodoc:
     public static func == (lhs: UBCronJob, rhs: UBCronJob) -> Bool {
-        return lhs.identifier == rhs.identifier
+        lhs.identifier == rhs.identifier
     }
 
     /// :nodoc:

@@ -19,12 +19,12 @@ public func setLanguage(languageCode: String, regionCode: String? = nil) throws 
 
 /// The localization object to be used by the app
 public var UBAppLocalization: UBLocalization {
-    return globalLocalization.appLocalization
+    globalLocalization.appLocalization
 }
 
 /// The localization to be used within the framework
 internal var frameworkLocalization: UBLocalization {
-    return globalLocalization.frameworkLocalization
+    globalLocalization.frameworkLocalization
 }
 
 /// A shared global object for localization

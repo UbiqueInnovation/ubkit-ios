@@ -20,7 +20,7 @@ class UBSessionTests: XCTestCase {
 
     lazy var testBundle: Bundle = {
         guard let testBundlePath = Bundle.module.path(forResource: "TestResources/NetworkingTestBundle", ofType: nil),
-            let testBundle = Bundle(path: testBundlePath) else {
+              let testBundle = Bundle(path: testBundlePath) else {
             fatalError("No test bundle found")
         }
         return testBundle

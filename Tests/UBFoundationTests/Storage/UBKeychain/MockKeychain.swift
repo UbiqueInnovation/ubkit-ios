@@ -9,7 +9,6 @@
 import XCTest
 
 class MockKeychain: UBKeychainProtocol {
-
     var store: [String: Any] = [:]
 
     var identifier: String = "MockKeychain"
@@ -31,9 +30,9 @@ class MockKeychain: UBKeychainProtocol {
         }
         return .failure(.notFound)
     }
-    
+
     @discardableResult
-    func set<T>(_ object: T, for key: UBKeychainKey<T>, accessibility: UBKeychainAccessibility) -> Result<Void, UBKeychainError> where T : Decodable, T : Encodable {
+    func set<T>(_ object: T, for key: UBKeychainKey<T>, accessibility _: UBKeychainAccessibility) -> Result<Void, UBKeychainError> where T: Decodable, T: Encodable {
         store[key.key] = object
         return .success(())
     }

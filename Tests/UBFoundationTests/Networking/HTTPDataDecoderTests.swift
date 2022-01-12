@@ -13,7 +13,7 @@ class HTTPDataDecoderTests: XCTestCase {
 
     func testDataDecoderBlock() {
         let ex = expectation(description: "Block")
-        let decoder = UBURLDataTaskDecoder { (data, _) -> Data in
+        let decoder = UBURLDataTaskDecoder { data, _ -> Data in
             ex.fulfill()
             return data
         }

@@ -9,7 +9,6 @@ import Foundation
 
 /// Convenience wrapper for Keychain
 public class UBKeychain: UBKeychainProtocol {
-
     private let logger = UBLogging.frameworkLoggerFactory(category: "UBKeychain")
 
     private let encoder: JSONEncoder
@@ -59,7 +58,7 @@ public class UBKeychain: UBKeychainProtocol {
                 // fallback for old installations since strings used to be stored utf8 encoded
                 // on next write the value will be written JSON encoded
                 if let stringOpt = String(data: item, encoding: .utf8),
-                    let string = stringOpt as? T {
+                   let string = stringOpt as? T {
                     return .success(string)
                 }
                 return .failure(.decodingError(error))
@@ -72,7 +71,6 @@ public class UBKeychain: UBKeychainProtocol {
             return .failure(.cannotAccess(status))
         }
     }
-
 
     /// Retrieves data item from the Keychain
     ///
@@ -179,7 +177,7 @@ public class UBKeychain: UBKeychainProtocol {
     private func query(for key: String, accessibility: UBKeychainAccessibility? = nil) -> [String: Any] {
         var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword as String,
-            kSecAttrAccount as String: key
+            kSecAttrAccount as String: key,
         ]
         if let accessibility = accessibility {
             query[kSecAttrAccessible as String] = accessibility.rawValue
@@ -199,13 +197,13 @@ public class UBKeychain: UBKeychainProtocol {
     ///
     /// - Returns: Whether deleting the value succeded
     @discardableResult
-    public func deleteAllItems()  -> Result<Void, UBKeychainError>  {
+    public func deleteAllItems() -> Result<Void, UBKeychainError> {
         let secClasses = [
             kSecClassGenericPassword,
             kSecClassInternetPassword,
             kSecClassCertificate,
             kSecClassKey,
-            kSecClassIdentity
+            kSecClassIdentity,
         ]
         let status: [OSStatus] = secClasses.compactMap { secClass in
             let query: NSMutableDictionary = [kSecClass as String: secClass]
@@ -213,7 +211,7 @@ public class UBKeychain: UBKeychainProtocol {
             if let accessGroup = accessGroup {
                 query[kSecAttrAccessGroup as String] = accessGroup
             }
-            
+
             let status = SecItemDelete(query as CFDictionary)
 
             if !(status == errSecSuccess || status == errSecItemNotFound) {

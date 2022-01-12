@@ -11,7 +11,7 @@ import Foundation
 extension URLSession: UBDataTaskURLSession {
     /// :nodoc:
     public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
-        return dataTask(with: request.getRequest(), completionHandler: { [weak owner] data, response, baseError in
+        dataTask(with: request.getRequest(), completionHandler: { [weak owner] data, response, baseError in
             guard let owner = owner else {
                 return
             }

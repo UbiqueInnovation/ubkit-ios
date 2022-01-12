@@ -9,10 +9,10 @@ import Foundation
 
 // MARK: - Parameter
 
-extension UBMIMEType {
+public extension UBMIMEType {
     /// MIME Parameter
     /// - seeAlso: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
-    public struct Parameter: Equatable {
+    struct Parameter: Equatable {
         /// The key of the parameter
         public let key: String
         /// The value of the parameter

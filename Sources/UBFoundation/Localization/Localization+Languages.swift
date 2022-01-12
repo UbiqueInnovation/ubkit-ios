@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Getting languages
 
-extension UBLocalization {
+public extension UBLocalization {
     /// Returns the preferred languages list modified to match the locale set.
     ///
     /// In the default case, the list is made up of the languages that the user sorted in the system settings and also are available in the app.
@@ -22,7 +22,7 @@ extension UBLocalization {
     ///   - stripRegionInformation: If the list should not contain any region information. _Default: true_
     ///   - preferredLanguages: The list of prefered languages to check against. _Default: Bundle.main.preferredLocalizations_
     /// - Returns: The list of preferred languages
-    public func preferredLanguages(stripRegionInformation: Bool = true, preferredLanguages: [String]? = nil) -> [Language] {
+    func preferredLanguages(stripRegionInformation: Bool = true, preferredLanguages: [String]? = nil) -> [Language] {
         let bundle = baseBundle ?? .main
         // load the list of preferred languages as the user defined them in the OS
         var mutablePreferredLanguages: [String] = preferredLanguages ?? bundle.preferredLocalizations
@@ -58,7 +58,7 @@ extension UBLocalization {
     ///   - stripRegionInformation: If the list should not contain any region information. *Default: true*
     ///   - bundle: The bundle to search in
     /// - Returns: A list of available localizations in the app.
-    public static func availableLanguages(stripRegionInformation: Bool = true, bundle: Bundle = .main) -> Set<Language> {
+    static func availableLanguages(stripRegionInformation: Bool = true, bundle: Bundle = .main) -> Set<Language> {
         var localizations = bundle.localizations
         if stripRegionInformation {
             localizations = localizations.map {

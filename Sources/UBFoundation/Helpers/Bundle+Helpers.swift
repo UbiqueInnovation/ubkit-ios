@@ -9,11 +9,11 @@ import Foundation
 
 public extension Bundle {
     static var bundleId: String {
-        return Bundle.main.infoDictionary?["CFBundleIdentifier"] as? String ?? ""
+        Bundle.main.infoDictionary?["CFBundleIdentifier"] as? String ?? ""
     }
 
     static var appVersion: String {
-        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0"
     }
 
     static var buildNumber: String {

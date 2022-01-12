@@ -64,41 +64,41 @@ public enum UBStandardHTTPCode: Int {
 
     /// :nodoc:
     public static func == (left: UBStandardHTTPCode, right: Int) -> Bool {
-        return left.rawValue == right
+        left.rawValue == right
     }
 
     /// :nodoc:
     public static func == (left: Int, right: UBStandardHTTPCode) -> Bool {
-        return right == left
+        right == left
     }
 
     /// :nodoc:
     public static func == (left: HTTPURLResponse, right: UBStandardHTTPCode) -> Bool {
-        return left.statusCode == right
+        left.statusCode == right
     }
 
     /// :nodoc:
     public static func == (left: UBStandardHTTPCode, right: HTTPURLResponse) -> Bool {
-        return right == left
+        right == left
     }
 
     /// :nodoc:
     public static func != (left: UBStandardHTTPCode, right: Int) -> Bool {
-        return left.rawValue != right
+        left.rawValue != right
     }
 
     /// :nodoc:
     public static func != (left: Int, right: UBStandardHTTPCode) -> Bool {
-        return right != left
+        right != left
     }
 
     /// :nodoc:
     public static func != (left: HTTPURLResponse, right: UBStandardHTTPCode) -> Bool {
-        return left.statusCode != right
+        left.statusCode != right
     }
 
     /// :nodoc:
     public static func != (left: UBStandardHTTPCode, right: HTTPURLResponse) -> Bool {
-        return right != left
+        right != left
     }
 }

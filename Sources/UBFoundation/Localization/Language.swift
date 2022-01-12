@@ -10,9 +10,9 @@ import Foundation
 
 // MARK: - Language
 
-extension UBLocalization {
+public extension UBLocalization {
     /// Holds information about a language
-    public struct Language: Codable, Hashable, CustomStringConvertible {
+    struct Language: Codable, Hashable, CustomStringConvertible {
         // MARK: - Properties
 
         /// The identifier of the language
@@ -36,7 +36,7 @@ extension UBLocalization {
         /// - Parameter localization: A `UBLocalization` to use
         /// - Returns: The name of the language using the passed `UBLocalization`
         public func displayName(_ localization: UBLocalization) -> String? {
-            return localization.locale.localizedString(forIdentifier: identifier)
+            localization.locale.localizedString(forIdentifier: identifier)
         }
 
         /// Returns the display name of the language in it's native form
@@ -47,7 +47,7 @@ extension UBLocalization {
 
         /// :nodoc:
         public var description: String {
-            return displayNameInNativeLanguage ?? identifier
+            displayNameInNativeLanguage ?? identifier
         }
     }
 }

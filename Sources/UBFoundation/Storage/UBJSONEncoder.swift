@@ -1,6 +1,6 @@
 //
 //  UBJSONEncoder.swift
-//  
+//
 //
 //  Created by Stefan Mitterrutzner on 09.12.21.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 public class UBJSONEncoder: JSONEncoder {
-    public override func encode<T>(_ value: T) throws -> Data where T : Encodable {
+    override public func encode<T>(_ value: T) throws -> Data where T: Encodable {
         if #available(iOS 13.1, *) {
             return try super.encode(value)
         } else {

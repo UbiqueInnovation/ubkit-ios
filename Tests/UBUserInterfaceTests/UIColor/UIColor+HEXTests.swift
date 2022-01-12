@@ -50,7 +50,7 @@ class UIColor_HEXTests: XCTestCase {
             ("#abc", "#AABBCC"),
             ("245690", "#245690"),
             ("ACE3", "#AACCEE33"),
-            ("#aabbcc99", "#AABBCC99")
+            ("#aabbcc99", "#AABBCC99"),
         ]
         for test in testData {
             let color = UIColor(ub_hexString: test.test)
@@ -63,7 +63,7 @@ class UIColor_HEXTests: XCTestCase {
         let testData: [(test: UIColor, result: String)] = [
             (.white, "#FFFFFF"),
             (.black, "#000000"),
-            (.red, "#FF0000")
+            (.red, "#FF0000"),
         ]
         for test in testData {
             XCTAssertEqual(test.test.ub_hexString, test.result)

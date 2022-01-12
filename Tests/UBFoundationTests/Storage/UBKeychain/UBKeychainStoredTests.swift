@@ -9,7 +9,6 @@
 import XCTest
 
 class UBKeychainStoredTests: XCTestCase {
-
     func testDefaultValue() {
         let mockKeychain = MockKeychain()
 
@@ -21,7 +20,6 @@ class UBKeychainStoredTests: XCTestCase {
     }
 
     func testStoringOfString() {
-
         let mockKeychain = MockKeychain()
 
         var value = UBKeychainStored<String>(key: "testKey", defaultValue: "defaultValue", accessibility: .whenUnlocked, keychain: mockKeychain)
@@ -34,7 +32,6 @@ class UBKeychainStoredTests: XCTestCase {
     }
 
     func testStoringOptionalString() {
-
         let mockKeychain = MockKeychain()
 
         var value = UBKeychainStored<String?>(key: "testKey", defaultValue: "defaultValue", accessibility: .whenUnlocked, keychain: mockKeychain)
@@ -44,7 +41,6 @@ class UBKeychainStoredTests: XCTestCase {
         value.wrappedValue = nil
 
         XCTAssertEqual(value.wrappedValue, nil)
-
     }
 
     func testMigratingOfOldStrings() {
@@ -94,7 +90,6 @@ class UBKeychainStoredTests: XCTestCase {
 
         XCTAssertEqual(value.wrappedValue!, user)
     }
-
 
     // MARK: - Helper types
 
