@@ -22,10 +22,10 @@ let package = Package(
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
         .testTarget(name: "UBFoundationTests",
-                        dependencies: ["UBFoundation"],
-                        resources: [
-                            .copy("TestResources"),
-                        ]),
+                    dependencies: ["UBFoundation"],
+                    resources: [
+                        .copy("TestResources"),
+                    ]),
         .testTarget(name: "UBUserInterfaceTests",
                     dependencies: ["UBUserInterface"]),
         .testTarget(name: "UBLocationTests",

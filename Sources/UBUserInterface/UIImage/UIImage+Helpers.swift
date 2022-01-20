@@ -9,9 +9,9 @@ import UIKit
 
 // MARK: - UIImage Helpers
 
-extension UIImage {
+public extension UIImage {
     /// Initializes an image with a single pixel with a constant color
-    public static func ub_singlePixelImage(with color: UIColor) -> UIImage? {
+    static func ub_singlePixelImage(with color: UIColor) -> UIImage? {
         let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
         UIGraphicsBeginImageContext(rect.size)
 
@@ -25,7 +25,7 @@ extension UIImage {
     }
 
     /// Create a tinted version of the image with the specified color
-    public func ub_withColor(_ color: UIColor) -> UIImage {
+    func ub_withColor(_ color: UIColor) -> UIImage {
         if #available(iOS 13.0, *) {
             return withTintColor(color)
         } else {

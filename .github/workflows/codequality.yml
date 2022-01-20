@@ -1,0 +1,24 @@
+name: Codequality
+
+env:
+  XCODE_VERSION: 'Xcode_13.1'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  codequality:
+    name: Codequality
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Switch to ${{ env.XCODE_VERSION }}
+      run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
+
+    - name: swiftformat
+      run: swiftformat Sources,Tests --lint

@@ -30,7 +30,7 @@ open class UBPushRegistrationManager: NSObject {
     private var registrationUrl: URL?
 
     /// Push local storage
-    private var pushLocalStorage : UBPushRegistrationLocalStorage
+    private var pushLocalStorage: UBPushRegistrationLocalStorage
 
     /// :nodoc:
     private var maxRegistrationAge: TimeInterval {
@@ -44,10 +44,10 @@ open class UBPushRegistrationManager: NSObject {
     // MARK: - Initialization
 
     /// Creates push registration manager for the provided `registrationUrl`
-    public init(pushLocalStorage : UBPushRegistrationLocalStorage? = nil, registrationUrl: URL? = nil) {
+    public init(pushLocalStorage: UBPushRegistrationLocalStorage? = nil, registrationUrl: URL? = nil) {
         self.pushLocalStorage = pushLocalStorage ?? UBPushRegistrationStandardLocalStorage.shared
         self.registrationUrl = registrationUrl
-        
+
         super.init()
     }
 
@@ -166,7 +166,7 @@ open class UBPushRegistrationManager: NSObject {
         UBDeviceUUID.getUUID()
     }
 
-    open var isValid : Bool {
+    open var isValid: Bool {
         self.pushLocalStorage.isValid
     }
 }

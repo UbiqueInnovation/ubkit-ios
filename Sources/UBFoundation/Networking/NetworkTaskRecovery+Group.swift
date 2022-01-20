@@ -17,7 +17,7 @@ public class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy {
     private var _strategies: [UBNetworkingTaskRecoveryStrategy]
     /// The list of recovery strategies in the group
     public var strategies: [UBNetworkingTaskRecoveryStrategy] {
-        return serialStrategies.sync {
+        serialStrategies.sync {
             _strategies
         }
     }
@@ -101,7 +101,7 @@ extension UBNetworkTaskRecoveryGroup {
         /// :nodoc
         var cancelled: Bool {
             get {
-                return serial.sync {
+                serial.sync {
                     _cancelled
                 }
             }

@@ -95,7 +95,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
     /// The default implementation returns true iff allowed
     /// Subclass may return true for all data to cache more data
     open func shouldWriteToCache(allowed: Bool, data _: Data, response _: HTTPURLResponse) -> Bool {
-        return allowed
+        allowed
     }
 
     /// Asks the caching logic to provide a cached proposition when successfull.
@@ -114,8 +114,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
     ///   - metrics: The metrics collected by the session during the request
     /// - Returns: A possible caching response
     open func proposedCacheResponseWhenSuccessfull(for _: URLSession, dataTask _: URLSessionDataTask, ubDataTask _: UBURLDataTask, request _: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> (response: HTTPURLResponse, data: Data, userInfo: [AnyHashable: Any])? {
-
-
         // Note: Data can be nil, if a successful response body was empty
         let data = data ?? Data()
 
@@ -149,7 +147,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
     ///
     /// Most common usage will be to return `possible` for all cases to enable cache forever or replace a `.expired` with `.hit` based on age to extend cache duration
     open func modifyCacheResult(proposed: UBCacheResult, possible _: UBCacheResult, reason _: CacheDecisionReason) -> UBCacheResult {
-        return proposed
+        proposed
     }
 
     /// Different decisions that can be made by caching logic
@@ -192,7 +190,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
         let possibleResult = UBCacheResult.hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics)
 
         if let cacheControlHeader = response.ub_getHeaderField(key: cacheControlHeaderFieldName),
-            let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader) {
+           let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader) {
             guard cacheControlDirectives.cachingAllowed else {
                 let result = modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .cachingNotAllowed)
                 if case .miss = result {
@@ -204,8 +202,8 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
         // Check that the content language of the cached response is contained in the request accepted language
         if let contentLanguage = response.ub_getHeaderField(key: contentLanguageHeaderFieldName),
-            let acceptLanguage = request.value(forHTTPHeaderField: acceptedLanguageHeaderFieldName),
-            acceptLanguage.lowercased().contains(contentLanguage.lowercased()) == false {
+           let acceptLanguage = request.value(forHTTPHeaderField: acceptedLanguageHeaderFieldName),
+           acceptLanguage.lowercased().contains(contentLanguage.lowercased()) == false {
             return modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .contentLanguageNotAccepted(contentLanguage))
         }
 
@@ -227,7 +225,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
             // If there are no max age then search for expire header
         } else if let expiresHeader = response.ub_getHeaderField(key: expiresHeaderFieldName),
-            let expiresDate = dateFormatter.date(from: expiresHeader) {
+                  let expiresDate = dateFormatter.date(from: expiresHeader) {
             if expiresDate < Date() {
                 return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics), possible: possibleResult, reason: .expiredInPast(expiresDate: expiresDate))
             } else {
@@ -276,61 +274,61 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
     /// The next refresh header field name
     open var nextRefreshHeaderFieldName: String {
-        return "X-Next-Refresh"
+        "X-Next-Refresh"
     }
 
     /// The backoff interval header field name
     open var backoffIntervalHeaderFieldName: String {
-        return "Backoff"
+        "Backoff"
     }
 
     /// The cache control header field name
     open var cacheControlHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.cacheControl.rawValue
+        UBHTTPHeaderField.StandardKeys.cacheControl.rawValue
     }
 
     /// The expires header field name
     open var expiresHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.expires.rawValue
+        UBHTTPHeaderField.StandardKeys.expires.rawValue
     }
 
     /// The age header field name
     open var ageHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.age.rawValue
+        UBHTTPHeaderField.StandardKeys.age.rawValue
     }
 
     /// The date header field name
     open var dateHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.date.rawValue
+        UBHTTPHeaderField.StandardKeys.date.rawValue
     }
 
     /// The accepted language header field name
     open var acceptedLanguageHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.acceptLanguage.rawValue
+        UBHTTPHeaderField.StandardKeys.acceptLanguage.rawValue
     }
 
     /// The content language header field name
     open var contentLanguageHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.contentLanguage.rawValue
+        UBHTTPHeaderField.StandardKeys.contentLanguage.rawValue
     }
 
     /// The eTag header field name
     open var eTagHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.etag.rawValue
+        UBHTTPHeaderField.StandardKeys.etag.rawValue
     }
 
     /// The if none match header field name
     open var ifNoneMatchHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.ifNoneMatch.rawValue
+        UBHTTPHeaderField.StandardKeys.ifNoneMatch.rawValue
     }
 
     /// The if modified since header field name
     open var ifModifiedSinceHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.ifModifiedSince.rawValue
+        UBHTTPHeaderField.StandardKeys.ifModifiedSince.rawValue
     }
 
     /// The last modified header field name
     open var lastModifiedHeaderFieldName: String {
-        return UBHTTPHeaderField.StandardKeys.lastModified.rawValue
+        UBHTTPHeaderField.StandardKeys.lastModified.rawValue
     }
 }

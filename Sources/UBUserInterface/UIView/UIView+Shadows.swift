@@ -9,9 +9,9 @@ import UIKit
 
 // MARK: - UIView Shadow Extensions
 
-extension UIView {
+public extension UIView {
     /// Adds shadow to UIView with black color and other parameters
-    public func ub_addShadow(with color: UIColor = UIColor.black, radius: CGFloat, opacity: CGFloat, xOffset: CGFloat, yOffset: CGFloat) {
+    func ub_addShadow(with color: UIColor = UIColor.black, radius: CGFloat, opacity: CGFloat, xOffset: CGFloat, yOffset: CGFloat) {
         layer.shadowColor = color.cgColor
         layer.shadowOpacity = Float(opacity)
         layer.shadowOffset = CGSize(width: xOffset, height: yOffset)

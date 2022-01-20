@@ -16,7 +16,7 @@ public class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     private var _login: String
     /// The login details
     public var login: String {
-        return serial.sync {
+        serial.sync {
             _login
         }
     }
@@ -25,7 +25,7 @@ public class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     private var _password: String
     /// The password
     public var password: String {
-        return serial.sync {
+        serial.sync {
             _password
         }
     }

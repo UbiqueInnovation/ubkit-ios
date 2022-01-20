@@ -132,7 +132,7 @@ class HTTPRequestModifierTests: XCTestCase {
         let ex = expectation(description: "Request Modification")
 
         guard let testBundlePath = Bundle.module.path(forResource: "TestResources/LocalizationTestBundle", ofType: nil),
-            let testBundle = Bundle(path: testBundlePath) else {
+              let testBundle = Bundle(path: testBundlePath) else {
             fatalError("No test bundle found")
         }
         let frenchCHLocalization = UBLocalization(locale: Locale(identifier: "fr_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())

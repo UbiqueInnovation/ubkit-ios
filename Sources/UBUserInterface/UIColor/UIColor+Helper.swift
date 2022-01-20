@@ -9,10 +9,10 @@ import UIKit
 
 // MARK: - General helpers for UIColor
 
-extension UIColor {
+public extension UIColor {
     /// Color interpolation
     /// - Returns: Color as interpolation (self*firstFactor + color*(1.0-firstFactor)
-    public func ub_colorByInterpolating(with color: UIColor, firstFactor: CGFloat) -> UIColor {
+    func ub_colorByInterpolating(with color: UIColor, firstFactor: CGFloat) -> UIColor {
         var r1: CGFloat = 0
         var g1: CGFloat = 0
         var b1: CGFloat = 0
@@ -38,7 +38,7 @@ extension UIColor {
 
     /// Color multiplication
     /// - Returns: Color multiplyed by color
-    public func ub_colorByMultiplying(with color: UIColor) -> UIColor {
+    func ub_colorByMultiplying(with color: UIColor) -> UIColor {
         var r1: CGFloat = 0
         var g1: CGFloat = 0
         var b1: CGFloat = 0

@@ -12,7 +12,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         guard let stringKey = key as? String else {
             return nil
         }
-        let caseInsensitiveElement = self.first { (dictionarykey, value) in
+        let caseInsensitiveElement = self.first { dictionarykey, _ in
             guard let string = dictionarykey as? String else {
                 return false
             }

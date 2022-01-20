@@ -5,16 +5,15 @@
 //  Created by Marco Zimmermann on 23.09.19.
 //
 
-
 #if os(iOS) || os(tvOS)
-import UIKit
+    import UIKit
 
-// MARK: - UIFont Helpers
+    // MARK: - UIFont Helpers
 
-extension UIFont {
-    /// Returns the height of the font
-    public func ub_fontHeight() -> CGFloat {
-        return ascender - descender
+    public extension UIFont {
+        /// Returns the height of the font
+        func ub_fontHeight() -> CGFloat {
+            ascender - descender
+        }
     }
-}
 #endif

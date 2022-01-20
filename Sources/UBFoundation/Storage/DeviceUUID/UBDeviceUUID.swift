@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UBDeviceUUID {
+public enum UBDeviceUUID {
     public static func getUUID() -> String {
         if let uuid = keychainDeviecUUID {
             return uuid

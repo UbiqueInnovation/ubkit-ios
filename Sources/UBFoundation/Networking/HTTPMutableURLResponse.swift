@@ -53,7 +53,7 @@ class HTTPMutableURLResponse {
     /// - Parameter key: A key
     /// - Returns: The value associated with the key
     public func getHeaderField(key: UBHTTPHeaderField.StandardKeys) -> String? {
-        return getHeaderField(key: key.rawValue)
+        getHeaderField(key: key.rawValue)
     }
 
     /// Returns the header field for the key. The search is case insensitive.
@@ -61,7 +61,7 @@ class HTTPMutableURLResponse {
     /// - Parameter key: A standard key
     /// - Returns: The value associated with the key
     public func getHeaderField(key: String) -> String? {
-        return allHeaderFields.getCaseInsensitiveValue(key: key)
+        allHeaderFields.getCaseInsensitiveValue(key: key)
     }
 
     /// Set the header field value for the key. The key is case insensitive and will replace values with matching results.
@@ -70,7 +70,7 @@ class HTTPMutableURLResponse {
     /// - Parameter value: A value to set
     /// - Returns: The value associated with the key
     public func setHeaderField(value: String, key: UBHTTPHeaderField.StandardKeys) {
-        return allHeaderFields.setValue(value, forCaseInsensitiveKey: key.rawValue)
+        allHeaderFields.setValue(value, forCaseInsensitiveKey: key.rawValue)
     }
 
     /// Set the header field value for the key. The key is case insensitive and will replace values with matching results.
@@ -79,7 +79,7 @@ class HTTPMutableURLResponse {
     /// - Parameter value: A value to set
     /// - Returns: The value associated with the key
     public func setHeaderField(value: String, key: String) {
-        return allHeaderFields.setValue(value, forCaseInsensitiveKey: key)
+        allHeaderFields.setValue(value, forCaseInsensitiveKey: key)
     }
 
     /// Remove a header field. The search of a key is insensitive

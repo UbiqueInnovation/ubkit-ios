@@ -90,14 +90,14 @@ class MockLocationManager: UBLocationManagerProtocol {
     }
 
     func authorizationStatus() -> CLAuthorizationStatus {
-        return _authorizationStatus
+        _authorizationStatus
     }
 
     func locationServicesEnabled() -> Bool {
-        return true
+        true
     }
 
     func significantLocationChangeMonitoringAvailable() -> Bool {
-        return true
+        true
     }
 }

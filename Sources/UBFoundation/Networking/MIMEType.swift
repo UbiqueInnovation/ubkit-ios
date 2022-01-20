@@ -41,8 +41,8 @@ public struct UBMIMEType {
         }
 
         guard typeResult.numberOfRanges >= 3,
-            let typeCapturedRange = Range(typeResult.range(at: 1), in: input),
-            let subtypeCapturedRange = Range(typeResult.range(at: 2), in: input) else {
+              let typeCapturedRange = Range(typeResult.range(at: 1), in: input),
+              let subtypeCapturedRange = Range(typeResult.range(at: 2), in: input) else {
             return nil
         }
 
@@ -53,7 +53,7 @@ public struct UBMIMEType {
 
         let parameter: Parameter?
         if typeResult.numberOfRanges == 6, let keyCapturedRange = Range(typeResult.range(at: 4), in: input),
-            let valueCapturedRange = Range(typeResult.range(at: 5), in: input) {
+           let valueCapturedRange = Range(typeResult.range(at: 5), in: input) {
             let key = String(input[keyCapturedRange])
             let value = String(input[valueCapturedRange])
             parameter = Parameter(key: key, value: value)

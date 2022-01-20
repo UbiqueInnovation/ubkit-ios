@@ -13,7 +13,7 @@ public struct UBURLInterceptorResult {
     let data: Data?
     /// the HTTPURLResponse containing the header fields
     let response: HTTPURLResponse?
-    /// optionale error 
+    /// optionale error
     let error: Error?
     /// networking task info containing metrics about the network task
     let info: UBNetworkingTaskInfo?
@@ -28,16 +28,15 @@ public struct UBURLInterceptorResult {
     /// this initializer creates the HTTPURLResponse internally
     public init(data: Data?, url: URL) {
         #if !os(watchOS)
-        let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
+            let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
         #else
-        let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
+            let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
         #endif
         self.init(data: data,
                   response: HTTPURLResponse(url: url, statusCode: 200, httpVersion: "2.0", headerFields: [:]),
                   error: nil,
                   info: info)
     }
-
 }
 
 /// A request interceptor is called before a HTTPDataTask starts. It can be used to intercept the networ call and directly return a Response
