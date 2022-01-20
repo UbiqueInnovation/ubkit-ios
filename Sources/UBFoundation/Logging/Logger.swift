@@ -9,6 +9,10 @@
 import Foundation
 import os.log
 
+public protocol UBLoggerListener: AnyObject {
+    func log(message: String)
+}
+
 /// A logger wrapper for the OSLog that provide an easy way to log. The UBLogger is thread safe.
 public class UBLogger {
     /// The logger to use
@@ -17,10 +21,14 @@ public class UBLogger {
     /// Thread safety
     private let logLevelDispatchQueue: DispatchQueue
 
+    public weak static var listener: UBLoggerListener?
+
     // MARK: - Properties
 
     /// The backing value of the log level
     private var _logLevel: LogLevel = .default
+
+    private var category: String?
 
     /// The log level of the logger
     public var logLevel: LogLevel {
@@ -62,6 +70,7 @@ public class UBLogger {
         }
         let osLog = OSLog(subsystem: bundleIdentifier, category: category)
         self.init(osLog)
+        self.category = category
     }
 
     // MARK: - Log a message
@@ -89,9 +98,13 @@ public class UBLogger {
             let threadName = getCurrentThreadDescription()
             // Log the message and extra information
             os_log("[%{private}@] [%{private}@:%{private}@ %{private}@] > %{private}@", log: logger, type: type, threadName, file, line, functionName, message)
+
+            let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
+            Self.listener?.log(message: message)
         case (.private, .default):
             // Log only the message
             os_log("%{private}@", log: logger, type: type, message)
+            Self.listener?.log(message: message)
         case (.public, .verbose):
             // Get the name of the file
             let file = URL(fileURLWithPath: fileName).lastPathComponent
@@ -101,9 +114,15 @@ public class UBLogger {
             let threadName = getCurrentThreadDescription()
             // Log the message and extra information
             os_log("[%{public}@] [%{public}@:%{public}@ %{public}@] > %{public}@", log: logger, type: type, threadName, file, line, functionName, message)
+
+            let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
+            Self.listener?.log(message: message)
         case (.public, .default):
             // Log only the message
             os_log("%{public}@", log: logger, type: type, message)
+
+            let message = "\(self.category != nil ? "[\(self.category!)] " : "")\(message)"
+            Self.listener?.log(message: message)
         }
     }
 
@@ -190,6 +209,19 @@ extension UBLogger {
             return "Thread \(threadNumber)"
         } catch {
             return "Unknown"
+        }
+    }
+}
+
+extension OSLogType {
+    var string: String {
+        switch self {
+        case .debug: return "debug"
+        case .error: return "error"
+        case .fault: return "fault"
+        case .info: return "info"
+        default:
+            return "default"
         }
     }
 }
