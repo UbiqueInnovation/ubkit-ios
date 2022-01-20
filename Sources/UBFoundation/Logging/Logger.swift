@@ -21,14 +21,7 @@ public class UBLogger {
     /// Thread safety
     private let logLevelDispatchQueue: DispatchQueue
 
-    private static let logListenerQueue = DispatchQueue(label: "logLevelDispatchQueue")
-    private static var listeners: [UBLoggerListener] = []
-
-    public static func addListener(listener: UBLoggerListener) {
-        logListenerQueue.async {
-            listeners.append(listener)
-        }
-    }
+    public weak static var listener: UBLoggerListener?
 
     // MARK: - Properties
 
@@ -106,15 +99,12 @@ public class UBLogger {
             // Log the message and extra information
             os_log("[%{private}@] [%{private}@:%{private}@ %{private}@] > %{private}@", log: logger, type: type, threadName, file, line, functionName, message)
 
-            Self.logListenerQueue.async {
-                let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
-                Self.listeners.forEach {
-                    $0.log(message: message)
-                }
-            }
+            let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
+            Self.listener?.log(message: message)
         case (.private, .default):
             // Log only the message
             os_log("%{private}@", log: logger, type: type, message)
+            Self.listener?.log(message: message)
         case (.public, .verbose):
             // Get the name of the file
             let file = URL(fileURLWithPath: fileName).lastPathComponent
@@ -125,22 +115,14 @@ public class UBLogger {
             // Log the message and extra information
             os_log("[%{public}@] [%{public}@:%{public}@ %{public}@] > %{public}@", log: logger, type: type, threadName, file, line, functionName, message)
 
-            Self.logListenerQueue.async {
-                let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
-                Self.listeners.forEach {
-                    $0.log(message: message)
-                }
-            }
+            let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
+            Self.listener?.log(message: message)
         case (.public, .default):
             // Log only the message
             os_log("%{public}@", log: logger, type: type, message)
 
-            Self.logListenerQueue.async {
-                let message = "\(self.category != nil ? "[\(self.category!)] " : "")\(message)"
-                Self.listeners.forEach {
-                    $0.log(message: message)
-                }
-            }
+            let message = "\(self.category != nil ? "[\(self.category!)] " : "")\(message)"
+            Self.listener?.log(message: message)
         }
     }
 
