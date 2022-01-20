@@ -21,10 +21,10 @@ public class UBLogger {
     /// Thread safety
     private let logLevelDispatchQueue: DispatchQueue
 
-    static private let logListenerQueue = DispatchQueue(label: "logLevelDispatchQueue")
-    static private var listeners: [UBLoggerListener] = []
+    private static let logListenerQueue = DispatchQueue(label: "logLevelDispatchQueue")
+    private static var listeners: [UBLoggerListener] = []
 
-    static public func addListener(listener: UBLoggerListener) {
+    public static func addListener(listener: UBLoggerListener) {
         logListenerQueue.async {
             listeners.append(listener)
         }
@@ -124,7 +124,7 @@ public class UBLogger {
             let threadName = getCurrentThreadDescription()
             // Log the message and extra information
             os_log("[%{public}@] [%{public}@:%{public}@ %{public}@] > %{public}@", log: logger, type: type, threadName, file, line, functionName, message)
-            
+
             Self.logListenerQueue.async {
                 let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
                 Self.listeners.forEach {
