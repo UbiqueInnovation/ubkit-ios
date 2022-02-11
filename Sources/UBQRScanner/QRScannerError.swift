@@ -7,8 +7,10 @@
 
 import Foundation
 
+/// Collection of errors the `QRScannerView` methods can return
 public enum QRScannerError: Error {
     case cameraPermissionDenied
     case cameraPermissionRestricted
     case captureSessionError(Error?)
+    case torchError(Error?)
 }

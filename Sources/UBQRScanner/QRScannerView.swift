@@ -9,7 +9,14 @@ import Foundation
 import UIKit
 import AVFoundation
 
+/// A view that provides functionalty related to the scanning of QR codes and other supported formats,
+/// using the device's video camera. When started, the view displays the video camera feed. Events, like
+/// the successful scanning of a code or specific errors are received via the `QRScannerViewDelegate` methods.
+/// - Important: Apps using this view must provide a value for `NSCameraUsageDescription` in their `Info.plist`,
+/// else the app will crash as soon as the `startScanning()` method is called.
 public class QRScannerView: UIView {
+    
+    /// The delegate that should receive events like successfully scanned codes or errors
     public weak var delegate: QRScannerViewDelegate?
 
     private lazy var videoCaptureDevice: AVCaptureDevice? = AVCaptureDevice.default(for: .video)
@@ -69,15 +76,18 @@ public class QRScannerView: UIView {
         return super.layer as! AVCaptureVideoPreviewLayer
     }
 
+    /// Whether the capture session is currently running
     public var isRunning: Bool {
         return captureSession?.isRunning ?? false
     }
 
+    /// Whether the device has a torch that can be enabled
     public var canEnableTorch: Bool {
         guard let camera = videoCaptureDevice else { return false }
         return camera.hasTorch && camera.isTorchAvailable
     }
 
+    /// Start scanning, requesting the camera permission if needed
     public func startScanning() {
         isScanningPaused = false
         setupCaptureSessionIfNeeded()
@@ -87,24 +97,37 @@ public class QRScannerView: UIView {
         }
     }
 
+    /// Turn the torch on or off
     public func setTorch(on: Bool) {
         guard let camera = videoCaptureDevice, canEnableTorch else { return }
 
         isTorchOn = on
-        try? camera.setTorch(on: isTorchOn)
+        
+        do {
+            try camera.setTorch(on: isTorchOn)
+        } catch {
+            delegate?.qrScanningDidFailWithError(.torchError(error))
+        }
     }
 
+    /// Pauses the scanning, meaning that no input will be processed, but the
+    /// capture session will continue to run
     public func pauseScanning() {
         isScanningPaused = true
     }
 
-    public func stopScanning() {
+    /// Completely stops the capture session, by default also turning off the torch
+    public func stopScanning(alsoTurnOffTorch: Bool = true) {
         isScanningPaused = true
         captureSession?.stopRunning()
         delegate?.qrScanningDidStop()
 
-        setTorch(on: false)
+        if alsoTurnOffTorch {
+            setTorch(on: false)
+        }
     }
+    
+    // MARK: - Private helper methods
 
     /// Does the initial setup for captureSession
     private func setupCaptureSessionIfNeeded() {
