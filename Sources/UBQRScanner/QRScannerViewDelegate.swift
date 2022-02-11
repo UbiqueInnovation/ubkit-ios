@@ -1,6 +1,6 @@
 //
 //  QRScannerViewDelegate.swift
-//  
+//
 //
 //  Created by Matthias Felix on 11.02.22.
 //

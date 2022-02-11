@@ -1,13 +1,13 @@
 //
 //  QRScannerView.swift
-//  
+//
 //
 //  Created by Matthias Felix on 11.02.22.
 //
 
+import AVFoundation
 import Foundation
 import UIKit
-import AVFoundation
 
 /// A view that provides functionalty related to the scanning of QR codes and other supported formats,
 /// using the device's video camera. When started, the view displays the video camera feed. Events, like
@@ -15,7 +15,6 @@ import AVFoundation
 /// - Important: Apps using this view must provide a value for `NSCameraUsageDescription` in their `Info.plist`,
 /// else the app will crash as soon as the `startScanning()` method is called.
 public class QRScannerView: UIView {
-    
     /// The delegate that should receive events like successfully scanned codes or errors
     public weak var delegate: QRScannerViewDelegate?
 
@@ -25,24 +24,24 @@ public class QRScannerView: UIView {
     private var captureSession: AVCaptureSession?
 
     public private(set) var isTorchOn = false
-    
+
     private var lastIsRunning: Bool?
     private var lastIsTorchOn: Bool?
 
     /// When this is set to true, the capture session keeps running but no output is processed.
     /// One difference to stopping the scanning completely is that the torch can still be kept on while paused.
     private var isScanningPaused = true
-    
+
     private let metadataObjectTypes: [AVMetadataObject.ObjectType]
 
     public init(delegate: QRScannerViewDelegate, metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr, .ean8, .ean13, .pdf417, .aztec]) {
         self.metadataObjectTypes = metadataObjectTypes
-        
+
         super.init(frame: .zero)
-        
+
         self.delegate = delegate
         clipsToBounds = true
-        
+
         NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { [weak self] _ in
             guard let self = self else { return }
             self.lastIsRunning = self.isRunning
@@ -69,16 +68,16 @@ public class QRScannerView: UIView {
     // MARK: overriding the layerClass to return `AVCaptureVideoPreviewLayer`.
 
     override public class var layerClass: AnyClass {
-        return AVCaptureVideoPreviewLayer.self
+        AVCaptureVideoPreviewLayer.self
     }
 
     override public var layer: AVCaptureVideoPreviewLayer {
-        return super.layer as! AVCaptureVideoPreviewLayer
+        super.layer as! AVCaptureVideoPreviewLayer
     }
 
     /// Whether the capture session is currently running
     public var isRunning: Bool {
-        return captureSession?.isRunning ?? false
+        captureSession?.isRunning ?? false
     }
 
     /// Whether the device has a torch that can be enabled
@@ -102,7 +101,7 @@ public class QRScannerView: UIView {
         guard let camera = videoCaptureDevice, canEnableTorch else { return }
 
         isTorchOn = on
-        
+
         do {
             try camera.setTorch(on: isTorchOn)
         } catch {
@@ -126,7 +125,7 @@ public class QRScannerView: UIView {
             setTorch(on: false)
         }
     }
-    
+
     // MARK: - Private helper methods
 
     /// Does the initial setup for captureSession
