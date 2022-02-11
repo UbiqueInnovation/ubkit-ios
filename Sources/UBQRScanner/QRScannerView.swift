@@ -68,9 +68,7 @@ public class QRScannerView: UIView {
     override public var layer: AVCaptureVideoPreviewLayer {
         return super.layer as! AVCaptureVideoPreviewLayer
     }
-}
 
-extension QRScannerView {
     public var isRunning: Bool {
         return captureSession?.isRunning ?? false
     }
