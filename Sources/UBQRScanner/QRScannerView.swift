@@ -17,7 +17,10 @@ public class QRScannerView: UIView {
     /// capture session which allows us to start and stop scanning.
     private var captureSession: AVCaptureSession?
 
-    private var isTorchOn = false
+    public private(set) var isTorchOn = false
+    
+    private var lastIsRunning: Bool?
+    private var lastIsTorchOn: Bool?
 
     /// When this is set to true, the capture session keeps running but no output is processed.
     /// One difference to stopping the scanning completely is that the torch can still be kept on while paused.
@@ -32,6 +35,23 @@ public class QRScannerView: UIView {
         
         self.delegate = delegate
         clipsToBounds = true
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { [weak self] _ in
+            guard let self = self else { return }
+            self.lastIsRunning = self.isRunning
+            self.lastIsTorchOn = self.isTorchOn
+            self.stopScanning()
+        }
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [weak self] _ in
+            guard let self = self else { return }
+            if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
+                self.startScanning()
+                if let lastIsTorchOn = self.lastIsTorchOn, lastIsTorchOn == true {
+                    self.setTorch(on: true)
+                }
+            }
+            self.lastIsRunning = nil
+        }
     }
 
     @available(*, unavailable)
@@ -94,9 +114,9 @@ extension QRScannerView {
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         switch status {
         case .restricted:
-            scanningDidFail(error: .permissionRestricted)
+            scanningDidFail(error: .cameraPermissionRestricted)
         case .denied:
-            scanningDidFail(error: .permissionDenied)
+            scanningDidFail(error: .cameraPermissionDenied)
         default:
             if captureSession == nil {
                 captureSession = AVCaptureSession()
@@ -114,14 +134,14 @@ extension QRScannerView {
         do {
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
         } catch {
-            scanningDidFail(error: .internal(error))
+            scanningDidFail(error: .captureSessionError(error))
             return
         }
 
         if captureSession?.canAddInput(videoInput) ?? false {
             captureSession?.addInput(videoInput)
         } else {
-            scanningDidFail(error: .internal(nil))
+            scanningDidFail(error: .captureSessionError(nil))
             return
         }
 
@@ -132,7 +152,7 @@ extension QRScannerView {
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
             metadataOutput.metadataObjectTypes = metadataObjectTypes
         } else {
-            scanningDidFail(error: .internal(nil))
+            scanningDidFail(error: .captureSessionError(nil))
             return
         }
 

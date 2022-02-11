@@ -8,7 +8,7 @@
 import Foundation
 
 public enum QRScannerError: Error {
-    case permissionDenied
-    case permissionRestricted
-    case `internal`(Error?)
+    case cameraPermissionDenied
+    case cameraPermissionRestricted
+    case captureSessionError(Error?)
 }

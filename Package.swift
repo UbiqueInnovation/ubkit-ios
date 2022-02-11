@@ -14,6 +14,7 @@ let package = Package(
         .library(name: "UBUserInterface", targets: ["UBUserInterface"]),
         .library(name: "UBLocation", targets: ["UBLocation"]),
         .library(name: "UBPush", targets: ["UBPush"]),
+        .library(name: "UBQRScanner", targets: ["UBQRScanner"]),
     ],
     dependencies: [],
     targets: [
@@ -21,6 +22,7 @@ let package = Package(
         .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
+        .target(name: "UBQRScanner"),
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation"],
                     resources: [
