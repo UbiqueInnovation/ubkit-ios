@@ -158,23 +158,21 @@ public class QRScannerView: UIView {
             return
         }
 
-        if captureSession?.canAddInput(videoInput) ?? false {
-            captureSession?.addInput(videoInput)
-        } else {
+        guard let captureSession = captureSession, captureSession.canAddInput(videoInput) else {
             scanningDidFail(error: .captureSessionError(nil))
             return
         }
+        captureSession.addInput(videoInput)
 
         let metadataOutput = AVCaptureMetadataOutput()
 
-        if captureSession?.canAddOutput(metadataOutput) ?? false {
-            captureSession?.addOutput(metadataOutput)
-            metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-            metadataOutput.metadataObjectTypes = metadataObjectTypes
-        } else {
+        guard captureSession.canAddOutput(metadataOutput) else {
             scanningDidFail(error: .captureSessionError(nil))
             return
         }
+        metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+        metadataOutput.metadataObjectTypes = metadataObjectTypes
+        captureSession.addOutput(metadataOutput)
 
         layer.session = captureSession
         layer.videoGravity = .resizeAspectFill
