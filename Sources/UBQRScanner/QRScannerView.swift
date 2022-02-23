@@ -170,9 +170,9 @@ public class QRScannerView: UIView {
             scanningDidFail(error: .captureSessionError(nil))
             return
         }
+        captureSession.addOutput(metadataOutput)
         metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
         metadataOutput.metadataObjectTypes = metadataObjectTypes
-        captureSession.addOutput(metadataOutput)
 
         layer.session = captureSession
         layer.videoGravity = .resizeAspectFill
