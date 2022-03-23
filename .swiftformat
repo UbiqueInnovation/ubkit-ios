@@ -2,6 +2,7 @@
 --disable initCoderUnavailable
 --disable redundantType
 --disable redundantSelf
+--disable unusedArguments
 
 # Don't format generated files
 --exclude **/Strings+Generated.swift

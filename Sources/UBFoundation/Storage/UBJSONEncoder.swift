@@ -18,8 +18,7 @@ public class UBJSONEncoder: JSONEncoder {
                 T.self == Date.self ||
                 T.self == Bool.self ||
                 T.self == String.self ||
-                T.self == String?.self
-            {
+                T.self == String?.self {
                 let encodedDate = try super.encode([value])
                 var encodedString = String(data: encodedDate, encoding: .utf8)
                 // remove "[" and "]"
