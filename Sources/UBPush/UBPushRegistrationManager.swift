@@ -118,11 +118,11 @@ open class UBPushRegistrationManager: NSObject {
                 UIApplication.shared.endBackgroundTask(self.backgroundTask)
             }
         }
-        
+
         if task != nil {
             modifyRegistrationDataTask(&task!)
         }
-        
+
         task?.start()
         UBPushManager.logger.info("\(String(describing: self)) started")
     }
@@ -145,7 +145,7 @@ open class UBPushRegistrationManager: NSObject {
         }
         return request
     }
-    
+
     /// This method can be overwritten by subclasses to modify the data task
     /// for the registration request, e.g. to add request modifiers. It will be called
     /// each time the push registration is triggered, right before the task is started.
