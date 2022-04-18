@@ -21,6 +21,8 @@ open class UBBaseCachingLogic: UBCachingLogic {
     private let UserInfoKeyMetrics = "UserInfoKeyMetrics"
     private let UserInfoKeyMethod = "UserInfoKeyMethod"
 
+    private let UserInfoKeyAcceptLanguage = "Accept-Language"
+
     /// Initializes the caching logic with a policy and a quality of service
     ///
     /// - Parameters:
@@ -133,7 +135,11 @@ open class UBBaseCachingLogic: UBCachingLogic {
         // If successful then cache the data
         var userInfo = [AnyHashable: Any]()
         if let metrics = metrics {
-            userInfo[UserInfoKeyMetrics] = metrics
+//            userInfo[UserInfoKeyMetrics] = metrics
+        }
+        if let headers = request.allHTTPHeaderFields,
+           let acceptHeader = headers.getCaseInsensitiveValue(key: acceptedLanguageHeaderFieldName) {
+            userInfo[UserInfoKeyAcceptLanguage] = acceptHeader
         }
         userInfo[UserInfoKeyMethod] = request.httpMethod
 
@@ -208,8 +214,11 @@ open class UBBaseCachingLogic: UBCachingLogic {
             }
         }
 
+
+        // Get the content language from the cached response header. If no language header was stored, assume that the content was cached in the language of the accept header
+        let contentLanguage = response.ub_getHeaderField(key: contentLanguageHeaderFieldName) ?? (cachedResponse.userInfo?[UserInfoKeyAcceptLanguage] as? String)
         // Check that the content language of the cached response is contained in the request accepted language
-        if let contentLanguage = response.ub_getHeaderField(key: contentLanguageHeaderFieldName),
+        if let contentLanguage = contentLanguage,
            let acceptLanguage = request.value(forHTTPHeaderField: acceptedLanguageHeaderFieldName),
            acceptLanguage.lowercased().contains(contentLanguage.lowercased()) == false {
             return modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .contentLanguageNotAccepted(contentLanguage))
