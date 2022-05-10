@@ -59,6 +59,11 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         return progress
     }
 
+    /// :nodoc:
+    public var countOfBytesReceived: Int64 {
+        dataTask?.countOfBytesReceived ?? 0
+    }
+
     /// The underlaying data task
     private var dataTask: URLSessionDataTask?
 
