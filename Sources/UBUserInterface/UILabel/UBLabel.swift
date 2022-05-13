@@ -26,8 +26,6 @@ public protocol UBLabelType {
 // MARK: - UBLabel
 
 open class UBLabel<T: UBLabelType>: UILabel {
-    private let type: T
-
     /// Simple way to initialize Label with T and optional textColor to override standard color of type. Standard multiline and left-aligned.
     public init(_ type: T, textColor: UIColor? = nil, numberOfLines: Int = 0, textAlignment: NSTextAlignment = .left) {
         self.type = type
@@ -42,6 +40,13 @@ open class UBLabel<T: UBLabelType>: UILabel {
 
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    public var type: T {
+        didSet {
+            font = type.font
+            update()
+        }
     }
 
     override public var text: String? {
