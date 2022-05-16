@@ -39,7 +39,7 @@ public class UBDataPassthroughDecoder: UBURLDataTaskDecoder<Data> {
     /// Initializes the decoder
     public init() {
         super.init { data, _ -> Data in
-            return data
+            data
         }
     }
 }

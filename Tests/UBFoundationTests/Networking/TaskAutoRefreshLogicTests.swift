@@ -434,7 +434,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
     }
 }
 
-fileprivate class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
+private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     override var nextRefreshHeaderFieldName: String {
         "x-amz-meta-next-refresh"
     }
