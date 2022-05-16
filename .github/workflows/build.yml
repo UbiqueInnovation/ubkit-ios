@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCODE_VERSION: 'latest-stable'
+  XCODE_VERSION: 'Xcode_13.3.1'
 
 on:
   push:
