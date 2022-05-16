@@ -34,6 +34,16 @@ open class UBURLDataTaskDecoder<T> {
     }
 }
 
+/// Decoder that simply forwards the data without actual parying
+public class UBDataPassthroughDecoder: UBURLDataTaskDecoder<Data> {
+    /// Initializes the decoder
+    public init() {
+        super.init { data, _ -> Data in
+            return data
+        }
+    }
+}
+
 /// A string decoder
 public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String> {
     /// Initializes the decoder
