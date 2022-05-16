@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Nicolas Märki on 16.05.22.
 //
@@ -18,14 +18,12 @@ class ConcurrentNetworkTests: XCTestCase {
         do {
             let _ = try await UBURLDataTask.loadOnce(request: brokenSampleRequest)
             XCTAssert(false)
-        }
-        catch {
+        } catch {
             // error is good
         }
     }
 
     func testCronStream() async throws {
-
         let stream = UBURLDataTask.startCronStream(request: sampleRequest, session: fastCronSession)
         var count = 0
         for try await _ in stream {
@@ -34,7 +32,6 @@ class ConcurrentNetworkTests: XCTestCase {
                 return
             }
         }
-        
     }
 
     private var sampleRequest: UBURLRequest {
@@ -60,7 +57,7 @@ class ConcurrentNetworkTests: XCTestCase {
     }
 }
 
-fileprivate class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
+private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     override var nextRefreshHeaderFieldName: String {
         "x-amz-meta-next-refresh"
     }
