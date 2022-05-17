@@ -31,7 +31,7 @@ public protocol UBAsyncURLRequestModifier: UBURLRequestModifier {
 }
 
 @available(iOS 13.0, *)
-extension UBAsyncURLRequestModifier {
+public extension UBAsyncURLRequestModifier {
     func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         Task {
             do {
