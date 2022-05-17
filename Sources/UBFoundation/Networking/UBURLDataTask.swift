@@ -301,7 +301,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         state = .parsing
 
-        notifyCompletion(data: data, response: unwrappedResponse, info: info)
+        // Empty body
+        let dataOrEmpty = data ?? Data()
+
+        notifyCompletion(data: dataOrEmpty, response: unwrappedResponse, info: info)
     }
 
     // MARK: - Request Modifier
@@ -511,7 +514,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// :nodoc:
-    private func notifyCompletion(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?) {
+    private func notifyCompletion(data: Data, response: HTTPURLResponse, info: UBNetworkingTaskInfo?) {
         state = .finished
         completionHandlers.forEach { $0.parse(data: data, response: response, info: info, callbackQueue: $0.callbackQueue ?? self.getCallbackQueue(), caller: self) }
     }
@@ -560,61 +563,11 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         return unwrappedResult
     }
 
-    /// Starts the data task and blocks the current thread until a response or an error are returned
-    ///
-    /// - Returns: The result of the task
     @discardableResult
-    public func startSynchronous() -> (result: Result<Data?, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
-        synchronousStartSemaphore.wait()
-
-        flags.insert(.synchronous)
-
-        var fetchedResult: (Result<Data?, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
-
-        let completionBlockIdentifier = addCompletionHandler { [weak self] result, response, taskInfo, dataTask in
-            fetchedResult = (result, response, taskInfo, dataTask)
-            self?.synchronousStartSemaphore.signal()
-        }
-
-        start()
-
-        // timeout should fire to completion handler, but never called for cancelled requests
-        // semaphore timeout to avoid deadlock
-        let timeout = Int(request.timeoutInterval * 2.0)
-        let waitResult = synchronousStartSemaphore.wait(timeout: DispatchTime.now() + DispatchTimeInterval.seconds(timeout))
-
-        if waitResult == .timedOut {
-            return (Result.failure(.timedOut), nil, nil, self)
-        }
-
-        removeCompletionHandler(identifier: completionBlockIdentifier)
-
-        guard let unwrappedResult = fetchedResult else {
-            return (Result.failure(.internal(.unwrapError)), nil, nil, self)
-        }
-
-        synchronousStartSemaphore.signal()
-
-        flags.remove(.synchronous)
-
-        return unwrappedResult
+    public func startSynchronous() -> (result: Result<Data, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
+        startSynchronous(decoder: UBDataPassthroughDecoder())
     }
 
-
-    /// Adds a completion handler that gets the raw data as is.
-    ///
-    /// - Parameter completionHandler: A completion handler
-    /// - Parameter callbackQueue: If not null, the queue where this specific handler will be called
-    /// Returns: Identifier token that can be used to remove the handler later
-    @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
-    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingNullableDataBlock, callbackQueue: OperationQueue? = nil) -> UUID {
-        let wrapper = CompletionHandlerWrapper(completion: completionHandler, callbackQueue: callbackQueue)
-        let uuid = CompletionHandlerIdentifier()
-        completionHandlersDispatchQueue.sync {
-            _completionHandlers[uuid] = wrapper
-        }
-        return uuid
-    }
 
     /// Adds a completion handler that gets the data decoded by the specified decoder.
     ///
@@ -632,6 +585,11 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             _completionHandlers[uuid] = wrapper
         }
         return uuid
+    }
+
+    @discardableResult
+    public func addCompletionHandler(completionHandler: @escaping CompletionHandlingBlock<Data>) -> UUID {
+        addCompletionHandler(decoder: UBDataPassthroughDecoder(), completionHandler: completionHandler)
     }
 
 
@@ -750,7 +708,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 extension UBURLDataTask {
     /// This is a wrapper that holds reference for a completion handler
     private struct CompletionHandlerWrapper {
-        private let executionBlock: (Data?, HTTPURLResponse, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
+        private let executionBlock: (Data, HTTPURLResponse, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
         private let failureBlock: (UBNetworkingError, Data?, HTTPURLResponse?, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
         let callbackQueue: OperationQueue?
 
@@ -759,12 +717,6 @@ extension UBURLDataTask {
             self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
-                guard let data = data else {
-                    callbackQueue.addOperation {
-                        completion(.failure(UBNetworkingError.internal(.responseBodyIsEmpty)), response, info, caller)
-                    }
-                    return
-                }
                 do {
                     let decoded = try decoder.decode(data: data, response: response)
                     callbackQueue.addOperation {
@@ -790,12 +742,6 @@ extension UBURLDataTask {
             self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
-                guard let data = data else {
-                    callbackQueue.addOperation {
-                        completion(.failure(UBNetworkingError.internal(.responseBodyIsEmpty)), response, info, caller)
-                    }
-                    return
-                }
                 do {
                     let decoded = try decoder.decode(data: data, response: response)
                     callbackQueue.addOperation {
@@ -825,24 +771,7 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        init(completion: @escaping CompletionHandlingNullableDataBlock, callbackQueue: OperationQueue?) {
-            self.callbackQueue = callbackQueue
-            // Create the block that gets called when success
-            executionBlock = { data, response, info, callbackQueue, caller in
-                callbackQueue.addOperation {
-                    completion(.success(data), response, info, caller)
-                }
-            }
-            // Create a block to be called on failure
-            failureBlock = { error, _, response, info, callbackQueue, caller in
-                callbackQueue.addOperation {
-                    completion(.failure(error), response, info, caller)
-                }
-            }
-        }
-
-        /// :nodoc:
-        func parse(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
+        func parse(data: Data, response: HTTPURLResponse, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
             executionBlock(data, response, info, callbackQueue, caller)
         }
 

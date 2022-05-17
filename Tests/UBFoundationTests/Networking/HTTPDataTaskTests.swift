@@ -295,7 +295,7 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
             case let .success(data):
-                XCTAssertNil(data)
+                XCTAssertEqual(data.count, 0)
             case .failure:
                 XCTFail()
             }
