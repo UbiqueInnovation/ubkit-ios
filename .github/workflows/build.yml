@@ -1,8 +1,5 @@
 name: Build & Test
 
-env:
-  XCODE_VERSION: 'Xcode_13.3.1'
-
 on:
   push:
     branches:
@@ -20,6 +17,11 @@ jobs:
 
     - name: Switch to ${{ env.XCODE_VERSION }}
       run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
+      
+    - name: "Select the latest stable Xcode 13"
+      uses: devbotsxyz/xcode-select@v1
+      with:
+        version: "13"
 
     - name: Fastlane
       run: fastlane tests
