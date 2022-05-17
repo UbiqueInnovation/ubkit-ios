@@ -42,16 +42,29 @@ class ConcurrentNetworkTests: XCTestCase {
 
     func testRepeatingStream() async throws {
         let task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
+        var count = 0
         for try await _ in task.startCronStream() {
+            count += 1
             break
         }
         for try await _ in task.startCronStream() {
+            count += 1
             break
         }
+        XCTAssertEqual(count, 2)
     }
 
     func testStoppingStream() async throws {
-        var task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
+        var task: UBURLDataTask? = UBURLDataTask(request: sampleRequest, session: fastCronSession)
+        var count = 0
+        for try await _ in task!.startCronStream() {
+            count += 1
+            XCTAssertLessThan(count, 3)
+            if count == 2 {
+                task = nil
+            }
+        }
+        XCTAssertEqual(count, 2)
     }
 
     private var sampleRequest: UBURLRequest {
