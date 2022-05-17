@@ -15,7 +15,7 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
       
-    - name: "Select the latest stable Xcode 13"
+    - name: "Select Xcode 13"
       uses: devbotsxyz/xcode-select@v1
       with:
         version: "13"
@@ -35,3 +35,18 @@ jobs:
       with:
         name: build-test-logs
         path: build
+        
+  codequality:
+    name: Codequality
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+  
+    - name: "Select Xcode 13"
+      uses: devbotsxyz/xcode-select@v1
+      with:
+        version: "13"
+
+    - name: swiftformat
+      run: swiftformat Sources,Tests --lint
