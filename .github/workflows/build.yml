@@ -14,9 +14,6 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-
-    - name: Switch to ${{ env.XCODE_VERSION }}
-      run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
       
     - name: "Select the latest stable Xcode 13"
       uses: devbotsxyz/xcode-select@v1
