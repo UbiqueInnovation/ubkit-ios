@@ -127,8 +127,12 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         self.init(request: UBURLRequest(url: url), taskDescription: taskDescription, priority: priority, session: session, callbackQueue: callbackQueue)
     }
 
+    /// Can be used to get notified before the task stops due to deallocation
+    var cleanupBeforeDeinit: (()->Void)?
+
     /// :nodoc:
     deinit {
+        cleanupBeforeDeinit?()
         dataTaskProgressObservation?.invalidate()
         dataTaskProgressObservation = nil
         dataTaskStateObservation?.invalidate()
@@ -503,13 +507,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private func notifyCompletion(error: UBNetworkingError, data: Data?, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?) {
         state = .finished
-        completionHandlers.forEach { $0.fail(error: error, data: data, response: response, info: info, callbackQueue: getCallbackQueue(), caller: self) }
+        completionHandlers.forEach { $0.fail(error: error, data: data, response: response, info: info, callbackQueue: $0.callbackQueue ?? getCallbackQueue(), caller: self) }
     }
 
     /// :nodoc:
     private func notifyCompletion(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?) {
         state = .finished
-        completionHandlers.forEach { $0.parse(data: data, response: response, info: info, callbackQueue: self.getCallbackQueue(), caller: self) }
+        completionHandlers.forEach { $0.parse(data: data, response: response, info: info, callbackQueue: $0.callbackQueue ?? self.getCallbackQueue(), caller: self) }
     }
 
     /// A semaphore to ensure when starting a task in synchronous mode, to block the current thread
