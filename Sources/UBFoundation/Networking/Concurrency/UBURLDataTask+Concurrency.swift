@@ -23,7 +23,7 @@ public extension UBURLDataTask {
 
             var id: UUID?
 
-            id = self.addCompletionHandler(decoder: decoder) { result, response, info, task in
+            id = self.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
                 case let .success(res):
                         cont.resume(returning: (result: res, meta: MetaData(info: info, response: response)))
@@ -44,8 +44,7 @@ public extension UBURLDataTask {
 
     func startCronStream<T>(decoder: UBURLDataTaskDecoder<T>) -> AsyncThrowingStream<(T, MetaData), Error> {
         AsyncThrowingStream { cont in
-            let task = UBURLDataTask(request: request, taskDescription: taskDescription, priority: priority, session: session, callbackQueue: Self.concurrencyCallbackQueue)
-            let id = task.addCompletionHandler(decoder: decoder) { result, response, info, task in
+            let id = self.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
                 case let .success(res):
                         cont.yield((res, MetaData(info: info, response: response)))
@@ -54,11 +53,14 @@ public extension UBURLDataTask {
                 }
             }
 
-            cont.onTermination = { @Sendable _ in
-                task.cancel()
-                task.removeCompletionHandler(identifier: id)
+            cont.onTermination = { @Sendable [weak self] _ in
+                self?.cancel()
+                self?.removeCompletionHandler(identifier: id)
             }
-            task.start()
+            self.cleanupBeforeDeinit = {
+                cont.finish()
+            }
+            self.start()
         }
     }
 
