@@ -304,12 +304,23 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// All the request modifiers
     private let requestModifier = UBURLRequestModifierGroup()
+
     /// Adds a request modifier.
     ///
     /// This modifier will be called everytime before the request is sent, and it gets a chance to modify the request.
     ///
     /// - Parameter modifier: The request modifier to add
     public func addRequestModifier(_ modifier: UBURLRequestModifier) {
+        requestModifier.append(modifier)
+    }
+
+    /// Adds a async request modifier.
+    ///
+    /// This modifier will be called everytime before the request is sent, and it gets a chance to modify the request.
+    ///
+    /// - Parameter modifier: The request modifier to add
+    @available(iOS 13.0, *)
+    public func addRequestModifier(_ modifier: UBAsyncURLRequestModifier) {
         requestModifier.append(modifier)
     }
 
@@ -585,12 +596,15 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         return unwrappedResult
     }
 
+
     /// Adds a completion handler that gets the raw data as is.
     ///
     /// - Parameter completionHandler: A completion handler
-    @discardableResult
-    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingNullableDataBlock) -> UUID {
-        let wrapper = CompletionHandlerWrapper(completion: completionHandler)
+    /// - Parameter callbackQueue: If not null, the queue where this specific handler will be called
+    /// Returns: Identifier token that can be used to remove the handler later
+    @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
+    public func addCompletionHandler(_ completionHandler: @escaping CompletionHandlingNullableDataBlock, callbackQueue: OperationQueue? = nil) -> UUID {
+        let wrapper = CompletionHandlerWrapper(completion: completionHandler, callbackQueue: callbackQueue)
         let uuid = CompletionHandlerIdentifier()
         completionHandlersDispatchQueue.sync {
             _completionHandlers[uuid] = wrapper
@@ -604,16 +618,18 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///
     /// - Parameters:
     ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
+    ///   - Parameter callbackQueue: If not null, the queue where this specific handler will be called
     ///   - completionHandler: A completion handler
     @discardableResult
-    public func addCompletionHandler<T>(decoder: UBURLDataTaskDecoder<T>, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
-        let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler)
+    public func addCompletionHandler<T>(decoder: UBURLDataTaskDecoder<T>, callbackQueue: OperationQueue? = nil, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
+        let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler, callbackQueue: callbackQueue)
         let uuid = CompletionHandlerIdentifier()
         completionHandlersDispatchQueue.sync {
             _completionHandlers[uuid] = wrapper
         }
         return uuid
     }
+
 
     /// Adds a completion handler that gets the data decoded by the specified decoder.
     /// In case of ab error, the handler gets the error object decoded by the spcified errorDecoder.
@@ -624,9 +640,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
     ///   - errorDecoder: The decoder to
     ///   - completionHandler: A completion handler
+    ///   - callbackQueue: If not null, where the callback will be executed
     @discardableResult
-    public func addCompletionHandler<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
-        let wrapper = CompletionHandlerWrapper(decoder: decoder, errorDecoder: errorDecoder, completion: completionHandler)
+    public func addCompletionHandler<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, callbackQueue: OperationQueue? = nil, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
+        let wrapper = CompletionHandlerWrapper(decoder: decoder, errorDecoder: errorDecoder, completion: completionHandler, callbackQueue: callbackQueue)
         let uuid = CompletionHandlerIdentifier()
         completionHandlersDispatchQueue.sync {
             _completionHandlers[uuid] = wrapper
@@ -731,9 +748,11 @@ extension UBURLDataTask {
     private struct CompletionHandlerWrapper {
         private let executionBlock: (Data?, HTTPURLResponse, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
         private let failureBlock: (UBNetworkingError, Data?, HTTPURLResponse?, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
+        let callbackQueue: OperationQueue?
 
         /// :nodoc:
-        init<T>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping CompletionHandlingBlock<T>) {
+        init<T>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
+            self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
@@ -763,7 +782,8 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        init<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completion: @escaping CompletionHandlingBlock<T>) {
+        init<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
+            self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
@@ -801,7 +821,8 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        init(completion: @escaping CompletionHandlingNullableDataBlock) {
+        init(completion: @escaping CompletionHandlingNullableDataBlock, callbackQueue: OperationQueue?) {
+            self.callbackQueue = callbackQueue
             // Create the block that gets called when success
             executionBlock = { data, response, info, callbackQueue, caller in
                 callbackQueue.addOperation {
