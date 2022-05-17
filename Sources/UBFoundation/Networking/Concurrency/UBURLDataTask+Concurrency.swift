@@ -9,36 +9,46 @@ import Foundation
 
 @available(iOS 13.0, *)
 public extension UBURLDataTask {
+
+    struct MetaData {
+        let info: UBNetworkingTaskInfo?
+        let response: HTTPURLResponse?
+    }
+
     private static let concurrencyCallbackQueue = OperationQueue()
 
-    static func loadOnce<T>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = Networking.sharedSession) async throws -> (T, UBNetworkingTaskInfo?) {
-        let task = UBURLDataTask(request: request, taskDescription: taskDescription, priority: priority, session: session, callbackQueue: Self.concurrencyCallbackQueue)
+    func loadOnce<T>(decoder: UBURLDataTaskDecoder<T>) async throws -> (result: T, meta: MetaData) {
 
         return try await withCheckedThrowingContinuation { cont in
 
-            task.addCompletionHandler(decoder: decoder) { result, response, info, task in
+            var id: UUID?
+
+            id = self.addCompletionHandler(decoder: decoder) { result, response, info, task in
                 switch result {
                 case let .success(res):
-                    cont.resume(returning: (res, info))
+                        cont.resume(returning: (result: res, meta: MetaData(info: info, response: response)))
                 case let .failure(e):
                     cont.resume(throwing: e)
                 }
+                if let id = id {
+                    self.removeCompletionHandler(identifier: id)
+                }
             }
-            task.start()
+            self.start()
         }
     }
 
-    static func loadOnce(request: UBURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = Networking.sharedSession) async throws -> (Data, UBNetworkingTaskInfo?) {
-        try await Self.loadOnce(request: request, decoder: UBDataPassthroughDecoder(), taskDescription: taskDescription, priority: priority, session: session)
+    func loadOnce() async throws -> (Data, MetaData) {
+        try await self.loadOnce(decoder: UBDataPassthroughDecoder())
     }
 
-    static func startCronStream<T>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = Networking.sharedSession) -> AsyncThrowingStream<T, Error> {
+    func startCronStream<T>(decoder: UBURLDataTaskDecoder<T>) -> AsyncThrowingStream<(T, MetaData), Error> {
         AsyncThrowingStream { cont in
             let task = UBURLDataTask(request: request, taskDescription: taskDescription, priority: priority, session: session, callbackQueue: Self.concurrencyCallbackQueue)
-            task.addCompletionHandler(decoder: decoder) { result, response, info, task in
+            let id = task.addCompletionHandler(decoder: decoder) { result, response, info, task in
                 switch result {
                 case let .success(res):
-                    cont.yield(res)
+                        cont.yield((res, MetaData(info: info, response: response)))
                 case let .failure(e):
                     cont.finish(throwing: e)
                 }
@@ -46,12 +56,13 @@ public extension UBURLDataTask {
 
             cont.onTermination = { @Sendable _ in
                 task.cancel()
+                task.removeCompletionHandler(identifier: id)
             }
             task.start()
         }
     }
 
-    static func startCronStream(request: UBURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = Networking.sharedSession) -> AsyncThrowingStream<Data, Error> {
-        Self.startCronStream(request: request, decoder: UBDataPassthroughDecoder(), taskDescription: taskDescription, priority: priority, session: session)
+    func startCronStream() -> AsyncThrowingStream<(Data, MetaData), Error> {
+        self.startCronStream(decoder: UBDataPassthroughDecoder())
     }
 }

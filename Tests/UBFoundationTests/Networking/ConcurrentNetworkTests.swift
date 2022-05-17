@@ -11,12 +11,18 @@ import XCTest
 @available(iOS 13.0.0, *)
 class ConcurrentNetworkTests: XCTestCase {
     func testBasicRequest() async throws {
-        let _ = try await UBURLDataTask.loadOnce(request: sampleRequest)
+        let _ = try await UBURLDataTask(request: sampleRequest).loadOnce()
+    }
+
+    func testRepeatedRequest() async throws {
+        let task = UBURLDataTask(request: sampleRequest)
+        let _ = try await task.loadOnce()
+        let _ = try await task.loadOnce()
     }
 
     func testRequestError() async throws {
         do {
-            let _ = try await UBURLDataTask.loadOnce(request: brokenSampleRequest)
+            let _ = try await UBURLDataTask(request: brokenSampleRequest).loadOnce()
             XCTAssert(false)
         } catch {
             // error is good
@@ -24,14 +30,28 @@ class ConcurrentNetworkTests: XCTestCase {
     }
 
     func testCronStream() async throws {
-        let stream = UBURLDataTask.startCronStream(request: sampleRequest, session: fastCronSession)
+        let task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
         var count = 0
-        for try await _ in stream {
+        for try await _ in task.startCronStream() {
             count += 1
             if count >= 3 {
                 return
             }
         }
+    }
+
+    func testRepeatingStream() async throws {
+        let task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
+        for try await _ in task.startCronStream() {
+            break
+        }
+        for try await _ in task.startCronStream() {
+            break
+        }
+    }
+
+    func testStoppingStream() async throws {
+        var task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
     }
 
     private var sampleRequest: UBURLRequest {
