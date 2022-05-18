@@ -128,7 +128,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// Can be used to get notified before the task stops due to deallocation
-    var cleanupBeforeDeinit: (()->Void)?
+    var cleanupBeforeDeinit: (() -> Void)?
 
     /// :nodoc:
     deinit {
@@ -568,7 +568,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         startSynchronous(decoder: UBDataPassthroughDecoder())
     }
 
-
     /// Adds a completion handler that gets the data decoded by the specified decoder.
     ///
     /// If no data is returned, there will be an error raised and the result will fail.
@@ -591,7 +590,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     public func addCompletionHandler(completionHandler: @escaping CompletionHandlingBlock<Data>) -> UUID {
         addCompletionHandler(decoder: UBDataPassthroughDecoder(), completionHandler: completionHandler)
     }
-
 
     /// Adds a completion handler that gets the data decoded by the specified decoder.
     /// In case of ab error, the handler gets the error object decoded by the spcified errorDecoder.
