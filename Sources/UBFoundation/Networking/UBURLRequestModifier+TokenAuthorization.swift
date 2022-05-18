@@ -49,5 +49,3 @@ public extension UBAsyncURLRequestTokenAuthorization {
         return modifierRequest
     }
 }
-
-

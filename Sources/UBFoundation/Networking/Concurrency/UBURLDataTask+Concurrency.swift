@@ -9,7 +9,6 @@ import Foundation
 
 @available(iOS 13.0, *)
 public extension UBURLDataTask {
-
     struct MetaData {
         let info: UBNetworkingTaskInfo?
         let response: HTTPURLResponse?
@@ -18,7 +17,6 @@ public extension UBURLDataTask {
     private static let concurrencyCallbackQueue = OperationQueue()
 
     func loadOnce<T>(decoder: UBURLDataTaskDecoder<T>) async throws -> (result: T, meta: MetaData) {
-
         return try await withCheckedThrowingContinuation { cont in
 
             var id: UUID?
@@ -26,7 +24,7 @@ public extension UBURLDataTask {
             id = self.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
                 case let .success(res):
-                        cont.resume(returning: (result: res, meta: MetaData(info: info, response: response)))
+                    cont.resume(returning: (result: res, meta: MetaData(info: info, response: response)))
                 case let .failure(e):
                     cont.resume(throwing: e)
                 }
@@ -47,7 +45,7 @@ public extension UBURLDataTask {
             let id = self.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
                 case let .success(res):
-                        cont.yield((res, MetaData(info: info, response: response)))
+                    cont.yield((res, MetaData(info: info, response: response)))
                 case let .failure(e):
                     cont.finish(throwing: e)
                 }
