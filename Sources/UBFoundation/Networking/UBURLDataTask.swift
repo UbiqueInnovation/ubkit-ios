@@ -127,12 +127,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         self.init(request: UBURLRequest(url: url), taskDescription: taskDescription, priority: priority, session: session, callbackQueue: callbackQueue)
     }
 
-    /// Can be used to get notified before the task stops due to deallocation
-    var cleanupBeforeDeinit: (() -> Void)?
-
     /// :nodoc:
     deinit {
-        cleanupBeforeDeinit?()
         dataTaskProgressObservation?.invalidate()
         dataTaskProgressObservation = nil
         dataTaskStateObservation?.invalidate()
