@@ -71,9 +71,9 @@ public extension UBURLDataTask {
                 }
             }
 
-            cont.onTermination = { @Sendable [weak self] _ in
-                self?.cancel()
-                self?.removeCompletionHandler(identifier: id)
+            cont.onTermination = { @Sendable [self] _ in
+                self.cancel()
+                self.removeCompletionHandler(identifier: id)
             }
 
             self.start()
@@ -91,9 +91,9 @@ public extension UBURLDataTask {
                 }
             }
 
-            cont.onTermination = { @Sendable [weak self] _ in
-                self?.cancel()
-                self?.removeCompletionHandler(identifier: id)
+            cont.onTermination = { @Sendable [self] _ in
+                self.cancel()
+                self.removeCompletionHandler(identifier: id)
             }
             self.start()
         }
