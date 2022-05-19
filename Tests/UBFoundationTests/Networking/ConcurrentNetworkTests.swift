@@ -23,7 +23,7 @@ class ConcurrentNetworkTests: XCTestCase {
     func testRequestError() async throws {
         do {
             let _ = try await UBURLDataTask(request: brokenSampleRequest).loadOnce()
-            XCTAssert(false)
+            XCTFail("Should not reach this")
         } catch {
             // error is good
         }
@@ -65,6 +65,21 @@ class ConcurrentNetworkTests: XCTestCase {
             }
         }
         XCTAssertEqual(count, 2)
+    }
+
+    func testTaskCancellation() throws {
+        let exp1 = expectation(description: "After first result")
+        let exp2 = expectation(description: "After cancel")
+        let t = Task.detached {
+            let task = UBURLDataTask(request: self.sampleRequest, session: self.fastCronSession)
+            for try await _ in task.startCronStream() {
+                exp1.fulfill()
+            }
+            exp2.fulfill()
+        }
+        wait(for: [exp1], timeout: 30)
+        t.cancel()
+        wait(for: [exp2], timeout: 30)
     }
 
     private var sampleRequest: UBURLRequest {
