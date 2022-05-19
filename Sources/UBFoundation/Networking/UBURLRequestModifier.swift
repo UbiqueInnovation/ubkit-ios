@@ -25,7 +25,7 @@ public protocol UBAsyncURLRequestModifier: UBURLRequestModifier {
     /// - Parameters:
     ///   - originalRequest: The original request before modification or the most recent request updated by the previous modifiers.
     ///   - completion: The completion handler to be called when the modification are finished.
-    func modifyRequest(_ originalRequest: UBURLRequest) async throws -> UBURLRequest
+    func modifyRequest(_ request: inout UBURLRequest) async throws
 }
 
 @available(iOS 13.0, *)
@@ -33,7 +33,8 @@ public extension UBAsyncURLRequestModifier {
     func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         Task {
             do {
-                let newRequest = try await modifyRequest(originalRequest)
+                var newRequest = originalRequest
+                try await modifyRequest(&newRequest)
                 completion(.success(newRequest))
             } catch {
                 completion(.failure(error))
