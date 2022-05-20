@@ -54,19 +54,6 @@ class ConcurrentNetworkTests: XCTestCase {
         XCTAssertEqual(count, 2)
     }
 
-    func testStoppingStream() async throws {
-        var task: UBURLDataTask? = UBURLDataTask(request: sampleRequest, session: fastCronSession)
-        var count = 0
-        for try await _ in task!.startCronStream() {
-            count += 1
-            XCTAssertLessThan(count, 3)
-            if count == 2 {
-                task = nil
-            }
-        }
-        XCTAssertEqual(count, 2)
-    }
-
     func testTaskCancellation() throws {
         let exp1 = expectation(description: "After first result")
         let exp2 = expectation(description: "After cancel")
