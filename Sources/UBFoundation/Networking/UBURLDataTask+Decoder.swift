@@ -22,6 +22,13 @@ open class UBURLDataTaskDecoder<T> {
         self.logic = logic
     }
 
+    public init<M>(withBase baseDecoder: UBURLDataTaskDecoder<M>, additionalLogic: @escaping (M, Data, HTTPURLResponse) throws -> T) {
+        self.logic = { data, response in
+            let m = try baseDecoder.decode(data: data, response: response)
+            return try additionalLogic(m, data, response)
+        }
+    }
+
     /// Attempt to decode the data
     ///
     /// - Parameters:
@@ -31,6 +38,25 @@ open class UBURLDataTaskDecoder<T> {
     /// - Throws: If the decoding encountered an issue
     public final func decode(data: Data, response: HTTPURLResponse) throws -> T {
         try logic(data, response)
+    }
+}
+
+public protocol UBURLDataTaskErrorDecoder {
+    func decode(data: Data, response: HTTPURLResponse, baseError: UBNetworkingError) throws -> Error
+}
+
+extension UBURLDataTaskDecoder: UBURLDataTaskErrorDecoder where T: Error {
+    public func decode(data: Data, response: HTTPURLResponse, baseError: UBNetworkingError) throws -> Error {
+        try decode(data: data, response: response)
+    }
+}
+
+public final class UBErrorPassthroughDecoder: UBURLDataTaskErrorDecoder {
+    public init() {
+        
+    }
+    public func decode(data: Data, response: HTTPURLResponse, baseError: UBNetworkingError) -> Error {
+        baseError
     }
 }
 
@@ -63,7 +89,7 @@ public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String> {
     }
 }
 
-extension UBURLDataTaskDecoder where T == String {
+public extension UBURLDataTaskDecoder where T == String {
     static let string = UBHTTPStringDecoder()
 }
 
@@ -91,7 +117,7 @@ public class UBHTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
     }
 }
 
-extension UBURLDataTaskDecoder where T: Decodable {
+public extension UBURLDataTaskDecoder where T: Decodable {
     static func json(decoder: JSONDecoder = JSONDecoder()) -> UBURLDataTaskDecoder {
         UBHTTPJSONDecoder(decoder: decoder)
     }

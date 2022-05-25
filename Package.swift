@@ -12,6 +12,7 @@ let package = Package(
     products: [
         .library(name: "UBFoundation", targets: ["UBFoundation"]),
         .library(name: "UBUserInterface", targets: ["UBUserInterface"]),
+        .library(name: "UBSwiftUI", targets: ["UBSwiftUI"]),
         .library(name: "UBLocation", targets: ["UBLocation"]),
         .library(name: "UBPush", targets: ["UBPush"]),
         .library(name: "UBQRScanner", targets: ["UBQRScanner"]),
@@ -20,6 +21,7 @@ let package = Package(
     targets: [
         .target(name: "UBFoundation"),
         .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
+        .target(name: "UBSwiftUI", dependencies: ["UBFoundation"]),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
         .target(name: "UBQRScanner"),

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Networking errors
-public enum UBNetworkingError: LocalizedError, Equatable {
+public enum UBNetworkingError: LocalizedError {
     /// Not connected to the internet (e.g., airplane mode, data not allowed)
     case notConnected
     /// The connection timed out
@@ -17,7 +17,11 @@ public enum UBNetworkingError: LocalizedError, Equatable {
     case certificateValidationFailed
     /// We cannot provide actionable information to the user. It is likely that something is broken on our end
     case `internal`(UBInternalNetworkingError)
+    /// decoded error using custom error decoder
+    case decoded(Error)
 }
+
+public protocol EquatableError: Error, Equatable { }
 
 public enum UBInternalNetworkingError: LocalizedError, Equatable {
     /// The URL is missing in the request
@@ -58,12 +62,6 @@ public enum UBInternalNetworkingError: LocalizedError, Equatable {
     case otherNSURLError(NSError)
 }
 
-/// A structure that encapsulate the error body returned from the backend
-public protocol UBURLDataTaskErrorBody: Error {
-    /// The base error that was initially generated and passed up the stack
-    var baseError: Error? { get set }
-}
-
 extension UBNetworkingError {
     init(_ error: Error) {
         switch error {
@@ -96,6 +94,13 @@ extension UBNetworkingError: UBCodedError {
         case .notConnected: return "\(errorCodePrefix)NOCONN"
         case .timedOut: return "\(errorCodePrefix)TIMEDOUT"
         case .certificateValidationFailed: return "\(errorCodePrefix)CVF"
+        case let .decoded(error):
+                if let error = error as? UBCodedError {
+                    return "\(errorCodePrefix)DEC\(error.errorCode)"
+                }
+                else {
+                    return "\(errorCodePrefix)DEC"
+                }
         case let .internal(error): return error.errorCode
         }
     }

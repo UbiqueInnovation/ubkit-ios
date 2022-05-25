@@ -36,7 +36,7 @@ public extension UBURLDataTask {
         }
     }
 
-    func loadOnce<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>) async throws -> (T, MetaData) {
+    func loadOnce<T>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<Error>? = nil) async throws -> (T, MetaData) {
         return try await withCheckedThrowingContinuation { cont in
 
             var id: UUID?
@@ -60,27 +60,9 @@ public extension UBURLDataTask {
         try await self.loadOnce(decoder: UBDataPassthroughDecoder())
     }
 
-    func startCronStream<T>(decoder: UBURLDataTaskDecoder<T>) -> AsyncThrowingStream<(T, MetaData), Error> {
-        AsyncThrowingStream { cont in
-            let id = self.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
-                switch result {
-                case let .success(res):
-                    cont.yield((res, MetaData(info: info, response: response)))
-                case let .failure(e):
-                    cont.finish(throwing: e)
-                }
-            }
 
-            cont.onTermination = { @Sendable [self] _ in
-                self.cancel()
-                self.removeCompletionHandler(identifier: id)
-            }
 
-            self.start()
-        }
-    }
-
-    func startCronStream<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>) -> AsyncThrowingStream<(T, MetaData), Error> {
+    func startCronStream<T>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<Error>? = nil) -> AsyncThrowingStream<(T, MetaData), Error> {
         AsyncThrowingStream { [self] cont in
             let id = self.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
@@ -98,6 +80,7 @@ public extension UBURLDataTask {
             self.start()
         }
     }
+
 
     func startCronStream() -> AsyncThrowingStream<(Data, MetaData), Error> {
         self.startCronStream(decoder: UBDataPassthroughDecoder())
