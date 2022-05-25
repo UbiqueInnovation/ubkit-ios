@@ -5,6 +5,8 @@
 //  Created by Nicolas Märki on 22.05.22.
 //
 
+#if canImport(SwiftUI) && (!os(iOS) || arch(arm64))
+
 import SwiftUI
 import UBFoundation
 
@@ -174,3 +176,5 @@ struct SwiftUIView_Previews: PreviewProvider {
         }
     }
 }
+
+#endif
