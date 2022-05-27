@@ -177,65 +177,65 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 return
             }
             switch result {
-            case let .failure(error):
-                self.requestStartSemaphore.signal()
-                self.attemptRecovery(data: nil, response: nil, error: error)
-            case let .success(modifiedRequest):
-
-                func startRequest() {
-                    // Create a new task from the preferences
-                    guard let dataTask = self.session.dataTask(with: modifiedRequest, owner: self) else {
-                        if self.state == .cancelled {
-                            self.state = .finished
-                        }
-                        self.requestStartSemaphore.signal()
-                        return
-                    }
-
-                    // Set priority and description
-                    dataTask.priority = self.priority
-                    dataTask.taskDescription = self.taskDescription
-
-                    if #available(iOS 11.0, *) {
-                        // Observe the task progress
-                        self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-                            guard let self = self else {
-                                return
-                            }
-
-                            self.notifyProgress(task.progress.fractionCompleted)
-                        })
-                    }
-
-                    // Observe the task state
-                    self.dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
-                        switch task.state {
-                        case .running:
-                            if self?.state != .fetching, self?.state != .cancelled {
-                                self?.state = .fetching
-                            }
-                        default:
-                            break
-                        }
-                    })
-
-                    self.dataTask = dataTask
+                case let .failure(error):
                     self.requestStartSemaphore.signal()
-                    dataTask.resume()
-                }
+                    self.attemptRecovery(data: nil, response: nil, error: error)
+                case let .success(modifiedRequest):
 
-                if let interceptor = self.requestInterceptor {
-                    interceptor.interceptRequest(modifiedRequest) { [weak self] interceptorResult in
-                        guard let self = self else { return }
-                        if let result = interceptorResult {
-                            self.dataTaskCompleted(data: result.data, response: result.response, error: result.error, info: result.info)
-                        } else {
-                            startRequest()
+                    func startRequest() {
+                        // Create a new task from the preferences
+                        guard let dataTask = self.session.dataTask(with: modifiedRequest, owner: self) else {
+                            if self.state == .cancelled {
+                                self.state = .finished
+                            }
+                            self.requestStartSemaphore.signal()
+                            return
                         }
+
+                        // Set priority and description
+                        dataTask.priority = self.priority
+                        dataTask.taskDescription = self.taskDescription
+
+                        if #available(iOS 11.0, *) {
+                            // Observe the task progress
+                            self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
+                                guard let self = self else {
+                                    return
+                                }
+
+                                self.notifyProgress(task.progress.fractionCompleted)
+                            })
+                        }
+
+                        // Observe the task state
+                        self.dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
+                            switch task.state {
+                                case .running:
+                                    if self?.state != .fetching, self?.state != .cancelled {
+                                        self?.state = .fetching
+                                    }
+                                default:
+                                    break
+                            }
+                        })
+
+                        self.dataTask = dataTask
+                        self.requestStartSemaphore.signal()
+                        dataTask.resume()
                     }
-                } else {
-                    startRequest()
-                }
+
+                    if let interceptor = self.requestInterceptor {
+                        interceptor.interceptRequest(modifiedRequest) { [weak self] interceptorResult in
+                            guard let self = self else { return }
+                            if let result = interceptorResult {
+                                self.dataTaskCompleted(data: result.data, response: result.response, error: result.error, info: result.info)
+                            } else {
+                                startRequest()
+                            }
+                        }
+                    } else {
+                        startRequest()
+                    }
             }
         }
     }
@@ -252,13 +252,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         failureRecoveryStrategy.cancelCurrentRecovery()
         dataTask?.cancel()
         switch state {
-        case .initial, .parsing, .finished, .cancelled:
-            break
-        case .fetching, .waitingExecution:
-            // don't change request state if currently starting
-            requestStartSemaphore.wait()
-            state = .cancelled
-            requestStartSemaphore.signal()
+            case .initial, .parsing, .finished, .cancelled:
+                break
+            case .fetching, .waitingExecution:
+                // don't change request state if currently starting
+                requestStartSemaphore.wait()
+                state = .cancelled
+                requestStartSemaphore.signal()
         }
 
         if notifyCompletion {
@@ -354,18 +354,18 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         /// :nodoc:
         public var debugDescription: String {
             switch self {
-            case .initial:
-                return "Initial"
-            case .waitingExecution:
-                return "Waiting Execution"
-            case .fetching:
-                return "Fetching"
-            case .parsing:
-                return "Parsing"
-            case .finished:
-                return "Finished"
-            case .cancelled:
-                return "Canceled"
+                case .initial:
+                    return "Initial"
+                case .waitingExecution:
+                    return "Waiting Execution"
+                case .fetching:
+                    return "Fetching"
+                case .parsing:
+                    return "Parsing"
+                case .finished:
+                    return "Finished"
+                case .cancelled:
+                    return "Canceled"
             }
         }
     }
@@ -377,21 +377,21 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         willSet {
             // Validate state machine
             switch (_state, newValue) {
-            case (.initial, .waitingExecution), // Put the task in the queue
-                 (.waitingExecution, .fetching), // Start task
-                 (.waitingExecution, .cancelled), // Cancel task
-                 (.waitingExecution, .parsing), // Returned from cache
-                 (.waitingExecution, .finished), // RecoverStrategy cannotRecover a RequestModifier
-                 (.fetching, .parsing), // Data received
-                 (.fetching, .finished), // Error received
-                 (.fetching, .cancelled), // Cancel task
-                 (.parsing, .finished), // Data parsed
-                 (.finished, .waitingExecution), // Restart task
-                 (.cancelled, .cancelled), // Cancelled
-                 (.cancelled, .waitingExecution): // Restart task
-                break
-            default:
-                fatalError("Invalid state transition from \(_state) -> \(newValue)")
+                case (.initial, .waitingExecution), // Put the task in the queue
+                     (.waitingExecution, .fetching), // Start task
+                     (.waitingExecution, .cancelled), // Cancel task
+                     (.waitingExecution, .parsing), // Returned from cache
+                     (.waitingExecution, .finished), // RecoverStrategy cannotRecover a RequestModifier
+                     (.fetching, .parsing), // Data received
+                     (.fetching, .finished), // Error received
+                     (.fetching, .cancelled), // Cancel task
+                     (.parsing, .finished), // Data parsed
+                     (.finished, .waitingExecution), // Restart task
+                     (.cancelled, .cancelled), // Cancelled
+                     (.cancelled, .waitingExecution): // Restart task
+                    break
+                default:
+                    fatalError("Invalid state transition from \(_state) -> \(newValue)")
             }
         }
         didSet {
@@ -712,15 +712,15 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private func attemptRecovery(data: Data?, response: HTTPURLResponse?, error: Error) {
         failureRecoveryStrategy.recoverTask(self, data: data, response: response, error: error) { [weak self] result in
             switch result {
-            case .cannotRecover:
-                self?.notifyCompletion(error: UBNetworkingError(error), data: data, response: response, info: nil)
-            case let .recoveryOptions(options: options):
-                let error = UBNetworkingError(options)
-                self?.notifyCompletion(error: error, data: data, response: response, info: nil)
-            case let .recovered(data: data, response: response, info: info):
-                self?.notifyCompletion(data: data, response: response, info: info)
-            case .restartDataTask:
-                self?.start(ignoreCache: false)
+                case .cannotRecover:
+                    self?.notifyCompletion(error: UBNetworkingError(error), data: data, response: response, info: nil)
+                case let .recoveryOptions(options: options):
+                    let error = UBNetworkingError(options)
+                    self?.notifyCompletion(error: error, data: data, response: response, info: nil)
+                case let .recovered(data: data, response: response, info: info):
+                    self?.notifyCompletion(data: data, response: response, info: info)
+                case .restartDataTask:
+                    self?.start(ignoreCache: false)
             }
         }
     }

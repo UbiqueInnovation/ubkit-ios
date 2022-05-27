@@ -27,10 +27,10 @@ class HTTPDataTaskTests: XCTestCase {
         operationQueue.addOperation {
             let response = dataTask.startSynchronous()
             switch response.result {
-            case .success:
-                break
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
             }
             ex1.fulfill()
         }
@@ -60,10 +60,10 @@ class HTTPDataTaskTests: XCTestCase {
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .failure:
-                break
-            case .success:
-                XCTFail("Should have failed")
+                case .failure:
+                    break
+                case .success:
+                    XCTFail("Should have failed")
             }
             ex1.fulfill()
         }
@@ -103,10 +103,10 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addFailureRecoveryStrategy(recovery)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .failure:
-                break
-            case .success:
-                XCTFail("Should have failed")
+                case .failure:
+                    break
+                case .success:
+                    XCTFail("Should have failed")
             }
             ex1.fulfill()
         }
@@ -150,18 +150,18 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addFailureRecoveryStrategy(recovery)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                if case let UBNetworkingError.internal(.recoverableError(recovery)) = error {
-                    XCTAssertFalse(recovery.recoveryOptions.isEmpty)
-                    recovery.attemptRecovery(optionIndex: 0, resultHandler: { success in
-                        XCTAssertTrue(success)
-                        ex2.fulfill()
-                    })
-                } else {
-                    XCTFail()
-                }
-            case .success:
-                XCTFail("Should have failed")
+                case let .failure(error):
+                    if case let UBNetworkingError.internal(.recoverableError(recovery)) = error {
+                        XCTAssertFalse(recovery.recoveryOptions.isEmpty)
+                        recovery.attemptRecovery(optionIndex: 0, resultHandler: { success in
+                            XCTAssertTrue(success)
+                            ex2.fulfill()
+                        })
+                    } else {
+                        XCTFail()
+                    }
+                case .success:
+                    XCTFail("Should have failed")
             }
             ex1.fulfill()
         }
@@ -180,10 +180,10 @@ class HTTPDataTaskTests: XCTestCase {
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                break
-            case .failure:
-                XCTFail("Should have returned success with empty")
+                case .success:
+                    break
+                case .failure:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -225,10 +225,10 @@ class HTTPDataTaskTests: XCTestCase {
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler(decoder: UBHTTPJSONDecoder<TestStruct>()) { result, _, _, _ in
             switch result {
-            case let .success(test):
-                XCTAssertEqual(test.value, "A")
-            default:
-                XCTFail("Should have returned success with empty")
+                case let .success(test):
+                    XCTAssertEqual(test.value, "A")
+                default:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -252,29 +252,29 @@ class HTTPDataTaskTests: XCTestCase {
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, response, _, _ in
             switch result {
-            case .success:
-                break
-            case .failure:
-                XCTFail("Should have returned data")
+                case .success:
+                    break
+                case .failure:
+                    XCTFail("Should have returned data")
             }
             XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
             ex1.fulfill()
         }
         dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(), completionHandler: { result, _, _, _ in
             switch result {
-            case .failure:
-                break
-            default:
-                XCTFail("Should have failed parsing")
+                case .failure:
+                    break
+                default:
+                    XCTFail("Should have failed parsing")
             }
             ex2.fulfill()
         })
         dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(encoding: .utf16), completionHandler: { result, _, _, _ in
             switch result {
-            case let .success(data):
-                XCTAssertEqual(data, "Hello")
-            default:
-                XCTFail("Should have returned a string")
+                case let .success(data):
+                    XCTAssertEqual(data, "Hello")
+                default:
+                    XCTFail("Should have returned a string")
             }
             ex3.fulfill()
         })
@@ -294,10 +294,10 @@ class HTTPDataTaskTests: XCTestCase {
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .success(data):
-                XCTAssertNil(data)
-            case .failure:
-                XCTFail()
+                case let .success(data):
+                    XCTAssertNil(data)
+                case .failure:
+                    XCTFail()
             }
             ex1.fulfill()
         }
@@ -319,10 +319,10 @@ class HTTPDataTaskTests: XCTestCase {
         }
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
-            case .success:
-                XCTFail("Should have returned success with empty")
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
+                case .success:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -345,10 +345,10 @@ class HTTPDataTaskTests: XCTestCase {
         ])
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
-            case .success:
-                XCTFail("Should have returned success with empty")
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
+                case .success:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -372,16 +372,16 @@ class HTTPDataTaskTests: XCTestCase {
         XCTAssertEqual(dataTask.state, .initial)
         dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
-            case .waitingExecution:
-                ex1.fulfill()
-            case .fetching:
-                ex2.fulfill()
-            case .parsing:
-                ex3.fulfill()
-            case .finished:
-                ex4.fulfill()
-            default:
-                break
+                case .waitingExecution:
+                    ex1.fulfill()
+                case .fetching:
+                    ex2.fulfill()
+                case .parsing:
+                    ex3.fulfill()
+                case .finished:
+                    ex4.fulfill()
+                default:
+                    break
             }
         }
         dataTask.start()
@@ -429,12 +429,12 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
-            case .waitingExecution:
-                ex1.fulfill()
-            case .cancelled:
-                ex2.fulfill()
-            default:
-                XCTFail()
+                case .waitingExecution:
+                    ex1.fulfill()
+                case .cancelled:
+                    ex2.fulfill()
+                default:
+                    XCTFail()
             }
         }
 
@@ -444,10 +444,10 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
-            case .success:
-                XCTFail()
+                case let .failure(error):
+                    XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
+                case .success:
+                    XCTFail()
             }
         }
 
@@ -482,14 +482,14 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
-            case .waitingExecution:
-                ex1.fulfill()
-            case .fetching:
-                ex2.fulfill()
-            case .cancelled:
-                ex3.fulfill()
-            default:
-                XCTFail()
+                case .waitingExecution:
+                    ex1.fulfill()
+                case .fetching:
+                    ex2.fulfill()
+                case .cancelled:
+                    ex3.fulfill()
+                default:
+                    XCTFail()
             }
         }
 
@@ -508,10 +508,10 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
-            case .success:
-                XCTFail()
+                case let .failure(error):
+                    XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
+                case .success:
+                    XCTFail()
             }
         }
 

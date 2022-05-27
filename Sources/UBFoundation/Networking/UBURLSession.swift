@@ -54,57 +54,57 @@ public class UBURLSession: UBDataTaskURLSession {
         }
 
         switch (urlSession.configuration.requestCachePolicy, cacheResult) {
-        case (.reloadIgnoringLocalAndRemoteCacheData, _),
-             (.reloadIgnoringLocalCacheData, _),
-             (.reloadRevalidatingCacheData, .miss),
-             (.useProtocolCachePolicy, .miss),
-             (.returnCacheDataElseLoad, .miss):
+            case (.reloadIgnoringLocalAndRemoteCacheData, _),
+                 (.reloadIgnoringLocalCacheData, _),
+                 (.reloadRevalidatingCacheData, .miss),
+                 (.useProtocolCachePolicy, .miss),
+                 (.returnCacheDataElseLoad, .miss):
 
-            owner.completionHandlersDispatchQueue.sync {
-                sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
-            }
-            return createTask(request.getRequest())
-
-        case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
-             let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
-             let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
-             let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)):
-            #if os(watchOS)
-                let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
-            #else
-                let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
-            #endif
-
-            owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
-            owner.completionHandlersDispatchQueue.sync {
-                if let response = cachedResponse.response as? HTTPURLResponse {
-                    sessionDelegate.cachingLogic?.hasUsed(response: response, metrics: metrics, request: request.getRequest(), dataTask: owner)
+                owner.completionHandlersDispatchQueue.sync {
+                    sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
                 }
-            }
-            return nil
+                return createTask(request.getRequest())
 
-        case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _, metrics: _)),
-             (.returnCacheDataDontLoad, .miss):
-            sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
-            owner.completionHandlersDispatchQueue.sync {
-                owner.dataTaskCompleted(data: nil, response: nil, error: UBInternalNetworkingError.noCachedData, info: nil)
-            }
-            return nil
+            case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
+                 let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
+                 let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
+                 let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)):
+                #if os(watchOS)
+                    let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
+                #else
+                    let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
+                #endif
 
-        case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
-             let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
-             let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)):
-            var reloadRequest = request.getRequest()
-            for header in reloadHeaders {
-                reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
-            }
-            owner.completionHandlersDispatchQueue.sync {
+                owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
+                owner.completionHandlersDispatchQueue.sync {
+                    if let response = cachedResponse.response as? HTTPURLResponse {
+                        sessionDelegate.cachingLogic?.hasUsed(response: response, metrics: metrics, request: request.getRequest(), dataTask: owner)
+                    }
+                }
+                return nil
+
+            case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _, metrics: _)),
+                 (.returnCacheDataDontLoad, .miss):
                 sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
-            }
-            return createTask(reloadRequest, cachedResponse: cachedResponse)
+                owner.completionHandlersDispatchQueue.sync {
+                    owner.dataTaskCompleted(data: nil, response: nil, error: UBInternalNetworkingError.noCachedData, info: nil)
+                }
+                return nil
 
-        @unknown default:
-            fatalError()
+            case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
+                 let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
+                 let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)):
+                var reloadRequest = request.getRequest()
+                for header in reloadHeaders {
+                    reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
+                }
+                owner.completionHandlersDispatchQueue.sync {
+                    sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
+                }
+                return createTask(reloadRequest, cachedResponse: cachedResponse)
+
+            @unknown default:
+                fatalError()
         }
     }
 

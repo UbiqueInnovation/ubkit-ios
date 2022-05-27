@@ -89,16 +89,16 @@ extension URLRequest.NetworkServiceType {
     var equivalentDispatchQOS: DispatchQoS {
         let qos: DispatchQoS
         switch self {
-        case .background:
-            qos = .background
-        case .responsiveData:
-            qos = .userInitiated
-        case .video, .voip, .voice, .callSignaling, .avStreaming, .responsiveAV:
-            qos = .userInteractive
-        case .default:
-            qos = .default
-        @unknown default:
-            fatalError()
+            case .background:
+                qos = .background
+            case .responsiveData:
+                qos = .userInitiated
+            case .video, .voip, .voice, .callSignaling, .avStreaming, .responsiveAV:
+                qos = .userInteractive
+            case .default:
+                qos = .default
+            @unknown default:
+                fatalError()
         }
         return qos
     }

@@ -82,15 +82,15 @@ open class UBBaseCachingLogic: UBCachingLogic {
         // Check the status code
         let statusCodeCategory = UBHTTPCodeCategory(code: response.statusCode)
         switch statusCodeCategory {
-        case .serverError, .informational, .redirection, .clientError, .uncategorized:
-            // If not success then no caching
-            return nil
-        case .success:
-            guard let encapsulatedData = proposedCacheResponseWhenSuccessfull(for: session, dataTask: dataTask, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics) else {
+            case .serverError, .informational, .redirection, .clientError, .uncategorized:
+                // If not success then no caching
                 return nil
-            }
-            let cachedResponse = CachedURLResponse(response: encapsulatedData.response, data: encapsulatedData.data, userInfo: encapsulatedData.userInfo, storagePolicy: storagePolicy)
-            return cachedResponse
+            case .success:
+                guard let encapsulatedData = proposedCacheResponseWhenSuccessfull(for: session, dataTask: dataTask, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics) else {
+                    return nil
+                }
+                let cachedResponse = CachedURLResponse(response: encapsulatedData.response, data: encapsulatedData.data, userInfo: encapsulatedData.userInfo, storagePolicy: storagePolicy)
+                return cachedResponse
         }
     }
 
@@ -185,7 +185,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
         /// Make sure the cached response uses the same HTTP method
         if let httpMethod = cachedResponse.userInfo?[UserInfoKeyMethod] as? String,
-            httpMethod != request.httpMethod {
+           httpMethod != request.httpMethod {
             return .miss
         }
 
@@ -213,7 +213,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
                 return result
             }
         }
-
 
         // Get the content language from the cached response header. If no language header was stored, assume that the content was cached in the language of the accept header
         let contentLanguage = response.ub_getHeaderField(key: contentLanguageHeaderFieldName) ?? (cachedResponse.userInfo?[UserInfoKeyAcceptLanguage] as? String)

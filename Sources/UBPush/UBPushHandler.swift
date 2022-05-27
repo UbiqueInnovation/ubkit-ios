@@ -125,12 +125,12 @@ open class UBPushHandler {
 
             let message: String
             switch (notification.userInfo["aps"] as? [String: Any])?["alert"] {
-            case let stringAlert as String:
-                message = stringAlert
-            case let dictAlert as [String: Any]:
-                message = (dictAlert["body"] as? String) ?? ""
-            default:
-                message = ""
+                case let stringAlert as String:
+                    message = stringAlert
+                case let dictAlert as [String: Any]:
+                    message = (dictAlert["body"] as? String) ?? ""
+                default:
+                    message = ""
             }
 
             showInAppPushAlert(withTitle: appName, proposedMessage: message, notification: notification, shouldPresentCompletionHandler: shouldPresentCompletionHandler)

@@ -32,10 +32,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                XCTFail()
-            case .failure:
-                break
+                case .success:
+                    XCTFail()
+                case .failure:
+                    break
             }
             ex.fulfill()
         }
@@ -49,10 +49,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                break
-            case .failure:
-                XCTFail()
+                case .success:
+                    break
+                case .failure:
+                    XCTFail()
             }
             ex.fulfill()
         }
@@ -68,10 +68,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                XCTFail()
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.internal(.requestRedirected))
+                case .success:
+                    XCTFail()
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.internal(.requestRedirected))
             }
             ex.fulfill()
         }
@@ -85,10 +85,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: Networking.sharedLowPrioritySession)
         dataTask.addCompletionHandler { result, response, _, _ in
             switch result {
-            case .success:
-                break
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
             }
             XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.ok)
             ex.fulfill()
@@ -107,10 +107,10 @@ class UBSessionTests: XCTestCase {
         }
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                XCTFail()
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.internal(.otherNSURLError(Err.x as NSError)))
+                case .success:
+                    XCTFail()
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.internal(.otherNSURLError(Err.x as NSError)))
             }
             ex.fulfill()
         }
@@ -127,10 +127,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
         dataTask.addCompletionHandler { result, response, _, _ in
             switch result {
-            case .success:
-                break
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
             }
             XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.ok)
             ex.fulfill()
@@ -148,10 +148,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                XCTFail("Certificate Pinning should have failed")
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
+                case .success:
+                    XCTFail("Certificate Pinning should have failed")
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -168,10 +168,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                XCTFail("Certificate Pinning should have failed")
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
+                case .success:
+                    XCTFail("Certificate Pinning should have failed")
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -188,10 +188,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                XCTFail("Certificate Pinning should have failed")
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
+                case .success:
+                    XCTFail("Certificate Pinning should have failed")
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -208,10 +208,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                XCTFail("Certificate Pinning should have failed")
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
+                case .success:
+                    XCTFail("Certificate Pinning should have failed")
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
             }
             ex.fulfill()
         }
@@ -228,10 +228,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                break
-            case let .failure(error):
-                XCTFail("Self signed certificate should have worked \(error)")
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail("Self signed certificate should have worked \(error)")
             }
             ex.fulfill()
         }
@@ -248,10 +248,10 @@ class UBSessionTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                break
-            case let .failure(error):
-                XCTFail("Self signed certificate should have worked \(error)")
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail("Self signed certificate should have worked \(error)")
             }
             ex.fulfill()
         }

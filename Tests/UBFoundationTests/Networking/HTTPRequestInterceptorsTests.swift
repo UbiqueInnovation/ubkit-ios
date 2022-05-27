@@ -22,10 +22,10 @@ class HTTPRequestInterceptorsTests: XCTestCase {
         dataTask.requestInterceptor = EmptyInterceptor()
         dataTask.addCompletionHandler { result, response, _, _ in
             switch result {
-            case .success:
-                XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
-            case .failure:
-                XCTFail("Should have returned success with empty")
+                case .success:
+                    XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
+                case .failure:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -44,11 +44,11 @@ class HTTPRequestInterceptorsTests: XCTestCase {
         dataTask.requestInterceptor = Interceptor()
         dataTask.addCompletionHandler { result, response, _, _ in
             switch result {
-            case let .success(data):
-                XCTAssertEqual(response?.statusCode, 401)
-                XCTAssertEqual(data, Data(repeating: 1, count: 15))
-            case .failure:
-                XCTFail("Should have returned success with empty")
+                case let .success(data):
+                    XCTAssertEqual(response?.statusCode, 401)
+                    XCTAssertEqual(data, Data(repeating: 1, count: 15))
+                case .failure:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }

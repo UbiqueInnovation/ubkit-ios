@@ -446,7 +446,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
 
-
         // load request to fill cache
         var request = URLRequest(url: url)
         request.addValue("de", forHTTPHeaderField: "Accept-Language")

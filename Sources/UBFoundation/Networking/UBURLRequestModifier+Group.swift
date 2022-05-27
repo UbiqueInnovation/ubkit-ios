@@ -81,10 +81,10 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
 
         modifier.modifyRequest(originalRequest) { result in
             switch result {
-            case let .failure(error):
-                completion(.failure(error))
-            case let .success(request):
-                self.recursiveModifyRequest(request, modification: modification, modifiers: modifiers.dropFirst(), completion: completion)
+                case let .failure(error):
+                    completion(.failure(error))
+                case let .success(request):
+                    self.recursiveModifyRequest(request, modification: modification, modifiers: modifiers.dropFirst(), completion: completion)
             }
         }
     }
