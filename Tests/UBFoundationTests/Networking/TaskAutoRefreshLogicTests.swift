@@ -470,7 +470,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         // load request again with different accept language
         var request2 = URLRequest(url: url)
         request2.addValue("fr", forHTTPHeaderField: "Accept-Language")
-        let dataTask2 = UBURLDataTask(request: UBURLRequest(request: request), session: session)
+        let dataTask2 = UBURLDataTask(request: UBURLRequest(request: request2), session: session)
 
         let ex2 = expectation(description: "s2")
         dataTask2.addCompletionHandler { _, _, info, _ in
@@ -484,7 +484,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [ex2], timeout: 10000)
 
         // load request another time, with same accept language
-        let dataTask3 = UBURLDataTask(request: UBURLRequest(request: request), session: session)
+        let dataTask3 = UBURLDataTask(request: UBURLRequest(request: request2), session: session)
 
         let ex3 = expectation(description: "s2")
         dataTask3.addCompletionHandler { _, _, info, _ in
