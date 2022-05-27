@@ -88,75 +88,75 @@ extension UBKeychainAccessibility: RawRepresentable {
     public init?(rawValue: String) {
         if #available(OSX 10.10, *) {
             switch rawValue {
-            case String(kSecAttrAccessibleWhenUnlocked):
-                self = .whenUnlocked
-            case String(kSecAttrAccessibleAfterFirstUnlock):
-                self = .afterFirstUnlock
-            #if !targetEnvironment(macCatalyst)
-                case String(kSecAttrAccessibleAlways):
-                    self = .always
-            #endif
-            case String(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly):
-                self = .whenPasscodeSetThisDeviceOnly
-            case String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly):
-                self = .whenUnlockedThisDeviceOnly
-            case String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly):
-                self = .afterFirstUnlockThisDeviceOnly
-            #if !targetEnvironment(macCatalyst)
-                case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
-                    self = .alwaysThisDeviceOnly
-            #endif
-            default:
-                return nil
+                case String(kSecAttrAccessibleWhenUnlocked):
+                    self = .whenUnlocked
+                case String(kSecAttrAccessibleAfterFirstUnlock):
+                    self = .afterFirstUnlock
+                #if !targetEnvironment(macCatalyst)
+                    case String(kSecAttrAccessibleAlways):
+                        self = .always
+                #endif
+                case String(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly):
+                    self = .whenPasscodeSetThisDeviceOnly
+                case String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly):
+                    self = .whenUnlockedThisDeviceOnly
+                case String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly):
+                    self = .afterFirstUnlockThisDeviceOnly
+                #if !targetEnvironment(macCatalyst)
+                    case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
+                        self = .alwaysThisDeviceOnly
+                #endif
+                default:
+                    return nil
             }
         } else {
             switch rawValue {
-            case String(kSecAttrAccessibleWhenUnlocked):
-                self = .whenUnlocked
-            case String(kSecAttrAccessibleAfterFirstUnlock):
-                self = .afterFirstUnlock
-            #if !targetEnvironment(macCatalyst)
-                case String(kSecAttrAccessibleAlways):
-                    self = .always
-            #endif
-            case String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly):
-                self = .whenUnlockedThisDeviceOnly
-            case String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly):
-                self = .afterFirstUnlockThisDeviceOnly
-            #if !targetEnvironment(macCatalyst)
-                case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
-                    self = .alwaysThisDeviceOnly
-            #endif
-            default:
-                return nil
+                case String(kSecAttrAccessibleWhenUnlocked):
+                    self = .whenUnlocked
+                case String(kSecAttrAccessibleAfterFirstUnlock):
+                    self = .afterFirstUnlock
+                #if !targetEnvironment(macCatalyst)
+                    case String(kSecAttrAccessibleAlways):
+                        self = .always
+                #endif
+                case String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly):
+                    self = .whenUnlockedThisDeviceOnly
+                case String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly):
+                    self = .afterFirstUnlockThisDeviceOnly
+                #if !targetEnvironment(macCatalyst)
+                    case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
+                        self = .alwaysThisDeviceOnly
+                #endif
+                default:
+                    return nil
             }
         }
     }
 
     public var rawValue: String {
         switch self {
-        case .whenUnlocked:
-            return String(kSecAttrAccessibleWhenUnlocked)
-        case .afterFirstUnlock:
-            return String(kSecAttrAccessibleAfterFirstUnlock)
-        #if !targetEnvironment(macCatalyst)
-            case .always:
-                return String(kSecAttrAccessibleAlways)
-        #endif
-        case .whenPasscodeSetThisDeviceOnly:
-            if #available(OSX 10.10, *) {
-                return String(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly)
-            } else {
-                fatalError("'Accessibility.WhenPasscodeSetThisDeviceOnly' is not available on this version of OS.")
-            }
-        case .whenUnlockedThisDeviceOnly:
-            return String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly)
-        case .afterFirstUnlockThisDeviceOnly:
-            return String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
-        #if !targetEnvironment(macCatalyst)
-            case .alwaysThisDeviceOnly:
-                return String(kSecAttrAccessibleAlwaysThisDeviceOnly)
-        #endif
+            case .whenUnlocked:
+                return String(kSecAttrAccessibleWhenUnlocked)
+            case .afterFirstUnlock:
+                return String(kSecAttrAccessibleAfterFirstUnlock)
+            #if !targetEnvironment(macCatalyst)
+                case .always:
+                    return String(kSecAttrAccessibleAlways)
+            #endif
+            case .whenPasscodeSetThisDeviceOnly:
+                if #available(OSX 10.10, *) {
+                    return String(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly)
+                } else {
+                    fatalError("'Accessibility.WhenPasscodeSetThisDeviceOnly' is not available on this version of OS.")
+                }
+            case .whenUnlockedThisDeviceOnly:
+                return String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly)
+            case .afterFirstUnlockThisDeviceOnly:
+                return String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
+            #if !targetEnvironment(macCatalyst)
+                case .alwaysThisDeviceOnly:
+                    return String(kSecAttrAccessibleAlwaysThisDeviceOnly)
+            #endif
         }
     }
 }

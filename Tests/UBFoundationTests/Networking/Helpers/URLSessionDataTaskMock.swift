@@ -39,17 +39,17 @@ class URLSessionDataTaskMock: URLSessionDataTask {
         }
         didSet {
             switch _state {
-            case .running:
-                timeoutTimer = Timer(timeInterval: timeoutInterval, repeats: false, block: { [weak self] _ in
-                    self?.completionHandler(nil, nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: [NSLocalizedDescriptionKey: "Request Timedout"]))
-                    self?.activeTimer?.invalidate()
-                    self?._state = .completed
-                })
-                RunLoop.main.add(timeoutTimer!, forMode: RunLoop.Mode.common)
-            case .canceling, .completed, .suspended:
-                timeoutTimer?.invalidate()
-            @unknown default:
-                fatalError("Unhandled new state")
+                case .running:
+                    timeoutTimer = Timer(timeInterval: timeoutInterval, repeats: false, block: { [weak self] _ in
+                        self?.completionHandler(nil, nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: [NSLocalizedDescriptionKey: "Request Timedout"]))
+                        self?.activeTimer?.invalidate()
+                        self?._state = .completed
+                    })
+                    RunLoop.main.add(timeoutTimer!, forMode: RunLoop.Mode.common)
+                case .canceling, .completed, .suspended:
+                    timeoutTimer?.invalidate()
+                @unknown default:
+                    fatalError("Unhandled new state")
             }
             didChangeValue(for: \.state)
         }

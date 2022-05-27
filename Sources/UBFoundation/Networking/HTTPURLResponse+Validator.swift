@@ -108,14 +108,14 @@ public struct UBHTTPResponseStatusValidator: UBHTTPURLResponseValidator {
     /// :nodoc:
     public func validateHTTPResponse(_ response: HTTPURLResponse) throws {
         switch type {
-        case let .category(category):
-            guard category == response.statusCode.ub_httpCodeCategory else {
-                throw UBInternalNetworkingError.responseStatusValidationFailed(status: response.statusCode)
-            }
-        case let .multipleStatusCode(statuses):
-            guard statuses.contains(response.statusCode) else {
-                throw UBInternalNetworkingError.responseStatusValidationFailed(status: response.statusCode)
-            }
+            case let .category(category):
+                guard category == response.statusCode.ub_httpCodeCategory else {
+                    throw UBInternalNetworkingError.responseStatusValidationFailed(status: response.statusCode)
+                }
+            case let .multipleStatusCode(statuses):
+                guard statuses.contains(response.statusCode) else {
+                    throw UBInternalNetworkingError.responseStatusValidationFailed(status: response.statusCode)
+                }
         }
     }
 }

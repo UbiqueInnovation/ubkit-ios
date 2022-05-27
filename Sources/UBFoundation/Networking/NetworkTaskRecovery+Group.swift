@@ -82,10 +82,10 @@ public class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy {
 
         strategy.recoverTask(dataTask, data: data, response: response, error: error) { [weak self] result in
             switch result {
-            case .cannotRecover:
-                self?.recursiveRecoverTask(dataTask, data: data, response: response, error: error, recovery: recovery, strategies: strategies.dropFirst(), completion: completion)
-            default:
-                completion(result)
+                case .cannotRecover:
+                    self?.recursiveRecoverTask(dataTask, data: data, response: response, error: error, recovery: recovery, strategies: strategies.dropFirst(), completion: completion)
+                default:
+                    completion(result)
             }
         }
     }

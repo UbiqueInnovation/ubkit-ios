@@ -432,6 +432,70 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit)
     }
+
+    func testNoLanguageCaching() {
+        // Load Request with Meteo-specific headers to enable cache
+
+        // Ensure that nothing is in cache
+        let session = UBURLSession()
+        let res = expectation(description: "res")
+        session.reset {
+            res.fulfill()
+        }
+        wait(for: [res], timeout: 10000)
+
+        let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
+
+        // load request to fill cache
+        var request = URLRequest(url: url)
+        request.addValue("de", forHTTPHeaderField: "Accept-Language")
+        var dataTask: UBURLDataTask? = UBURLDataTask(request: UBURLRequest(request: request), session: session)
+
+        let ex = expectation(description: "s")
+        ex.assertForOverFulfill = false
+        dataTask?.addCompletionHandler { _, _, _, _ in
+            ex.fulfill()
+            dataTask?.cancel() // make sure that cron doesn't trigger
+            dataTask = nil
+        }
+        dataTask?.start()
+        wait(for: [ex], timeout: 10000)
+
+        dataTask?.cancel() // make sure that cron doesn't trigger
+        dataTask = nil
+
+        sleep(5)
+
+        // load request again with different accept language
+        var request2 = URLRequest(url: url)
+        request2.addValue("fr", forHTTPHeaderField: "Accept-Language")
+        let dataTask2 = UBURLDataTask(request: UBURLRequest(request: request2), session: session)
+
+        let ex2 = expectation(description: "s2")
+        dataTask2.addCompletionHandler { _, _, info, _ in
+
+            XCTAssert(info != nil)
+            XCTAssertFalse(info!.cacheHit)
+
+            ex2.fulfill()
+        }
+        dataTask2.start()
+        wait(for: [ex2], timeout: 10000)
+
+        // load request another time, with same accept language
+        let dataTask3 = UBURLDataTask(request: UBURLRequest(request: request2), session: session)
+
+        let ex3 = expectation(description: "s2")
+        dataTask3.addCompletionHandler { _, _, info, _ in
+
+            XCTAssert(info != nil)
+            XCTAssert(info!.cacheHit)
+
+            ex3.fulfill()
+        }
+        dataTask3.start()
+        wait(for: [ex3], timeout: 10000)
+    }
 }
 
 class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {

@@ -170,21 +170,21 @@ public class UBLocationManager: NSObject {
     public static func hasRequiredAuthorizationLevel(forUsage usage: LocationMonitoringUsage) -> Bool {
         let authorizationStatus = CLLocationManager.authorizationStatus()
         switch authorizationStatus {
-        case .authorizedAlways:
-            return true
-        case .authorizedWhenInUse:
-            let requiredAuthorizationLevel = usage.minimumAuthorizationLevelRequired
-            guard requiredAuthorizationLevel == .whenInUse else {
+            case .authorizedAlways:
+                return true
+            case .authorizedWhenInUse:
+                let requiredAuthorizationLevel = usage.minimumAuthorizationLevelRequired
+                guard requiredAuthorizationLevel == .whenInUse else {
+                    return false
+                }
+                return true
+            case .denied,
+                 .restricted:
                 return false
-            }
-            return true
-        case .denied,
-             .restricted:
-            return false
-        case .notDetermined:
-            return false
-        @unknown default:
-            fatalError()
+            case .notDetermined:
+                return false
+            @unknown default:
+                fatalError()
         }
     }
 
@@ -240,32 +240,32 @@ public class UBLocationManager: NSObject {
         let authorizationStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
         switch authorizationStatus {
-        case .authorizedAlways:
-            startLocationMonitoringWithoutChecks(delegate)
-        case .authorizedWhenInUse:
-            guard minimumAuthorizationLevelRequired == .whenInUse else {
+            case .authorizedAlways:
+                startLocationMonitoringWithoutChecks(delegate)
+            case .authorizedWhenInUse:
+                guard minimumAuthorizationLevelRequired == .whenInUse else {
+                    if canAskForPermission {
+                        requestPermission(for: minimumAuthorizationLevelRequired)
+                    }
+                    delegate.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
+                    return
+                }
+                startLocationMonitoringWithoutChecks(delegate)
+            case .denied,
+                 .restricted:
+                stopLocationMonitoring()
                 if canAskForPermission {
                     requestPermission(for: minimumAuthorizationLevelRequired)
                 }
                 delegate.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
-                return
-            }
-            startLocationMonitoringWithoutChecks(delegate)
-        case .denied,
-             .restricted:
-            stopLocationMonitoring()
-            if canAskForPermission {
-                requestPermission(for: minimumAuthorizationLevelRequired)
-            }
-            delegate.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
-        case .notDetermined:
-            stopLocationMonitoring()
-            if canAskForPermission {
-                requestPermission(for: minimumAuthorizationLevelRequired)
-            }
-            delegate.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
-        @unknown default:
-            fatalError()
+            case .notDetermined:
+                stopLocationMonitoring()
+                if canAskForPermission {
+                    requestPermission(for: minimumAuthorizationLevelRequired)
+                }
+                delegate.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
+            @unknown default:
+                fatalError()
         }
     }
 
@@ -338,33 +338,33 @@ public class UBLocationManager: NSObject {
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
 
         switch authorizationStatus {
-        case .authorizedAlways:
-            callback(.success)
-        case .authorizedWhenInUse:
-            guard minimumAuthorizationLevelRequired == .whenInUse else {
-                // can only ask once
-                if minimumAuthorizationLevelRequired == .always, self.askedForAlwaysPermissionAtLeastOnce {
-                    callback(.showSettings)
+            case .authorizedAlways:
+                callback(.success)
+            case .authorizedWhenInUse:
+                guard minimumAuthorizationLevelRequired == .whenInUse else {
+                    // can only ask once
+                    if minimumAuthorizationLevelRequired == .always, self.askedForAlwaysPermissionAtLeastOnce {
+                        callback(.showSettings)
+                        return
+                    }
+
+                    self.permissionRequestUsage = usage
+                    self.permissionRequestCallback = callback
+                    requestPermission(for: minimumAuthorizationLevelRequired)
                     return
                 }
 
+                callback(.success)
+            case .denied, .restricted:
+                callback(.showSettings)
+
+            case .notDetermined:
                 self.permissionRequestUsage = usage
                 self.permissionRequestCallback = callback
-                requestPermission(for: minimumAuthorizationLevelRequired)
-                return
-            }
+                self.requestPermission(for: minimumAuthorizationLevelRequired)
 
-            callback(.success)
-        case .denied, .restricted:
-            callback(.showSettings)
-
-        case .notDetermined:
-            self.permissionRequestUsage = usage
-            self.permissionRequestCallback = callback
-            self.requestPermission(for: minimumAuthorizationLevelRequired)
-
-        @unknown default:
-            fatalError()
+            @unknown default:
+                fatalError()
         }
     }
 
@@ -430,11 +430,11 @@ public class UBLocationManager: NSObject {
     /// request permission from the location manager
     func requestPermission(for authorizationLevel: AuthorizationLevel) {
         switch authorizationLevel {
-        case .always:
-            locationManager.requestAlwaysAuthorization()
-            self.askedForAlwaysPermissionAtLeastOnce = true
-        case .whenInUse:
-            locationManager.requestWhenInUseAuthorization()
+            case .always:
+                locationManager.requestAlwaysAuthorization()
+                self.askedForAlwaysPermissionAtLeastOnce = true
+            case .whenInUse:
+                locationManager.requestWhenInUseAuthorization()
         }
     }
 }
@@ -608,12 +608,12 @@ public extension UBLocationManager {
 private extension CLAccuracyAuthorization {
     var accuracyLevel: UBLocationManager.AccuracyLevel {
         switch self {
-        case .fullAccuracy:
-            return .full
-        case .reducedAccuracy:
-            return .reduced
-        @unknown default:
-            fatalError("Level of accuracy not handled")
+            case .fullAccuracy:
+                return .full
+            case .reducedAccuracy:
+                return .reduced
+            @unknown default:
+                fatalError("Level of accuracy not handled")
         }
     }
 }

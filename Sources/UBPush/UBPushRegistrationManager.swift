@@ -102,16 +102,16 @@ open class UBPushRegistrationManager: NSObject {
             }
 
             switch result {
-            case let .success(responseString):
-                self.validate()
-                completion?(nil)
+                case let .success(responseString):
+                    self.validate()
+                    completion?(nil)
 
-                UBPushManager.logger.info("\(String(describing: self)) ended with result: \(responseString)")
+                    UBPushManager.logger.info("\(String(describing: self)) ended with result: \(responseString)")
 
-            case let .failure(error):
-                completion?(error)
+                case let .failure(error):
+                    completion?(error)
 
-                UBPushManager.logger.info("\(String(describing: self)) ended with error: \(error.localizedDescription)")
+                    UBPushManager.logger.info("\(String(describing: self)) ended with error: \(error.localizedDescription)")
             }
 
             if self.backgroundTask != .invalid {

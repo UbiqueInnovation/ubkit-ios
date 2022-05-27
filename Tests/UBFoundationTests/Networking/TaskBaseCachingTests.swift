@@ -1,6 +1,6 @@
 //
 //  BaseCachingTests.swift
-//  
+//
 //
 //  Created by Zeno Koller on 27.05.22.
 //
@@ -9,7 +9,6 @@ import UBFoundation
 import XCTest
 
 class BaseCachingTests: XCTestCase {
-
     func testMethodChange() {
         // Ensure that requests with different HTTP methods are not cached
 

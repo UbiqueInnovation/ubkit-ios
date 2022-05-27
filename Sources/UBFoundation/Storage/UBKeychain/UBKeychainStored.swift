@@ -39,10 +39,10 @@ public struct UBKeychainStored<Value: Codable> {
     public var wrappedValue: Value {
         get {
             switch keychain.get(for: self.key) {
-            case let .success(value):
-                return value
-            case .failure:
-                return defaultValue
+                case let .success(value):
+                    return value
+                case .failure:
+                    return defaultValue
             }
         }
         set {

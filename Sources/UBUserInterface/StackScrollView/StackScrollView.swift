@@ -23,12 +23,12 @@ public class StackScrollView: UIView {
         super.init(frame: .zero)
 
         switch axis {
-        case .vertical:
-            scrollView.alwaysBounceVertical = true
-        case .horizontal:
-            scrollView.alwaysBounceHorizontal = true
-        @unknown default:
-            fatalError()
+            case .vertical:
+                scrollView.alwaysBounceVertical = true
+            case .horizontal:
+                scrollView.alwaysBounceHorizontal = true
+            @unknown default:
+                fatalError()
         }
 
         // Add scrollView
@@ -53,12 +53,12 @@ public class StackScrollView: UIView {
         ])
 
         switch axis {
-        case .vertical:
-            stackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        case .horizontal:
-            stackViewContainer.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
-        @unknown default:
-            fatalError()
+            case .vertical:
+                stackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            case .horizontal:
+                stackViewContainer.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
+            @unknown default:
+                fatalError()
         }
 
         stackView.axis = axis
@@ -92,12 +92,12 @@ public class StackScrollView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         if let s = size {
             switch stackView.axis {
-            case .vertical:
-                view.heightAnchor.constraint(equalToConstant: s).isActive = true
-            case .horizontal:
-                view.widthAnchor.constraint(equalToConstant: s).isActive = true
-            @unknown default:
-                fatalError()
+                case .vertical:
+                    view.heightAnchor.constraint(equalToConstant: s).isActive = true
+                case .horizontal:
+                    view.widthAnchor.constraint(equalToConstant: s).isActive = true
+                @unknown default:
+                    fatalError()
             }
         }
 
@@ -133,24 +133,24 @@ public class StackScrollView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
 
         switch stackView.axis {
-        case .vertical:
-            NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: wrapper.topAnchor),
-                view.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor),
-                view.centerXAnchor.constraint(equalTo: wrapper.centerXAnchor),
-                view.leadingAnchor.constraint(greaterThanOrEqualTo: wrapper.leadingAnchor, constant: inset),
-                view.trailingAnchor.constraint(lessThanOrEqualTo: wrapper.trailingAnchor, constant: -inset),
-            ])
-        case .horizontal:
-            NSLayoutConstraint.activate([
-                view.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor),
-                view.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor),
-                view.centerYAnchor.constraint(equalTo: wrapper.centerYAnchor),
-                view.topAnchor.constraint(greaterThanOrEqualTo: wrapper.topAnchor, constant: inset),
-                view.bottomAnchor.constraint(lessThanOrEqualTo: wrapper.bottomAnchor, constant: -inset),
-            ])
-        @unknown default:
-            fatalError()
+            case .vertical:
+                NSLayoutConstraint.activate([
+                    view.topAnchor.constraint(equalTo: wrapper.topAnchor),
+                    view.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor),
+                    view.centerXAnchor.constraint(equalTo: wrapper.centerXAnchor),
+                    view.leadingAnchor.constraint(greaterThanOrEqualTo: wrapper.leadingAnchor, constant: inset),
+                    view.trailingAnchor.constraint(lessThanOrEqualTo: wrapper.trailingAnchor, constant: -inset),
+                ])
+            case .horizontal:
+                NSLayoutConstraint.activate([
+                    view.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor),
+                    view.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor),
+                    view.centerYAnchor.constraint(equalTo: wrapper.centerYAnchor),
+                    view.topAnchor.constraint(greaterThanOrEqualTo: wrapper.topAnchor, constant: inset),
+                    view.bottomAnchor.constraint(lessThanOrEqualTo: wrapper.bottomAnchor, constant: -inset),
+                ])
+            @unknown default:
+                fatalError()
         }
 
         addArrangedView(wrapper)

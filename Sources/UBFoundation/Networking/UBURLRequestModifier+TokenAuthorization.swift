@@ -21,11 +21,11 @@ public extension UBURLRequestTokenAuthorization {
         getToken { result in
             var modifierRequest = originalRequest
             switch result {
-            case let .success(token):
-                modifierRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
-                completion(.success(modifierRequest))
-            case let .failure(error):
-                completion(.failure(error))
+                case let .success(token):
+                    modifierRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
+                    completion(.success(modifierRequest))
+                case let .failure(error):
+                    completion(.failure(error))
             }
         }
     }

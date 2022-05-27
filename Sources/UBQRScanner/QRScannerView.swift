@@ -133,15 +133,15 @@ public class QRScannerView: UIView {
         // check if user didn't deny camera usage to show error
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         switch status {
-        case .restricted:
-            scanningDidFail(error: .cameraPermissionRestricted)
-        case .denied:
-            scanningDidFail(error: .cameraPermissionDenied)
-        default:
-            if captureSession == nil {
-                captureSession = AVCaptureSession()
-                startCapture()
-            }
+            case .restricted:
+                scanningDidFail(error: .cameraPermissionRestricted)
+            case .denied:
+                scanningDidFail(error: .cameraPermissionDenied)
+            default:
+                if captureSession == nil {
+                    captureSession = AVCaptureSession()
+                    startCapture()
+                }
         }
     }
 

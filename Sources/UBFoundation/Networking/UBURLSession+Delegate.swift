@@ -271,10 +271,10 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         let evaluation: ChallengeEvaluation
 
         switch challenge.protectionSpace.authenticationMethod {
-        case NSURLAuthenticationMethodServerTrust:
-            evaluation = attemptServerTrustAuthentication(with: challenge)
-        default:
-            evaluation = (.performDefaultHandling, nil, nil)
+            case NSURLAuthenticationMethodServerTrust:
+                evaluation = attemptServerTrustAuthentication(with: challenge)
+            default:
+                evaluation = (.performDefaultHandling, nil, nil)
         }
 
         if let error = evaluation.error {

@@ -28,14 +28,14 @@ public class UBCronJob {
         /// :nodoc:
         public var debugDescription: String {
             switch self {
-            case .initial:
-                return "Initial"
-            case .resumed:
-                return "Resumed"
-            case .paused:
-                return "Paused"
-            case .finished:
-                return "Finished"
+                case .initial:
+                    return "Initial"
+                case .resumed:
+                    return "Resumed"
+                case .paused:
+                    return "Paused"
+                case .finished:
+                    return "Finished"
             }
         }
     }
@@ -222,14 +222,14 @@ extension UBCronJob {
         let timer = DispatchSource.makeTimerSource(queue: dispatchQueue)
         let deadline: DispatchWallTime = DispatchWallTime.now() + fireRule.deadlineFromNow
         switch (fireRule.repeatRule, fireRule.tolerence) {
-        case (.never, .none):
-            timer.schedule(wallDeadline: deadline, repeating: .never)
-        case let (.after(interval), .none):
-            timer.schedule(wallDeadline: deadline, repeating: interval, leeway: .never)
-        case let (.never, .some(leeway)):
-            timer.schedule(wallDeadline: deadline, repeating: .never, leeway: leeway)
-        case let (.after(interval), .some(leeway)):
-            timer.schedule(wallDeadline: deadline, repeating: interval, leeway: leeway)
+            case (.never, .none):
+                timer.schedule(wallDeadline: deadline, repeating: .never)
+            case let (.after(interval), .none):
+                timer.schedule(wallDeadline: deadline, repeating: interval, leeway: .never)
+            case let (.never, .some(leeway)):
+                timer.schedule(wallDeadline: deadline, repeating: .never, leeway: leeway)
+            case let (.after(interval), .some(leeway)):
+                timer.schedule(wallDeadline: deadline, repeating: interval, leeway: leeway)
         }
 
         timer.setEventHandler { [weak self] in

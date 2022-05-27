@@ -86,43 +86,43 @@ public class UBLogger {
     ///   - lineNumber: The line from where the log was called
     private func log(message: String, type: OSLogType, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
         switch (accessLevel, logLevel) {
-        case (_, .none):
-            // No logs
-            break
-        case (.private, .verbose):
-            // Get the name of the file
-            let file = URL(fileURLWithPath: fileName).lastPathComponent
-            // Get the line number
-            let line = String(lineNumber)
-            // Get the thread name
-            let threadName = getCurrentThreadDescription()
-            // Log the message and extra information
-            os_log("[%{private}@] [%{private}@:%{private}@ %{private}@] > %{private}@", log: logger, type: type, threadName, file, line, functionName, message)
+            case (_, .none):
+                // No logs
+                break
+            case (.private, .verbose):
+                // Get the name of the file
+                let file = URL(fileURLWithPath: fileName).lastPathComponent
+                // Get the line number
+                let line = String(lineNumber)
+                // Get the thread name
+                let threadName = getCurrentThreadDescription()
+                // Log the message and extra information
+                os_log("[%{private}@] [%{private}@:%{private}@ %{private}@] > %{private}@", log: logger, type: type, threadName, file, line, functionName, message)
 
-            let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
-            Self.listener?.log(message: message)
-        case (.private, .default):
-            // Log only the message
-            os_log("%{private}@", log: logger, type: type, message)
-            Self.listener?.log(message: message)
-        case (.public, .verbose):
-            // Get the name of the file
-            let file = URL(fileURLWithPath: fileName).lastPathComponent
-            // Get the line number
-            let line = String(lineNumber)
-            // Get the thread name
-            let threadName = getCurrentThreadDescription()
-            // Log the message and extra information
-            os_log("[%{public}@] [%{public}@:%{public}@ %{public}@] > %{public}@", log: logger, type: type, threadName, file, line, functionName, message)
+                let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
+                Self.listener?.log(message: message)
+            case (.private, .default):
+                // Log only the message
+                os_log("%{private}@", log: logger, type: type, message)
+                Self.listener?.log(message: message)
+            case (.public, .verbose):
+                // Get the name of the file
+                let file = URL(fileURLWithPath: fileName).lastPathComponent
+                // Get the line number
+                let line = String(lineNumber)
+                // Get the thread name
+                let threadName = getCurrentThreadDescription()
+                // Log the message and extra information
+                os_log("[%{public}@] [%{public}@:%{public}@ %{public}@] > %{public}@", log: logger, type: type, threadName, file, line, functionName, message)
 
-            let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
-            Self.listener?.log(message: message)
-        case (.public, .default):
-            // Log only the message
-            os_log("%{public}@", log: logger, type: type, message)
+                let message = "\(self.category != nil ? "[\(self.category!)] " : "")[\(type.string)] [\(threadName):\(file) \(line)] > \(functionName) \(message)"
+                Self.listener?.log(message: message)
+            case (.public, .default):
+                // Log only the message
+                os_log("%{public}@", log: logger, type: type, message)
 
-            let message = "\(self.category != nil ? "[\(self.category!)] " : "")\(message)"
-            Self.listener?.log(message: message)
+                let message = "\(self.category != nil ? "[\(self.category!)] " : "")\(message)"
+                Self.listener?.log(message: message)
         }
     }
 
@@ -216,12 +216,12 @@ extension UBLogger {
 extension OSLogType {
     var string: String {
         switch self {
-        case .debug: return "debug"
-        case .error: return "error"
-        case .fault: return "fault"
-        case .info: return "info"
-        default:
-            return "default"
+            case .debug: return "debug"
+            case .error: return "error"
+            case .fault: return "fault"
+            case .info: return "info"
+            default:
+                return "default"
         }
     }
 }
