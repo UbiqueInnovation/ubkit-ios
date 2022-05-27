@@ -19,6 +19,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
     public let qos: DispatchQoS
 
     private let UserInfoKeyMetrics = "UserInfoKeyMetrics"
+    private let UserInfoKeyMethod = "UserInfoKeyMethod"
 
     /// Initializes the caching logic with a policy and a quality of service
     ///
@@ -113,7 +114,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
     ///   - data: The data returned by the response
     ///   - metrics: The metrics collected by the session during the request
     /// - Returns: A possible caching response
-    open func proposedCacheResponseWhenSuccessfull(for _: URLSession, dataTask _: URLSessionDataTask, ubDataTask _: UBURLDataTask, request _: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> (response: HTTPURLResponse, data: Data, userInfo: [AnyHashable: Any])? {
+    open func proposedCacheResponseWhenSuccessfull(for _: URLSession, dataTask _: URLSessionDataTask, ubDataTask _: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> (response: HTTPURLResponse, data: Data, userInfo: [AnyHashable: Any])? {
         // Note: Data can be nil, if a successful response body was empty
         let data = data ?? Data()
 
@@ -134,6 +135,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
         if let metrics = metrics {
             userInfo[UserInfoKeyMetrics] = metrics
         }
+        userInfo[UserInfoKeyMethod] = request.httpMethod
 
         return (response, data, userInfo)
     }
@@ -172,6 +174,12 @@ open class UBBaseCachingLogic: UBCachingLogic {
         /// Make sure we have the caching headers and it was allowed to cache the response in the first place
         guard let response = cachedResponse.response as? HTTPURLResponse, response.statusCode == UBHTTPCodeCategory.success else {
             session.configuration.urlCache?.removeCachedResponse(for: request)
+            return .miss
+        }
+
+        /// Make sure the cached response uses the same HTTP method
+        if let httpMethod = cachedResponse.userInfo?[UserInfoKeyMethod] as? String,
+            httpMethod != request.httpMethod {
             return .miss
         }
 
