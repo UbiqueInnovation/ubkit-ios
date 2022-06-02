@@ -1,0 +1,13 @@
+# .git-blame-ignore-revs
+# Run swiftformat
+efd2e77eccb73d824c4c08990196167a2b6016b3
+# Run swiftformat
+11ba0e0a0a5ddf744ab676abda9cea84e3546427
+# swiftformat
+c78c5f54faa6eab40df1fd3d85cc117ef1059cba
+# swiftformat
+c22a9bc37aeff39380c90ab2bdaa8ac8359bc7cf
+# swiftformat
+92840c4ac01880dcdc43970baba195667c62a320
+# UBF: Format all files using swiftformat and swiftlint, disable weak_delegate rule locally in UBURLSession
+2582ca49265f09ca3fa6f73bb8e6c624f2d3c63b
