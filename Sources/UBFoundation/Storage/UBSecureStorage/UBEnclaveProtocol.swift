@@ -1,6 +1,6 @@
 //
 //  UBEnclaveProtocol.swift
-//  
+//
 //
 //  Created by Stefan Mitterrutzner on 07.06.22.
 //
@@ -8,7 +8,6 @@
 import Foundation
 
 protocol UBEnclaveProtocol {
-
     func generateKey(with name: String, accessibility: UBKeychainAccessibility) -> Result<SecKey, UBEnclaveError>
 
     func loadKey(with name: String) -> Result<SecKey, UBEnclaveError>
@@ -21,4 +20,3 @@ protocol UBEnclaveProtocol {
 
     func sign(data: Data, with key: SecKey) -> Result<Data, UBEnclaveError>
 }
-

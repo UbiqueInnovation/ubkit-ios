@@ -161,6 +161,6 @@ extension UBKeychainAccessibility: RawRepresentable {
     }
 
     public var rawValue: String {
-        return String(cfString)
+        String(cfString)
     }
 }

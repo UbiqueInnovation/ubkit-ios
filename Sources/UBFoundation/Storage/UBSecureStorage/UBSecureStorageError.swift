@@ -1,6 +1,6 @@
 //
 //  UBSecureStorageError.swift
-//  
+//
 //
 //  Created by Stefan Mitterrutzner on 07.06.22.
 //
@@ -20,19 +20,18 @@ extension UBSecureStorageError: UBCodedError {
     static let prefix = "[US]"
     public var errorCode: String {
         switch self {
-        case .enclaveError(let err):
-            return Self.prefix + err.errorCode
-        case .ioError(let err):
-            return Self.prefix + "IO\((err as NSError).code)"
-        case .decodingError(let err):
-            return Self.prefix + "DE\((err as NSError).code)"
-        case .encodingError(let err):
-            return Self.prefix + "EN\((err as NSError).code)"
-        case .dataIntegrity:
-            return Self.prefix + "DIE"
-        case .notFound:
-            return Self.prefix + "NF"
-
+            case let .enclaveError(err):
+                return Self.prefix + err.errorCode
+            case let .ioError(err):
+                return Self.prefix + "IO\((err as NSError).code)"
+            case let .decodingError(err):
+                return Self.prefix + "DE\((err as NSError).code)"
+            case let .encodingError(err):
+                return Self.prefix + "EN\((err as NSError).code)"
+            case .dataIntegrity:
+                return Self.prefix + "DIE"
+            case .notFound:
+                return Self.prefix + "NF"
         }
     }
 }

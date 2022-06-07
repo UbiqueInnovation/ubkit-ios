@@ -24,12 +24,12 @@ public class UBEnclave: UBEnclaveProtocol {
         var error: Unmanaged<CFError>?
         guard
             let access =
-                SecAccessControlCreateWithFlags(
-                    kCFAllocatorDefault,
-                    accessibility.cfString,
-                    [],
-                    &error
-                )
+            SecAccessControlCreateWithFlags(
+                kCFAllocatorDefault,
+                accessibility.cfString,
+                [],
+                &error
+            )
         else {
             if let error = error?.takeRetainedValue() {
                 logger.error(error.localizedDescription)
@@ -97,7 +97,7 @@ public class UBEnclave: UBEnclaveProtocol {
             data as CFData,
             &error
         ) as Data?
-        if let error = error?.takeRetainedValue(){
+        if let error = error?.takeRetainedValue() {
             logger.error("encrypt.\(error.localizedDescription)")
             return .failure(.secError(error))
         }
@@ -119,7 +119,7 @@ public class UBEnclave: UBEnclaveProtocol {
             data as CFData,
             &error
         ) as Data?
-        if let error = error?.takeRetainedValue(){
+        if let error = error?.takeRetainedValue() {
             logger.error("decrypt.\(error.localizedDescription)")
             return .failure(.secError(error))
         }
@@ -128,7 +128,6 @@ public class UBEnclave: UBEnclaveProtocol {
         }
         fatalError()
     }
-
 
     func verify(data: Data, signature: Data, with key: SecKey) -> Result<Bool, UBEnclaveError> {
         guard let publicKey = SecKeyCopyPublicKey(key) else {
@@ -147,13 +146,12 @@ public class UBEnclave: UBEnclaveProtocol {
             signature as CFData,
             &error
         )
-        if let error = error?.takeRetainedValue(){
+        if let error = error?.takeRetainedValue() {
             logger.error("verify.\(error.localizedDescription)")
             return .failure(.secError(error))
         }
         return .success(isValid)
     }
-
 
     func sign(
         data: Data,
@@ -170,7 +168,7 @@ public class UBEnclave: UBEnclaveProtocol {
             data as CFData,
             &error
         ) as Data?
-        if let error = error?.takeRetainedValue(){
+        if let error = error?.takeRetainedValue() {
             logger.error("sign.\(error.localizedDescription)")
             return .failure(.secError(error))
         }

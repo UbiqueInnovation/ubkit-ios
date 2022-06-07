@@ -1,6 +1,6 @@
 //
 //  UBSecureStorage.swift
-//  
+//
 //
 //  Created by Stefan Mitterrutzner on 03.06.22.
 //
@@ -8,10 +8,8 @@
 import Foundation
 import UIKit
 
-
 @available(iOS 11.0, *)
 public class UBSecureStorage {
-
     private let fileName: String
 
     private let filePath: URL
@@ -81,7 +79,7 @@ public class UBSecureStorage {
         return loadKeyResult
     }
 
-    private func loadDict() -> Result<[String: Data], UBSecureStorageError>{
+    private func loadDict() -> Result<[String: Data], UBSecureStorageError> {
         dispatchPrecondition(condition: .onQueue(queue))
 
         guard FileManager.default.fileExists(atPath: filePath.path) else {
@@ -107,31 +105,31 @@ public class UBSecureStorage {
 
         let key: SecKey
         switch loadOrGenerateKey() {
-        case let .success(key_):
-            key = key_
-        case let .failure(error):
-            logger.error("could not loadOrGenerateKey \(error.errorCode)")
-            return .failure(.enclaveError(error))
+            case let .success(key_):
+                key = key_
+            case let .failure(error):
+                logger.error("could not loadOrGenerateKey \(error.errorCode)")
+                return .failure(.enclaveError(error))
         }
 
         switch enclave.verify(data: wrapper.encrypedData, signature: wrapper.signature, with: key) {
-        case let .success(success):
-            if !success {
-                logger.error("data verification failed")
-                return .failure(.dataIntegrity)
-            }
-        case let .failure(error):
-            logger.error("could not verify data on disk \(error.errorCode)")
-            return .failure(.enclaveError(error))
+            case let .success(success):
+                if !success {
+                    logger.error("data verification failed")
+                    return .failure(.dataIntegrity)
+                }
+            case let .failure(error):
+                logger.error("could not verify data on disk \(error.errorCode)")
+                return .failure(.enclaveError(error))
         }
 
         let decryptedData: Data
         switch enclave.decrypt(data: wrapper.encrypedData, with: key) {
-        case let .success(data):
-            decryptedData = data
-        case let .failure(error):
-            logger.error("could not decrypt data on disk \(error.errorCode)")
-            return .failure(.enclaveError(error))
+            case let .success(data):
+                decryptedData = data
+            case let .failure(error):
+                logger.error("could not decrypt data on disk \(error.errorCode)")
+                return .failure(.enclaveError(error))
         }
 
         do {
@@ -155,29 +153,29 @@ public class UBSecureStorage {
 
         let key: SecKey
         switch loadOrGenerateKey() {
-        case let .success(key_):
-            key = key_
-        case let .failure(error):
-            logger.error("could not loadOrGenerateKey \(error.errorCode)")
-            return .failure(.enclaveError(error))
+            case let .success(key_):
+                key = key_
+            case let .failure(error):
+                logger.error("could not loadOrGenerateKey \(error.errorCode)")
+                return .failure(.enclaveError(error))
         }
 
         let encrypedData: Data
         switch enclave.encrypt(data: data, with: key) {
-        case let .success(encrypedData_):
-            encrypedData = encrypedData_
-        case let .failure(error):
-            logger.error("could not encrypt data \(error.errorCode)")
-            return .failure(.enclaveError(error))
+            case let .success(encrypedData_):
+                encrypedData = encrypedData_
+            case let .failure(error):
+                logger.error("could not encrypt data \(error.errorCode)")
+                return .failure(.enclaveError(error))
         }
 
         let signature: Data
         switch enclave.sign(data: encrypedData, with: key) {
-        case let .success(signature_):
-            signature = signature_
-        case let .failure(error):
-            logger.error("could not sign encrypted data \(error.errorCode)")
-            return .failure(.enclaveError(error))
+            case let .success(signature_):
+                signature = signature_
+            case let .failure(error):
+                logger.error("could not sign encrypted data \(error.errorCode)")
+                return .failure(.enclaveError(error))
         }
 
         let wrapper = UBSecureStorageWrapper(encrypedData: encrypedData, signature: signature)
@@ -205,12 +203,12 @@ public class UBSecureStorage {
     /// - Returns: a result which either contain the error or the object
     public func get<T>(for key: UBSecureStorageKey<T>) -> Result<T, UBSecureStorageError> where T: Decodable, T: Encodable {
         queue.sync {
-            let dict: [String:Data]
+            let dict: [String: Data]
             switch loadDict() {
-            case let .success(dict_):
-                dict = dict_
-            case let .failure(error):
-                return .failure(error)
+                case let .success(dict_):
+                    dict = dict_
+                case let .failure(error):
+                    return .failure(error)
             }
             guard let data = dict[key.key] else {
                 return .failure(.notFound)
@@ -227,12 +225,12 @@ public class UBSecureStorage {
     @discardableResult
     public func set<T>(_ object: T, for key: UBSecureStorageKey<T>) -> Result<Void, UBSecureStorageError> where T: Decodable, T: Encodable {
         queue.sync {
-            var dict: [String:Data]
+            var dict: [String: Data]
             switch loadDict() {
-            case let .success(dict_):
-                dict = dict_
-            case let .failure(error):
-                return .failure(error)
+                case let .success(dict_):
+                    dict = dict_
+                case let .failure(error):
+                    return .failure(error)
             }
 
             do {
@@ -245,16 +243,15 @@ public class UBSecureStorage {
         }
     }
 
-
     @discardableResult
     public func delete<T>(for key: UBSecureStorageKey<T>) -> Result<Void, UBSecureStorageError> where T: Decodable, T: Encodable {
         queue.sync {
-            var dict: [String:Data]
+            var dict: [String: Data]
             switch loadDict() {
-            case let .success(dict_):
-                dict = dict_
-            case let .failure(error):
-                return .failure(error)
+                case let .success(dict_):
+                    dict = dict_
+                case let .failure(error):
+                    return .failure(error)
             }
 
             dict.removeValue(forKey: key.key)
@@ -266,8 +263,7 @@ public class UBSecureStorage {
     @discardableResult
     public func deleteAllItems() -> Result<Void, UBSecureStorageError> {
         queue.sync {
-            return save(dict: [:])
+            save(dict: [:])
         }
     }
-    
 }
