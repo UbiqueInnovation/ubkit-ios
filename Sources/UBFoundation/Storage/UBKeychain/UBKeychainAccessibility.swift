@@ -133,30 +133,34 @@ extension UBKeychainAccessibility: RawRepresentable {
         }
     }
 
-    public var rawValue: String {
+    public var cfString: CFString {
         switch self {
             case .whenUnlocked:
-                return String(kSecAttrAccessibleWhenUnlocked)
+                return kSecAttrAccessibleWhenUnlocked
             case .afterFirstUnlock:
-                return String(kSecAttrAccessibleAfterFirstUnlock)
+                return kSecAttrAccessibleAfterFirstUnlock
             #if !targetEnvironment(macCatalyst)
                 case .always:
-                    return String(kSecAttrAccessibleAlways)
+                    return kSecAttrAccessibleAlways
             #endif
             case .whenPasscodeSetThisDeviceOnly:
                 if #available(OSX 10.10, *) {
-                    return String(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly)
+                    return kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
                 } else {
                     fatalError("'Accessibility.WhenPasscodeSetThisDeviceOnly' is not available on this version of OS.")
                 }
             case .whenUnlockedThisDeviceOnly:
-                return String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly)
+                return kSecAttrAccessibleWhenUnlockedThisDeviceOnly
             case .afterFirstUnlockThisDeviceOnly:
-                return String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
+                return kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
             #if !targetEnvironment(macCatalyst)
                 case .alwaysThisDeviceOnly:
-                    return String(kSecAttrAccessibleAlwaysThisDeviceOnly)
+                    return kSecAttrAccessibleAlwaysThisDeviceOnly
             #endif
         }
+    }
+
+    public var rawValue: String {
+        return String(cfString)
     }
 }
