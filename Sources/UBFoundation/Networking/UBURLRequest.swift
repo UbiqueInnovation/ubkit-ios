@@ -203,6 +203,13 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
         try setQueryParameters(parameters.map { URLQueryItem(name: $0.key, value: $0.value) }, percentEncoded: true)
     }
 
+    /// Deprecated because of spelling issue, will be removed in next major release.
+    /// Please use `setQueryParameter:`
+    @available(swift, deprecated: 1.0, renamed: "setQueryParameter()")
+    public mutating func setQueryParameters(_ parameter: URLQueryItem) throws {
+        try setQueryParameters([parameter], percentEncoded: false)
+    }
+
     /// Sets the query parameter
     ///
     /// - Parameter parameter: A query item
