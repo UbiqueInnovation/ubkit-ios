@@ -64,7 +64,7 @@ class HTTPURLRequestTests: XCTestCase {
         XCTAssertNoThrow(try request.setQueryParameters(testData))
         // The order of the parameters is arbitrary when it comes to dictionary
         XCTAssertTrue(request.url?.absoluteString == "http://ubique.ch?a=1&b=2" ? true : request.url?.absoluteString == "http://ubique.ch?b=2&a=1")
-        XCTAssertNoThrow(try request.setQueryParameters(URLQueryItem(name: "a", value: "1")))
+        XCTAssertNoThrow(try request.setQueryParameter(URLQueryItem(name: "a", value: "1")))
         XCTAssertEqual(request.url?.absoluteString, "http://ubique.ch?a=1")
 
         do {
