@@ -19,10 +19,16 @@ public struct UBSecureStorageStored<Value: Codable> {
     /// keychain instance to use
     public let secureStorage: UBSecureStorage
 
-    public init(key: String, defaultValue: Value, secureStorage: UBSecureStorage = UBSecureStorage.shared(accessibility: .whenUnlockedThisDeviceOnly)) {
+    public init(key: String, defaultValue: Value, secureStorage: UBSecureStorage) {
         self.key = UBSecureStorageKey(key)
         self.defaultValue = defaultValue
         self.secureStorage = secureStorage
+    }
+
+    public init(key: String, defaultValue: Value, accessibility: UBKeychainAccessibility) {
+        self.key = UBSecureStorageKey(key)
+        self.defaultValue = defaultValue
+        self.secureStorage = UBSecureStorage.shared(accessibility: accessibility)
     }
 
     public var wrappedValue: Value {

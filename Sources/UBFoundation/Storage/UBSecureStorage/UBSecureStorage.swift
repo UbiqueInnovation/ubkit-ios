@@ -26,14 +26,14 @@ public class UBSecureStorage {
 
     private let logger: UBLogger
 
-    public static let sharedInstanceQueue = DispatchQueue(label: "UBSecureStorageSharedInstanceQueue")
-    public static var sharedInstances: [UBKeychainAccessibility: UBSecureStorage] = [:]
+    private static let sharedInstanceQueue = DispatchQueue(label: "UBSecureStorageSharedInstanceQueue")
+    private static var sharedInstances: [UBKeychainAccessibility: UBSecureStorage] = [:]
     public static func shared(accessibility: UBKeychainAccessibility) -> UBSecureStorage {
         sharedInstanceQueue.sync {
             if let instance = sharedInstances[accessibility] {
                 return instance
             }
-            let fileName = (Bundle.main.bundleIdentifier ?? "app") + "." + accessibility.rawValue
+            let fileName = (Bundle.main.bundleIdentifier ?? "app") + "." + accessibility.secureStorageFileName
             let instance = UBSecureStorage(fileName: fileName, accessibility: accessibility)
             sharedInstances[accessibility] = instance
             return instance
