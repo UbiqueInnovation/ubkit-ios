@@ -8,11 +8,11 @@
 import Foundation
 
 class UBLocationManagerDelegateWrapper {
-    let usage: UBLocationManager.LocationMonitoringUsage
+    let usage: Set<UBLocationManager.LocationMonitoringUsage>
 
     weak var delegate: UBLocationManagerDelegate?
 
-    init(_ delegate: UBLocationManagerDelegate, usage: UBLocationManager.LocationMonitoringUsage) {
+    init(_ delegate: UBLocationManagerDelegate, usage: Set<UBLocationManager.LocationMonitoringUsage>) {
         self.delegate = delegate
         self.usage = usage
     }
