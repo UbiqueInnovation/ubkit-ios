@@ -317,7 +317,9 @@ public class UBLocationManager: NSObject {
         }
         if usage.containsRegions {
             for region in usage.regionsToMonitor {
-                locationManager.startMonitoring(for: region)
+                if !locationManager.monitoredRegions.contains(region) {
+                    locationManager.startMonitoring(for: region)
+                }
             }
         }
     }
@@ -440,7 +442,9 @@ public class UBLocationManager: NSObject {
         }
         if usage.containsRegions {
             for region in usage.regionsToMonitor {
-                locationManager.startMonitoring(for: region)
+                if !locationManager.monitoredRegions.contains(region) {
+                    locationManager.startMonitoring(for: region)
+                }
             }
         }
     }
