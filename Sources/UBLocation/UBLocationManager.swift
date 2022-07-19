@@ -675,7 +675,7 @@ extension Set where Element == UBLocationManager.LocationMonitoringUsage {
 
     /// :nodoc:
     var containsLocation: Bool {
-        contains(.location(background: true)) || contains(.location(background: false))
+        contains(.foregroundLocation) || contains(.backgroundLocation)
     }
 
     /// :nodoc:

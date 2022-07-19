@@ -18,7 +18,7 @@ You can aslo find plenty of guides under the Documentation folder in the project
 
 # UBLocation
 
-A `UBLocationManager` facilitates asking for the required authorization level for the desired usage (location, significant updates, visits or heading). The location manager forwards the updates to the client's `UBLocationManagerDelegate`, similar to the `CLLocationManagerDelegate`.
+A `UBLocationManager` facilitates asking for the required authorization level for the desired usage (location, significant updates, visits, heading or region monitoring). The location manager forwards the updates to the client's `UBLocationManagerDelegate`, similar to the `CLLocationManagerDelegate`.
 
 ## Usage
 
