@@ -1,0 +1,9 @@
+--disable wrapMultilineStatementBraces
+--disable initCoderUnavailable
+--disable redundantType
+--disable redundantSelf
+--disable unusedArguments
+--indentcase true
+
+# Don't format generated files
+--exclude **/Strings+Generated.swift
