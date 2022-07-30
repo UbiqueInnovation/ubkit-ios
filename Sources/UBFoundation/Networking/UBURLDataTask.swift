@@ -150,6 +150,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// Start the task with the given request. It will cancel any ongoing request
     public func start(ignoreCache: Bool) {
+
+        // Cancel the previous task
+        cancel()
+
         if ignoreCache {
             flags.insert(.ignoreCache)
         } else {
@@ -162,9 +166,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     func start(flags: Flags) {
         // Wait for any ongoing request start
         requestStartSemaphore.wait()
-
-        // Cancel the previous task
-        cancel()
 
         // Set the state to waiting execution and launch the task
         state = .waitingExecution
