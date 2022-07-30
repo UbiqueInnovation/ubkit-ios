@@ -45,6 +45,16 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
         }
     }
 
+    /// Add a modifier to the group
+    ///
+    /// - Parameter modifier: The modifier to add
+    @available(iOS 13.0, *)
+    public func append(_ modifier: UBAsyncURLRequestModifier) {
+        serialModifiers.sync {
+            _modifiers.append(modifier)
+        }
+    }
+
     /// :nodoc:
     private let serialOperation = DispatchQueue(label: "Group Modifiers Operation")
     /// :nodoc:
