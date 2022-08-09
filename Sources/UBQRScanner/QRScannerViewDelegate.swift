@@ -11,6 +11,7 @@ import Foundation
 /// like successfully scanned codes or errors
 public protocol QRScannerViewDelegate: AnyObject {
     func qrScanningDidFailWithError(_ error: QRScannerError)
-    func qrScanningDidSucceedWithCode(_ code: String?)
+    // if true is returned no more codes will be passed to this delegate from the current frame
+    func qrScanningDidSucceedWithCode(_ code: String?) -> Bool
     func qrScanningDidStop()
 }

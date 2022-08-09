@@ -184,8 +184,8 @@ public class QRScannerView: UIView {
         captureSession = nil
     }
 
-    private func found(code: String) {
-        delegate?.qrScanningDidSucceedWithCode(code)
+    private func found(code: String) -> Bool {
+        delegate?.qrScanningDidSucceedWithCode(code) ?? false
     }
 }
 
@@ -193,10 +193,12 @@ extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
     public func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
         guard !isScanningPaused else { return } // Don't process any input if scanning is paused
 
-        if let metadataObject = metadataObjects.first {
-            guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
-            guard let stringValue = readableObject.stringValue else { return }
-            found(code: stringValue)
+        for metadataObject in metadataObjects {
+            guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { continue }
+            guard let stringValue = readableObject.stringValue else { continue }
+            if found(code: stringValue) {
+                return
+            }
         }
     }
 }
