@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 
 ### Fixed
+- The QRScannerView now evaluates all QR-codes not only the first one found. Therefore the qrScanningDidSucceedWithCode has to return a bool wether this QR-Code was usable or not.
 
 ## 1.2.0
 ### Added
