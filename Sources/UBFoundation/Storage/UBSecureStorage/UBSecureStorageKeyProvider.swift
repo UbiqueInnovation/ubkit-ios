@@ -1,14 +1,15 @@
 //
-//  UBEnclaveProtocol.swift
+//  UBSecureStorageKeyProvider.swift
+//  
 //
-//
-//  Created by Stefan Mitterrutzner on 07.06.22.
+//  Created by Stefan Mitterrutzner on 10.06.22.
 //
 
 import Foundation
 
-protocol UBEnclaveProtocol {
-    func generateKey(with name: String, accessibility: UBKeychainAccessibility) -> Result<SecKey, UBEnclaveError>
+public protocol UBSecureStorageKeyProvider {
+
+    func generateKey(with name: String) -> Result<SecKey, UBEnclaveError>
 
     func loadKey(with name: String) -> Result<SecKey, UBEnclaveError>
 
@@ -19,4 +20,5 @@ protocol UBEnclaveProtocol {
     func verify(data: Data, signature: Data, with key: SecKey) -> Result<Bool, UBEnclaveError>
 
     func sign(data: Data, with key: SecKey) -> Result<Data, UBEnclaveError>
+
 }

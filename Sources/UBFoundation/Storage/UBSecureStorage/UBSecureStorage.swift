@@ -14,7 +14,7 @@ public class UBSecureStorage {
 
     private let filePath: URL
 
-    private let enclave: UBEnclaveProtocol
+    private let keyProvider: UBSecureStorageKeyProvider
 
     private let accessibility: UBKeychainAccessibility
 
@@ -46,14 +46,14 @@ public class UBSecureStorage {
     }
 
     init(fileName: String = (Bundle.main.bundleIdentifier ?? "app"),
-         enclave: UBEnclaveProtocol = UBEnclave(),
+         keyProvider: UBSecureStorageKeyProvider? = nil,
          accessibility: UBKeychainAccessibility = .whenUnlockedThisDeviceOnly,
          encoder: JSONEncoder = UBJSONEncoder(),
          decoder: JSONDecoder = UBJSONDecoder()) {
+        self.keyProvider = keyProvider ?? UBEnclave(accessibility: accessibility)
         self.encoder = encoder
         self.decoder = decoder
 
-        self.enclave = enclave
         self.fileName = fileName
         self.accessibility = accessibility
 
@@ -64,20 +64,24 @@ public class UBSecureStorage {
         filePath = documentsDirectory.appendingPathComponent("\(fileName).ubSecStore")
     }
 
-    private func loadOrGenerateKey() -> Result<SecKey, UBEnclaveError> {
-        let loadKeyResult = enclave.loadKey(with: fileName)
-
-        if case Result.success = loadKeyResult {
-            return loadKeyResult
+    private func loadKey() -> Result<SecKey, UBSecureStorageError> {
+        switch keyProvider.loadKey(with: fileName) {
+            case let .success(key):
+                return .success(key)
+            case let .failure(error):
+                return .failure(.encodingError(error))
         }
-
-        if case Result.failure(.keyLoadingError(errSecItemNotFound)) = loadKeyResult {
-            self.logger.debug("generating Key")
-            return enclave.generateKey(with: fileName, accessibility: accessibility)
-        }
-
-        return loadKeyResult
     }
+
+    private func generateKey() -> Result<SecKey, UBSecureStorageError> {
+        switch keyProvider.generateKey(with: fileName) {
+            case let .success(key):
+                return .success(key)
+            case let .failure(error):
+                return .failure(.encodingError(error))
+        }
+    }
+
 
     private func loadDict() -> Result<[String: Data], UBSecureStorageError> {
         dispatchPrecondition(condition: .onQueue(queue))
@@ -104,15 +108,15 @@ public class UBSecureStorage {
         }
 
         let key: SecKey
-        switch loadOrGenerateKey() {
+        switch loadKey() {
             case let .success(key_):
                 key = key_
             case let .failure(error):
-                logger.error("could not loadOrGenerateKey \(error.errorCode)")
+                logger.error("could not loadKey \(error.errorCode)")
                 return .failure(.enclaveError(error))
         }
 
-        switch enclave.verify(data: wrapper.encrypedData, signature: wrapper.signature, with: key) {
+        switch keyProvider.verify(data: wrapper.encrypedData, signature: wrapper.signature, with: key) {
             case let .success(success):
                 if !success {
                     logger.error("data verification failed")
@@ -124,7 +128,7 @@ public class UBSecureStorage {
         }
 
         let decryptedData: Data
-        switch enclave.decrypt(data: wrapper.encrypedData, with: key) {
+        switch keyProvider.decrypt(data: wrapper.encrypedData, with: key) {
             case let .success(data):
                 decryptedData = data
             case let .failure(error):
@@ -151,17 +155,33 @@ public class UBSecureStorage {
             return .failure(.encodingError(error))
         }
 
-        let key: SecKey
-        switch loadOrGenerateKey() {
-            case let .success(key_):
-                key = key_
-            case let .failure(error):
-                logger.error("could not loadOrGenerateKey \(error.errorCode)")
-                return .failure(.enclaveError(error))
+
+        var key: SecKey?
+        if !FileManager.default.fileExists(atPath: filePath.path) {
+            logger.debug("file does not exist yet therefore we generate a key")
+
+            switch generateKey() {
+                case let .success(key_):
+                    key = key_
+                case let .failure(error):
+                    logger.error("could not generateKey \(error.errorCode)")
+                    return .failure(.enclaveError(error))
+
+            }
+        }
+
+        if key == nil {
+            switch loadKey() {
+                case let .success(key_):
+                    key = key_
+                case let .failure(error):
+                    logger.error("could not loadKey \(error.errorCode)")
+                    return .failure(.enclaveError(error))
+            }
         }
 
         let encrypedData: Data
-        switch enclave.encrypt(data: data, with: key) {
+        switch keyProvider.encrypt(data: data, with: key!) {
             case let .success(encrypedData_):
                 encrypedData = encrypedData_
             case let .failure(error):
@@ -170,7 +190,7 @@ public class UBSecureStorage {
         }
 
         let signature: Data
-        switch enclave.sign(data: encrypedData, with: key) {
+        switch keyProvider.sign(data: encrypedData, with: key!) {
             case let .success(signature_):
                 signature = signature_
             case let .failure(error):
@@ -263,7 +283,8 @@ public class UBSecureStorage {
     @discardableResult
     public func deleteAllItems() -> Result<Void, UBSecureStorageError> {
         queue.sync {
-            save(dict: [:])
+            try? FileManager.default.removeItem(atPath: filePath.path)
+            return .success(())
         }
     }
 }

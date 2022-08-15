@@ -8,9 +8,10 @@
 import Foundation
 
 @available(iOS 11.0, *)
-public class UBEnclave: UBEnclaveProtocol {
+public class UBEnclave: UBSecureStorageKeyProvider {
     private let encryptAlg = SecKeyAlgorithm.eciesEncryptionCofactorVariableIVX963SHA256AESGCM
     private let signAlg = SecKeyAlgorithm.ecdsaSignatureMessageX962SHA512
+    private let accessibility: UBKeychainAccessibility
 
     let logger: UBLogger = UBLogging.frameworkLoggerFactory(category: "UBEnclave")
 
@@ -18,7 +19,11 @@ public class UBEnclave: UBEnclaveProtocol {
         "\(Bundle.main.bundleIdentifier ?? "app").\(name)".data(using: .utf8)!
     }
 
-    public func generateKey(with name: String, accessibility: UBKeychainAccessibility) -> Result<SecKey, UBEnclaveError> {
+    init(accessibility: UBKeychainAccessibility) {
+        self.accessibility = accessibility
+    }
+
+    public func generateKey(with name: String) -> Result<SecKey, UBEnclaveError> {
         let name = name
         let tag = tag(for: name)
         var error: Unmanaged<CFError>?
@@ -33,7 +38,7 @@ public class UBEnclave: UBEnclaveProtocol {
         else {
             if let error = error?.takeRetainedValue() {
                 logger.error(error.localizedDescription)
-                return .failure(.secError(error))
+                return .failure(UBEnclaveError.secError(error))
             }
             fatalError("SecAccessControlCreateWithFlags neither returned an error nor a access")
         }
@@ -54,14 +59,14 @@ public class UBEnclave: UBEnclaveProtocol {
         else {
             if let error = error?.takeRetainedValue() {
                 logger.error(error.localizedDescription)
-                return .failure(.secError(error))
+                return .failure(UBEnclaveError.secError(error))
             }
             fatalError("SecKeyCreateRandomKey neither returned an error nor a key")
         }
         return .success(privateKey)
     }
 
-    func loadKey(with name: String) -> Result<SecKey, UBEnclaveError> {
+    public func loadKey(with name: String) -> Result<SecKey, UBEnclaveError> {
         let tag = tag(for: name)
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
@@ -76,19 +81,19 @@ public class UBEnclave: UBEnclaveProtocol {
             status == errSecSuccess,
             case let result as SecKey = item
         else {
-            return .failure(.keyLoadingError(status))
+            return .failure(UBEnclaveError.keyLoadingError(status))
         }
         return .success(result)
     }
 
-    func encrypt(data: Data, with key: SecKey) -> Result<Data, UBEnclaveError> {
+    public func encrypt(data: Data, with key: SecKey) -> Result<Data, UBEnclaveError> {
         guard let publicKey = SecKeyCopyPublicKey(key) else {
             logger.error("encrypt.err.pub-key-irretrievable")
-            return .failure(.pubkeyIrretrievable)
+            return .failure(UBEnclaveError.pubkeyIrretrievable)
         }
         guard SecKeyIsAlgorithmSupported(publicKey, .encrypt, encryptAlg) else {
             logger.error("encrypt.err.alg-not-supported")
-            return .failure(.algNotSupported)
+            return .failure(UBEnclaveError.algNotSupported)
         }
         var error: Unmanaged<CFError>?
         let cipherData = SecKeyCreateEncryptedData(
@@ -99,7 +104,7 @@ public class UBEnclave: UBEnclaveProtocol {
         ) as Data?
         if let error = error?.takeRetainedValue() {
             logger.error("encrypt.\(error.localizedDescription)")
-            return .failure(.secError(error))
+            return .failure(UBEnclaveError.secError(error))
         }
         if let cipherData = cipherData {
             return .success(cipherData)
@@ -107,10 +112,10 @@ public class UBEnclave: UBEnclaveProtocol {
         fatalError()
     }
 
-    func decrypt(data: Data, with key: SecKey) -> Result<Data, UBEnclaveError> {
+    public func decrypt(data: Data, with key: SecKey) -> Result<Data, UBEnclaveError> {
         guard SecKeyIsAlgorithmSupported(key, .decrypt, encryptAlg) else {
             logger.error("decrypt.err.alg-not-supported")
-            return .failure(.algNotSupported)
+            return .failure(UBEnclaveError.algNotSupported)
         }
         var error: Unmanaged<CFError>?
         let clearData = SecKeyCreateDecryptedData(
@@ -121,7 +126,7 @@ public class UBEnclave: UBEnclaveProtocol {
         ) as Data?
         if let error = error?.takeRetainedValue() {
             logger.error("decrypt.\(error.localizedDescription)")
-            return .failure(.secError(error))
+            return .failure(UBEnclaveError.secError(error))
         }
         if let clearData = clearData {
             return .success(clearData)
@@ -129,14 +134,14 @@ public class UBEnclave: UBEnclaveProtocol {
         fatalError()
     }
 
-    func verify(data: Data, signature: Data, with key: SecKey) -> Result<Bool, UBEnclaveError> {
+    public func verify(data: Data, signature: Data, with key: SecKey) -> Result<Bool, UBEnclaveError> {
         guard let publicKey = SecKeyCopyPublicKey(key) else {
             logger.error("verify.err.pub-key-irretrievable")
-            return .failure(.pubkeyIrretrievable)
+            return .failure(UBEnclaveError.pubkeyIrretrievable)
         }
         guard SecKeyIsAlgorithmSupported(publicKey, .verify, signAlg) else {
             logger.error("verify.err.alg-not-supported")
-            return .failure(.algNotSupported)
+            return .failure(UBEnclaveError.algNotSupported)
         }
         var error: Unmanaged<CFError>?
         let isValid = SecKeyVerifySignature(
@@ -148,18 +153,18 @@ public class UBEnclave: UBEnclaveProtocol {
         )
         if let error = error?.takeRetainedValue() {
             logger.error("verify.\(error.localizedDescription)")
-            return .failure(.secError(error))
+            return .failure(UBEnclaveError.secError(error))
         }
         return .success(isValid)
     }
 
-    func sign(
+    public func sign(
         data: Data,
         with key: SecKey
     ) -> Result<Data, UBEnclaveError> {
         guard SecKeyIsAlgorithmSupported(key, .sign, signAlg) else {
             logger.error("verify.err.alg-not-supported")
-            return .failure(.algNotSupported)
+            return .failure(UBEnclaveError.algNotSupported)
         }
         var error: Unmanaged<CFError>?
         let signature = SecKeyCreateSignature(
@@ -170,7 +175,7 @@ public class UBEnclave: UBEnclaveProtocol {
         ) as Data?
         if let error = error?.takeRetainedValue() {
             logger.error("sign.\(error.localizedDescription)")
-            return .failure(.secError(error))
+            return .failure(UBEnclaveError.secError(error))
         }
         if let signature = signature {
             return .success(signature)

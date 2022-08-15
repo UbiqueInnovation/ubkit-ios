@@ -8,7 +8,7 @@
 import Foundation
 
 public enum UBSecureStorageError: Error {
-    case enclaveError(UBEnclaveError)
+    case enclaveError(UBCodedError)
     case ioError(Error)
     case decodingError(_ error: Error)
     case encodingError(_ error: Error)
