@@ -8,6 +8,7 @@
 @testable import UBFoundation
 import XCTest
 
+@available(iOS 11.0, *)
 class UBSecureStorageTests: XCTestCase {
     func testSecureStorage(){
         let storage = UBSecureStorage(
@@ -21,7 +22,7 @@ class UBSecureStorageTests: XCTestCase {
             let name: String
         }
 
-        let key = UBSecureStorageKey<TestStruct>("testKey")
+        let key = UBSecureStorageValueKey<TestStruct>("testKey")
 
         storage.set(TestStruct(name: "Name"), for: key)
 

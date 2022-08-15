@@ -11,7 +11,7 @@ import Foundation
 @propertyWrapper
 public struct UBSecureStorageStored<Value: Codable> {
     /// The key for the value
-    public let key: UBSecureStorageKey<Value>
+    public let key: UBSecureStorageValueKey<Value>
 
     /// Optional default value if the key is not present in the Keychain
     public let defaultValue: Value
@@ -20,13 +20,13 @@ public struct UBSecureStorageStored<Value: Codable> {
     public let secureStorage: UBSecureStorage
 
     public init(key: String, defaultValue: Value, secureStorage: UBSecureStorage) {
-        self.key = UBSecureStorageKey(key)
+        self.key = UBSecureStorageValueKey(key)
         self.defaultValue = defaultValue
         self.secureStorage = secureStorage
     }
 
     public init(key: String, defaultValue: Value, accessibility: UBKeychainAccessibility) {
-        self.key = UBSecureStorageKey(key)
+        self.key = UBSecureStorageValueKey(key)
         self.defaultValue = defaultValue
         self.secureStorage = UBSecureStorage.shared(accessibility: accessibility)
     }

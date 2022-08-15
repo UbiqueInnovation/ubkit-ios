@@ -8,7 +8,8 @@
 @testable import UBFoundation
 import XCTest
 
-class MockKeyProvider: UBSecureStorageKeyProvider {
+@available(iOS 11.0, *)
+class MockKeyProvider: UBSecureStorageKeyProviderProtocol {
 
     private let encryptAlg = SecKeyAlgorithm.eciesEncryptionCofactorVariableIVX963SHA256AESGCM
     private let signAlg = SecKeyAlgorithm.ecdsaSignatureMessageX962SHA512
@@ -77,50 +78,6 @@ class MockKeyProvider: UBSecureStorageKeyProvider {
         }
         if let clearData = clearData {
             return .success(clearData)
-        }
-        fatalError()
-    }
-
-    public func verify(data: Data, signature: Data, with key: SecKey) -> Result<Bool, UBEnclaveError> {
-        guard let publicKey = SecKeyCopyPublicKey(key) else {
-            return .failure(UBEnclaveError.pubkeyIrretrievable)
-        }
-        guard SecKeyIsAlgorithmSupported(publicKey, .verify, signAlg) else {
-            return .failure(UBEnclaveError.algNotSupported)
-        }
-        var error: Unmanaged<CFError>?
-        let isValid = SecKeyVerifySignature(
-            publicKey,
-            signAlg,
-            data as CFData,
-            signature as CFData,
-            &error
-        )
-        if let error = error?.takeRetainedValue() {
-            return .failure(UBEnclaveError.secError(error))
-        }
-        return .success(isValid)
-    }
-
-    public func sign(
-        data: Data,
-        with key: SecKey
-    ) -> Result<Data, UBEnclaveError> {
-        guard SecKeyIsAlgorithmSupported(key, .sign, signAlg) else {
-            return .failure(UBEnclaveError.algNotSupported)
-        }
-        var error: Unmanaged<CFError>?
-        let signature = SecKeyCreateSignature(
-            key,
-            signAlg,
-            data as CFData,
-            &error
-        ) as Data?
-        if let error = error?.takeRetainedValue() {
-            return .failure(UBEnclaveError.secError(error))
-        }
-        if let signature = signature {
-            return .success(signature)
         }
         fatalError()
     }

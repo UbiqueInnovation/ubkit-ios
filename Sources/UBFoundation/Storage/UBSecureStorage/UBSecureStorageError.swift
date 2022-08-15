@@ -12,7 +12,6 @@ public enum UBSecureStorageError: Error {
     case ioError(Error)
     case decodingError(_ error: Error)
     case encodingError(_ error: Error)
-    case dataIntegrity
     case notFound
 }
 
@@ -28,8 +27,6 @@ extension UBSecureStorageError: UBCodedError {
                 return Self.prefix + "DE\((err as NSError).code)"
             case let .encodingError(err):
                 return Self.prefix + "EN\((err as NSError).code)"
-            case .dataIntegrity:
-                return Self.prefix + "DIE"
             case .notFound:
                 return Self.prefix + "NF"
         }

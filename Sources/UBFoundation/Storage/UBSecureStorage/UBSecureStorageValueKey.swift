@@ -8,7 +8,7 @@
 import Foundation
 
 /// This is struct is needed to defer the type of a key when getting a object
-public struct UBSecureStorageKey<Object: Codable> {
+public struct UBSecureStorageValueKey<Object: Codable> {
     let key: String
     public init(_ key: String) {
         self.key = key

@@ -12,9 +12,9 @@ import UIKit
 public class UBSecureStorage {
     private let fileName: String
 
-    private let filePath: URL
+    private var filePath: URL
 
-    private let keyProvider: UBSecureStorageKeyProvider
+    private let keyProvider: UBSecureStorageKeyProviderProtocol
 
     private let accessibility: UBKeychainAccessibility
 
@@ -40,17 +40,14 @@ public class UBSecureStorage {
         }
     }
 
-    struct UBSecureStorageWrapper: Codable {
-        let encrypedData: Data
-        let signature: Data
-    }
-
     init(fileName: String = (Bundle.main.bundleIdentifier ?? "app"),
-         keyProvider: UBSecureStorageKeyProvider? = nil,
+         keyProvider: UBSecureStorageKeyProviderProtocol? = nil,
          accessibility: UBKeychainAccessibility = .whenUnlockedThisDeviceOnly,
          encoder: JSONEncoder = UBJSONEncoder(),
-         decoder: JSONDecoder = UBJSONDecoder()) {
-        self.keyProvider = keyProvider ?? UBEnclave(accessibility: accessibility)
+         decoder: JSONDecoder = UBJSONDecoder(),
+         excludeFileFromBackup: Bool = true,
+         fileProtection: FileProtectionType? = .complete) {
+        self.keyProvider = keyProvider ?? UBSecureStorageKeyProvider(accessibility: accessibility)
         self.encoder = encoder
         self.decoder = decoder
 
@@ -62,6 +59,20 @@ public class UBSecureStorage {
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = documentsPath[0]
         filePath = documentsDirectory.appendingPathComponent("\(fileName).ubSecStore")
+
+        if excludeFileFromBackup {
+            do {
+                var res = URLResourceValues()
+                res.isExcludedFromBackup = true
+                try filePath.setResourceValues(res)
+            } catch { }
+        }
+
+        if let fileProtection = fileProtection {
+            try? FileManager.default.setAttributes([
+                .protectionKey: fileProtection
+            ], ofItemAtPath: filePath.path)
+        }
     }
 
     private func loadKey() -> Result<SecKey, UBSecureStorageError> {
@@ -91,21 +102,14 @@ public class UBSecureStorage {
             return .success([:])
         }
 
-        let data: Data
+        let encrypedData: Data
         do {
-            data = try Data(contentsOf: filePath)
+            encrypedData = try Data(contentsOf: filePath)
         } catch {
             logger.error("could not read file \(error.localizedDescription)")
             return .failure(.ioError(error))
         }
 
-        let wrapper: UBSecureStorageWrapper
-        do {
-            wrapper = try decoder.decode(UBSecureStorageWrapper.self, from: data)
-        } catch {
-            logger.error("could not decode file \(error.localizedDescription)")
-            return .failure(.decodingError(error))
-        }
 
         let key: SecKey
         switch loadKey() {
@@ -116,19 +120,8 @@ public class UBSecureStorage {
                 return .failure(.enclaveError(error))
         }
 
-        switch keyProvider.verify(data: wrapper.encrypedData, signature: wrapper.signature, with: key) {
-            case let .success(success):
-                if !success {
-                    logger.error("data verification failed")
-                    return .failure(.dataIntegrity)
-                }
-            case let .failure(error):
-                logger.error("could not verify data on disk \(error.errorCode)")
-                return .failure(.enclaveError(error))
-        }
-
         let decryptedData: Data
-        switch keyProvider.decrypt(data: wrapper.encrypedData, with: key) {
+        switch keyProvider.decrypt(data: encrypedData, with: key) {
             case let .success(data):
                 decryptedData = data
             case let .failure(error):
@@ -189,27 +182,8 @@ public class UBSecureStorage {
                 return .failure(.enclaveError(error))
         }
 
-        let signature: Data
-        switch keyProvider.sign(data: encrypedData, with: key!) {
-            case let .success(signature_):
-                signature = signature_
-            case let .failure(error):
-                logger.error("could not sign encrypted data \(error.errorCode)")
-                return .failure(.enclaveError(error))
-        }
-
-        let wrapper = UBSecureStorageWrapper(encrypedData: encrypedData, signature: signature)
-
-        let wrapperData: Data
         do {
-            wrapperData = try encoder.encode(wrapper)
-        } catch {
-            logger.error("could not encode data \(error.localizedDescription)")
-            return .failure(.encodingError(error))
-        }
-
-        do {
-            try wrapperData.write(to: filePath)
+            try encrypedData.write(to: filePath)
         } catch {
             logger.error("could not write data \(error.localizedDescription)")
             return .failure(.ioError(error))
@@ -221,7 +195,7 @@ public class UBSecureStorage {
     /// Get a object from the keychain
     /// - Parameter key: a key object with the type
     /// - Returns: a result which either contain the error or the object
-    public func get<T>(for key: UBSecureStorageKey<T>) -> Result<T, UBSecureStorageError> where T: Decodable, T: Encodable {
+    public func get<T>(for key: UBSecureStorageValueKey<T>) -> Result<T, UBSecureStorageError> where T: Decodable, T: Encodable {
         queue.sync {
             let dict: [String: Data]
             switch loadDict() {
@@ -243,7 +217,7 @@ public class UBSecureStorage {
     }
 
     @discardableResult
-    public func set<T>(_ object: T, for key: UBSecureStorageKey<T>) -> Result<Void, UBSecureStorageError> where T: Decodable, T: Encodable {
+    public func set<T>(_ object: T, for key: UBSecureStorageValueKey<T>) -> Result<Void, UBSecureStorageError> where T: Decodable, T: Encodable {
         queue.sync {
             var dict: [String: Data]
             switch loadDict() {
@@ -264,7 +238,7 @@ public class UBSecureStorage {
     }
 
     @discardableResult
-    public func delete<T>(for key: UBSecureStorageKey<T>) -> Result<Void, UBSecureStorageError> where T: Decodable, T: Encodable {
+    public func delete<T>(for key: UBSecureStorageValueKey<T>) -> Result<Void, UBSecureStorageError> where T: Decodable, T: Encodable {
         queue.sync {
             var dict: [String: Data]
             switch loadDict() {
