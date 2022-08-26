@@ -54,8 +54,8 @@ public enum UBInternalNetworkingError: LocalizedError, Equatable {
     case recoverableError(UBNetworkTaskRecoveryOptions)
     /// Failed to unwrap an optional (should never happen)
     case unwrapError
-    /// Other error from NSURLErrorDomain
-    case otherNSURLError(NSError)
+    /// Other error
+    case otherError(NSError)
 }
 
 /// A structure that encapsulate the error body returned from the backend
@@ -80,7 +80,7 @@ extension UBNetworkingError {
             case let error as UBNetworkTaskRecoveryOptions:
                 self = UBNetworkingError.internal(.recoverableError(error))
             case let error as NSError:
-                let otherError = UBInternalNetworkingError.otherNSURLError(error)
+                let otherError = UBInternalNetworkingError.otherError(error)
                 self = .internal(otherError)
         }
     }
@@ -122,7 +122,12 @@ extension UBInternalNetworkingError: UBCodedError {
                 case .synchronousTimedOut: return "SEMTIMEOUT"
                 case .canceled: return "CANCELLED"
                 case .recoverableError: return "REC"
-                case let .otherNSURLError(error): return "NSURL \(error.code)"
+                case let .otherError(error):
+                    if let codedError = error as? UBCodedError {
+                        return codedError.errorCode
+                    } else {
+                        return "NSURL: \(error.localizedDescription) [\(error.code)]"
+                    }
             }
         }()
         return "\(errorCodePrefix)\(postfix)"
