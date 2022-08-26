@@ -122,12 +122,7 @@ extension UBInternalNetworkingError: UBCodedError {
                 case .synchronousTimedOut: return "SEMTIMEOUT"
                 case .canceled: return "CANCELLED"
                 case .recoverableError: return "REC"
-                case let .otherError(error):
-                    if let codedError = error as? UBCodedError {
-                        return codedError.errorCode
-                    } else {
-                        return "NSURL: \(error.localizedDescription) [\(error.code)]"
-                    }
+                case let .otherError(error): return error.errorCode
             }
         }()
         return "\(errorCodePrefix)\(postfix)"
