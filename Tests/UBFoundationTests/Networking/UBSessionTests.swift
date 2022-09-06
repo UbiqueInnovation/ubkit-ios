@@ -110,7 +110,7 @@ class UBSessionTests: XCTestCase {
                 case .success:
                     XCTFail()
                 case let .failure(error):
-                    XCTAssertEqual(error, UBNetworkingError.internal(.otherNSURLError(Err.x as NSError)))
+                    XCTAssertEqual(error, UBNetworkingError.internal(.otherError(Err.x as NSError)))
             }
             ex.fulfill()
         }
