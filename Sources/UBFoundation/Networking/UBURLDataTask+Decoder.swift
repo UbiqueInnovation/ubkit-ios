@@ -44,7 +44,7 @@ public class UBDataPassthroughDecoder: UBURLDataTaskDecoder<Data> {
     }
 }
 
-extension UBURLDataTaskDecoder where T == Data {
+public extension UBURLDataTaskDecoder where T == Data {
     static let passthrough = UBDataPassthroughDecoder()
 }
 
@@ -63,7 +63,7 @@ public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String> {
     }
 }
 
-extension UBURLDataTaskDecoder where T == String {
+public extension UBURLDataTaskDecoder where T == String {
     static let string = UBHTTPStringDecoder()
 }
 
@@ -91,7 +91,7 @@ public class UBHTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
     }
 }
 
-extension UBURLDataTaskDecoder where T: Decodable {
+public extension UBURLDataTaskDecoder where T: Decodable {
     static func json(decoder: JSONDecoder = JSONDecoder()) -> UBURLDataTaskDecoder {
         UBHTTPJSONDecoder(decoder: decoder)
     }
