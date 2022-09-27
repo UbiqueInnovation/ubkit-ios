@@ -12,29 +12,14 @@
     @available(iOS 14.0, *)
     struct UBPopupViewModifier<T: View>: ViewModifier {
         @Binding var isPresented: Bool
-        let extendsToEdges: Bool
-        let backgroundColor: Color
-        let cornerRadius: CGFloat
-        let insets: EdgeInsets
-        let horizontalPadding: CGFloat
-        let tapOutsideToDismiss: Bool
+        let style: UBPopupStyle
         let popup: () -> T
 
         init(isPresented: Binding<Bool>,
-             extendsToEdges: Bool,
-             backgroundColor: Color,
-             cornerRadius: CGFloat,
-             insets: EdgeInsets,
-             horizontalPadding: CGFloat,
-             tapOutsideToDismiss: Bool,
+             style: UBPopupStyle,
              @ViewBuilder content: @escaping () -> T) {
             self._isPresented = isPresented
-            self.extendsToEdges = extendsToEdges
-            self.backgroundColor = backgroundColor
-            self.cornerRadius = cornerRadius
-            self.insets = insets
-            self.horizontalPadding = horizontalPadding
-            self.tapOutsideToDismiss = tapOutsideToDismiss
+            self.style = style
             self.popup = content
         }
 
@@ -48,31 +33,31 @@
                 if isPresented {
                     VStack(alignment: .center) {
                         Spacer()
-                        if extendsToEdges {
+                        if style.extendsToEdges {
                             HStack {
                                 Spacer()
                                 popup()
-                                    .padding(insets)
+                                    .padding(style.insets)
                                 Spacer()
                             }
-                            .background(backgroundColor)
-                            .cornerRadius(cornerRadius)
-                            .padding(horizontalPadding)
+                            .background(style.backgroundColor)
+                            .cornerRadius(style.cornerRadius)
+                            .padding(style.horizontalPadding)
                         } else {
                             HStack {
                                 Spacer()
                                 popup()
-                                    .padding(insets)
-                                    .background(backgroundColor)
-                                    .cornerRadius(cornerRadius)
-                                    .padding(horizontalPadding)
+                                    .padding(style.insets)
+                                    .background(style.backgroundColor)
+                                    .cornerRadius(style.cornerRadius)
+                                    .padding(style.horizontalPadding)
                                 Spacer()
                             }
                         }
                         Spacer()
                     }
                     .background(Color.black.opacity(0.8).onTapGesture {
-                        if tapOutsideToDismiss {
+                        if style.tapOutsideToDismiss {
                             isPresented = false
                         }
                     })

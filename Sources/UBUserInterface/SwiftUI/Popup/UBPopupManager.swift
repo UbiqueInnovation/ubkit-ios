@@ -18,10 +18,11 @@
 
         @Published var currentPopupContent: (() -> AnyView)?
         @Published var isPresented: Binding<Bool> = .constant(false)
+        @Published var currentStyle: UBPopupStyle?
 
         private var popupBindings: [String: Binding<Bool>] = [:]
 
-        func showPopup(id: String, isPresented: Binding<Bool>, @ViewBuilder content: @escaping () -> AnyView) {
+        func showPopup(id: String, isPresented: Binding<Bool>, customStyle: UBPopupStyle? = nil, @ViewBuilder content: @escaping () -> AnyView) {
             popupBindings[id] = isPresented
             DispatchQueue.main.async {
                 for (k, v) in self.popupBindings {
@@ -29,6 +30,7 @@
                         v.wrappedValue = false
                     }
                 }
+                self.currentStyle = customStyle
                 self.currentPopupContent = content
                 self.isPresented = isPresented
             }
