@@ -24,8 +24,12 @@
         }
 
         func body(content: Content) -> some View {
-            content
-                .overlay(popupContent())
+            ZStack {
+                content
+                Color.clear
+                    .edgesIgnoringSafeArea(.all)
+                    .overlay(popupContent())
+            }
         }
 
         @ViewBuilder private func popupContent() -> some View {
