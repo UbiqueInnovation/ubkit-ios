@@ -15,6 +15,7 @@ let package = Package(
         .library(name: "UBLocation", targets: ["UBLocation"]),
         .library(name: "UBPush", targets: ["UBPush"]),
         .library(name: "UBQRScanner", targets: ["UBQRScanner"]),
+        .library(name: "UBDevTools", targets: ["UBDevTools"])
     ],
     dependencies: [],
     targets: [
@@ -23,6 +24,7 @@ let package = Package(
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
         .target(name: "UBQRScanner"),
+        .target(name: "UBDevTools"),
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation"],
                     resources: [
