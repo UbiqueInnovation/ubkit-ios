@@ -38,6 +38,13 @@ public struct DevToolsView : View {
             Section(header: Text("User Defaults")) {
                 Button("Clear UserDefaults") { UserDefaultsDevTools.clearUserDefaults() }
             }
+            Section(header: Text("URLCache.shared")) {
+                Text(cacheSizeText)
+                Button("Remove all cached responses") {
+                    CacheDevTools.clearCache(URLCache.shared)
+                    cacheSizeText = CacheDevTools.currentSizes(URLCache.shared)
+                }
+            }
             Section(header: Text("Finger Tips")) {
                 Toggle("Show finger tips", isOn: Binding(get: { Self.showFingerTips }, set: { Self.showFingerTips = $0 }))
             }
@@ -70,4 +77,6 @@ public struct DevToolsView : View {
     public static var showLocalizationKeys : Bool {
         didSet { fatalError() }
     }
+
+    @State var cacheSizeText : String = CacheDevTools.currentSizes(URLCache.shared)
 }
