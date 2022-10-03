@@ -8,8 +8,12 @@
 import UIKit
 
 @available(iOS 13.0, *)
-class FingerTipsDevTools {
+class FingerTipsDevTools : DevTool {
     static private var overlayWindow : FingerTipsWindow?
+
+    static func setup() {
+        
+    }
 
     static func showFingerTips(_ showFingerTips: Bool) {
         if showFingerTips {

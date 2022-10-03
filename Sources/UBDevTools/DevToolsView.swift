@@ -33,6 +33,9 @@ public struct DevToolsView : View {
             Section(header: Text("Finger Tips")) {
                 Toggle("Show finger tips", isOn: Binding(get: { showFingerTips }, set: { showFingerTips = $0 }))
             }
+            Section(header: Text("Localization")) {
+                Toggle("Show localization keys", isOn: Binding(get: { showLocalizationKeys }, set: { showLocalizationKeys = $0 }))
+            }
         }
     }
 
@@ -52,5 +55,9 @@ public struct DevToolsView : View {
 
     @State private var showFingerTips : Bool = false {
         didSet { FingerTipsDevTools.showFingerTips(showFingerTips) }
+    }
+
+    @State private var showLocalizationKeys : Bool = false {
+        didSet { LocalizationDevTools.showLocalizationKeys(showLocalizationKeys) }
     }
 }
