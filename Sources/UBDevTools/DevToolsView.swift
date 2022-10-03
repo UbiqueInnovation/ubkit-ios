@@ -13,8 +13,9 @@ import UBFoundation
 public class DevToolsViewController : UIHostingController<DevToolsView> {
     // MARK: - Init
     
-    public init() {
-        super.init(rootView: DevToolsView())
+    public init?() {
+        guard UBDevTools.isActivated, let dtv = DevToolsView() else { return nil }
+        super.init(rootView: dtv)
     }
 
     // MARK: - Init?
@@ -26,6 +27,12 @@ public class DevToolsViewController : UIHostingController<DevToolsView> {
 
 @available(iOS 13.0, *)
 public struct DevToolsView : View {
+    // MARK: - Init
+
+    public init?() {
+        guard UBDevTools.isActivated else { return nil }
+    }
+
     private var contentView : some View {
         Form {
             Section(header: Text("User Defaults")) {
