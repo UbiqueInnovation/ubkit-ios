@@ -45,6 +45,9 @@ public struct DevToolsView : View {
                     cacheSizeText = CacheDevTools.currentSizes(URLCache.shared)
                 }
             }
+            Section(header: Text("UIView")) {
+                Toggle("Show debug border", isOn: Binding(get: { Self.showViewBorders }, set: { Self.showViewBorders = $0 }))
+            }
             Section(header: Text("Finger Tips")) {
                 Toggle("Show finger tips", isOn: Binding(get: { Self.showFingerTips }, set: { Self.showFingerTips = $0 }))
             }
@@ -78,5 +81,11 @@ public struct DevToolsView : View {
         didSet { fatalError() }
     }
 
+    @UBUserDefault(key: "ubkit.devtools.uiviewbordertools.key", defaultValue: false)
+    public static var showViewBorders: Bool {
+        didSet { fatalError() }
+    }
+
     @State var cacheSizeText : String = CacheDevTools.currentSizes(URLCache.shared)
 }
+

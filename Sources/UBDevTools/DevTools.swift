@@ -15,7 +15,7 @@ protocol DevTool {
 public class UBDevTools {
     static var isActivated : Bool = false
 
-    private static let devTools : [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self]
+    private static let devTools : [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self, UIViewDevTools.self]
 
     public static func setup() {
         self.isActivated = true
