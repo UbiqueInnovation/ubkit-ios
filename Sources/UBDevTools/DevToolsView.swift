@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import UBFoundation
 
 @available(iOS 13.0, *)
 public class DevToolsViewController : UIHostingController<DevToolsView> {
@@ -31,10 +32,10 @@ public struct DevToolsView : View {
                 Button("Clear UserDefaults") { UserDefaultsDevTools.clearUserDefaults() }
             }
             Section(header: Text("Finger Tips")) {
-                Toggle("Show finger tips", isOn: Binding(get: { showFingerTips }, set: { showFingerTips = $0 }))
+                Toggle("Show finger tips", isOn: Binding(get: { Self.showFingerTips }, set: { Self.showFingerTips = $0 }))
             }
             Section(header: Text("Localization")) {
-                Toggle("Show localization keys", isOn: Binding(get: { showLocalizationKeys }, set: { showLocalizationKeys = $0 }))
+                Toggle("Show localization keys", isOn: Binding(get: { Self.showLocalizationKeys }, set: { Self.showLocalizationKeys = $0 }))
             }
         }
     }
@@ -53,11 +54,13 @@ public struct DevToolsView : View {
 
     // MARK: - State handling
 
-    @State private var showFingerTips : Bool = false {
-        didSet { FingerTipsDevTools.showFingerTips(showFingerTips) }
+    @UBUserDefault(key: "ubkit.devtools.fingertips.key", defaultValue: false)
+    public static var showFingerTips: Bool {
+        didSet { fatalError() }
     }
 
-    @State private var showLocalizationKeys : Bool = false {
-        didSet { LocalizationDevTools.showLocalizationKeys(showLocalizationKeys) }
+    @UBUserDefault(key: "ubkit.devtools.showlocalizationkeys.key", defaultValue: false)
+    public static var showLocalizationKeys : Bool {
+        didSet { fatalError() }
     }
 }

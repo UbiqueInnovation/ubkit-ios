@@ -15,24 +15,25 @@ class FingerTipsWindow : UIWindow {
 
     public func remove() {
         self.useMainRoot = false
+
+        self.rootViewController?.view.removeFromSuperview()
+        self.rootViewController = nil
         self.isHidden = true
+
+        if #available(iOS 13, *) {
+            windowScene = nil
+        }
     }
 
     public func handleTouchEvent(_ event: UIEvent) {
         guard isActive else {
             super.sendEvent(event)
-            self.scheduleRemoval()
             return
         }
 
         self.handleEvent(event)
 
         super.sendEvent(event)
-        self.scheduleRemoval()
-    }
-
-    private func scheduleRemoval() {
-
     }
 
     private func handleEvent(_ event: UIEvent) {

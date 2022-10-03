@@ -12,12 +12,12 @@ protocol DevTool {
 }
 
 @available(iOS 13.0, *)
-class DevTools {
+public class UBDevTools {
     static var isActivated : Bool = false
 
-    static private let devTools : [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self]
+    private static let devTools : [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self]
 
-    static func setup() {
+    public static func setup() {
         self.isActivated = true
 
         for d in devTools {
