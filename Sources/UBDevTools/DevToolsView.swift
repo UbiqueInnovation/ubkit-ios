@@ -30,6 +30,9 @@ public struct DevToolsView : View {
             Section(header: Text("User Defaults")) {
                 Button("Clear UserDefaults") { UserDefaultsDevTools.clearUserDefaults() }
             }
+            Section(header: Text("Finger Tips")) {
+                Toggle("Show finger tips", isOn: Binding(get: { showFingerTips }, set: { showFingerTips = $0 }))
+            }
         }
     }
 
@@ -43,5 +46,11 @@ public struct DevToolsView : View {
                 contentView.navigationBarTitle(Text("DevTools"))
             }
         }
+    }
+
+    // MARK: - State handling
+
+    @State private var showFingerTips : Bool = false {
+        didSet { FingerTipsDevTools.showFingerTips(showFingerTips) }
     }
 }
