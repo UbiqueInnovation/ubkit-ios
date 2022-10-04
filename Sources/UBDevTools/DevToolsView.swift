@@ -27,6 +27,10 @@ public class DevToolsViewController : UIHostingController<DevToolsView> {
 
 @available(iOS 13.0, *)
 public struct DevToolsView : View {
+
+    @State private var showingKeychainDeleteAlert = false
+    @State private var showingUserDefaultsDeleteAlert = false
+
     // MARK: - Init
 
     public init?() {
@@ -36,10 +40,35 @@ public struct DevToolsView : View {
     private var contentView : some View {
         Form {
             Section(header: Text("User Defaults")) {
-                Button("Clear UserDefaults") { UserDefaultsDevTools.clearUserDefaults() }
+                Button("Clear UserDefaults") {
+                    showingUserDefaultsDeleteAlert = true
+                }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
+                    Alert(
+                        title: Text("Delete"),
+                        message: Text("Are you sure?"),
+                        primaryButton: .destructive(Text("Delete"), action: {
+                            UserDefaultsDevTools.clearUserDefaults()
+                        }),
+                        secondaryButton: .cancel(Text("Cancel"), action: {})
+                    )
+                }
 
                 NavigationLink("Editor") {
                     UserDefaultsEditor()
+                }
+            }
+            Section(header: Text("Keychain")) {
+                Button("Clear Keychain") {
+                    showingKeychainDeleteAlert = true
+                }.alert(isPresented: $showingKeychainDeleteAlert) {
+                    Alert(
+                        title: Text("Delete"),
+                        message: Text("Are you sure?"),
+                        primaryButton: .destructive(Text("Delete"), action: {
+                            UBKeychain().deleteAllItems()
+                        }),
+                        secondaryButton: .cancel(Text("Cancel"), action: {})
+                    )
                 }
             }
             Section(header: Text("URLCache.shared")) {
@@ -57,6 +86,9 @@ public struct DevToolsView : View {
             }
             Section(header: Text("Localization")) {
                 Toggle("Show localization keys", isOn: Binding(get: { Self.showLocalizationKeys }, set: { Self.showLocalizationKeys = $0 }))
+            }
+            Section(header: Text("Map")) {
+                Toggle("Raster tiles debug overlay", isOn: Binding(get: { Self.mapRasterTilesDebugOverlay }, set: { Self.mapRasterTilesDebugOverlay = $0 }))
             }
         }
     }
@@ -91,6 +123,9 @@ public struct DevToolsView : View {
 
     @UBUserDefault(key: "ubkit.devtools.uiviewbordertools.key", defaultValue: false)
     public static var showViewBorders: Bool
+
+    @UBUserDefault(key: "io.openmobilemaps.debug.rastertiles.enabled", defaultValue: false)
+    public static var mapRasterTilesDebugOverlay: Bool
 
     @State var cacheSizeText : String = CacheDevTools.currentSizes(URLCache.shared)
 }
