@@ -70,6 +70,9 @@ public struct DevToolsView : View {
                         secondaryButton: .cancel(Text("Cancel"), action: {})
                     )
                 }
+                NavigationLink("Editor") {
+                    KeychainEditor()
+                }
             }
             Section(header: Text("URLCache.shared")) {
                 Text(cacheSizeText)

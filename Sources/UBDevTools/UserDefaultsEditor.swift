@@ -136,7 +136,7 @@ public struct UserDefaultsEditor : View {
                                         set: {
                                             UserDefaults.standard.set($0, forKey: key)
                                         }
-                                    ))
+                                    )).textFieldStyle(RoundedBorderTextFieldStyle())
                                 case let value as Double:
                                     TextField("", text: Binding(
                                         get: {
@@ -179,6 +179,6 @@ public struct UserDefaultsEditor : View {
                     UserDefaults.standard.removeObject(forKey: store.keys[firstIndex])
                 }
             }
-        }
+        }.navigationBarTitle(Text("Userdefaults Editor"))
     }
 }
