@@ -37,6 +37,10 @@ public struct DevToolsView : View {
         Form {
             Section(header: Text("User Defaults")) {
                 Button("Clear UserDefaults") { UserDefaultsDevTools.clearUserDefaults() }
+
+                NavigationLink("Editor") {
+                    UserDefaultsEditor()
+                }
             }
             Section(header: Text("URLCache.shared")) {
                 Text(cacheSizeText)
