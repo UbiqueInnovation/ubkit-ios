@@ -62,9 +62,17 @@ public struct DevToolsView : View {
     public var body : some View {
         NavigationView {
             if #available(iOS 14.0, *) {
-                contentView.navigationTitle("DevTools")
+                contentView.navigationTitle("DevTools").toolbar {
+                    Button("Save and exit") {
+                        fatalError()
+                    }
+                }
             } else {
-                contentView.navigationBarTitle(Text("DevTools"))
+                contentView
+                    .navigationBarTitle(Text("DevTools"))
+                    .navigationBarItems(trailing: Button("Save and exit") {
+                        fatalError()
+                    })
             }
         }
     }
@@ -72,19 +80,13 @@ public struct DevToolsView : View {
     // MARK: - State handling
 
     @UBUserDefault(key: "ubkit.devtools.fingertips.key", defaultValue: false)
-    public static var showFingerTips: Bool {
-        didSet { fatalError() }
-    }
+    public static var showFingerTips: Bool
 
     @UBUserDefault(key: "ubkit.devtools.showlocalizationkeys.key", defaultValue: false)
-    public static var showLocalizationKeys : Bool {
-        didSet { fatalError() }
-    }
+    public static var showLocalizationKeys : Bool
 
     @UBUserDefault(key: "ubkit.devtools.uiviewbordertools.key", defaultValue: false)
-    public static var showViewBorders: Bool {
-        didSet { fatalError() }
-    }
+    public static var showViewBorders: Bool
 
     @State var cacheSizeText : String = CacheDevTools.currentSizes(URLCache.shared)
 }

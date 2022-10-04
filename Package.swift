@@ -24,7 +24,7 @@ let package = Package(
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
         .target(name: "UBQRScanner"),
-        .target(name: "UBDevTools"),
+        .target(name: "UBDevTools", dependencies: ["UBFoundation"]),
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation"],
                     resources: [
