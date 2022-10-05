@@ -16,6 +16,8 @@
                 .onChange(of: isPresented.wrappedValue) { newValue in
                     if newValue {
                         UBPopupManager.shared.showPopup(id: id, isPresented: isPresented, customStyle: customStyle, content: { AnyView(content()) })
+                    } else {
+                        UBPopupManager.shared.hideWindowIfNecessary()
                     }
                 }
         }

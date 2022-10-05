@@ -24,11 +24,13 @@
 
         public var body: some View {
             wrappedContent()
-                .modifier(UBPopupViewModifier(isPresented: popupManager.isPresented, style: popupManager.currentStyle ?? style) {
-                    if let content = popupManager.currentPopupContent {
-                        content()
-                    }
-                })
+                .onAppear {
+                    popupManager.setupWindow()
+                    popupManager.defaultStyle = style
+                }
+                .onChange(of: style) { newValue in
+                    popupManager.defaultStyle = newValue
+                }
         }
     }
 

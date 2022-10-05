@@ -1,8 +1,8 @@
 //
-//  UBPopupViewModifier.swift
+//  UBPopupContainerView.swift
 //
 //
-//  Created by Matthias Felix on 27.09.22.
+//  Created by Matthias Felix on 05.10.22.
 //
 
 #if arch(arm64) || arch(x86_64)
@@ -10,29 +10,16 @@
     import SwiftUI
 
     @available(iOS 14.0, *)
-    struct UBPopupViewModifier<T: View>: ViewModifier {
+    struct UBPopupContainerView: View {
+        @EnvironmentObject private var popupManager: UBPopupManager
+
         @Binding var isPresented: Bool
-        let style: UBPopupStyle
-        let popup: () -> T
 
-        init(isPresented: Binding<Bool>,
-             style: UBPopupStyle,
-             @ViewBuilder content: @escaping () -> T) {
-            self._isPresented = isPresented
-            self.style = style
-            self.popup = content
+        private var style: UBPopupStyle {
+            popupManager.currentStyle ?? popupManager.defaultStyle
         }
 
-        func body(content: Content) -> some View {
-            ZStack {
-                content
-                Color.clear
-                    .edgesIgnoringSafeArea(.all)
-                    .overlay(popupContent())
-            }
-        }
-
-        @ViewBuilder private func popupContent() -> some View {
+        var body: some View {
             ZStack {
                 if isPresented {
                     VStack(alignment: .center) {
@@ -40,7 +27,7 @@
                         if style.extendsToEdges {
                             HStack {
                                 Spacer()
-                                popup()
+                                popupManager.currentPopupContent?()
                                     .padding(style.insets)
                                 Spacer()
                             }
@@ -50,7 +37,7 @@
                         } else {
                             HStack {
                                 Spacer()
-                                popup()
+                                popupManager.currentPopupContent?()
                                     .padding(style.insets)
                                     .background(style.backgroundColor)
                                     .cornerRadius(style.cornerRadius)

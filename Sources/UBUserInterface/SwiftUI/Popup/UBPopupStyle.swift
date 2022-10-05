@@ -10,7 +10,7 @@
     import SwiftUI
 
     @available(iOS 14.0, *)
-    public struct UBPopupStyle {
+    public struct UBPopupStyle: Equatable {
         let extendsToEdges: Bool
         let backgroundColor: Color
         let cornerRadius: CGFloat
