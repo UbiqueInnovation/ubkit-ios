@@ -8,8 +8,7 @@
 import Foundation
 
 class UserDefaultsDevTools {
-    static func clearUserDefaults() {
-        let defaults = UserDefaults.standard
+    static func clearUserDefaults(_ defaults: UserDefaults) {
         defaults.dictionaryRepresentation().keys.forEach { (key) in
             defaults.removeObject(forKey: key)
         }

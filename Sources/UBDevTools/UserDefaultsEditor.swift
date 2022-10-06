@@ -10,6 +10,7 @@ import SwiftUI
 
 @available(iOS 13.0, *)
 class ObservableUserDefaults: ObservableObject {
+    let userDefaults: UserDefaults
 
     var observer: Any?
 
@@ -39,6 +40,7 @@ class ObservableUserDefaults: ObservableObject {
         "ApplePasscodeKeyboards",
         "ApplePerAppLanguageSelectionBundleIdentifiers",
         "AppleTemperatureUnit",
+        "AppleTextDirection",
         "CarCapabilities",
         "INNextDelayedOfferFailsafeDateKey",
         "INNextFreshmintRefreshDateKey",
@@ -50,6 +52,7 @@ class ObservableUserDefaults: ObservableObject {
         "METAL_WARNING_MODE",
         "MPDebugEUVolumeLimit",
         "MSVLoggingMasterSwitchEnabledKey",
+        "NSAllowsDefaultLineBreakStrategy",
         "NSInterfaceStyle",
         "NSLanguages",
         "NSPersonNameDefaultShortNameFormat",
@@ -70,7 +73,8 @@ class ObservableUserDefaults: ObservableObject {
         "com.apple.content-rating.TVShowRating"
     ]
 
-    init(){
+    init(userDefaults: UserDefaults) {
+        self.userDefaults = userDefaults
         reload()
         observer = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { [weak self] _ in
             guard let self = self else { return }
@@ -79,7 +83,7 @@ class ObservableUserDefaults: ObservableObject {
     }
 
     func reload() {
-        let temp = UserDefaults.standard.dictionaryRepresentation().filter { el in
+        let temp = userDefaults.dictionaryRepresentation().filter { el in
             !filterKeys || !Self.systemKeys.contains(el.key)
         }
         self.dictionary = temp
@@ -92,14 +96,15 @@ class ObservableUserDefaults: ObservableObject {
 
 @available(iOS 13.0, *)
 public struct UserDefaultsEditor : View {
+    let userDefaults: UserDefaults
+    let displayName: String
+    @ObservedObject var store: ObservableUserDefaults
 
     @State var filterSystemDefaults: Bool = true
 
-    @ObservedObject var store = ObservableUserDefaults()
-
     public var body : some View {
         Form {
-            Section(header: Text("UserDefaults")) {
+            Section(header: Text("UserDefaults \(displayName)")) {
                 Toggle(isOn: $store.filterKeys) {
                     Text("Filter System Defaults")
                 }
@@ -116,7 +121,7 @@ public struct UserDefaultsEditor : View {
                                     DatePicker(selection: Binding(get: {
                                         value
                                     }, set: { newValue in
-                                        UserDefaults.standard.set(newValue, forKey: key)
+                                        userDefaults.set(newValue, forKey: key)
                                     })) {
                                         EmptyView()
                                     }
@@ -124,7 +129,7 @@ public struct UserDefaultsEditor : View {
                                     Toggle(isOn: Binding(get: {
                                         value
                                     }, set: { newValue in
-                                        UserDefaults.standard.set(newValue, forKey: key)
+                                        userDefaults.set(newValue, forKey: key)
                                     })) {
                                         EmptyView()
                                     }
@@ -134,7 +139,7 @@ public struct UserDefaultsEditor : View {
                                             value
                                         },
                                         set: {
-                                            UserDefaults.standard.set($0, forKey: key)
+                                            userDefaults.set($0, forKey: key)
                                         }
                                     )).textFieldStyle(RoundedBorderTextFieldStyle())
                                 case let value as Double:
@@ -143,7 +148,7 @@ public struct UserDefaultsEditor : View {
                                             "\(value)"
                                         },
                                         set: {
-                                            UserDefaults.standard.setValue(Double($0), forKey: key)
+                                            userDefaults.setValue(Double($0), forKey: key)
                                         }
                                     ))
                                 case let value as Int:
@@ -152,7 +157,7 @@ public struct UserDefaultsEditor : View {
                                             "\(value)"
                                         },
                                         set: {
-                                            UserDefaults.standard.setValue(Int($0), forKey: key)
+                                            userDefaults.setValue(Int($0), forKey: key)
                                         }
                                     ))
                                 case let value as Data:
@@ -161,7 +166,7 @@ public struct UserDefaultsEditor : View {
                                             "\(value.base64EncodedString())"
                                         },
                                         set: {
-                                            UserDefaults.standard.setValue(Data(base64Encoded: $0), forKey: key)
+                                            userDefaults.setValue(Data(base64Encoded: $0), forKey: key)
                                         }
                                     ))
                                 default:
@@ -176,7 +181,7 @@ public struct UserDefaultsEditor : View {
                     }.deleteDisabled(ObservableUserDefaults.systemKeys.contains(key))
                 }.onDelete { indexSet in
                     guard let firstIndex = indexSet.first else { return }
-                    UserDefaults.standard.removeObject(forKey: store.keys[firstIndex])
+                    userDefaults.removeObject(forKey: store.keys[firstIndex])
                 }
             }
         }.navigationBarTitle(Text("Userdefaults Editor"))

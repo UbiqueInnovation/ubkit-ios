@@ -39,22 +39,40 @@ public struct DevToolsView : View {
 
     private var contentView : some View {
         Form {
-            Section(header: Text("User Defaults")) {
-                Button("Clear UserDefaults") {
+            Section(header: Text("UserDefaults (Standard)")) {
+                Button("Clear UserDefaults (Standard)") {
                     showingUserDefaultsDeleteAlert = true
                 }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
                     Alert(
                         title: Text("Delete"),
                         message: Text("Are you sure?"),
                         primaryButton: .destructive(Text("Delete"), action: {
-                            UserDefaultsDevTools.clearUserDefaults()
+                            UserDefaultsDevTools.clearUserDefaults(.standard)
                         }),
                         secondaryButton: .cancel(Text("Cancel"), action: {})
                     )
                 }
-
                 NavigationLink("Editor") {
-                    UserDefaultsEditor()
+                    UserDefaultsEditor(userDefaults: .standard, displayName: "Standard", store: ObservableUserDefaults(userDefaults: .standard))
+                }
+            }
+            ForEach(Array(UBDevTools.options.additionalUserDefaults.enumerated()), id: \.offset) { idx, el in
+                Section(header: Text("UserDefaults (\(el.displayName))")) {
+                    Button("Clear UserDefaults (\(el.displayName))") {
+                        showingUserDefaultsDeleteAlert = true
+                    }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
+                        Alert(
+                            title: Text("Delete"),
+                            message: Text("Are you sure?"),
+                            primaryButton: .destructive(Text("Delete"), action: {
+                                UserDefaultsDevTools.clearUserDefaults(el.defaults)
+                            }),
+                            secondaryButton: .cancel(Text("Cancel"), action: {})
+                        )
+                    }
+                    NavigationLink("Editor") {
+                        UserDefaultsEditor(userDefaults: el.defaults, displayName: el.displayName, store: ObservableUserDefaults(userDefaults: el.defaults))
+                    }
                 }
             }
             Section(header: Text("Keychain")) {
@@ -93,26 +111,39 @@ public struct DevToolsView : View {
             Section(header: Text("Map")) {
                 Toggle("Raster tiles debug overlay", isOn: Binding(get: { Self.mapRasterTilesDebugOverlay }, set: { Self.mapRasterTilesDebugOverlay = $0 }))
             }
+            if #available(iOS 15.0, *) {
+                LogDevToolsView()
+            }
+        }
+    }
+
+    @ViewBuilder private var container: some View {
+        if #available(iOS 14.0, *) {
+            contentView
+                .navigationTitle("DevTools")
+                .toolbar {
+                    Button("Save and exit") {
+                        fatalError()
+                    }
+                }
+        } else {
+            contentView
+                .navigationBarTitle(Text("DevTools"))
+                .navigationBarItems(trailing: Button("Save and exit") {
+                    fatalError()
+                })
         }
     }
 
     // MARK: - Body
 
     public var body : some View {
-        NavigationView {
-            if #available(iOS 14.0, *) {
-                contentView.navigationTitle("DevTools").toolbar {
-                    Button("Save and exit") {
-                        fatalError()
-                    }
-                }
-            } else {
-                contentView
-                    .navigationBarTitle(Text("DevTools"))
-                    .navigationBarItems(trailing: Button("Save and exit") {
-                        fatalError()
-                    })
+        if UBDevTools.options.useOwnNavigationView {
+            NavigationView {
+                container
             }
+        } else {
+            container
         }
     }
 
