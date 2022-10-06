@@ -24,4 +24,8 @@ public class UBDevTools {
             d.setup()
         }
     }
+
+    public static func setupBaseUrls(baseUrls: [BaseUrl]) {
+        BackendDevTools.setup(baseUrls: baseUrls)
+    }
 }
