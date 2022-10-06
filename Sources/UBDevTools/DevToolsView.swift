@@ -27,6 +27,10 @@ public class DevToolsViewController : UIHostingController<DevToolsView> {
 
 @available(iOS 13.0, *)
 public struct DevToolsView : View {
+
+    @State private var showingKeychainDeleteAlert = false
+    @State private var showingUserDefaultsDeleteAlert = false
+
     // MARK: - Init
 
     public init?() {
@@ -35,8 +39,58 @@ public struct DevToolsView : View {
 
     private var contentView : some View {
         Form {
-            Section(header: Text("User Defaults")) {
-                Button("Clear UserDefaults") { UserDefaultsDevTools.clearUserDefaults() }
+            Section(header: Text("UserDefaults (Standard)")) {
+                Button("Clear UserDefaults (Standard)") {
+                    showingUserDefaultsDeleteAlert = true
+                }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
+                    Alert(
+                        title: Text("Delete"),
+                        message: Text("Are you sure?"),
+                        primaryButton: .destructive(Text("Delete"), action: {
+                            UserDefaultsDevTools.clearUserDefaults(.standard)
+                        }),
+                        secondaryButton: .cancel(Text("Cancel"), action: {})
+                    )
+                }
+                NavigationLink("Editor") {
+                    UserDefaultsEditor(userDefaults: .standard, displayName: "Standard", store: ObservableUserDefaults(userDefaults: .standard))
+                }
+            }
+            ForEach(Array(UBDevTools.options.additionalUserDefaults.enumerated()), id: \.offset) { idx, el in
+                Section(header: Text("UserDefaults (\(el.displayName))")) {
+                    Button("Clear UserDefaults (\(el.displayName))") {
+                        showingUserDefaultsDeleteAlert = true
+                    }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
+                        Alert(
+                            title: Text("Delete"),
+                            message: Text("Are you sure?"),
+                            primaryButton: .destructive(Text("Delete"), action: {
+                                UserDefaultsDevTools.clearUserDefaults(el.defaults)
+                            }),
+                            secondaryButton: .cancel(Text("Cancel"), action: {})
+                        )
+                    }
+                    NavigationLink("Editor") {
+                        UserDefaultsEditor(userDefaults: el.defaults, displayName: el.displayName, store: ObservableUserDefaults(userDefaults: el.defaults))
+                    }
+                }
+            }
+            Section(header: Text("Keychain")) {
+                Button("Clear Keychain") {
+                    showingKeychainDeleteAlert = true
+                }.alert(isPresented: $showingKeychainDeleteAlert) {
+                    Alert(
+                        title: Text("Delete"),
+                        message: Text("Are you sure?"),
+                        primaryButton: .destructive(Text("Delete"), action: {
+                            UBKeychain().deleteAllItems()
+                        }),
+                        secondaryButton: .cancel(Text("Cancel"), action: {})
+                    )
+                }
+                NavigationLink("Editor") {
+                    KeychainEditor()
+                }
             }
             Section(header: Text("URLCache.shared")) {
                 Text(cacheSizeText)
@@ -54,7 +108,6 @@ public struct DevToolsView : View {
             Section(header: Text("Localization")) {
                 Toggle("Show localization keys", isOn: Binding(get: { Self.showLocalizationKeys }, set: { Self.showLocalizationKeys = $0 }))
             }
-
             Section(header: Text("Backend URL Config")) {
                 if BackendDevTools.baseUrls.count > 0 {
                     List(BackendDevTools.baseUrls, id: \.title) { bu in
@@ -69,26 +122,42 @@ public struct DevToolsView : View {
                     Text("No backend urls configured.")
                 }
             }
+            Section(header: Text("Map")) {
+                Toggle("Raster tiles debug overlay", isOn: Binding(get: { Self.mapRasterTilesDebugOverlay }, set: { Self.mapRasterTilesDebugOverlay = $0 }))
+            }
+            if #available(iOS 15.0, *) {
+                LogDevToolsView()
+            }
+        }
+    }
+
+    @ViewBuilder private var container: some View {
+        if #available(iOS 14.0, *) {
+            contentView
+                .navigationTitle("DevTools")
+                .toolbar {
+                    Button("Save and exit") {
+                        fatalError()
+                    }
+                }
+        } else {
+            contentView
+                .navigationBarTitle(Text("DevTools"))
+                .navigationBarItems(trailing: Button("Save and exit") {
+                    fatalError()
+                })
         }
     }
 
     // MARK: - Body
 
     public var body : some View {
-        NavigationView {
-            if #available(iOS 14.0, *) {
-                contentView.navigationTitle("DevTools").toolbar {
-                    Button("Save and exit") {
-                        fatalError()
-                    }
-                }
-            } else {
-                contentView
-                    .navigationBarTitle(Text("DevTools"))
-                    .navigationBarItems(trailing: Button("Save and exit") {
-                        fatalError()
-                    })
+        if UBDevTools.options.useOwnNavigationView {
+            NavigationView {
+                container
             }
+        } else {
+            container
         }
     }
 
@@ -102,6 +171,9 @@ public struct DevToolsView : View {
 
     @UBUserDefault(key: "ubkit.devtools.uiviewbordertools.key", defaultValue: false)
     public static var showViewBorders: Bool
+
+    @UBUserDefault(key: "io.openmobilemaps.debug.rastertiles.enabled", defaultValue: false)
+    public static var mapRasterTilesDebugOverlay: Bool
 
     @State var cacheSizeText : String = CacheDevTools.currentSizes(URLCache.shared)
 }
