@@ -1,22 +1,20 @@
 //
 //  UserDefaultsEditor.swift
-//  
+//
 //
 //  Created by Stefan Mitterrutzner on 03.10.22.
 //
 
 import Foundation
-import UBFoundation
 import SwiftUI
+import UBFoundation
 
 @available(iOS 13.0, *)
 class ObservableKeychainEditor: ObservableObject {
-
-
     var dictionary: [String: String] = [:]
     var keys: [String] = []
 
-    init(){
+    init() {
         reload()
     }
 
@@ -29,13 +27,13 @@ class ObservableKeychainEditor: ObservableObject {
         }
     }
 
-    private func getAllKeyChainItems() -> [String:String] {
+    private func getAllKeyChainItems() -> [String: String] {
         let query: [String: Any] = [
-            kSecClass as String : kSecClassGenericPassword,
-            kSecReturnData as String  : kCFBooleanTrue!,
-            kSecReturnAttributes as String : kCFBooleanTrue!,
-            kSecReturnRef as String : kCFBooleanTrue!,
-            kSecMatchLimit as String: kSecMatchLimitAll
+            kSecClass as String: kSecClassGenericPassword,
+            kSecReturnData as String: kCFBooleanTrue!,
+            kSecReturnAttributes as String: kCFBooleanTrue!,
+            kSecReturnRef as String: kCFBooleanTrue!,
+            kSecMatchLimit as String: kSecMatchLimitAll,
         ]
 
         var result: AnyObject?
@@ -46,7 +44,7 @@ class ObservableKeychainEditor: ObservableObject {
 
         var values = [String: String]()
         if lastResultCode == noErr {
-            let array = result as? Array<Dictionary<String, Any>>
+            let array = result as? [[String: Any]]
 
             for item in array! {
                 if let key = item[kSecAttrAccount as String] as? String,
@@ -62,11 +60,10 @@ class ObservableKeychainEditor: ObservableObject {
 }
 
 @available(iOS 13.0, *)
-public struct KeychainEditor : View {
-
+public struct KeychainEditor: View {
     @ObservedObject var store = ObservableKeychainEditor()
 
-    public var body : some View {
+    public var body: some View {
         Form {
             Section {
                 ForEach(store.keys, id: \.self) { key in
@@ -83,7 +80,6 @@ public struct KeychainEditor : View {
                                 }
                             )).textFieldStyle(RoundedBorderTextFieldStyle())
                         }
-
                     }
                 }.onDelete { indexSet in
                     guard let firstIndex = indexSet.first else { return }

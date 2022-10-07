@@ -1,6 +1,6 @@
 //
 //  UserDefaultsEditor.swift
-//  
+//
 //
 //  Created by Stefan Mitterrutzner on 03.10.22.
 //
@@ -70,7 +70,7 @@ class ObservableUserDefaults: ObservableObject {
         "com.apple.content-rating.ExplicitBooksAllowed",
         "com.apple.content-rating.ExplicitMusicPodcastsAllowed",
         "com.apple.content-rating.MovieRating",
-        "com.apple.content-rating.TVShowRating"
+        "com.apple.content-rating.TVShowRating",
     ]
 
     init(userDefaults: UserDefaults) {
@@ -95,12 +95,12 @@ class ObservableUserDefaults: ObservableObject {
 }
 
 @available(iOS 13.0, *)
-public struct UserDefaultsEditor : View {
+public struct UserDefaultsEditor: View {
     let userDefaults: UserDefaults
     let displayName: String
     @ObservedObject var store: ObservableUserDefaults
 
-    public var body : some View {
+    public var body: some View {
         Form {
             Section(header: Text(displayName)) {
                 Toggle(isOn: $store.filterKeys) {
@@ -113,7 +113,6 @@ public struct UserDefaultsEditor : View {
                         Text("Key: \(key)").font(.caption)
 
                         if let value = store.dictionary[key] {
-
                             switch value {
                                 case let value as Date:
                                     DatePicker(selection: Binding(get: {

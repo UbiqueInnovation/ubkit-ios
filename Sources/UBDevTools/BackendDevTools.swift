@@ -1,6 +1,6 @@
 //
 //  BackendDevTools.swift
-//  
+//
 //
 //  Created by Marco Zimmermann on 04.10.22.
 //
@@ -12,12 +12,12 @@ public struct BaseUrl {
         self.title = title
         self.url = url
     }
-    
+
     let title: String
     let url: String
 }
 
-class BackendDevTools : DevTool {
+class BackendDevTools: DevTool {
     private static var didSwizzle = false
     public static var baseUrls: [BaseUrl] = []
 
@@ -42,15 +42,15 @@ class BackendDevTools : DevTool {
     }
 
     public static func currentUrlString(baseUrl: BaseUrl) -> String {
-        return UserDefaults.standard.string(forKey: key(baseUrl)) ?? baseUrl.url
+        UserDefaults.standard.string(forKey: key(baseUrl)) ?? baseUrl.url
     }
 
     public static func key(_ b: BaseUrl) -> String {
-        return "ubkit.devtools.backenddevtools." + b.url
+        "ubkit.devtools.backenddevtools." + b.url
     }
 
     private static func keyPrefix() -> String {
-        return "ubkit.devtools.backenddevtools."
+        "ubkit.devtools.backenddevtools."
     }
 
     private static func startSwizzling() {

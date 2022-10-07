@@ -1,17 +1,17 @@
 //
 //  FingerTipsDevTools.swift
-//  
+//
 //
 //  Created by Marco Zimmermann on 30.09.22.
 //
 
-import UIKit
 import UBFoundation
+import UIKit
 
 @available(iOS 13.0, *)
-class FingerTipsDevTools : DevTool {
-    static private var overlayWindow : FingerTipsWindow?
-    static private var notificationHelper : NotificationHelper?
+class FingerTipsDevTools: DevTool {
+    private static var overlayWindow: FingerTipsWindow?
+    private static var notificationHelper: NotificationHelper?
 
     static func setup() {
         let nh = NotificationHelper()
@@ -48,7 +48,8 @@ class FingerTipsDevTools : DevTool {
 
     private static func setMainAssociatedObject(_ window: UIWindow?) {
         if let main = UIApplication.shared.windows.first(where: {
-            !($0 is FingerTipsWindow) }) {
+            !($0 is FingerTipsWindow)
+        }) {
             objc_setAssociatedObject(main, &UIWindow.associatedObjectHandle, window, objc_AssociationPolicy.OBJC_ASSOCIATION_ASSIGN)
         }
     }

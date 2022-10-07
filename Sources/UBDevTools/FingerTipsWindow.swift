@@ -1,15 +1,15 @@
 //
 //  FingerTipsWindow.swift
-//  
+//
 //
 //  Created by Marco Zimmermann on 30.09.22.
 //
 
 import UIKit
 
-class FingerTipsWindow : UIWindow {
-    private var isActive : Bool = true
-    private var fingerViews : [Int : FingerTipView] = [:]
+class FingerTipsWindow: UIWindow {
+    private var isActive: Bool = true
+    private var fingerViews: [Int: FingerTipView] = [:]
 
     private var useMainRoot = true
 
@@ -41,41 +41,41 @@ class FingerTipsWindow : UIWindow {
 
         for t in touches {
             switch t.phase {
-            case .began:
-                let ftv = FingerTipView()
-                ftv.center = t.location(in: self)
-                self.addSubview(ftv)
-                self.fingerViews[t.hash] = ftv
-
-                break
-            case .moved, .stationary:
-                if let ftv = self.fingerViews[t.hash] {
+                case .began:
+                    let ftv = FingerTipView()
                     ftv.center = t.location(in: self)
-                }
-            case .ended, .cancelled:
-                if let ftv = self.fingerViews[t.hash] {
-                    ftv.fadeOut {
-                        ftv.removeFromSuperview()
-                        self.fingerViews.removeValue(forKey: t.hash)
+                    self.addSubview(ftv)
+                    self.fingerViews[t.hash] = ftv
+
+                case .moved, .stationary:
+                    if let ftv = self.fingerViews[t.hash] {
+                        ftv.center = t.location(in: self)
                     }
-                }
-            case .regionEntered, .regionMoved, .regionExited:
-                break
-            @unknown default:
-                break
+                case .ended, .cancelled:
+                    if let ftv = self.fingerViews[t.hash] {
+                        ftv.fadeOut {
+                            ftv.removeFromSuperview()
+                            self.fingerViews.removeValue(forKey: t.hash)
+                        }
+                    }
+                case .regionEntered, .regionMoved, .regionExited:
+                    break
+                @unknown default:
+                    break
             }
         }
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        return super.hitTest(point, with: event)
+        super.hitTest(point, with: event)
     }
 
     override var rootViewController: UIViewController? {
         set { super.rootViewController = newValue }
         get {
             if let main = UIApplication.shared.windows.first(where: {
-                !($0 is FingerTipsWindow) }), useMainRoot {
+                !($0 is FingerTipsWindow)
+            }), useMainRoot {
                 return main.rootViewController
             }
 
@@ -84,8 +84,8 @@ class FingerTipsWindow : UIWindow {
     }
 }
 
-class FingerTipView : UIImageView {
-    private var timestamp : Int64 = 0
+class FingerTipView: UIImageView {
+    private var timestamp: Int64 = 0
     private var removeAutomatically: Bool = false
     private var isFadingOut: Bool = false
 
@@ -102,7 +102,7 @@ class FingerTipView : UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func fadeOut(_ completion: @escaping (() -> ())) {
+    func fadeOut(_ completion: @escaping (() -> Void)) {
         UIView.animate(withDuration: 0.3) {
             self.alpha = 0.0
         } completion: { _ in

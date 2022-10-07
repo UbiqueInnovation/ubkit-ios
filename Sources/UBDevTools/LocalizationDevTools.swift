@@ -1,16 +1,16 @@
 //
 //  LocalizationDevTools.swift
-//  
+//
 //
 //  Created by Marco Zimmermann on 03.10.22.
 //
 
 import Foundation
-import UIKit
 import UBFoundation
+import UIKit
 
 @available(iOS 13.0, *)
-class LocalizationDevTools : DevTool {
+class LocalizationDevTools: DevTool {
     static func setup() {
         if DevToolsView.showLocalizationKeys {
             Bundle.localizationKeySwizzleWizzle()
@@ -29,6 +29,6 @@ public extension Bundle {
     }
 
     @objc func specialLocalizedString(forKey key: String, value: String?, table tableName: String?) -> String {
-        return key
+        key
     }
 }

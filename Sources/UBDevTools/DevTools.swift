@@ -1,6 +1,6 @@
 //
 //  DevTools.swift
-//  
+//
 //
 //  Created by Marco Zimmermann on 03.10.22.
 //
@@ -13,10 +13,10 @@ protocol DevTool {
 }
 
 @available(iOS 13.0, *)
-public class UBDevTools {
-    static var isActivated : Bool = false
+public enum UBDevTools {
+    static var isActivated: Bool = false
 
-    private static let devTools : [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self, UIViewDevTools.self]
+    private static let devTools: [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self, UIViewDevTools.self]
 
     public static func setup() {
         Self.isActivated = true
@@ -39,18 +39,18 @@ public class UBDevTools {
 
 @available(iOS 13.0, *)
 extension UIWindow {
-    static private var initSwizzled = false
+    private static var initSwizzled = false
 
     static func sendInitSwizzleWizzle() {
         guard !Self.initSwizzled else { return }
 
         if let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.init(windowScene:))),
-            let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzled_windowSceneInit)) {
+           let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzled_windowSceneInit)) {
             method_exchangeImplementations(originalMethod, swizzledMethod)
         }
 
         if let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.init(frame:))),
-            let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzed_frameInit(frame:))) {
+           let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzed_frameInit(frame:))) {
             method_exchangeImplementations(originalMethod, swizzledMethod)
         }
 

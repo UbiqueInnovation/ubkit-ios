@@ -1,6 +1,6 @@
 //
 //  LogDevToolsView.swift
-//  
+//
 //
 //  Created by Matthias Felix on 05.10.22.
 //
@@ -56,7 +56,7 @@ struct LogDevToolsView: View {
             Text("Logs")
         }
         .onAppear {
-            if !extractor.isFetching && extractor.entries.isEmpty {
+            if !extractor.isFetching, extractor.entries.isEmpty {
                 extractor.fetchEntries()
             }
         }
@@ -84,6 +84,5 @@ private struct ShareView: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController,
-                                context: UIViewControllerRepresentableContext<ShareView>) {
-    }
+                                context: UIViewControllerRepresentableContext<ShareView>) {}
 }

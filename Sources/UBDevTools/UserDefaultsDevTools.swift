@@ -8,10 +8,10 @@
 import Foundation
 
 class UserDefaultsDevTools {
-    static var sharedUserDefaults: UserDefaults? = nil
+    static var sharedUserDefaults: UserDefaults?
 
     static func clearUserDefaults(_ defaults: UserDefaults) {
-        defaults.dictionaryRepresentation().keys.forEach { (key) in
+        defaults.dictionaryRepresentation().keys.forEach { key in
             defaults.removeObject(forKey: key)
         }
     }

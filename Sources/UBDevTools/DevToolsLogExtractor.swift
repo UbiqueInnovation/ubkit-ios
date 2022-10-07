@@ -1,12 +1,12 @@
 //
 //  DevToolsLogExtractor.swift
-//  
+//
 //
 //  Created by Matthias Felix on 05.10.22.
 //
 
-import SwiftUI
 import OSLog
+import SwiftUI
 
 @available(iOS 15.0, *)
 class DevToolsLogExtractor: ObservableObject {

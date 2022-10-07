@@ -1,6 +1,6 @@
 //
 //  UIViewDevTools.swift
-//  
+//
 //
 //  Created by Marco Zimmermann on 03.10.22.
 //
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 @available(iOS 13.0, *)
-class UIViewDevTools : DevTool {
+class UIViewDevTools: DevTool {
     static func setup() {
         if DevToolsView.showViewBorders {
             UIView.layoutSwizzleWizzle()
