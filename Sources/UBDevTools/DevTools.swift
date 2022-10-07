@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol DevTool {
     static func setup()
@@ -20,6 +21,8 @@ public class UBDevTools {
     public static func setup() {
         Self.isActivated = true
 
+        UIWindow.sendInitSwizzleWizzle()
+
         for d in devTools {
             d.setup()
         }
@@ -31,5 +34,50 @@ public class UBDevTools {
 
     public static func setupSharedUserDefaults(_ userDefaults: UserDefaults) {
         UserDefaultsDevTools.setupSharedUserDefaults(userDefaults)
+    }
+}
+
+@available(iOS 13.0, *)
+extension UIWindow {
+    static private var initSwizzled = false
+
+    static func sendInitSwizzleWizzle() {
+        guard !Self.initSwizzled else { return }
+
+        if let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.init(windowScene:))),
+            let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzled_windowSceneInit)) {
+            method_exchangeImplementations(originalMethod, swizzledMethod)
+        }
+
+        if let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.init(frame:))),
+            let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzed_frameInit(frame:))) {
+            method_exchangeImplementations(originalMethod, swizzledMethod)
+        }
+
+        Self.initSwizzled = true
+    }
+
+    @objc private func swizzled_windowSceneInit(windowScene: UIWindowScene) -> UIWindow {
+        let window = swizzled_windowSceneInit(windowScene: windowScene)
+        let gr = UITapGestureRecognizer(target: self, action: #selector(openDevTools))
+        gr.numberOfTapsRequired = 5
+        gr.numberOfTouchesRequired = 2
+        window.addGestureRecognizer(gr)
+        return window
+    }
+
+    @objc private func swizzed_frameInit(frame: CGRect) -> UIWindow {
+        let window = swizzed_frameInit(frame: frame)
+        let gr = UITapGestureRecognizer(target: self, action: #selector(openDevTools))
+        gr.numberOfTapsRequired = 5
+        gr.numberOfTouchesRequired = 2
+        window.addGestureRecognizer(gr)
+        return window
+    }
+
+    @objc private func openDevTools() {
+        if let vc = rootViewController, let devToolsVC = DevToolsViewController() {
+            vc.present(devToolsVC, animated: true)
+        }
     }
 }
