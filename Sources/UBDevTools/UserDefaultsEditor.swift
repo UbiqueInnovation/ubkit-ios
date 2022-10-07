@@ -100,11 +100,9 @@ public struct UserDefaultsEditor : View {
     let displayName: String
     @ObservedObject var store: ObservableUserDefaults
 
-    @State var filterSystemDefaults: Bool = true
-
     public var body : some View {
         Form {
-            Section(header: Text("UserDefaults \(displayName)")) {
+            Section(header: Text(displayName)) {
                 Toggle(isOn: $store.filterKeys) {
                     Text("Filter System Defaults")
                 }
@@ -184,6 +182,6 @@ public struct UserDefaultsEditor : View {
                     userDefaults.removeObject(forKey: store.keys[firstIndex])
                 }
             }
-        }.navigationBarTitle(Text("Userdefaults Editor"))
+        }.navigationBarTitle(Text("UserDefaults Editor"))
     }
 }

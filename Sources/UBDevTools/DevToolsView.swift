@@ -27,6 +27,7 @@ public class DevToolsViewController : UIHostingController<DevToolsView> {
 
 @available(iOS 13.0, *)
 public struct DevToolsView : View {
+    @Environment(\.presentationMode) private var presentationMode
 
     @State private var showingKeychainDeleteAlert = false
     @State private var showingUserDefaultsDeleteAlert = false
@@ -39,8 +40,8 @@ public struct DevToolsView : View {
 
     private var contentView : some View {
         Form {
-            Section(header: Text("UserDefaults (Standard)")) {
-                Button("Clear UserDefaults (Standard)") {
+            Section(header: Text("UserDefaults.standard")) {
+                Button("Clear UserDefaults.standard") {
                     showingUserDefaultsDeleteAlert = true
                 }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
                     Alert(
@@ -53,26 +54,29 @@ public struct DevToolsView : View {
                     )
                 }
                 NavigationLink("Editor") {
-                    UserDefaultsEditor(userDefaults: .standard, displayName: "Standard", store: ObservableUserDefaults(userDefaults: .standard))
+                    UserDefaultsEditor(userDefaults: .standard, displayName: "UserDefaults.standard", store: ObservableUserDefaults(userDefaults: .standard))
                 }
             }
-            ForEach(Array(UBDevTools.options.additionalUserDefaults.enumerated()), id: \.offset) { idx, el in
-                Section(header: Text("UserDefaults (\(el.displayName))")) {
-                    Button("Clear UserDefaults (\(el.displayName))") {
+
+            Section(header: Text("Shared UserDefaults")) {
+                if let shared = UserDefaultsDevTools.sharedUserDefaults {
+                    Button("Clear Shared UserDefaults") {
                         showingUserDefaultsDeleteAlert = true
                     }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
                         Alert(
                             title: Text("Delete"),
                             message: Text("Are you sure?"),
                             primaryButton: .destructive(Text("Delete"), action: {
-                                UserDefaultsDevTools.clearUserDefaults(el.defaults)
+                                UserDefaultsDevTools.clearUserDefaults(shared)
                             }),
                             secondaryButton: .cancel(Text("Cancel"), action: {})
                         )
                     }
                     NavigationLink("Editor") {
-                        UserDefaultsEditor(userDefaults: el.defaults, displayName: el.displayName, store: ObservableUserDefaults(userDefaults: el.defaults))
+                        UserDefaultsEditor(userDefaults: shared, displayName: "Shared UserDefaults", store: ObservableUserDefaults(userDefaults: shared))
                     }
+                } else {
+                    Text("No Shared UserDefaults configured.")
                 }
             }
             Section(header: Text("Keychain")) {
@@ -131,33 +135,25 @@ public struct DevToolsView : View {
         }
     }
 
-    @ViewBuilder private var container: some View {
-        if #available(iOS 14.0, *) {
-            contentView
-                .navigationTitle("DevTools")
-                .toolbar {
-                    Button("Save and exit") {
-                        fatalError()
-                    }
-                }
-        } else {
-            contentView
-                .navigationBarTitle(Text("DevTools"))
-                .navigationBarItems(trailing: Button("Save and exit") {
-                    fatalError()
-                })
-        }
-    }
-
     // MARK: - Body
 
     public var body : some View {
-        if UBDevTools.options.useOwnNavigationView {
-            NavigationView {
-                container
+        NavigationView {
+            if #available(iOS 14.0, *) {
+                contentView
+                    .navigationTitle("DevTools")
+                    .toolbar {
+                        Button("Save and exit") {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+            } else {
+                contentView
+                    .navigationBarTitle(Text("DevTools"))
+                    .navigationBarItems(trailing: Button("Save and exit") {
+                        presentationMode.wrappedValue.dismiss()
+                    })
             }
-        } else {
-            container
         }
     }
 
