@@ -27,8 +27,6 @@ public class DevToolsViewController : UIHostingController<DevToolsView> {
 
 @available(iOS 13.0, *)
 public struct DevToolsView : View {
-    @Environment(\.presentationMode) private var presentationMode
-
     @State private var showingKeychainDeleteAlert = false
     @State private var showingUserDefaultsDeleteAlert = false
 
@@ -144,14 +142,14 @@ public struct DevToolsView : View {
                     .navigationTitle("DevTools")
                     .toolbar {
                         Button("Save and exit") {
-                            presentationMode.wrappedValue.dismiss()
+                            fatalError()
                         }
                     }
             } else {
                 contentView
                     .navigationBarTitle(Text("DevTools"))
                     .navigationBarItems(trailing: Button("Save and exit") {
-                        presentationMode.wrappedValue.dismiss()
+                        fatalError()
                     })
             }
         }
