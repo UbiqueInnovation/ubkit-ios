@@ -40,7 +40,6 @@ public class UBDevTools {
 @available(iOS 13.0, *)
 extension UIWindow {
     static private var initSwizzled = false
-    static private var window: UIWindow?
 
     static func sendInitSwizzleWizzle() {
         guard !Self.initSwizzled else { return }
@@ -64,7 +63,6 @@ extension UIWindow {
         gr.numberOfTapsRequired = 5
         gr.numberOfTouchesRequired = 2
         window.addGestureRecognizer(gr)
-        Self.window = window
         return window
     }
 
@@ -74,13 +72,19 @@ extension UIWindow {
         gr.numberOfTapsRequired = 5
         gr.numberOfTouchesRequired = 2
         window.addGestureRecognizer(gr)
-        Self.window = window
         return window
     }
 
     @objc private func openDevTools() {
-        if let window = Self.window, let devToolsVC = DevToolsViewController() {
-            window.rootViewController?.present(devToolsVC, animated: true)
+        if let rootVC = rootViewController, let devToolsVC = DevToolsViewController() {
+            var vc = rootVC
+            while let presented = vc.presentedViewController {
+                vc = presented
+            }
+
+            guard !(vc is DevToolsViewController) else { return } // Prevent multiple presented DevTools
+
+            vc.present(devToolsVC, animated: true)
         }
     }
 }
