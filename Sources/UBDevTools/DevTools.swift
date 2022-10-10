@@ -62,6 +62,9 @@ extension UIWindow {
         let gr = UITapGestureRecognizer(target: self, action: #selector(openDevTools))
         gr.numberOfTapsRequired = 5
         gr.numberOfTouchesRequired = 2
+        gr.cancelsTouchesInView = false
+        gr.delaysTouchesBegan = false
+        gr.delaysTouchesEnded = false
         window.addGestureRecognizer(gr)
         return window
     }
@@ -71,6 +74,9 @@ extension UIWindow {
         let gr = UITapGestureRecognizer(target: self, action: #selector(openDevTools))
         gr.numberOfTapsRequired = 5
         gr.numberOfTouchesRequired = 2
+        gr.cancelsTouchesInView = false
+        gr.delaysTouchesBegan = false
+        gr.delaysTouchesEnded = false
         window.addGestureRecognizer(gr)
         return window
     }
