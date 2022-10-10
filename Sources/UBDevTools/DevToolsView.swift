@@ -127,9 +127,14 @@ public struct DevToolsView: View {
             Section(header: Text("Map")) {
                 Toggle("Raster tiles debug overlay", isOn: Binding(get: { Self.mapRasterTilesDebugOverlay }, set: { Self.mapRasterTilesDebugOverlay = $0 }))
             }
-            if #available(iOS 15.0, *) {
-                LogDevToolsView()
+
+            if #available(iOS 14.0, *) {
+                ShareDocumentsView()
+                if #available(iOS 15.0, *) {
+                    LogDevToolsView()
+                }
             }
+
         }
     }
 

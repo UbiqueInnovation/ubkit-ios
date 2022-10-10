@@ -63,7 +63,7 @@ struct LogDevToolsView: View {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 private struct CustomLabelStyle: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack {
@@ -74,7 +74,7 @@ private struct CustomLabelStyle: LabelStyle {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 private struct ShareView: UIViewControllerRepresentable {
     let activityItems: [Any]
 
