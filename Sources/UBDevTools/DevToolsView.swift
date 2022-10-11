@@ -129,7 +129,9 @@ public struct DevToolsView: View {
             }
 
             if #available(iOS 14.0, *) {
+#if !targetEnvironment(simulator)
                 ShareDocumentsView()
+#endif
                 if #available(iOS 15.0, *) {
                     LogDevToolsView()
                 }

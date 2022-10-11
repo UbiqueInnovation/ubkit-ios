@@ -84,6 +84,7 @@ private struct ShareView: UIViewControllerRepresentable {
 @available(iOS 14.0, *)
 class CompressDocumentsDirectory {
     func compress() -> URL? {
+#if !targetEnvironment(simulator)
         let archiveDestination = NSTemporaryDirectory() + "documentDirectory.aar"
 
         let archiveFilePath = FilePath(archiveDestination)
@@ -131,6 +132,9 @@ class CompressDocumentsDirectory {
         }
 
         return NSURL(fileURLWithPath: archiveDestination) as URL
+#else
+        fatalError("Apple Archive isn't supported on simulator https://developer.apple.com/forums/thread/665465")
+#endif
 
     }
 
