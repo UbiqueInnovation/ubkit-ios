@@ -1,7 +1,7 @@
 name: Codequality
 
 env:
-  XCODE_VERSION: 'Xcode_13.1'
+  XCODE_VERSION: 'Xcode_14.0.1'
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 jobs:
   codequality:
     name: Codequality
-    runs-on: macos-latest
+    runs-on: macos-12
 
     steps:
     - uses: actions/checkout@v2
