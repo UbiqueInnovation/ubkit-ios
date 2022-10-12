@@ -6,20 +6,31 @@
 //
 
 import Foundation
+import SwiftUI
 
-public struct BaseUrl {
+@available(iOS 13.0, *)
+public class BaseUrl: ObservableObject {
+    let title: String
+    let url: String
+    @Published var currentUrl: String
+
     public init(title: String, url: String) {
         self.title = title
         self.url = url
+        self.currentUrl = BackendDevTools.currentUrlString(url: url)
     }
-
-    let title: String
-    let url: String
 }
 
+@available(iOS 13.0, *)
 class BackendDevTools: DevTool {
     private static var didSwizzle = false
     public static var baseUrls: [BaseUrl] = []
+
+    class ViewModel: ObservableObject {
+        @Published var urls: [BaseUrl] = []
+    }
+
+    public static var viewModel = ViewModel()
 
     public static func setup() {}
 
@@ -27,26 +38,44 @@ class BackendDevTools: DevTool {
         Self.baseUrls = baseUrls
 
         for b in baseUrls {
-            if UserDefaults.standard.string(forKey: Self.key(b)) != nil {
+            if UserDefaults.standard.string(forKey: Self.key(url: b.url)) != nil {
                 Self.startSwizzling()
                 break
             }
         }
+
+        Self.viewModel.urls = baseUrls
     }
 
     public static func saveNewUrl(baseUrl: BaseUrl, newUrl: String) {
-        let key = Self.key(baseUrl)
+        let key = Self.key(url: baseUrl.url)
         UserDefaults.standard.set(newUrl, forKey: key)
+
+        updateUrls()
 
         Self.startSwizzling()
     }
 
-    public static func currentUrlString(baseUrl: BaseUrl) -> String {
-        UserDefaults.standard.string(forKey: key(baseUrl)) ?? baseUrl.url
+    public static func resetAllUrls() {
+        for bu in Self.baseUrls {
+            UserDefaults.standard.removeObject(forKey: key(url: bu.url))
+        }
+
+        updateUrls()
     }
 
-    public static func key(_ b: BaseUrl) -> String {
-        "ubkit.devtools.backenddevtools." + b.url
+    public static func currentUrlString(url: String) -> String {
+        UserDefaults.standard.string(forKey: key(url: url)) ?? url
+    }
+
+    private static func updateUrls() {
+        for url in Self.viewModel.urls {
+            url.currentUrl = Self.currentUrlString(url: url.url)
+        }
+    }
+
+    public static func key(url: String) -> String {
+        keyPrefix() + url
     }
 
     private static func keyPrefix() -> String {
@@ -58,6 +87,7 @@ class BackendDevTools: DevTool {
     }
 }
 
+@available(iOS 13.0, *)
 private extension NSURL {
     private static var didSwizzle = false
 
@@ -91,7 +121,7 @@ private extension NSURL {
 
     private func changedUrl(_ string: String) -> String? {
         for b in BackendDevTools.baseUrls {
-            let alternative = BackendDevTools.currentUrlString(baseUrl: b)
+            let alternative = BackendDevTools.currentUrlString(url: b.url)
             let rep = b.url.replacingOccurrences(of: "//", with: "/")
 
             if string.contains(b.url) || string.contains(rep) {

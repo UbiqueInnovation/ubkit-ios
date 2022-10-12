@@ -30,6 +30,8 @@ public struct DevToolsView: View {
     @State private var showingKeychainDeleteAlert = false
     @State private var showingUserDefaultsDeleteAlert = false
 
+    @StateObject private var backendUrls = BackendDevTools.viewModel
+
     // MARK: - Init
 
     public init?() {
@@ -111,15 +113,16 @@ public struct DevToolsView: View {
                 Toggle("Show localization keys", isOn: Binding(get: { Self.showLocalizationKeys }, set: { Self.showLocalizationKeys = $0 }))
             }
             Section(header: Text("Backend URL Config")) {
-                if BackendDevTools.baseUrls.count > 0 {
-                    List(BackendDevTools.baseUrls, id: \.title) { bu in
-                        VStack(alignment: .leading) {
-                            Text(bu.title)
-                            TextField(bu.title, text: Binding(get: { BackendDevTools.currentUrlString(baseUrl: bu) }, set: { newValue, _ in
-                                BackendDevTools.saveNewUrl(baseUrl: bu, newUrl: newValue)
-                            }))
-                        }
+                if backendUrls.urls.count > 0 {
+                    List(backendUrls.urls, id: \.title) { bu in
+                        BackendUrlEditor(url: bu)
                     }
+                    Button {
+                        BackendDevTools.resetAllUrls()
+                    } label: {
+                        Text("Reset all URLs")
+                    }
+
                 } else {
                     Text("No backend urls configured.")
                 }
