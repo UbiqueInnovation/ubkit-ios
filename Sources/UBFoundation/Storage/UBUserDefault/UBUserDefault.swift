@@ -68,14 +68,14 @@ extension Bool: UBUserDefaultValue {
         // therefore we try to interpret the string as a fallback
         if let string = object as? String {
             switch string.lowercased() {
-            case "true", "t", "yes", "y", "1":
-                self = true
-                return
-            case "false", "f", "no", "n", "0":
-                self = false
-                return
-            default:
-                return nil
+                case "true", "t", "yes", "y", "1":
+                    self = true
+                    return
+                case "false", "f", "no", "n", "0":
+                    self = false
+                    return
+                default:
+                    return nil
             }
         }
 
