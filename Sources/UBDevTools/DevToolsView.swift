@@ -151,14 +151,14 @@ public struct DevToolsView: View {
                     .navigationTitle("DevTools")
                     .toolbar {
                         Button("Save and exit") {
-                            fatalError()
+                            exit(0)
                         }
                     }
             } else {
                 contentView
                     .navigationBarTitle(Text("DevTools"))
                     .navigationBarItems(trailing: Button("Save and exit") {
-                        fatalError()
+                        exit(0)
                     })
             }
         }
