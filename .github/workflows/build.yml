@@ -1,5 +1,8 @@
 name: Build & Test
 
+env:
+  XCODE_VERSION: 'Xcode_14.0.1'
+
 on:
   push:
     branches:
@@ -9,7 +12,7 @@ on:
 jobs:
   build-and-test:
     name: Build & Tests
-    runs-on: macos-latest
+    runs-on: macos-12
 
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
