@@ -21,6 +21,8 @@ public enum UBDevTools {
     public static func setup() {
         Self.isActivated = true
 
+        setupNavbarAppearance()
+
         UIWindow.sendInitSwizzleWizzle()
 
         for d in devTools {
@@ -34,6 +36,22 @@ public enum UBDevTools {
 
     public static func setupSharedUserDefaults(_ userDefaults: UserDefaults) {
         UserDefaultsDevTools.setupSharedUserDefaults(userDefaults)
+    }
+
+    // MARK: - Helper methods
+
+    private static func setupNavbarAppearance() {
+        UINavigationBar.appearance(whenContainedInInstancesOf: [DevToolsViewController.self]).isTranslucent = true
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .white
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor.black,
+        ]
+        appearance.largeTitleTextAttributes = [
+            .foregroundColor: UIColor.black,
+        ]
+        UINavigationBar.appearance(whenContainedInInstancesOf: [DevToolsViewController.self]).standardAppearance = appearance
+        UINavigationBar.appearance(whenContainedInInstancesOf: [DevToolsViewController.self]).scrollEdgeAppearance = appearance
     }
 }
 
