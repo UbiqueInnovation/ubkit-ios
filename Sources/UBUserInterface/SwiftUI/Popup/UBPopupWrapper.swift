@@ -12,8 +12,6 @@
 
     @available(iOS 14.0, *)
     public struct UBPopupWrapper<V: View>: View {
-        @StateObject private var popupManager = UBPopupManager.shared
-
         let style: UBPopupStyle
         @ViewBuilder let wrappedContent: () -> V
 
@@ -25,11 +23,12 @@
         public var body: some View {
             wrappedContent()
                 .onAppear {
-                    popupManager.setupWindow()
-                    popupManager.defaultStyle = style
+                    UBPopupWindowManager.shared.setupWindow()
                 }
-                .onChange(of: style) { newValue in
-                    popupManager.defaultStyle = newValue
+                .onPreferenceChange(UBPopupPreferenceKey.self) { popupPreference in
+                    if let popupPreference, popupPreference.isPresented.wrappedValue {
+                        UBPopupWindowManager.shared.showPopup(isPresented: popupPreference.isPresented, style: popupPreference.customStyle ?? style, content: popupPreference.content)
+                    }
                 }
         }
     }

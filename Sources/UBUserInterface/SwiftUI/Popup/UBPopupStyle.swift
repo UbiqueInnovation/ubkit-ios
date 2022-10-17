@@ -9,7 +9,7 @@
 
     import SwiftUI
 
-    @available(iOS 14.0, *)
+    @available(iOS 13.0, *)
     public struct UBPopupStyle: Equatable {
         let extendsToEdges: Bool
         let backgroundColor: Color
@@ -21,7 +21,7 @@
         public init(extendsToEdges: Bool = true,
                     backgroundColor: Color = .white,
                     cornerRadius: CGFloat = 15,
-                    insets: EdgeInsets = .zero,
+                    insets: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0),
                     horizontalPadding: CGFloat = 20,
                     tapOutsideToDismiss: Bool = true) {
             self.extendsToEdges = extendsToEdges

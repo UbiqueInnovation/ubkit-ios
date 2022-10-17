@@ -11,15 +11,25 @@
 
     @available(iOS 14.0, *)
     public extension View {
-        func ub_popup<V: View>(id: String, isPresented: Binding<Bool>, customStyle: UBPopupStyle? = nil, @ViewBuilder _ content: @escaping () -> V) -> some View {
-            self
-                .onChange(of: isPresented.wrappedValue) { newValue in
-                    if newValue {
-                        UBPopupManager.shared.showPopup(id: id, isPresented: isPresented, customStyle: customStyle, content: { AnyView(content()) })
-                    } else {
-                        UBPopupManager.shared.hideWindowIfNecessary()
-                    }
-                }
+        func ub_popup<V: View>(isPresented: Binding<Bool>, customStyle: UBPopupStyle? = nil, @ViewBuilder content: @escaping () -> V) -> some View {
+            modifier(UBPopupViewModifier(isPresented: isPresented, customStyle: customStyle, popupContent: content))
+        }
+    }
+
+    @available(iOS 14.0, *)
+    public struct UBPopupViewModifier<V: View>: ViewModifier {
+        @State private var date: Date?
+        @Binding var isPresented: Bool
+        let customStyle: UBPopupStyle?
+        @ViewBuilder let popupContent: () -> V
+
+        public func body(content: Content) -> some View {
+            content
+                .preference(key: UBPopupPreferenceKey.self, value: UBPopupPreference(isPresented: $isPresented,
+                                                                                     date: date,
+                                                                                     customStyle: customStyle,
+                                                                                     content: { AnyView(popupContent()) }))
+                .onChange(of: isPresented) { date = $0 ? Date() : nil }
         }
     }
 

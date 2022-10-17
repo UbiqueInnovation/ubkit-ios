@@ -11,13 +11,9 @@
 
     @available(iOS 14.0, *)
     struct UBPopupContainerView: View {
-        @EnvironmentObject private var popupManager: UBPopupManager
-
         @Binding var isPresented: Bool
-
-        private var style: UBPopupStyle {
-            popupManager.currentStyle ?? popupManager.defaultStyle
-        }
+        let style: UBPopupStyle
+        let content: () -> AnyView
 
         var body: some View {
             ZStack {
@@ -27,7 +23,7 @@
                         if style.extendsToEdges {
                             HStack {
                                 Spacer()
-                                popupManager.currentPopupContent?()
+                                content()
                                     .padding(style.insets)
                                 Spacer()
                             }
@@ -37,7 +33,7 @@
                         } else {
                             HStack {
                                 Spacer()
-                                popupManager.currentPopupContent?()
+                                content()
                                     .padding(style.insets)
                                     .background(style.backgroundColor)
                                     .cornerRadius(style.cornerRadius)
@@ -58,6 +54,11 @@
             }
             .transition(.opacity)
             .animation(.default, value: isPresented)
+            .onChange(of: isPresented) { newValue in
+                if !newValue {
+                    UBPopupWindowManager.shared.hideWindow()
+                }
+            }
         }
     }
 
