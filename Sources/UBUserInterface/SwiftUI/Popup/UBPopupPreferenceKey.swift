@@ -10,9 +10,9 @@
     import Foundation
     import SwiftUI
 
-    @available(iOS 13.0, *)
-    public struct UBPopupPreferenceKey: PreferenceKey {
-        public static func reduce(value: inout UBPopupPreference?, nextValue: () -> UBPopupPreference?) {
+    @available(iOS 14.0, *)
+    struct UBPopupPreferenceKey: PreferenceKey {
+        static func reduce(value: inout UBPopupPreference?, nextValue: () -> UBPopupPreference?) {
             if let next = nextValue() {
                 if value == nil || value!.date < next.date {
                     value = next
@@ -21,15 +21,15 @@
         }
     }
 
-    @available(iOS 13.0, *)
-    public struct UBPopupPreference: Equatable {
-        public let id = UUID()
-        public let isPresented: Binding<Bool>
-        public let date: Date
-        public let customStyle: UBPopupStyle?
-        @ViewBuilder public let content: () -> AnyView
+    @available(iOS 14.0, *)
+    struct UBPopupPreference: Equatable {
+        let id = UUID()
+        let isPresented: Binding<Bool>
+        let date: Date
+        let customStyle: UBPopupStyle?
+        @ViewBuilder let content: () -> AnyView
 
-        public init?(isPresented: Binding<Bool>, date: Date?, customStyle: UBPopupStyle? = nil, content: @escaping () -> AnyView) {
+        init?(isPresented: Binding<Bool>, date: Date?, customStyle: UBPopupStyle? = nil, content: @escaping () -> AnyView) {
             guard let date, isPresented.wrappedValue else { return nil }
 
             self.isPresented = isPresented
@@ -38,9 +38,11 @@
             self.content = content
         }
 
-        public static func == (lhs: UBPopupPreference, rhs: UBPopupPreference) -> Bool {
-            print("Comparing lhs & rhs:", lhs, rhs)
-            return lhs.id == rhs.id && lhs.isPresented.wrappedValue == rhs.isPresented.wrappedValue && lhs.date == rhs.date && lhs.customStyle == rhs.customStyle
+        static func == (lhs: UBPopupPreference, rhs: UBPopupPreference) -> Bool {
+            lhs.id == rhs.id
+                && lhs.isPresented.wrappedValue == rhs.isPresented.wrappedValue
+                && lhs.date == rhs.date
+                && lhs.customStyle == rhs.customStyle
         }
     }
 

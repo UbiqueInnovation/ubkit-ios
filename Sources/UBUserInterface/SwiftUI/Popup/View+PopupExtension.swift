@@ -17,13 +17,13 @@
     }
 
     @available(iOS 14.0, *)
-    public struct UBPopupViewModifier<V: View>: ViewModifier {
+    struct UBPopupViewModifier<V: View>: ViewModifier {
         @State private var date: Date?
         @Binding var isPresented: Bool
         let customStyle: UBPopupStyle?
         @ViewBuilder let popupContent: () -> V
 
-        public func body(content: Content) -> some View {
+        func body(content: Content) -> some View {
             content
                 .preference(key: UBPopupPreferenceKey.self, value: UBPopupPreference(isPresented: $isPresented,
                                                                                      date: date,
