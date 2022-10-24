@@ -61,7 +61,7 @@ private final class ScreenBrightnessAnimator {
     static let shared = ScreenBrightnessAnimator()
 
     /// The step of brightness change
-    private let brightnessAnimationStep: CGFloat = 0.02
+    private let brightnessAnimationStep: CGFloat = 0.05
 
     /// The interval at which the brightness will change
     private let brightnessAnimationInterval: TimeInterval = 0.01
