@@ -184,7 +184,12 @@ public class UBLocationManager: NSObject {
 
     /// Does the location manager have the required authorization level for `usage`?
     public static func hasRequiredAuthorizationLevel(forUsage usage: Set<LocationMonitoringUsage>) -> Bool {
-        let authorizationStatus = CLLocationManager.authorizationStatus()
+        return shared.hasRequiredAuthorizationLevel(forUsage: usage)
+    }
+
+    /// Does the location manager have the required authorization level for `usage`?
+    public func hasRequiredAuthorizationLevel(forUsage usage: Set<LocationMonitoringUsage>) -> Bool {
+        let authorizationStatus = locationManager.authorizationStatus()
         switch authorizationStatus {
             case .authorizedAlways:
                 return true
