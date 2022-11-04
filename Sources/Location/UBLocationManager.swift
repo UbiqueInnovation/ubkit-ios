@@ -277,7 +277,7 @@ extension UBLocationManager {
     public struct LocationMonitoringUsage: OptionSet {
         public let rawValue: UInt8
 
-        public init(rawValue: Self.RawValue) {
+        public init(rawValue: UInt8) {
             self.rawValue = rawValue
         }
 
