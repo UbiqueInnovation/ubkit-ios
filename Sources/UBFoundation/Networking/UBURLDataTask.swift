@@ -160,7 +160,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// Start the task with the given request. It will cancel any ongoing request
     func start(flags: Flags) {
-
         // Cancel the previous task
         cancel()
 

@@ -51,7 +51,7 @@ final class ScreenBrightness: NSObject {
     }
 
     private var currentBrightness: CGFloat {
-        return UIScreen.main.brightness
+        UIScreen.main.brightness
     }
 }
 
