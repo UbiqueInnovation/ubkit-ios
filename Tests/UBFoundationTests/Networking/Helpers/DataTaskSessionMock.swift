@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 22.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 @testable import UBFoundation
@@ -60,3 +61,4 @@ class DataTaskSessionMock: UBDataTaskURLSession {
         fatalError("Not emplemented")
     }
 }
+#endif

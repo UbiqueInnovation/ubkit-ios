@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 01.04.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -112,3 +113,4 @@ extension UBURLRequestModifierGroup {
         }
     }
 }
+#endif

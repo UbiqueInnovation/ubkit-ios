@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 13.05.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -16,3 +17,4 @@ public extension UIView {
         }
     }
 }
+#endif

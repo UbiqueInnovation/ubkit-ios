@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 25.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -117,3 +118,4 @@ extension UIColor {
         return String(format: "#%02X%02X%02X%02X", Int(r * 0xFF), Int(g * 0xFF), Int(b * 0xFF), Int(a * 0xFF))
     }
 }
+#endif

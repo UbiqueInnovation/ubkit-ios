@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 15.11.21.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -73,3 +74,4 @@ private struct Interceptor: UBURLRequestInterceptor {
         }
     }
 }
+#endif

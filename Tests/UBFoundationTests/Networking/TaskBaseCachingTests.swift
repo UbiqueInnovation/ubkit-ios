@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 27.05.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -39,3 +40,4 @@ class BaseCachingTests: XCTestCase {
         XCTAssert(info!.cacheHit == false)
     }
 }
+#endif

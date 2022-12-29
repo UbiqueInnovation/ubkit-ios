@@ -4,6 +4,7 @@
 //
 //  Created by Matthias Felix on 11.02.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -15,3 +16,4 @@ public protocol QRScannerViewDelegate: AnyObject {
     func qrScanningDidSucceedWithCode(_ code: String?) -> Bool
     func qrScanningDidStop()
 }
+#endif

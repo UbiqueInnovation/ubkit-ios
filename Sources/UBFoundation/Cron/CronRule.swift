@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 30.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -109,3 +110,4 @@ private extension TimeInterval {
         DispatchTimeInterval.milliseconds(Int(self * 1000))
     }
 }
+#endif

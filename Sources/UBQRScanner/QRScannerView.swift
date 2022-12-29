@@ -5,6 +5,8 @@
 //  Created by Matthias Felix on 11.02.22.
 //
 
+#if os(iOS) || os(tvOS) || os(watchOS)
+
 import AVFoundation
 import Foundation
 import UIKit
@@ -214,3 +216,4 @@ private extension AVCaptureDevice {
         unlockForConfiguration()
     }
 }
+#endif

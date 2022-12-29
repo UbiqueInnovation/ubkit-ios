@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 20.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -24,3 +25,4 @@ public enum UBHTTPMethod: String {
     /// The PATCH method is used to apply partial modifications to a resource.
     case patch = "PATCH"
 }
+#endif

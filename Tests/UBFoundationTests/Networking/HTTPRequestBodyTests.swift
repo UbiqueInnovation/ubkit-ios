@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 20.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -107,3 +108,4 @@ class HTTPRequestBodyProviderTests: XCTestCase {
         XCTAssertThrowsError(try multipart.httpRequestBody())
     }
 }
+#endif

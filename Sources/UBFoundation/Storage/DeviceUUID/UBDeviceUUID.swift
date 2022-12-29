@@ -4,6 +4,7 @@
 //
 //  Created by Nicolas Märki on 29.03.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -22,3 +23,4 @@ public enum UBDeviceUUID {
     @UBKeychainStored(key: "UBDeviceUUID", defaultValue: nil, accessibility: .whenUnlockedThisDeviceOnly)
     private static var keychainDeviecUUID: String?
 }
+#endif

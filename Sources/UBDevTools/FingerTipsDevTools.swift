@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 30.09.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import UIKit
@@ -63,3 +64,4 @@ private class NotificationHelper {
         }
     }
 }
+#endif

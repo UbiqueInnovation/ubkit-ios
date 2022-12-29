@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 20.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -76,3 +77,4 @@ class MIMETypeTests: XCTestCase {
         XCTAssertEqual(UBMIMEType.json().stringValue, "application/json; charset=utf-8")
     }
 }
+#endif

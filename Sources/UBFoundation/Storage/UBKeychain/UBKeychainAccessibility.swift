@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 01.04.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -160,3 +161,4 @@ extension UBKeychainAccessibility: RawRepresentable {
         }
     }
 }
+#endif

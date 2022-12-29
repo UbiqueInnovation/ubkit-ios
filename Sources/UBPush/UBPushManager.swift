@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 23.03.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import UIKit
@@ -337,3 +338,4 @@ private extension Data {
         map { String(format: "%02hhx", $0) }.joined()
     }
 }
+#endif

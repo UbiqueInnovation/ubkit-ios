@@ -4,6 +4,7 @@
 //
 //  Created by Matthias Felix on 27.09.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 #if arch(arm64) || arch(x86_64)
 
@@ -47,4 +48,5 @@
         }
     }
 
+#endif
 #endif

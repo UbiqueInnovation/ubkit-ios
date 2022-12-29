@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 02.04.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -18,3 +19,4 @@ public protocol UBNetworkTaskRecoveryOption {
     /// Cancels the ongoing recovery if any is running.
     func cancelOngoingRecovery()
 }
+#endif

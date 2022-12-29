@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 31.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -125,3 +126,4 @@ public class UBNetworkActivityTracker {
         }
     }
 }
+#endif

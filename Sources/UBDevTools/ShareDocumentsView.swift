@@ -4,7 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 10.10.22.
 //
-
+#if os(iOS) || os(tvOS) || os(watchOS)
 import AppleArchive
 import SwiftUI
 import System
@@ -144,3 +144,4 @@ class CompressDocumentsDirectory {
         return documentsDirectory
     }
 }
+#endif

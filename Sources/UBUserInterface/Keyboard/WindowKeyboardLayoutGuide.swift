@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 26.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -83,3 +84,4 @@ extension WindowKeyboardLayoutGuide {
         owningView?.setNeedsLayout()
     }
 }
+#endif

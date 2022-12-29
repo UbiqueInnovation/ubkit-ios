@@ -4,6 +4,7 @@
 //
 //  Created by Matthias Felix on 05.10.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import SwiftUI
 
@@ -86,3 +87,4 @@ private struct ShareView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIActivityViewController,
                                 context: UIViewControllerRepresentableContext<ShareView>) {}
 }
+#endif

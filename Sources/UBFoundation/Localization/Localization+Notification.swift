@@ -5,6 +5,7 @@
 //  Created by Joseph El Mallah on 16.03.19.
 //  Copyright © 2019 Ubique. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -22,3 +23,4 @@ public enum UBLocalizationNotification {
     /// The new loacle key in the user info dictionary
     public static var newLocaleKey = "newLocaleKey"
 }
+#endif

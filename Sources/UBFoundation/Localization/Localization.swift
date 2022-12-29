@@ -5,6 +5,7 @@
 //  Created by Joseph El Mallah on 16.03.19.
 //  Copyright © 2019 Ubique. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -168,3 +169,4 @@ extension UBLocalization: CustomDebugStringConvertible {
         "\(UBLocalization.self) (\(locale.identifier)) [\(localizedBundle?.bundlePath ?? "No bundle")]"
     }
 }
+#endif

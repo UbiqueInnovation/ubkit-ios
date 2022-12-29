@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 16.01.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -18,3 +19,4 @@ extension UserDefaults {
         return defaults
     }
 }
+#endif

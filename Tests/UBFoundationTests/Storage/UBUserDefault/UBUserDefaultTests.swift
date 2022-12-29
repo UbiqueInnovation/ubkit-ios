@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 02.02.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 @testable import UBFoundation
 import XCTest
@@ -237,3 +238,4 @@ private extension Date {
         return dateFormatter.date(from: "2020-02-03")!
     }
 }
+#endif

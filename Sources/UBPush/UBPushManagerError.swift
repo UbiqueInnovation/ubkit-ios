@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 24.03.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -12,3 +13,4 @@ public enum UBPushManagerError: Error {
     /// The request for push registration could not be formed
     case registrationRequestMissing
 }
+#endif

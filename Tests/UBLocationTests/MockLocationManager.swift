@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 17.01.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import CoreLocation
 import Foundation
@@ -116,3 +117,4 @@ class MockLocationManager: UBLocationManagerProtocol {
         true
     }
 }
+#endif

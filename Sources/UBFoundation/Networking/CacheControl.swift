@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 04.04.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -86,3 +87,4 @@ public extension Array where Element == UBCacheResponseDirective {
         first(where: { $0 == UBCacheResponseDirective.Command.maxAge || $0 == UBCacheResponseDirective.Command.sMaxAge })?.value
     }
 }
+#endif

@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 03.10.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 import UIKit
@@ -33,3 +34,4 @@ extension UIView {
         self.layer.borderColor = UIColor.green.cgColor
     }
 }
+#endif

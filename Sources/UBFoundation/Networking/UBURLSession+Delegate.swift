@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 03.04.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -342,3 +343,4 @@ extension UBURLSessionDelegate {
         }
     }
 }
+#endif

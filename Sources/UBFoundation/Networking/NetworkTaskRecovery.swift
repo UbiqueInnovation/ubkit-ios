@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 02.04.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -31,3 +32,4 @@ public protocol UBNetworkingTaskRecoveryStrategy {
     ///   - completion: To be called when the recovery process is finished
     func recoverTask(_ dataTask: UBURLDataTask, data: Data?, response: URLResponse?, error: Error, completion: @escaping (UBNetworkingTaskRecoveryResult) -> Void)
 }
+#endif

@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 23.09.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -59,3 +60,4 @@ public extension UICollectionViewLayoutAttributes {
         self.init(forDecorationViewOfKind: T.ub_reuseIdentifier, with: indexPath)
     }
 }
+#endif

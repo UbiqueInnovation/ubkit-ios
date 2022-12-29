@@ -5,6 +5,7 @@
 //  Created by Joseph El Mallah & Zeno Koller on 16.01.20.
 //  Copyright © 2020 Ubique. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import CoreLocation
 import UBFoundation
@@ -700,3 +701,4 @@ private extension CLAccuracyAuthorization {
         }
     }
 }
+#endif

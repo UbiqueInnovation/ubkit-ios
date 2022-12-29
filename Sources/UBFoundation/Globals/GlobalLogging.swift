@@ -5,6 +5,7 @@
 //  Created by Joseph El Mallah on 17.03.19.
 //  Copyright © 2019 Ubique. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 import os.log
@@ -45,3 +46,4 @@ public enum UBLogging {
         }
     }
 }
+#endif

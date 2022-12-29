@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 28.05.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -348,3 +349,4 @@ open class UBBaseCachingLogic: UBCachingLogic {
         UBHTTPHeaderField.StandardKeys.lastModified.rawValue
     }
 }
+#endif

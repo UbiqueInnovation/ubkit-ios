@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 19.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import os.log
 import UBFoundation
@@ -110,3 +111,4 @@ class LoggerTests: XCTestCase {
         }
     }
 }
+#endif

@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 21.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -28,3 +29,4 @@ public extension HTTPURLResponse {
         }
     }
 }
+#endif

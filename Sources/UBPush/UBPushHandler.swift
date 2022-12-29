@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 23.03.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import UIKit
@@ -201,3 +202,4 @@ public struct UBPushNotification {
         }
     }
 }
+#endif

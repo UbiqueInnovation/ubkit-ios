@@ -4,12 +4,14 @@
 //
 //  Created by Zeno Koller on 31.03.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
 /// Backs a variable with storage in Keychain.
 /// The value can be optional, thus if no value has previously been stored, nil
-/// will be returned. The accessibility property determines where the value can be accessed.
+/// will be retu
+/// rned. The accessibility property determines where the value can be accessed.
 ///
 /// Usage:
 /// @UBKeychainStored(key: "UBDeviceUUID", defaultValue: nil, accessibility: .whenUnlockedThisDeviceOnly)
@@ -50,3 +52,4 @@ public struct UBKeychainStored<Value: Codable> {
         }
     }
 }
+#endif

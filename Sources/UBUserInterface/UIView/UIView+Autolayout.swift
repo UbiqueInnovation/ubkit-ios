@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 23.09.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -18,3 +19,4 @@ public extension UIView {
         setContentCompressionResistancePriority(.required, for: .vertical)
     }
 }
+#endif

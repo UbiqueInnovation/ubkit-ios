@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 23.09.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -21,3 +22,4 @@ public extension UIView {
         layer.rasterizationScale = UIScreen.main.scale
     }
 }
+#endif

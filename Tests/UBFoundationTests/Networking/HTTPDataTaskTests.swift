@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 22.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -617,3 +618,4 @@ class HTTPDataTaskTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
 }
+#endif

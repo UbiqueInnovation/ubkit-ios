@@ -5,6 +5,7 @@
 //  Created by Zeno Koller on 25.03.20.
 //  Copyright © 2020 Ubique Apps & Technology. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 import os.log
@@ -46,3 +47,4 @@ public enum UBPushLogging {
         }
     }
 }
+#endif

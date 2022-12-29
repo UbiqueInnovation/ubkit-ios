@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 08.12.21.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -45,3 +46,4 @@ public protocol UBKeychainProtocol {
     @discardableResult
     func deleteAllItems() -> Result<Void, UBKeychainError>
 }
+#endif

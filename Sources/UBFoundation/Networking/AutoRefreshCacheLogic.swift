@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 28.05.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -100,3 +101,4 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics)
     }
 }
+#endif

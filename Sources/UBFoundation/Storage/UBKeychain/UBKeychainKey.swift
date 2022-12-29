@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 08.12.21.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -14,3 +15,4 @@ public struct UBKeychainKey<Object: Codable> {
         self.key = key
     }
 }
+#endif

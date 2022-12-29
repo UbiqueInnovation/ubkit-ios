@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 23.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -133,3 +134,4 @@ public extension UBURLRequestBodyMultipart {
         }
     }
 }
+#endif

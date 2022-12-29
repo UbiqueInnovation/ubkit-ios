@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 09.11.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 @testable import UBFoundation
 import XCTest
@@ -51,3 +52,4 @@ class MockKeychain: UBKeychainProtocol {
         store.removeAll()
     }
 }
+#endif

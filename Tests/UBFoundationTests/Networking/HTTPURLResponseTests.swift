@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 24.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -15,3 +16,4 @@ class HTTPURLResponseTests: XCTestCase {
         XCTAssertNil(response.ub_getHeaderField(key: .authorization))
     }
 }
+#endif

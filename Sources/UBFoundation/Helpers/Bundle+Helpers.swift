@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 10.06.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -23,3 +24,4 @@ public extension Bundle {
         return buildNumber.components(separatedBy: ".").last ?? buildNumber
     }
 }
+#endif

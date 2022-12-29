@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 24.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -73,3 +74,4 @@ public struct UBHTTPRequestBodyURLEncoder: URLRequestBodyConvertible {
         return UBURLRequestBody(data: data, mimeType: mime)
     }
 }
+#endif

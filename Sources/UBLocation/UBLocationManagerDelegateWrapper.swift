@@ -4,6 +4,7 @@
 //  Created by Zeno Koller on 29.04.20.
 //  Copyright © 2020 Ubique. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -17,3 +18,4 @@ class UBLocationManagerDelegateWrapper {
         self.usage = usage
     }
 }
+#endif

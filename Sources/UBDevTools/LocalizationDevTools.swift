@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 03.10.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 import UBFoundation
@@ -32,3 +33,4 @@ public extension Bundle {
         key
     }
 }
+#endif

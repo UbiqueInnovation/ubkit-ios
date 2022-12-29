@@ -4,6 +4,7 @@
 //
 //  Created by Patrick Amrein on 26.08.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -29,3 +30,4 @@ extension NSError {
         }
     }
 }
+#endif

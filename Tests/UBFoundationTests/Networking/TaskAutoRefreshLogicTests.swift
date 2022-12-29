@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 04.04.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -600,3 +601,4 @@ class SwisstopoMapAutorefreshCacheLogic: UBAutoRefreshCacheLogic {
         possible
     }
 }
+#endif

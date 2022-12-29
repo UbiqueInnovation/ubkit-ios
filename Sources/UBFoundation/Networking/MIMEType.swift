@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 20.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -87,3 +88,4 @@ public struct UBMIMEType {
         return comparison && (parameter == to.parameter)
     }
 }
+#endif

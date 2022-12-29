@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 01.04.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -16,3 +17,4 @@ public protocol UBURLRequestModifier {
     ///   - completion: The completion handler to be called when the modification are finished.
     func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void)
 }
+#endif

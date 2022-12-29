@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 04.10.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 import SwiftUI
@@ -132,3 +133,4 @@ private extension NSURL {
         return nil
     }
 }
+#endif

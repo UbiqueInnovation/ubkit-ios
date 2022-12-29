@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 19.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import os.log
 import UBFoundation
@@ -34,3 +35,4 @@ class LoggerGroupTests: XCTestCase {
         XCTAssertFalse(group.loggers.contains(where: { $0 === l4 }))
     }
 }
+#endif

@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 25.03.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -101,3 +102,4 @@ extension HTTPURLResponse {
         HTTPMutableURLResponse(self)
     }
 }
+#endif

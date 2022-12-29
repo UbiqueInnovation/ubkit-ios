@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 20.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -33,3 +34,4 @@ public protocol UBDataTaskURLSession: UBURLSessionProtocol {
     /// - Returns: The new session data task. Nil if there is no need for one.
     func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask?
 }
+#endif

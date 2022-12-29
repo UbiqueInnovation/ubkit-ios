@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 27.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -195,3 +196,4 @@ class CronJobTests: XCTestCase {
         waitForExpectations(timeout: testDuration * 2, handler: nil)
     }
 }
+#endif

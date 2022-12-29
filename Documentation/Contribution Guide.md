@@ -1,6 +1,6 @@
 # UBFoundation contribution guide
 
-If you wish to contribute to the framework development you cando so by following this guide.
+If you wish to contribute to the framework development you can do so by following this guide.
 
 ## Installation
 Checkout the project, open  a Terminal and navigating to the project root folder, then run:

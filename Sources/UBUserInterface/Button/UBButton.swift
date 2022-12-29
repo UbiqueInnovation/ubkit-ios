@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 23.09.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -120,3 +121,4 @@ open class UBButton: UIButton {
         touchUpCallback?()
     }
 }
+#endif

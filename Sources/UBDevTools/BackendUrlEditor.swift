@@ -4,6 +4,7 @@
 //
 //  Created by Matthias Felix on 11.10.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import SwiftUI
 
@@ -22,3 +23,4 @@ struct BackendUrlEditor: View {
         }
     }
 }
+#endif

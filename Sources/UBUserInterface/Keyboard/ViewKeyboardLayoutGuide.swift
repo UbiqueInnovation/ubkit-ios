@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 17.05.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -140,3 +141,4 @@ extension ViewKeyboardLayoutGuide {
         owningView?.setNeedsLayout()
     }
 }
+#endif

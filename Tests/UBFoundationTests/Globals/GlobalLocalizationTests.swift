@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 19.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 @testable import UBFoundation
 import XCTest
@@ -21,3 +22,4 @@ class GlobalLocalizationTests: XCTestCase {
         }
     }
 }
+#endif

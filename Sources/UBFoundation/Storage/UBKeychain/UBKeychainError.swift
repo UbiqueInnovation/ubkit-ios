@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 08.12.21.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -43,3 +44,4 @@ public enum UBKeychainError: Error {
         }
     }
 }
+#endif

@@ -4,6 +4,7 @@
 //
 //  Created by Matthias Felix on 05.10.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import OSLog
 import SwiftUI
@@ -59,3 +60,4 @@ class DevToolsLogExtractor: ObservableObject {
         }
     }
 }
+#endif

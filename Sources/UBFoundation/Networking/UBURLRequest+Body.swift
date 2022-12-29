@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 20.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -24,3 +25,4 @@ public struct UBURLRequestBody {
         self.mimeType = mimeType
     }
 }
+#endif

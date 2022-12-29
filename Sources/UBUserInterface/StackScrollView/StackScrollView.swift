@@ -4,6 +4,7 @@
 //
 //  Created by Matthias Felix on 14.07.21.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UIKit
 
@@ -225,3 +226,4 @@ public class StackScrollView: UIView {
         scrollView.setContentOffset(offset, animated: true)
     }
 }
+#endif

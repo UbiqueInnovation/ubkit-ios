@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 04.04.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -64,3 +65,4 @@ public protocol UBCachingLogic {
     /// Tell the caching logic that a new result was cached
     func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session: URLSession, request: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?)
 }
+#endif

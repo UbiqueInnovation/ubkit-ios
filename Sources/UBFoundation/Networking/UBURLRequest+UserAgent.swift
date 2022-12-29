@@ -5,11 +5,14 @@
 //  Created by Zeno Koller on 10.06.20.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS) || os(watchOS)
     import UIKit
 #elseif os(watchOS)
     import WatchKit
 #endif
+import Foundation
+
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 extension UBURLRequest {
     public mutating func setDefaultUserAgent() {
@@ -22,7 +25,7 @@ extension UBURLRequest {
         let os = "iOS"
 
         let systemVersion: String
-        #if os(iOS) || os(tvOS)
+        #if os(iOS) || os(tvOS) || os(watchOS)
             systemVersion = UIDevice.current.systemVersion
         #elseif os(watchOS)
             systemVersion = WKInterfaceDevice.current().systemVersion
@@ -35,3 +38,4 @@ extension UBURLRequest {
         return header
     }
 }
+#endif

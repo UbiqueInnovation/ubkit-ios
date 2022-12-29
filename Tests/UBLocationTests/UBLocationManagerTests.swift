@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 17.01.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import CoreLocation
 @testable import UBLocation
@@ -122,3 +123,4 @@ class UBLocationManagerTests: XCTestCase {
         MockLocationManagerDelegate()
     }
 }
+#endif

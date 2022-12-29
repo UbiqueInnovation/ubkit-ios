@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 22.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -177,3 +178,4 @@ public extension UBMIMEType {
         UBMIMEType(type: .application, subtype: "zip")
     }
 }
+#endif

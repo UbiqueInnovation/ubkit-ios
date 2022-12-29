@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 31.03.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -234,3 +235,4 @@ public class UBKeychain: UBKeychainProtocol {
         }
     }
 }
+#endif

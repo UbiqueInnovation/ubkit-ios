@@ -5,6 +5,7 @@
 //  Created by Zeno Koller on 25.03.20.
 //  Copyright © 2020 Ubique Apps & Technology. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import UIKit
@@ -35,3 +36,4 @@ struct UBPushRegistrationStandardLocalStorage: UBPushRegistrationLocalStorage {
     @UBUserDefault(key: "UBPushRegistrationManager_LastRegistrationDate", defaultValue: nil)
     var lastRegistrationDate: Date?
 }
+#endif

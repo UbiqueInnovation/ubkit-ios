@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 19.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -59,3 +60,4 @@ private class GlobalLocalization {
         frameworkLocalization.setLocale(newLocale, baseBundle: Bundle(for: GlobalLocalization.self))
     }
 }
+#endif

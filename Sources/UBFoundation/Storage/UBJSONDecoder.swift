@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 09.12.21.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -34,3 +35,4 @@ public class UBJSONDecoder: JSONDecoder {
         }
     }
 }
+#endif

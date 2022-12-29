@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 03.10.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 import SwiftUI
@@ -184,3 +185,4 @@ public struct UserDefaultsEditor: View {
         }.navigationBarTitle(Text("UserDefaults Editor"))
     }
 }
+#endif

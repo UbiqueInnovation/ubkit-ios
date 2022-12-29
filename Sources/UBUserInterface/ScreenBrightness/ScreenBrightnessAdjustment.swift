@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 11.02.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 import UIKit
@@ -47,3 +48,4 @@ open class ScreenBrightnessAdjustment {
         }
     }
 }
+#endif

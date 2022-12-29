@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 19.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBFoundation
 import XCTest
@@ -71,3 +72,4 @@ class LanguageTests: XCTestCase {
         XCTAssertEqual(String(describing: language), test)
     }
 }
+#endif

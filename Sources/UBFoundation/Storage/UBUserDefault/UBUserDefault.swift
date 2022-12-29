@@ -4,6 +4,7 @@
 //
 //  Created by Zeno Koller on 02.02.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -206,3 +207,4 @@ public struct UBUserDefault<Value: UBUserDefaultValue> {
         }
     }
 }
+#endif

@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 09.11.20.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 @testable import UBFoundation
 import XCTest
@@ -98,3 +99,4 @@ class UBKeychainStoredTests: XCTestCase {
         var birthdate: Date
     }
 }
+#endif

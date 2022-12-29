@@ -1,3 +1,4 @@
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -96,3 +97,4 @@ extension Dictionary where Key == String, Value == String {
         return nil
     }
 }
+#endif

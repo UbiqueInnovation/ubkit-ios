@@ -4,6 +4,7 @@
 //
 //  Created by Stefan Mitterrutzner on 12.11.21.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import Foundation
 
@@ -48,3 +49,4 @@ public protocol UBURLRequestInterceptor {
     ///   - completion: The completion handler to be called with a InterceptorResult
     func interceptRequest(_ request: UBURLRequest, completion: @escaping (UBURLInterceptorResult?) -> Void)
 }
+#endif

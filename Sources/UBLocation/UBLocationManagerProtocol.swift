@@ -5,6 +5,7 @@
 //  Created by Zeno Koller on 17.01.20.
 //  Copyright © 2020 Ubique. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import CoreLocation
 
@@ -63,3 +64,4 @@ extension CLLocationManager: UBLocationManagerProtocol {
         CLLocationManager.isMonitoringAvailable(for: regionClass)
     }
 }
+#endif

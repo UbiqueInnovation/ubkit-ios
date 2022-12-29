@@ -4,6 +4,7 @@
 //
 //  Created by Marco Zimmermann on 30.09.22.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import SwiftUI
 import UBFoundation
@@ -180,3 +181,4 @@ public struct DevToolsView: View {
 
     @State var cacheSizeText: String = CacheDevTools.currentSizes(URLCache.shared)
 }
+#endif

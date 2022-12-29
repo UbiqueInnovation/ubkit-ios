@@ -4,6 +4,7 @@
 //
 //  Created by Joseph El Mallah on 26.03.19.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import UBUserInterface
 import XCTest
@@ -62,3 +63,4 @@ class KeyboardLayoutGuideTests: XCTestCase {
         XCTAssertNil(keyboard)
     }
 }
+#endif

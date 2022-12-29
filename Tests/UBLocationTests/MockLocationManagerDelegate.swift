@@ -5,6 +5,7 @@
 //  Created by Zeno Koller on 29.04.20.
 //  Copyright © 2020 Ubique Apps & Technology. All rights reserved.
 //
+#if os(iOS) || os(tvOS) || os(watchOS)
 
 import CoreLocation
 import UBLocation
@@ -24,3 +25,4 @@ class MockLocationManagerDelegate: NSObject, UBLocationManagerDelegate {
 
     var locationManagerFilterAccuracy: CLLocationAccuracy? { nil }
 }
+#endif
