@@ -10,13 +10,13 @@ import Foundation
 @available(iOS 13.0, *)
 public extension UBURLDataTask {
     struct MetaData {
-        let info: UBNetworkingTaskInfo?
-        let response: HTTPURLResponse?
+        public let info: UBNetworkingTaskInfo?
+        public let response: HTTPURLResponse?
     }
 
     private static let concurrencyCallbackQueue = OperationQueue()
 
-    func loadOnce<T>(decoder: UBURLDataTaskDecoder<T>) async throws -> (T, MetaData) {
+    func loadOnce<T>(decoder: UBURLDataTaskDecoder<T>, ignoreCache: Bool = false) async throws -> (T, MetaData) {
         return try await withCheckedThrowingContinuation { cont in
 
             var id: UUID?
@@ -32,11 +32,11 @@ public extension UBURLDataTask {
                     self.removeCompletionHandler(identifier: id)
                 }
             }
-            self.start()
+            self.start(ignoreCache: ignoreCache)
         }
     }
 
-    func loadOnce<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>) async throws -> (T, MetaData) {
+    func loadOnce<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, ignoreCache: Bool = false) async throws -> (T, MetaData) {
         return try await withCheckedThrowingContinuation { cont in
 
             var id: UUID?
@@ -52,12 +52,13 @@ public extension UBURLDataTask {
                     self.removeCompletionHandler(identifier: id)
                 }
             }
-            self.start()
+            self.start(ignoreCache: ignoreCache)
         }
     }
 
-    func loadOnce() async throws -> (Data, MetaData) {
-        try await self.loadOnce(decoder: UBDataPassthroughDecoder())
+    @discardableResult
+    func loadOnce(ignoreCache: Bool = false) async throws -> (Data, MetaData) {
+        try await self.loadOnce(decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache)
     }
 
     func startCronStream<T>(decoder: UBURLDataTaskDecoder<T>) -> AsyncThrowingStream<(T, MetaData), Error> {
