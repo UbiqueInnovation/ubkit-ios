@@ -42,10 +42,8 @@ public protocol UBAsyncURLRequestTokenAuthorization: UBAsyncURLRequestModifier {
 @available(iOS 13.0, *)
 public extension UBAsyncURLRequestTokenAuthorization {
     /// :nodoc:
-    func modifyRequest(_ originalRequest: UBURLRequest) async throws -> UBURLRequest {
+    func modifyRequest(_ request: inout UBURLRequest) async throws {
         let token = try await getToken()
-        var modifierRequest = originalRequest
-        modifierRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
-        return modifierRequest
+        request.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
     }
 }
