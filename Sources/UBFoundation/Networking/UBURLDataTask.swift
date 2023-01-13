@@ -640,7 +640,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///
     /// - Parameters:
     ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
-    ///   - errorDecoder: The decoder to
+    ///   - errorDecoder: The decoder for the error in case of a failed request
     ///   - completionHandler: A completion handler
     ///   - callbackQueue: If not null, where the callback will be executed
     @discardableResult
