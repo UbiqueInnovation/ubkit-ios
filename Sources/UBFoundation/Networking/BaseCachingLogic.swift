@@ -248,18 +248,11 @@ open class UBBaseCachingLogic: UBCachingLogic {
                 return modifyCacheResult(proposed: .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics), possible: possibleResult, reason: .expiresInFuture(expiresDate: expiresDate))
             }
 
-            // If there is no max age neither expires, set a cache validity default
+            // If there is no max age neither expires, don't cache
         } else if let responseDateHearder = response.ub_getHeaderField(key: dateHeaderFieldName), let responseDate = dateFormatter.date(from: responseDateHearder) {
-            // Fallback to a month of caching
-            let calendar = Calendar(identifier: .gregorian)
-            guard let defaultCachingLimit = calendar.date(byAdding: .month, value: 1, to: responseDate) else {
-                return .miss
-            }
-            if defaultCachingLimit < Date() {
-                return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics), possible: possibleResult, reason: .expiredInPast(expiresDate: defaultCachingLimit))
-            } else {
-                return modifyCacheResult(proposed: .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics), possible: possibleResult, reason: .expiresInFuture(expiresDate: defaultCachingLimit))
-            }
+            // We could do heuristic caching, but behaviour could be unexpected
+            return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics), possible: possibleResult, reason: .noCacheHeaders)
+
 
             // In case no caching information is found just remove the cached object
         } else {
