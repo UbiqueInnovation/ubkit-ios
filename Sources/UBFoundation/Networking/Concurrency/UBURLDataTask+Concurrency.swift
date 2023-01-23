@@ -14,6 +14,8 @@ public extension UBURLDataTask {
         public let response: HTTPURLResponse?
     }
 
+    typealias ResultTuple<T> = (result: Result<T, UBNetworkingError>, metadata: UBURLDataTask.MetaData)
+
     struct TaskConfig {
         public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil) {
             self.requestModifiers = requestModifiers
@@ -25,31 +27,29 @@ public extension UBURLDataTask {
     }
 
     struct TaskResult<T> {
-        internal init(result: Result<(T, UBURLDataTask.MetaData), UBNetworkingError>) {
-            self.result = result
+        internal init(resultTuple: ResultTuple<T>) {
+            self.resultTuple = resultTuple
         }
 
-        private let result: Result<(T, MetaData), UBNetworkingError>
+        private let resultTuple: ResultTuple<T>
 
         /// Data of a successful request
         /// - Throws: if Result is a failure
         public var data: T {
             get throws {
-                try result.get().0
+                try resultTuple.result.get()
             }
         }
 
         /// Metadata consisting of info and reponse of a successful request
         /// - Throws: if Result is a failure
         public var metadata: MetaData {
-            get throws {
-                try result.get().1
-            }
+            return resultTuple.metadata
         }
 
         /// Optional networking error of a failed request
         public var ubNetworkingError: UBNetworkingError? {
-            switch result {
+            switch resultTuple.result {
                 case let .failure(error):
                     return error
                 default:
@@ -82,9 +82,9 @@ public extension UBURLDataTask {
             id = task.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
                     case let .success(res):
-                        cont.resume(returning: TaskResult(result:.success((res, MetaData(info: info, response: response)))))
+                        cont.resume(returning: TaskResult(resultTuple: (.success(res), MetaData(info: info, response: response))))
                     case let .failure(e):
-                        cont.resume(returning: TaskResult(result: .failure(e)))
+                        cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
                 }
                 if let id = id {
                     task.removeCompletionHandler(identifier: id)
@@ -119,9 +119,9 @@ public extension UBURLDataTask {
             id = task.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
                 case let .success(res):
-                        cont.resume(returning: TaskResult(result:.success((res, MetaData(info: info, response: response)))))
+                        cont.resume(returning: TaskResult(resultTuple: (.success(res), MetaData(info: info, response: response))))
                 case let .failure(e):
-                        cont.resume(returning: TaskResult(result: .failure(e)))
+                        cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
                 }
                 if let id = id {
                     task.removeCompletionHandler(identifier: id)
