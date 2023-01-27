@@ -499,29 +499,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 }
 
 class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
-<<<<<<< HEAD
-    override var nextRefreshHeaderFieldName: String {
-        "x-amz-meta-next-refresh"
-    }
-
-    override var backoffIntervalHeaderFieldName: String {
-        "x-amz-meta-backoff"
-    }
-
-    override var expiresHeaderFieldName: String {
-        "x-amz-meta-best-before"
-    }
-
-    override var cacheControlHeaderFieldName: String {
-        "x-amz-meta-cache"
-    }
-
-    override var eTagHeaderFieldName: String {
-        "Etag"
-    }
-
-=======
->>>>>>> 6369279 (add most used cache header keys aligned to Android networking library)
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {

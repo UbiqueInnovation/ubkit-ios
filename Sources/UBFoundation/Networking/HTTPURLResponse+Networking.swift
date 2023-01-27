@@ -32,7 +32,7 @@ public extension HTTPURLResponse {
     ///
     /// - Parameter key: List of keys
     /// - Returns: First matching value with one of the keys
-    public func ub_getHeaderField(key headerKeys: [String]) -> String? {
-        return headerKeys.compactMap { ub_getHeaderField(key: $0) }.first
+    func ub_getHeaderField(key headerKeys: [String]) -> String? {
+        headerKeys.compactMap { ub_getHeaderField(key: $0) }.first
     }
 }

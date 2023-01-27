@@ -253,7 +253,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
             // We could do heuristic caching, but behaviour could be unexpected
             return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics), possible: possibleResult, reason: .noCacheHeaders)
 
-
             // In case no caching information is found just remove the cached object
         } else {
             let result = modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .noCacheHeaders)
@@ -283,22 +282,22 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
     /// The next refresh header field name
     open var nextRefreshHeaderFieldName: [String] {
-        return [UBHTTPHeaderField.StandardKeys.nextRefresh.rawValue, UBHTTPHeaderField.AmazonKeys.nextRefresh.rawValue, UBHTTPHeaderField.MSKeys.nextRefresh.rawValue]
+        [UBHTTPHeaderField.StandardKeys.nextRefresh.rawValue, UBHTTPHeaderField.AmazonKeys.nextRefresh.rawValue, UBHTTPHeaderField.MSKeys.nextRefresh.rawValue]
     }
 
     /// The backoff interval header field name
     open var backoffIntervalHeaderFieldName: [String] {
-        return [UBHTTPHeaderField.StandardKeys.backoff.rawValue, UBHTTPHeaderField.AmazonKeys.backoff.rawValue, UBHTTPHeaderField.MSKeys.backoff.rawValue]
+        [UBHTTPHeaderField.StandardKeys.backoff.rawValue, UBHTTPHeaderField.AmazonKeys.backoff.rawValue, UBHTTPHeaderField.MSKeys.backoff.rawValue]
     }
 
     /// The cache control header field name
     open var cacheControlHeaderFieldName: [String] {
-        return [UBHTTPHeaderField.StandardKeys.cacheControl.rawValue, UBHTTPHeaderField.AmazonKeys.cacheControl.rawValue]
+        [UBHTTPHeaderField.StandardKeys.cacheControl.rawValue, UBHTTPHeaderField.AmazonKeys.cacheControl.rawValue]
     }
 
     /// The expires header field name
     open var expiresHeaderFieldName: [String] {
-        return [UBHTTPHeaderField.StandardKeys.expires.rawValue, UBHTTPHeaderField.AmazonKeys.expires.rawValue, UBHTTPHeaderField.MSKeys.expires.rawValue]
+        [UBHTTPHeaderField.StandardKeys.expires.rawValue, UBHTTPHeaderField.AmazonKeys.expires.rawValue, UBHTTPHeaderField.MSKeys.expires.rawValue]
     }
 
     /// The age header field name

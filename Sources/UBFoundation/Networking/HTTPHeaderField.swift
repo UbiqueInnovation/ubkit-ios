@@ -108,7 +108,7 @@ public extension UBHTTPHeaderField {
         case cacheControl = "x-amz-meta-cache"
     }
 
-    enum MSKeys : String {
+    enum MSKeys: String {
         /// Next refresh header field key
         case nextRefresh = "x-ms-meta-nextrefresh"
         /// Expires header field key
