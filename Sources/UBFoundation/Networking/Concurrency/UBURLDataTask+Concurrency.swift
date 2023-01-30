@@ -42,7 +42,6 @@ public extension UBURLDataTask {
         }
 
         /// Metadata consisting of info and reponse of a successful request
-        /// - Throws: if Result is a failure
         public var metadata: MetaData {
             return resultTuple.metadata
         }

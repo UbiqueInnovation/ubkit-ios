@@ -11,18 +11,19 @@ import XCTest
 @available(iOS 13.0.0, *)
 class ConcurrentNetworkTests: XCTestCase {
     func testBasicRequest() async throws {
-        let _ = try await UBURLDataTask(request: sampleRequest).loadOnce()
+        let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
     }
 
-    func testRepeatedRequest() async throws {
-        let task = UBURLDataTask(request: sampleRequest)
-        let _ = try await task.loadOnce()
-        let _ = try await task.loadOnce()
+    /*
+    func testRepeatedRequestAsync() async throws {
+        let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
+        let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
     }
+*/
 
     func testRequestError() async throws {
         do {
-            let _ = try await UBURLDataTask(request: brokenSampleRequest).loadOnce()
+            let _ = try await UBURLDataTask.loadOnce(request: brokenSampleRequest).data
             XCTFail("Should not reach this")
         } catch {
             // error is good

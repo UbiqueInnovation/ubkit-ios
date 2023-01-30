@@ -31,19 +31,19 @@ public extension UBURLRequestTokenAuthorization {
     }
 }
 
-/// A protocol describing a token authorisation request modifier
+/// A protocol describing a bearer token authorisation request modifier
 @available(iOS 13.0, *)
-public protocol UBAsyncURLRequestTokenAuthorization: UBAsyncURLRequestModifier {
-    /// Fetches the token and returns it
+public protocol UBAsyncURLRequestBearerTokenAuthorization: UBAsyncURLRequestModifier {
+    /// Fetches the bearer token and returns it
     ///
-    func getToken() async throws -> String
+    func getBearerToken() async throws -> String
 }
 
 @available(iOS 13.0, *)
-public extension UBAsyncURLRequestTokenAuthorization {
+public extension UBAsyncURLRequestBearerTokenAuthorization {
     /// :nodoc:
     func modifyRequest(_ request: inout UBURLRequest) async throws {
-        let token = try await getToken()
+        let token = try await getBearerToken()
         request.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
     }
 }
