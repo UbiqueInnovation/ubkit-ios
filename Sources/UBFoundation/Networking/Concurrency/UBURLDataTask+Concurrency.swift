@@ -75,22 +75,26 @@ public extension UBURLDataTask {
 
         task.requestInterceptor = taskConfig.requestInterceptor
 
-        return await withCheckedContinuation { cont in
-            var id: UUID?
+        return await withTaskCancellationHandler(operation: {
+            await withCheckedContinuation { cont in
+                var id: UUID?
 
-            id = task.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
-                switch result {
-                    case let .success(res):
-                        cont.resume(returning: TaskResult(resultTuple: (.success(res), MetaData(info: info, response: response))))
-                    case let .failure(e):
-                        cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
+                id = task.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
+                    switch result {
+                        case let .success(res):
+                            cont.resume(returning: TaskResult(resultTuple: (.success(res), MetaData(info: info, response: response))))
+                        case let .failure(e):
+                            cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
+                    }
+                    if let id = id {
+                        task.removeCompletionHandler(identifier: id)
+                    }
                 }
-                if let id = id {
-                    task.removeCompletionHandler(identifier: id)
-                }
+                task.start(ignoreCache: ignoreCache)
             }
-            task.start(ignoreCache: ignoreCache)
-        }
+        }, onCancel: {
+            task.cancel()
+        })
     }
 
     /// Makes a request and returns a TaskResult, from which you can access the data and metadata
@@ -110,24 +114,26 @@ public extension UBURLDataTask {
         }
 
         task.requestInterceptor = taskConfig.requestInterceptor
-        return await withCheckedContinuation { cont in
-            var id: UUID?
 
-
-
-            id = task.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
-                switch result {
-                case let .success(res):
-                        cont.resume(returning: TaskResult(resultTuple: (.success(res), MetaData(info: info, response: response))))
-                case let .failure(e):
-                        cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
+        return await withTaskCancellationHandler(operation: {
+            await withCheckedContinuation { cont in
+                var id: UUID?
+                id = task.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
+                    switch result {
+                        case let .success(res):
+                            cont.resume(returning: TaskResult(resultTuple: (.success(res), MetaData(info: info, response: response))))
+                        case let .failure(e):
+                            cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
+                    }
+                    if let id = id {
+                        task.removeCompletionHandler(identifier: id)
+                    }
                 }
-                if let id = id {
-                    task.removeCompletionHandler(identifier: id)
-                }
+                task.start(ignoreCache: ignoreCache)
             }
-            task.start(ignoreCache: ignoreCache)
-        }
+        }, onCancel: {
+            task.cancel()
+        })
     }
 
     /// Makes a request and returns a TaskResult consisting of Data
