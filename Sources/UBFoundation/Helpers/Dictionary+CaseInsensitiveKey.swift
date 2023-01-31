@@ -10,7 +10,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
             return directFound
         }
 
-        var keys : [String] = []
+        var keys: [String] = []
 
         if let stringKey = key as? String {
             keys.append(stringKey)
@@ -51,7 +51,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
             return directFound
         }
 
-        var keys : [String] = []
+        var keys: [String] = []
 
         if let stringKey = key as? String {
             keys.append(stringKey)
