@@ -253,7 +253,6 @@ open class UBBaseCachingLogic: UBCachingLogic {
             // We could do heuristic caching, but behaviour could be unexpected
             return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: metrics), possible: possibleResult, reason: .noCacheHeaders)
 
-
             // In case no caching information is found just remove the cached object
         } else {
             let result = modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .noCacheHeaders)

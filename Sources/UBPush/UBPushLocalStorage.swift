@@ -6,9 +6,9 @@
 //  Copyright © 2020 Ubique Apps & Technology. All rights reserved.
 //
 
+import Foundation
 import UBFoundation
 import UIKit
-import Foundation
 
 public protocol UBPushRegistrationLocalStorage {
     /// The push token obtained from Apple

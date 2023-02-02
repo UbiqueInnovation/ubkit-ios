@@ -27,7 +27,7 @@ public extension UBURLDataTask {
         public var requestModifiers: [UBURLRequestModifier] = []
         public var requestInterceptor: UBURLRequestInterceptor?
         public var failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []
-        public var session: UBDataTaskURLSession? = nil
+        public var session: UBDataTaskURLSession?
 
         @discardableResult
         public func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
@@ -55,19 +55,19 @@ public extension UBURLDataTask {
     }
 
     static func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
-        return TaskConfig(requestModifiers: [requestModifier])
+        TaskConfig(requestModifiers: [requestModifier])
     }
 
     static func with(requestInterceptor: UBURLRequestInterceptor) -> TaskConfig {
-        return TaskConfig(requestInterceptor: requestInterceptor)
+        TaskConfig(requestInterceptor: requestInterceptor)
     }
 
     static func with(failureRecoveryStrategy: UBNetworkingTaskRecoveryStrategy) -> TaskConfig {
-        return TaskConfig(failureRecoveryStrategies: [failureRecoveryStrategy])
+        TaskConfig(failureRecoveryStrategies: [failureRecoveryStrategy])
     }
 
     static func with(session: UBDataTaskURLSession) -> TaskConfig {
-        return TaskConfig(session: session)
+        TaskConfig(session: session)
     }
 
     struct TaskResult<T> {
@@ -87,12 +87,12 @@ public extension UBURLDataTask {
 
         /// Metadata consisting of info and reponse of a successful request
         public var metadata: MetaData {
-            return resultTuple.metadata
+            resultTuple.metadata
         }
 
         /// Optional networking error of a failed request
         public var ubNetworkingError: UBNetworkingError? {
-            if case .failure(let error) = resultTuple.result {
+            if case let .failure(error) = resultTuple.result {
                 return error
             }
             return nil
@@ -155,7 +155,7 @@ public extension UBURLDataTask {
     ///   - ignoreCache: Whether to ignore the cache or not
     ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
-    /// 
+    ///
     static func loadOnce<T, E: UBURLDataTaskErrorBody>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
         let task = UBURLDataTask(request: request)
 
@@ -214,10 +214,10 @@ public extension UBURLDataTask {
         AsyncThrowingStream { cont in
             let id = self.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
-                case let .success(res):
-                    cont.yield((res, MetaData(info: info, response: response)))
-                case let .failure(e):
-                    cont.finish(throwing: e)
+                    case let .success(res):
+                        cont.yield((res, MetaData(info: info, response: response)))
+                    case let .failure(e):
+                        cont.finish(throwing: e)
                 }
             }
 
@@ -239,10 +239,10 @@ public extension UBURLDataTask {
         AsyncThrowingStream { [self] cont in
             let id = self.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
-                case let .success(res):
-                    cont.yield((res, MetaData(info: info, response: response)))
-                case let .failure(e):
-                    cont.finish(throwing: e)
+                    case let .success(res):
+                        cont.yield((res, MetaData(info: info, response: response)))
+                    case let .failure(e):
+                        cont.finish(throwing: e)
                 }
             }
 
@@ -263,7 +263,6 @@ public extension UBURLDataTask {
 
 @available(iOS 13.0, *)
 public extension UBURLDataTask.TaskConfig {
-
     /// Makes a request and returns a TaskResult, from which you can access the data and metadata
     /// - Parameters:
     ///   - request: A HTTP URL request object that provides request-specific information such as the URL, cache policy, request type, and body data or body stream.
