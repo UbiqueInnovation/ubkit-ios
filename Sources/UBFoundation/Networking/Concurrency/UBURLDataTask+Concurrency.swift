@@ -17,15 +17,17 @@ public extension UBURLDataTask {
     typealias ResultTuple<T> = (result: Result<T, UBNetworkingError>, metadata: UBURLDataTask.MetaData)
 
     class TaskConfig {
-        public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []) {
+        public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = [], session: UBDataTaskURLSession? = nil) {
             self.requestModifiers = requestModifiers
             self.requestInterceptor = requestInterceptor
             self.failureRecoveryStrategies = failureRecoveryStrategies
+            self.session = session
         }
 
         public var requestModifiers: [UBURLRequestModifier] = []
         public var requestInterceptor: UBURLRequestInterceptor?
         public var failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []
+        public var session: UBDataTaskURLSession? = nil
 
         @discardableResult
         public func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
@@ -44,6 +46,12 @@ public extension UBURLDataTask {
             failureRecoveryStrategies.append(failureRecoveryStrategy)
             return self
         }
+
+        @discardableResult
+        public func with(session: UBDataTaskURLSession) -> TaskConfig {
+            self.session = session
+            return self
+        }
     }
 
     static func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
@@ -56,6 +64,10 @@ public extension UBURLDataTask {
 
     static func with(failureRecoveryStrategy: UBNetworkingTaskRecoveryStrategy) -> TaskConfig {
         return TaskConfig(failureRecoveryStrategies: [failureRecoveryStrategy])
+    }
+
+    static func with(session: UBDataTaskURLSession) -> TaskConfig {
+        return TaskConfig(session: session)
     }
 
     struct TaskResult<T> {
@@ -109,6 +121,10 @@ public extension UBURLDataTask {
             task.addFailureRecoveryStrategy(strategy)
         }
 
+        if let session = taskConfig.session {
+            task.setSession(session)
+        }
+
         return await withTaskCancellationHandler(operation: {
             await withCheckedContinuation { cont in
                 var id: UUID?
@@ -151,6 +167,10 @@ public extension UBURLDataTask {
 
         for strategy in taskConfig.failureRecoveryStrategies {
             task.addFailureRecoveryStrategy(strategy)
+        }
+
+        if let session = taskConfig.session {
+            task.setSession(session)
         }
 
         return await withTaskCancellationHandler(operation: {

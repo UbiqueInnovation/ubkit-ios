@@ -12,7 +12,11 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: - Properties
 
     /// The session used to create tasks
-    public let session: UBDataTaskURLSession
+    public private(set) var session: UBDataTaskURLSession
+
+    func setSession(_ session: UBDataTaskURLSession) {
+        self.session = session
+    }
 
     /// The request to execute.
     public let request: UBURLRequest
