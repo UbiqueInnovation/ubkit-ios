@@ -48,12 +48,10 @@ public extension UBURLDataTask {
 
         /// Optional networking error of a failed request
         public var ubNetworkingError: UBNetworkingError? {
-            switch resultTuple.result {
-                case let .failure(error):
-                    return error
-                default:
-                    return nil
+            if case .failure(let error) = resultTuple.result {
+                return error
             }
+            return nil
         }
     }
 
