@@ -31,7 +31,7 @@ class ConcurrentNetworkTests: XCTestCase {
     func testCronStream() async throws {
         let task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
         var count = 0
-        for try await _ in task.startCronStream() {
+        for try await _ in task.startStream() {
             count += 1
             if count >= 3 {
                 return
@@ -42,11 +42,11 @@ class ConcurrentNetworkTests: XCTestCase {
     func testRepeatingStream() async throws {
         let task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
         var count = 0
-        for try await _ in task.startCronStream() {
+        for try await _ in task.startStream() {
             count += 1
             break
         }
-        for try await _ in task.startCronStream() {
+        for try await _ in task.startStream() {
             count += 1
             break
         }
@@ -58,7 +58,7 @@ class ConcurrentNetworkTests: XCTestCase {
         let exp2 = expectation(description: "After cancel")
         let t = Task.detached {
             let task = UBURLDataTask(request: self.sampleRequest, session: self.fastCronSession)
-            for try await _ in task.startCronStream() {
+            for try await _ in task.startStream() {
                 exp1.fulfill()
             }
             exp2.fulfill()

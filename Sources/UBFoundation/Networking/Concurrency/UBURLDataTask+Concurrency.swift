@@ -148,7 +148,7 @@ public extension UBURLDataTask {
         await UBURLDataTask.loadOnce(request: request, decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
 
-    func startCronStream<T>(decoder: UBURLDataTaskDecoder<T>) -> AsyncThrowingStream<(T, MetaData), Error> {
+    func startStream<T>(decoder: UBURLDataTaskDecoder<T>) -> AsyncThrowingStream<(T, MetaData), Error> {
         AsyncThrowingStream { cont in
             let id = self.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
@@ -168,7 +168,7 @@ public extension UBURLDataTask {
         }
     }
 
-    func startCronStream<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>) -> AsyncThrowingStream<(T, MetaData), Error> {
+    func startStream<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>) -> AsyncThrowingStream<(T, MetaData), Error> {
         AsyncThrowingStream { [self] cont in
             let id = self.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
@@ -187,7 +187,7 @@ public extension UBURLDataTask {
         }
     }
 
-    func startCronStream() -> AsyncThrowingStream<(Data, MetaData), Error> {
-        self.startCronStream(decoder: UBDataPassthroughDecoder())
+    func startStream() -> AsyncThrowingStream<(Data, MetaData), Error> {
+        self.startStream(decoder: UBDataPassthroughDecoder())
     }
 }
