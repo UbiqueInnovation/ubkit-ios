@@ -14,12 +14,10 @@ class ConcurrentNetworkTests: XCTestCase {
         let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
     }
 
-    /*
     func testRepeatedRequestAsync() async throws {
         let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
         let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
     }
-*/
 
     func testRequestError() async throws {
         do {
