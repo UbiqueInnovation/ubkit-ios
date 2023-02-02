@@ -16,7 +16,7 @@ public extension UBURLDataTask {
 
     typealias ResultTuple<T> = (result: Result<T, UBNetworkingError>, metadata: UBURLDataTask.MetaData)
 
-    struct TaskConfig {
+    class TaskConfig {
         public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []) {
             self.requestModifiers = requestModifiers
             self.requestInterceptor = requestInterceptor
@@ -28,19 +28,19 @@ public extension UBURLDataTask {
         public var failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []
 
         @discardableResult
-        public mutating func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
+        public func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
             requestModifiers.append(requestModifier)
             return self
         }
 
         @discardableResult
-        public mutating func with(requestInterceptor: UBURLRequestInterceptor) -> TaskConfig {
+        public func with(requestInterceptor: UBURLRequestInterceptor) -> TaskConfig {
             self.requestInterceptor = requestInterceptor
             return self
         }
 
         @discardableResult
-        public mutating func with(failureRecoveryStrategy: UBNetworkingTaskRecoveryStrategy) -> TaskConfig {
+        public func with(failureRecoveryStrategy: UBNetworkingTaskRecoveryStrategy) -> TaskConfig {
             failureRecoveryStrategies.append(failureRecoveryStrategy)
             return self
         }
