@@ -17,7 +17,7 @@ public extension UBURLDataTask {
     typealias ResultTuple<T> = (result: Result<T, UBNetworkingError>, metadata: UBURLDataTask.MetaData)
 
     struct TaskConfig {
-        public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies:  [UBNetworkingTaskRecoveryStrategy] = []) {
+        public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []) {
             self.requestModifiers = requestModifiers
             self.requestInterceptor = requestInterceptor
             self.failureRecoveryStrategies = failureRecoveryStrategies
@@ -186,6 +186,10 @@ public extension UBURLDataTask {
         await UBURLDataTask.loadOnce(request: request, decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
 
+    /// Starts a stream of requests which will be executed repeatedly based on next-refresh header
+    /// - Parameters:
+    ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
+    /// - Returns: A throwing stream of decoded result object with metadata
     func startStream<T>(decoder: UBURLDataTaskDecoder<T>) -> AsyncThrowingStream<(T, MetaData), Error> {
         AsyncThrowingStream { cont in
             let id = self.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
@@ -206,6 +210,11 @@ public extension UBURLDataTask {
         }
     }
 
+    /// Starts a stream of requests which will be executed repeatedly based on next-refresh header
+    /// - Parameters:
+    ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
+    ///   - errorDecoder: The decoder for the error in case of a failed request
+    /// - Returns: A throwing stream of decoded result object with metadata
     func startStream<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>) -> AsyncThrowingStream<(T, MetaData), Error> {
         AsyncThrowingStream { [self] cont in
             let id = self.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
@@ -225,6 +234,8 @@ public extension UBURLDataTask {
         }
     }
 
+    /// Starts a stream of requests which will be executed repeatedly based on next-refresh header
+    /// - Returns: A throwing stream of data with metadata
     func startStream() -> AsyncThrowingStream<(Data, MetaData), Error> {
         self.startStream(decoder: UBDataPassthroughDecoder())
     }
