@@ -17,13 +17,15 @@ public extension UBURLDataTask {
     typealias ResultTuple<T> = (result: Result<T, UBNetworkingError>, metadata: UBURLDataTask.MetaData)
 
     struct TaskConfig {
-        public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil) {
+        public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies:  [UBNetworkingTaskRecoveryStrategy] = []) {
             self.requestModifiers = requestModifiers
             self.requestInterceptor = requestInterceptor
+            self.failureRecoveryStrategies = failureRecoveryStrategies
         }
 
         public var requestModifiers: [UBURLRequestModifier] = []
         public var requestInterceptor: UBURLRequestInterceptor?
+        public var failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []
     }
 
     struct TaskResult<T> {
@@ -73,6 +75,10 @@ public extension UBURLDataTask {
 
         task.requestInterceptor = taskConfig.requestInterceptor
 
+        for strategy in taskConfig.failureRecoveryStrategies {
+            task.addFailureRecoveryStrategy(strategy)
+        }
+
         return await withTaskCancellationHandler(operation: {
             await withCheckedContinuation { cont in
                 var id: UUID?
@@ -112,6 +118,10 @@ public extension UBURLDataTask {
         }
 
         task.requestInterceptor = taskConfig.requestInterceptor
+
+        for strategy in taskConfig.failureRecoveryStrategies {
+            task.addFailureRecoveryStrategy(strategy)
+        }
 
         return await withTaskCancellationHandler(operation: {
             await withCheckedContinuation { cont in
