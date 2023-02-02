@@ -26,6 +26,36 @@ public extension UBURLDataTask {
         public var requestModifiers: [UBURLRequestModifier] = []
         public var requestInterceptor: UBURLRequestInterceptor?
         public var failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []
+
+        @discardableResult
+        public mutating func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
+            requestModifiers.append(requestModifier)
+            return self
+        }
+
+        @discardableResult
+        public mutating func with(requestInterceptor: UBURLRequestInterceptor) -> TaskConfig {
+            self.requestInterceptor = requestInterceptor
+            return self
+        }
+
+        @discardableResult
+        public mutating func with(failureRecoveryStrategy: UBNetworkingTaskRecoveryStrategy) -> TaskConfig {
+            failureRecoveryStrategies.append(failureRecoveryStrategy)
+            return self
+        }
+    }
+
+    static func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
+        return TaskConfig(requestModifiers: [requestModifier])
+    }
+
+    static func with(requestInterceptor: UBURLRequestInterceptor) -> TaskConfig {
+        return TaskConfig(requestInterceptor: requestInterceptor)
+    }
+
+    static func with(failureRecoveryStrategy: UBNetworkingTaskRecoveryStrategy) -> TaskConfig {
+        return TaskConfig(failureRecoveryStrategies: [failureRecoveryStrategy])
     }
 
     struct TaskResult<T> {
@@ -197,5 +227,47 @@ public extension UBURLDataTask {
 
     func startStream() -> AsyncThrowingStream<(Data, MetaData), Error> {
         self.startStream(decoder: UBDataPassthroughDecoder())
+    }
+}
+
+@available(iOS 13.0, *)
+public extension UBURLDataTask.TaskConfig {
+
+    /// Makes a request and returns a TaskResult, from which you can access the data and metadata
+    /// - Parameters:
+    ///   - request: A HTTP URL request object that provides request-specific information such as the URL, cache policy, request type, and body data or body stream.
+    ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
+    ///   - ignoreCache: Whether to ignore the cache or not
+    ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
+    /// - Returns: `TaskResult`. Access data by result.data (throwing!)
+    @discardableResult
+    func loadOnce<T>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<T> {
+        await UBURLDataTask.loadOnce(request: request, decoder: decoder, ignoreCache: ignoreCache, taskConfig: self)
+    }
+
+    /// Makes a request and returns a TaskResult, from which you can access the data and metadata
+    /// - Parameters:
+    ///   - request: A HTTP URL request object that provides request-specific information such as the URL, cache policy, request type, and body data or body stream.
+    ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
+    ///   - errorDecoder: The decoder for the error in case of a failed request
+    ///   - ignoreCache: Whether to ignore the cache or not
+    ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
+    /// - Returns: `TaskResult`. Access data by result.data (throwing!)
+    ///
+    @discardableResult
+    func loadOnce<T, E: UBURLDataTaskErrorBody>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<T> {
+        await UBURLDataTask.loadOnce(request: request, decoder: decoder, errorDecoder: errorDecoder, ignoreCache: ignoreCache, taskConfig: self)
+    }
+
+    /// Makes a request and returns a TaskResult consisting of Data
+    /// - Parameters:
+    ///   - request: A HTTP URL request object that provides request-specific information such as the URL, cache policy, request type, and body data or body stream.
+    ///   - ignoreCache: Whether to ignore the cache or not
+    ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
+    /// - Returns: `TaskResult`. Access data by result.data (throwing!)
+    ///
+    @discardableResult
+    func loadOnce(request: UBURLRequest, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<Data> {
+        await UBURLDataTask.loadOnce(request: request, decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: self)
     }
 }
