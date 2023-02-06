@@ -7,27 +7,81 @@
 
 import UBFoundation
 import XCTest
+import UBLocalNetworking
 
-@available(iOS 13.0.0, *)
+@available(iOS 15.0.0, *)
 class ConcurrentNetworkTests: XCTestCase {
+
+    private let sampleUrl = URL(string: "http://mock.ubique.ch/user.json")!
+    private lazy var sampleRequest = UBURLRequest(url: sampleUrl)
+
+    private let cronUrl = URL(string: "http://mock.ubique.ch/cron.json")!
+    private lazy var cronRequest = UBURLRequest(url: cronUrl)
+
+    private var brokenSampleRequest: UBURLRequest {
+        let url = URL(string: "https://not.a.mock.amazonaws.com/but/DOES_NOT_EXIST.json")!
+        let request = UBURLRequest(url: url)
+        return request
+    }
+    
+    private struct User: Encodable {
+        let name: String
+    }
+
+    private let sampleResponse = User(name: "Jhon")
+
+    private let sharedSession: UBDataTaskURLSession = URLSession.shared
+
+    private var fastCronSession: UBDataTaskURLSession {
+        let cache = MeteoAutoRefreshCacheLogic()
+        let conf = UBURLSessionConfiguration(cachingLogic: cache)
+        let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
+        c.removeAllCachedResponses()
+        conf.sessionConfiguration.urlCache = c
+        conf.sessionConfiguration.protocolClasses = [LocalServerURLProtocol.self]
+        let session = UBURLSession(configuration: conf)
+        return session
+    }
+
+    override func setUp() {
+        LocalServer.resumeLocalServerOnSharedSession()
+
+        let responseProvider = try! BasicResponseProvider(rule: sampleUrl.absoluteString, encodable: sampleResponse)
+        responseProvider.addToLocalServer()
+
+        let cronResponseProvider = try! BasicResponseProvider(rule: cronUrl.absoluteString, body: "Hello, World!", header: BasicResponseProvider.Header(statusCode: 200, headerFields: [
+            "x-amz-meta-backoff": "60",
+            "x-amz-meta-cache": "max-age=300",
+            "x-amz-version-id": "qSojcs_cgESN8uLviKqiyCiFauZY0kxw",
+            "x-amz-meta-next-refresh": "Mon, 06 Feb 2023 14:06:01 GMT",
+            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date())
+        ]))
+        cronResponseProvider.addToLocalServer()
+    }
+
+    override func tearDown() {
+        LocalServer.removeAllResponseProviders()
+        LocalServer.pauseLocalServer()
+    }
+
     func testBasicRequest() async throws {
-        let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
+        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest)
     }
 
     func testBasicRequestWithUrl() async throws {
-        let data1 = try await UBURLDataTask.loadOnce(url: sampleRequestUrl).data
-        let data2 = try await UBURLDataTask.loadOnce(request: sampleRequest).data
+        let data1 = try await UBURLDataTask.with(session: sharedSession).loadOnce(url: sampleUrl).data
+        let data2 = try await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest).data
         XCTAssertEqual(data1, data2)
     }
 
     func testRepeatedRequestAsync() async throws {
-        let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
-        let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
+        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest)
+        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest)
     }
 
     func testRequestError() async throws {
         do {
-            let _ = try await UBURLDataTask.loadOnce(request: brokenSampleRequest).data
+            let _ = try await UBURLDataTask.with(session: sharedSession).loadOnce(request: brokenSampleRequest).data
             XCTFail("Should not reach this")
         } catch {
             // error is good
@@ -35,7 +89,7 @@ class ConcurrentNetworkTests: XCTestCase {
     }
 
     func testCronStream() async throws {
-        let task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
+        let task = UBURLDataTask(request: cronRequest, session: fastCronSession)
         var count = 0
         for try await _ in task.startStream() {
             count += 1
@@ -46,7 +100,7 @@ class ConcurrentNetworkTests: XCTestCase {
     }
 
     func testRepeatingStream() async throws {
-        let task = UBURLDataTask(request: sampleRequest, session: fastCronSession)
+        let task = UBURLDataTask(request: cronRequest, session: fastCronSession)
         var count = 0
         for try await _ in task.startStream() {
             count += 1
@@ -63,7 +117,7 @@ class ConcurrentNetworkTests: XCTestCase {
         let exp1 = expectation(description: "After first result")
         let exp2 = expectation(description: "After cancel")
         let t = Task.detached {
-            let task = UBURLDataTask(request: self.sampleRequest, session: self.fastCronSession)
+            let task = UBURLDataTask(request: self.cronRequest, session: self.fastCronSession)
             for try await _ in task.startStream() {
                 exp1.fulfill()
             }
@@ -72,31 +126,6 @@ class ConcurrentNetworkTests: XCTestCase {
         wait(for: [exp1], timeout: 30)
         t.cancel()
         wait(for: [exp2], timeout: 30)
-    }
-
-    private var sampleRequestUrl: URL {
-        URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
-    }
-
-    private var sampleRequest: UBURLRequest {
-        let request = UBURLRequest(url: sampleRequestUrl)
-        return request
-    }
-
-    private var brokenSampleRequest: UBURLRequest {
-        let url = URL(string: "https://s3-eu-central-1.amazonaws.com/DOES_NOT_EXIST.json")!
-        let request = UBURLRequest(url: url)
-        return request
-    }
-
-    private var fastCronSession: UBDataTaskURLSession {
-        let cache = MeteoAutoRefreshCacheLogic()
-        let conf = UBURLSessionConfiguration(cachingLogic: cache)
-        let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
-        c.removeAllCachedResponses()
-        conf.sessionConfiguration.urlCache = c
-        let session = UBURLSession(configuration: conf)
-        return session
     }
 }
 
