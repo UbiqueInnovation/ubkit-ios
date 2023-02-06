@@ -14,6 +14,12 @@ class ConcurrentNetworkTests: XCTestCase {
         let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
     }
 
+    func testBasicRequestWithUrl() async throws {
+        let data1 = try await UBURLDataTask.loadOnce(url: sampleRequestUrl).data
+        let data2 = try await UBURLDataTask.loadOnce(request: sampleRequest).data
+        XCTAssertEqual(data1, data2)
+    }
+
     func testRepeatedRequestAsync() async throws {
         let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
         let _ = await UBURLDataTask.loadOnce(request: sampleRequest)
@@ -68,9 +74,12 @@ class ConcurrentNetworkTests: XCTestCase {
         wait(for: [exp2], timeout: 30)
     }
 
+    private var sampleRequestUrl: URL {
+        URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
+    }
+
     private var sampleRequest: UBURLRequest {
-        let url = URL(string: "https://s3-eu-central-1.amazonaws.com/app-test-static-fra.meteoswiss-app.ch/v1/warnings_with_outlook_with_naturalhazards_de.json")!
-        let request = UBURLRequest(url: url)
+        let request = UBURLRequest(url: sampleRequestUrl)
         return request
     }
 
