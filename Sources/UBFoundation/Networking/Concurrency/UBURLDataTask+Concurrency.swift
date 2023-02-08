@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 13.0, *)
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
 public extension UBURLDataTask {
     struct MetaData {
         public let info: UBNetworkingTaskInfo?
@@ -301,7 +301,7 @@ public extension UBURLDataTask {
     }
 }
 
-@available(iOS 13.0, *)
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
 public extension UBURLDataTask.TaskConfig {
     /// Makes a request and returns a TaskResult, from which you can access the data and metadata
     /// - Parameters:

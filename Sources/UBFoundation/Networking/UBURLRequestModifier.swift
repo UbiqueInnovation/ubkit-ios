@@ -18,7 +18,7 @@ public protocol UBURLRequestModifier {
 }
 
 /// A request modifier is called before a HTTPDataTask starts and have the chance to change the request.
-@available(iOS 13.0, *)
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
 public protocol UBAsyncURLRequestModifier: UBURLRequestModifier {
     /// Modifies the request before it will start.
     ///
@@ -28,7 +28,7 @@ public protocol UBAsyncURLRequestModifier: UBURLRequestModifier {
     func modifyRequest(_ request: inout UBURLRequest) async throws
 }
 
-@available(iOS 13.0, *)
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
 public extension UBAsyncURLRequestModifier {
     func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         Task {

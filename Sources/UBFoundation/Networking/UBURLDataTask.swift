@@ -325,7 +325,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// This modifier will be called everytime before the request is sent, and it gets a chance to modify the request.
     ///
     /// - Parameter modifier: The request modifier to add
-    @available(iOS 13.0, *)
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
     @discardableResult
     public func addRequestModifier(_ modifier: UBAsyncURLRequestModifier) -> Self {
         requestModifier.append(modifier)
