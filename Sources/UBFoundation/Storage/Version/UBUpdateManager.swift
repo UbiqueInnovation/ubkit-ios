@@ -56,6 +56,12 @@ public struct AppVersion : UBCodable, Equatable {
         patch = split.removeFirst() ?? 0
     }
 
+    // MARK: - API
+
+    var versionString : String {
+        "\(major).\(minor).\(patch)"
+    }
+
     // MARK: - Version major.minor.patch (e.g. v3.1.4)
 
     let major: Int
