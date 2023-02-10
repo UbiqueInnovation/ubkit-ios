@@ -9,17 +9,28 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         if let directFound = self[key] {
             return directFound
         }
-        guard let stringKey = key as? String else {
-            return nil
+
+        var keys: [String] = []
+
+        if let stringKey = key as? String {
+            keys.append(stringKey)
+        } else if let strings = key as? [String] {
+            keys = strings
         }
-        let caseInsensitiveElement = self.first { dictionarykey, _ in
-            guard let string = dictionarykey as? String else {
-                return false
-            }
-            let result = string.compare(stringKey, options: .caseInsensitive)
-            return result == .orderedSame
+
+        for key in keys {
+            guard let caseInsensitiveElement = self.first(where: { dictionarykey, _ in
+                guard let string = dictionarykey as? String else {
+                    return false
+                }
+                let result = string.compare(key, options: .caseInsensitive)
+                return result == .orderedSame
+            }) else { continue }
+
+            return caseInsensitiveElement.value
         }
-        return caseInsensitiveElement?.value
+
+        return nil
     }
 
     /// Set a value for the given key, replacing any other keys that match in an case insensitive manner.
@@ -39,17 +50,26 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         if let directFound = removeValue(forKey: key) {
             return directFound
         }
-        guard let stringKey = key as? String else {
-            return nil
+
+        var keys: [String] = []
+
+        if let stringKey = key as? String {
+            keys.append(stringKey)
+        } else if let strings = key as? [String] {
+            keys = strings
         }
-        for element in self {
-            guard let string = element.key as? String,
-                  string.compare(stringKey, options: .caseInsensitive) == .orderedSame
-            else {
-                continue
+
+        for key in keys {
+            for element in self {
+                guard let string = element.key as? String,
+                      string.compare(key, options: .caseInsensitive) == .orderedSame
+                else {
+                    continue
+                }
+                return removeValue(forKey: element.key)
             }
-            return removeValue(forKey: element.key)
         }
+
         return nil
     }
 }
