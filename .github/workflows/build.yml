@@ -1,0 +1,55 @@
+name: Build & Test
+
+env:
+  XCODE_VERSION: 'Xcode_14.1.0'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Build & Tests
+    runs-on: macos-12
+
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      
+    - name: "Select Xcode 13"
+      uses: devbotsxyz/xcode-select@v1
+      with:
+        version: "13"
+
+    - name: Fastlane
+      run: fastlane tests
+
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action/composite@95a3aff882d4abe2838b187c66477be7fbf3ddb8
+      if: always()
+      with:
+        files: build/*.xml
+
+    - name: Archive logs
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-test-logs
+        path: build
+        
+  codequality:
+    name: Codequality
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+  
+    - name: "Select Xcode 13"
+      uses: devbotsxyz/xcode-select@v1
+      with:
+        version: "13"
+
+    - name: swiftformat
+      run: swiftformat Sources,Tests --lint

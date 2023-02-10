@@ -43,7 +43,7 @@ public protocol UBCachingLogic {
     ///
     /// - Parameters:
     ///   - currentCachedResponse: The current cached response
-    ///   - newResponse: The updated HTTP response 
+    ///   - newResponse: The updated HTTP response
     func proposeUpdatedCachedResponse(_ currentCachedResponse: CachedURLResponse, newResponse: HTTPURLResponse) -> CachedURLResponse?
 
     /// Asks the caching logic for a cached result

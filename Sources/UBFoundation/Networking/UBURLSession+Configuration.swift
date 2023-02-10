@@ -48,7 +48,7 @@ public class UBURLSessionConfiguration {
 
         // Add app information
         if let info = Bundle.main.infoDictionary,
-            let appName = info[kCFBundleNameKey as String] as? String {
+           let appName = info[kCFBundleNameKey as String] as? String {
             let shortVersionNumber = info["CFBundleShortVersionString"] as? String
             let buildNumber = info[kCFBundleVersionKey as String] as? String
             headers["App-Version"] = "\(appName) v\(shortVersionNumber ?? "unknown") (\(buildNumber ?? "unknown"))"
@@ -89,16 +89,16 @@ extension URLRequest.NetworkServiceType {
     var equivalentDispatchQOS: DispatchQoS {
         let qos: DispatchQoS
         switch self {
-        case .background:
-            qos = .background
-        case .responsiveData:
-            qos = .userInitiated
-        case .video, .voip, .voice, .callSignaling, .avStreaming, .responsiveAV:
-            qos = .userInteractive
-        case .default:
-            qos = .default
-        @unknown default:
-            fatalError()
+            case .background:
+                qos = .background
+            case .responsiveData:
+                qos = .userInitiated
+            case .video, .voip, .voice, .callSignaling, .avStreaming, .responsiveAV:
+                qos = .userInteractive
+            case .default:
+                qos = .default
+            @unknown default:
+                fatalError()
         }
         return qos
     }

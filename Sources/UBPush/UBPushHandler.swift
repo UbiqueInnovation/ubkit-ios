@@ -36,13 +36,13 @@ open class UBPushHandler {
     }
 
     /// Categories to register
-    open var notificationCategories : Set<UNNotificationCategory> {
-        return Set()
+    open var notificationCategories: Set<UNNotificationCategory> {
+        Set()
     }
 
     /// Overrride to show an application-specific alert/popup in response to a push
     /// arriving while the application is running.
-    open func showInAppPushAlert(withTitle proposedTitle: String, proposedMessage: String, notification: UBPushNotification, shouldPresentCompletionHandler: ((UNNotificationPresentationOptions) -> Void)? = nil) {
+    open func showInAppPushAlert(withTitle _: String, proposedMessage _: String, notification _: UBPushNotification, shouldPresentCompletionHandler: ((UNNotificationPresentationOptions) -> Void)? = nil) {
         // Show notification banner also when app is already in foreground
         if #available(iOS 14.0, *) {
             shouldPresentCompletionHandler?([.banner, .sound])
@@ -58,7 +58,7 @@ open class UBPushHandler {
     }
 
     /// Override to update local data (e.g. current warnings) after every remote notification. It's the clients responsibility to call the fetchCompletionHandler appropriately, if set
-    open func updateLocalData(withSilent _: Bool, remoteNotification _: UBPushNotification, fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?) {
+    open func updateLocalData(withSilent _: Bool, remoteNotification _: UBPushNotification, fetchCompletionHandler _: ((UIBackgroundFetchResult) -> Void)?) {
         UBPushManager.logger.error("Subclasses of UBPushHandler should override updateLocalData(withSilent:remoteNotification:)")
     }
 
@@ -125,12 +125,12 @@ open class UBPushHandler {
 
             let message: String
             switch (notification.userInfo["aps"] as? [String: Any])?["alert"] {
-            case let stringAlert as String:
-                message = stringAlert
-            case let dictAlert as [String: Any]:
-                message = (dictAlert["body"] as? String) ?? ""
-            default:
-                message = ""
+                case let stringAlert as String:
+                    message = stringAlert
+                case let dictAlert as [String: Any]:
+                    message = (dictAlert["body"] as? String) ?? ""
+                default:
+                    message = ""
             }
 
             showInAppPushAlert(withTitle: appName, proposedMessage: message, notification: notification, shouldPresentCompletionHandler: shouldPresentCompletionHandler)

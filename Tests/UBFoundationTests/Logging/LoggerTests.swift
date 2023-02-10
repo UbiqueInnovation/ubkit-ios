@@ -90,4 +90,23 @@ class LoggerTests: XCTestCase {
             }
         }
     }
+
+    class Listener: UBLoggerListener {
+        var messages: [String] = []
+        func log(message: String) {
+            messages.append(message)
+        }
+    }
+
+    func testLogListenerShouldBeCalled() {
+        let logger = try! UBLogger(category: "Tests", bundle: Bundle(for: LoggerTests.self))
+        for level in [UBLogger.LogLevel.default, UBLogger.LogLevel.verbose] {
+            let listener = Listener()
+            UBLogger.listener = listener
+            logger.setLogLevel(level)
+            logger.info("Test Log Info")
+            XCTAssertEqual(listener.messages.count, 1)
+            XCTAssert(listener.messages.first!.contains("Test Log Info"))
+        }
+    }
 }

@@ -17,7 +17,7 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     private var _modifiers: [UBURLRequestModifier]
     /// The list of modifier in the group
     public var modifiers: [UBURLRequestModifier] {
-        return serialModifiers.sync {
+        serialModifiers.sync {
             _modifiers
         }
     }
@@ -40,6 +40,16 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     ///
     /// - Parameter modifier: The modifier to add
     public func append(_ modifier: UBURLRequestModifier) {
+        serialModifiers.sync {
+            _modifiers.append(modifier)
+        }
+    }
+
+    /// Add a modifier to the group
+    ///
+    /// - Parameter modifier: The modifier to add
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
+    public func append(_ modifier: UBAsyncURLRequestModifier) {
         serialModifiers.sync {
             _modifiers.append(modifier)
         }
@@ -81,10 +91,10 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
 
         modifier.modifyRequest(originalRequest) { result in
             switch result {
-            case let .failure(error):
-                completion(.failure(error))
-            case let .success(request):
-                self.recursiveModifyRequest(request, modification: modification, modifiers: modifiers.dropFirst(), completion: completion)
+                case let .failure(error):
+                    completion(.failure(error))
+                case let .success(request):
+                    self.recursiveModifyRequest(request, modification: modification, modifiers: modifiers.dropFirst(), completion: completion)
             }
         }
     }
@@ -100,7 +110,7 @@ extension UBURLRequestModifierGroup {
         /// :nodoc
         var cancelled: Bool {
             get {
-                return serial.sync {
+                serial.sync {
                     _cancelled
                 }
             }

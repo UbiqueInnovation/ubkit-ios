@@ -11,6 +11,8 @@
     import WatchKit
 #endif
 
+import Foundation
+
 extension UBURLRequest {
     public mutating func setDefaultUserAgent() {
         setHTTPHeaderField(UBHTTPHeaderField(key: .userAgent, value: UBURLRequest.userAgent))

@@ -17,7 +17,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: 0.1)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
@@ -27,10 +27,10 @@ class HTTPDataTaskTests: XCTestCase {
         operationQueue.addOperation {
             let response = dataTask.startSynchronous()
             switch response.result {
-            case .success:
-                break
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
             }
             ex1.fulfill()
         }
@@ -54,16 +54,16 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .failure:
-                break
-            case .success:
-                XCTFail("Should have failed")
+                case .failure:
+                    break
+                case .success:
+                    XCTFail("Should have failed")
             }
             ex1.fulfill()
         }
@@ -79,7 +79,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
@@ -103,10 +103,10 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addFailureRecoveryStrategy(recovery)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .failure:
-                break
-            case .success:
-                XCTFail("Should have failed")
+                case .failure:
+                    break
+                case .success:
+                    XCTFail("Should have failed")
             }
             ex1.fulfill()
         }
@@ -121,7 +121,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
@@ -150,18 +150,18 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addFailureRecoveryStrategy(recovery)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                if case let UBNetworkingError.internal(.recoverableError(recovery)) = error {
-                    XCTAssertFalse(recovery.recoveryOptions.isEmpty)
-                    recovery.attemptRecovery(optionIndex: 0, resultHandler: { success in
-                        XCTAssertTrue(success)
-                        ex2.fulfill()
-                    })
-                } else {
-                    XCTFail()
-                }
-            case .success:
-                XCTFail("Should have failed")
+                case let .failure(error):
+                    if case let UBNetworkingError.internal(.recoverableError(recovery)) = error {
+                        XCTAssertFalse(recovery.recoveryOptions.isEmpty)
+                        recovery.attemptRecovery(optionIndex: 0, resultHandler: { success in
+                            XCTAssertTrue(success)
+                            ex2.fulfill()
+                        })
+                    } else {
+                        XCTFail()
+                    }
+                case .success:
+                    XCTFail("Should have failed")
             }
             ex1.fulfill()
         }
@@ -174,16 +174,16 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case .success:
-                break
-            case .failure:
-                XCTFail("Should have returned success with empty")
+                case .success:
+                    break
+                case .failure:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -196,7 +196,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
-        let mockSession = DataTaskSessionMock { (request) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { request -> URLSessionDataTaskMock.Configuration in
             XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Basic bG9naW46cGFzc3dvcmQ=")
             return URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
@@ -219,16 +219,16 @@ class HTTPDataTaskTests: XCTestCase {
             let value: String
         }
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler(decoder: UBHTTPJSONDecoder<TestStruct>()) { result, _, _, _ in
             switch result {
-            case let .success(test):
-                XCTAssertEqual(test.value, "A")
-            default:
-                XCTFail("Should have returned success with empty")
+                case let .success(test):
+                    XCTAssertEqual(test.value, "A")
+                default:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -245,36 +245,36 @@ class HTTPDataTaskTests: XCTestCase {
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
         let expectedData = "Hello".data(using: .utf16)!
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: expectedData, response: expectedResponse, error: nil)
         }
 
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, response, _, _ in
             switch result {
-            case .success:
-                break
-            case .failure:
-                XCTFail("Should have returned data")
+                case .success:
+                    break
+                case .failure:
+                    XCTFail("Should have returned data")
             }
             XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
             ex1.fulfill()
         }
         dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(), completionHandler: { result, _, _, _ in
             switch result {
-            case .failure:
-                break
-            default:
-                XCTFail("Should have failed parsing")
+                case .failure:
+                    break
+                default:
+                    XCTFail("Should have failed parsing")
             }
             ex2.fulfill()
         })
         dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(encoding: .utf16), completionHandler: { result, _, _, _ in
             switch result {
-            case let .success(data):
-                XCTAssertEqual(data, "Hello")
-            default:
-                XCTFail("Should have returned a string")
+                case let .success(data):
+                    XCTAssertEqual(data, "Hello")
+                default:
+                    XCTFail("Should have returned a string")
             }
             ex3.fulfill()
         })
@@ -288,16 +288,16 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .success(data):
-                XCTAssertNil(data)
-            case .failure:
-                XCTFail()
+                case let .success(data):
+                    XCTAssertNil(data)
+                case .failure:
+                    XCTFail()
             }
             ex1.fulfill()
         }
@@ -310,7 +310,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
@@ -319,10 +319,10 @@ class HTTPDataTaskTests: XCTestCase {
         }
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
-            case .success:
-                XCTFail("Should have returned success with empty")
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
+                case .success:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -335,20 +335,20 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addResponseValidator([
             UBHTTPResponseStatusValidator(.success),
-            UBHTTPResponseContentTypeValidator(expectedMIMEType: .png)
+            UBHTTPResponseContentTypeValidator(expectedMIMEType: .png),
         ])
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
-            case .success:
-                XCTFail("Should have returned success with empty")
+                case let .failure(error):
+                    XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
+                case .success:
+                    XCTFail("Should have returned success with empty")
             }
             ex1.fulfill()
         }
@@ -365,23 +365,23 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         XCTAssertEqual(dataTask.state, .initial)
         dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
-            case .waitingExecution:
-                ex1.fulfill()
-            case .fetching:
-                ex2.fulfill()
-            case .parsing:
-                ex3.fulfill()
-            case .finished:
-                ex4.fulfill()
-            default:
-                break
+                case .waitingExecution:
+                    ex1.fulfill()
+                case .fetching:
+                    ex2.fulfill()
+                case .parsing:
+                    ex3.fulfill()
+                case .finished:
+                    ex4.fulfill()
+                default:
+                    break
             }
         }
         dataTask.start()
@@ -394,7 +394,7 @@ class HTTPDataTaskTests: XCTestCase {
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
 
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil)
         }
 
@@ -419,7 +419,7 @@ class HTTPDataTaskTests: XCTestCase {
 
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: 0.5, latency: nil, transferDuration: 2, progressUpdateCount: 5)
         }
 
@@ -429,12 +429,12 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
-            case .waitingExecution:
-                ex1.fulfill()
-            case .cancelled:
-                ex2.fulfill()
-            default:
-                XCTFail()
+                case .waitingExecution:
+                    ex1.fulfill()
+                case .cancelled:
+                    ex2.fulfill()
+                default:
+                    XCTFail()
             }
         }
 
@@ -444,10 +444,10 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
-            case .success:
-                XCTFail()
+                case let .failure(error):
+                    XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
+                case .success:
+                    XCTFail()
             }
         }
 
@@ -472,7 +472,7 @@ class HTTPDataTaskTests: XCTestCase {
 
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
         }
 
@@ -482,14 +482,14 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.addStateTransitionObserver { _, new, _ in
             switch new {
-            case .waitingExecution:
-                ex1.fulfill()
-            case .fetching:
-                ex2.fulfill()
-            case .cancelled:
-                ex3.fulfill()
-            default:
-                XCTFail()
+                case .waitingExecution:
+                    ex1.fulfill()
+                case .fetching:
+                    ex2.fulfill()
+                case .cancelled:
+                    ex3.fulfill()
+                default:
+                    XCTFail()
             }
         }
 
@@ -508,10 +508,10 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.addCompletionHandler { result, _, _, _ in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
-            case .success:
-                XCTFail()
+                case let .failure(error):
+                    XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
+                case .success:
+                    XCTFail()
             }
         }
 
@@ -532,7 +532,7 @@ class HTTPDataTaskTests: XCTestCase {
         autoreleasepool {
             let request = UBURLRequest(url: url)
             let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-            let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+            let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
                 URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
             }
 
@@ -575,7 +575,7 @@ class HTTPDataTaskTests: XCTestCase {
 
         let request = UBURLRequest(url: url)
         let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-        let mockSession = DataTaskSessionMock { (_) -> URLSessionDataTaskMock.Configuration in
+        let mockSession = DataTaskSessionMock { _ -> URLSessionDataTaskMock.Configuration in
             URLSessionDataTaskMock.Configuration(data: "1".data(using: .utf8)!, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.2, progressUpdateCount: 10)
         }
 
@@ -600,7 +600,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex3.fulfill()
         }
 
-        let decoder = UBURLDataTaskDecoder { (data, _) -> Data in
+        let decoder = UBURLDataTaskDecoder { data, _ -> Data in
             XCTAssertNotEqual(queue, OperationQueue.current)
             XCTAssertNotEqual(queue, OperationQueue.main)
             ex4.fulfill()

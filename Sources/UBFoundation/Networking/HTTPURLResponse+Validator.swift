@@ -95,7 +95,7 @@ public struct UBHTTPResponseStatusValidator: UBHTTPURLResponseValidator {
     ///
     /// - Parameter statusCodes: An array of status codes
     public init(_ statusCodes: [UBStandardHTTPCode]) {
-        self.init(statusCodes.map { $0.rawValue })
+        self.init(statusCodes.map(\.rawValue))
     }
 
     /// Initializes the validator
@@ -108,14 +108,14 @@ public struct UBHTTPResponseStatusValidator: UBHTTPURLResponseValidator {
     /// :nodoc:
     public func validateHTTPResponse(_ response: HTTPURLResponse) throws {
         switch type {
-        case let .category(category):
-            guard category == response.statusCode.ub_httpCodeCategory else {
-                throw UBInternalNetworkingError.responseStatusValidationFailed(status: response.statusCode)
-            }
-        case let .multipleStatusCode(statuses):
-            guard statuses.contains(response.statusCode) else {
-                throw UBInternalNetworkingError.responseStatusValidationFailed(status: response.statusCode)
-            }
+            case let .category(category):
+                guard category == response.statusCode.ub_httpCodeCategory else {
+                    throw UBInternalNetworkingError.responseStatusValidationFailed(status: response.statusCode)
+                }
+            case let .multipleStatusCode(statuses):
+                guard statuses.contains(response.statusCode) else {
+                    throw UBInternalNetworkingError.responseStatusValidationFailed(status: response.statusCode)
+                }
         }
     }
 }

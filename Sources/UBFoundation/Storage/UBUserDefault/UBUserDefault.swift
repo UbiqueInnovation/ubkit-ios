@@ -18,18 +18,19 @@ public protocol UBUserDefaultValue {
     func object() -> Any?
 }
 
-extension UBUserDefaultValue {
-    public init?(with object: Any) {
+public extension UBUserDefaultValue {
+    init?(with object: Any) {
         guard let value = object as? Self else { return nil }
         self = value
     }
-    public func object() -> Any? { self }
+
+    func object() -> Any? { self }
 }
 
 // MARK: - Plist-Compatible Values
 
 /// The types that can be stored in `UserDefaults` out of the box.
-protocol UBPListValue : UBUserDefaultValue {}
+protocol UBPListValue: UBUserDefaultValue {}
 
 extension Data: UBPListValue {}
 extension NSData: UBPListValue {}
@@ -41,7 +42,6 @@ extension Date: UBPListValue {}
 extension NSDate: UBPListValue {}
 
 extension NSNumber: UBPListValue {}
-extension Bool: UBPListValue {}
 extension Int: UBPListValue {}
 extension Int8: UBPListValue {}
 extension Int16: UBPListValue {}
@@ -55,18 +55,48 @@ extension UInt64: UBPListValue {}
 extension Double: UBPListValue {}
 extension Float: UBPListValue {}
 
+// MARK: - Bool
+
+extension Bool: UBUserDefaultValue {
+    public init?(with object: Any) {
+        if let value = object as? Self {
+            self = value
+            return
+        }
+
+        // If a UserDefault value is passed via launchArgument for XCUITest it is always passed as a string
+        // therefore we try to interpret the string as a fallback
+        if let string = object as? String {
+            switch string.lowercased() {
+                case "true", "t", "yes", "y", "1":
+                    self = true
+                    return
+                case "false", "f", "no", "n", "0":
+                    self = false
+                    return
+                default:
+                    return nil
+            }
+        }
+
+        return nil
+    }
+
+    public func object() -> Any? { self }
+}
+
 // MARK: - Codable Values
 
 public protocol UBCodable: Codable, UBUserDefaultValue {}
 
 public extension UBUserDefaultValue where Self: UBCodable {
     init?(with object: Any) {
-        guard let value = (object as? Data).flatMap({ try? JSONDecoder().decode(Self.self, from: $0) }) else { return nil }
+        guard let value = (object as? Data).flatMap({ try? UBJSONDecoder().decode(Self.self, from: $0) }) else { return nil }
         self = value
     }
 
     func object() -> Any? {
-        try? JSONEncoder().encode(self)
+        try? UBJSONEncoder().encode(self)
     }
 }
 
@@ -123,10 +153,10 @@ extension Optional: UBUserDefaultValue where Wrapped: UBUserDefaultValue {
 
     public func object() -> Any? {
         switch self {
-        case .some(let value):
-            return value.object()
-        case .none:
-            return nil
+            case let .some(value):
+                return value.object()
+            case .none:
+                return nil
         }
     }
 }

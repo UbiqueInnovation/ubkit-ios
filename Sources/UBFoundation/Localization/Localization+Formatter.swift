@@ -8,62 +8,62 @@
 
 import Foundation
 
-extension DateFormatter {
+public extension DateFormatter {
     /// Get a date formatter with the locale set
     ///
     /// - Parameter localization: A `UBLocalization` object
-    public convenience init(ub_localization localization: UBLocalization) {
+    convenience init(ub_localization localization: UBLocalization) {
         self.init()
         locale = localization.locale
     }
 }
 
-extension DateComponentsFormatter {
+public extension DateComponentsFormatter {
     /// Get a date components formatter with the locale set
     ///
     /// - Parameter localization: A `UBLocalization` object
-    public convenience init(ub_localization localization: UBLocalization) {
+    convenience init(ub_localization localization: UBLocalization) {
         self.init()
         calendar = localization.locale.calendar
     }
 }
 
-extension DateIntervalFormatter {
+public extension DateIntervalFormatter {
     /// Get a date interval formatter with the locale set
     ///
     /// - Parameter localization: A `UBLocalization` object
-    public convenience init(ub_localization localization: UBLocalization) {
+    convenience init(ub_localization localization: UBLocalization) {
         self.init()
         calendar = localization.locale.calendar
         locale = localization.locale
     }
 }
 
-extension NumberFormatter {
+public extension NumberFormatter {
     /// Get a number formatter with the locale set
     ///
     /// - Parameter localization: A `UBLocalization` object
-    public convenience init(ub_localization localization: UBLocalization) {
+    convenience init(ub_localization localization: UBLocalization) {
         self.init()
         locale = localization.locale
     }
 }
 
-extension LengthFormatter {
+public extension LengthFormatter {
     /// Get a length formatter with the locale set
     ///
     /// - Parameter localization: A `UBLocalization` object
-    public convenience init(ub_localization localization: UBLocalization) {
+    convenience init(ub_localization localization: UBLocalization) {
         self.init()
         numberFormatter = NumberFormatter(ub_localization: localization)
     }
 }
 
-extension MassFormatter {
+public extension MassFormatter {
     /// Get a mass formatter with the locale set
     ///
     /// - Parameter localization: A `UBLocalization` object
-    public convenience init(ub_localization localization: UBLocalization) {
+    convenience init(ub_localization localization: UBLocalization) {
         self.init()
         numberFormatter = NumberFormatter(ub_localization: localization)
     }

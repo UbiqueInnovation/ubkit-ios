@@ -15,18 +15,35 @@ public protocol UBURLRequestTokenAuthorization: UBURLRequestModifier {
     func getToken(completion: @escaping (Result<String, Error>) -> Void)
 }
 
-extension UBURLRequestTokenAuthorization {
+public extension UBURLRequestTokenAuthorization {
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
+    func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
         getToken { result in
             var modifierRequest = originalRequest
             switch result {
-            case let .success(token):
-                modifierRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
-                completion(.success(modifierRequest))
-            case let .failure(error):
-                completion(.failure(error))
+                case let .success(token):
+                    modifierRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
+                    completion(.success(modifierRequest))
+                case let .failure(error):
+                    completion(.failure(error))
             }
         }
+    }
+}
+
+/// A protocol describing a bearer token authorisation request modifier
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
+public protocol UBAsyncURLRequestBearerTokenAuthorization: UBAsyncURLRequestModifier {
+    /// Fetches the bearer token and returns it
+    ///
+    func getBearerToken() async throws -> String
+}
+
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
+public extension UBAsyncURLRequestBearerTokenAuthorization {
+    /// :nodoc:
+    func modifyRequest(_ request: inout UBURLRequest) async throws {
+        let token = try await getBearerToken()
+        request.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Bearer \(token)"))
     }
 }

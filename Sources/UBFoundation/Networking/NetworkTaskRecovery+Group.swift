@@ -17,7 +17,7 @@ public class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy {
     private var _strategies: [UBNetworkingTaskRecoveryStrategy]
     /// The list of recovery strategies in the group
     public var strategies: [UBNetworkingTaskRecoveryStrategy] {
-        return serialStrategies.sync {
+        serialStrategies.sync {
             _strategies
         }
     }
@@ -82,10 +82,10 @@ public class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy {
 
         strategy.recoverTask(dataTask, data: data, response: response, error: error) { [weak self] result in
             switch result {
-            case .cannotRecover:
-                self?.recursiveRecoverTask(dataTask, data: data, response: response, error: error, recovery: recovery, strategies: strategies.dropFirst(), completion: completion)
-            default:
-                completion(result)
+                case .cannotRecover:
+                    self?.recursiveRecoverTask(dataTask, data: data, response: response, error: error, recovery: recovery, strategies: strategies.dropFirst(), completion: completion)
+                default:
+                    completion(result)
             }
         }
     }
@@ -101,7 +101,7 @@ extension UBNetworkTaskRecoveryGroup {
         /// :nodoc
         var cancelled: Bool {
             get {
-                return serial.sync {
+                serial.sync {
                     _cancelled
                 }
             }

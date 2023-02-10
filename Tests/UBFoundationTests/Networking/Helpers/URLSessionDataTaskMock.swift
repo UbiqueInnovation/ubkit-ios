@@ -12,7 +12,7 @@ class URLSessionDataTaskMock: URLSessionDataTask {
     var config: Configuration
     var timeoutInterval: TimeInterval
     override var priority: Float {
-        get { return 1.0 }
+        get { 1.0 }
         set {}
     }
 
@@ -26,7 +26,7 @@ class URLSessionDataTaskMock: URLSessionDataTask {
     private var _taskDescription: String?
     override var taskDescription: String? {
         get {
-            return _taskDescription
+            _taskDescription
         }
         set {
             _taskDescription = newValue
@@ -39,17 +39,17 @@ class URLSessionDataTaskMock: URLSessionDataTask {
         }
         didSet {
             switch _state {
-            case .running:
-                timeoutTimer = Timer(timeInterval: timeoutInterval, repeats: false, block: { [weak self] _ in
-                    self?.completionHandler(nil, nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: [NSLocalizedDescriptionKey: "Request Timedout"]))
-                    self?.activeTimer?.invalidate()
-                    self?._state = .completed
-                })
-                RunLoop.main.add(timeoutTimer!, forMode: RunLoop.Mode.common)
-            case .canceling, .completed, .suspended:
-                timeoutTimer?.invalidate()
-            @unknown default:
-                fatalError("Unhandled new state")
+                case .running:
+                    timeoutTimer = Timer(timeInterval: timeoutInterval, repeats: false, block: { [weak self] _ in
+                        self?.completionHandler(nil, nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: [NSLocalizedDescriptionKey: "Request Timedout"]))
+                        self?.activeTimer?.invalidate()
+                        self?._state = .completed
+                    })
+                    RunLoop.main.add(timeoutTimer!, forMode: RunLoop.Mode.common)
+                case .canceling, .completed, .suspended:
+                    timeoutTimer?.invalidate()
+                @unknown default:
+                    fatalError("Unhandled new state")
             }
             didChangeValue(for: \.state)
         }
@@ -58,11 +58,11 @@ class URLSessionDataTaskMock: URLSessionDataTask {
     private var _progress = Progress(totalUnitCount: 100)
 
     override var progress: Progress {
-        return _progress
+        _progress
     }
 
     override var state: URLSessionTask.State {
-        return _state
+        _state
     }
 
     private var timeoutTimer: Timer?

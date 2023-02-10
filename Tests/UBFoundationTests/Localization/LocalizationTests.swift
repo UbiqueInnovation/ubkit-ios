@@ -11,7 +11,7 @@ import XCTest
 class LocalizationTests: XCTestCase {
     lazy var testBundle: Bundle = {
         guard let testBundlePath = Bundle.module.path(forResource: "TestResources/LocalizationTestBundle", ofType: nil),
-            let testBundle = Bundle(path: testBundlePath) else {
+              let testBundle = Bundle(path: testBundlePath) else {
             fatalError("No test bundle found")
         }
         return testBundle
@@ -22,10 +22,10 @@ class LocalizationTests: XCTestCase {
         XCTAssertNil(frenchCHLocalization.localizedBundle)
 
         let test1 = frenchCHLocalization.preferredLanguages(stripRegionInformation: true, preferredLanguages: ["en", "fr", "it"])
-        XCTAssertEqual(test1.map { $0.identifier }, ["fr", "en", "it"])
+        XCTAssertEqual(test1.map(\.identifier), ["fr", "en", "it"])
 
         let test2 = frenchCHLocalization.preferredLanguages(stripRegionInformation: false, preferredLanguages: ["fr", "en", "it"])
-        XCTAssertEqual(test2.map { $0.identifier }, ["fr_CH", "fr", "en", "it"])
+        XCTAssertEqual(test2.map(\.identifier), ["fr_CH", "fr", "en", "it"])
     }
 
     func testPreferredLanguagesEdgeCases() {
@@ -33,15 +33,15 @@ class LocalizationTests: XCTestCase {
         XCTAssertNil(localization.localizedBundle)
 
         let test1 = localization.preferredLanguages(stripRegionInformation: true, preferredLanguages: ["_", "@"])
-        XCTAssertEqual(test1.map { $0.identifier }, ["-", "_", "@"])
+        XCTAssertEqual(test1.map(\.identifier), ["-", "_", "@"])
     }
 
     func testAvailableLanguages() {
         let languagesStripped = UBLocalization.availableLanguages(stripRegionInformation: true, bundle: testBundle)
-        XCTAssertEqual(languagesStripped.map { $0.identifier }, ["en"])
+        XCTAssertEqual(languagesStripped.map(\.identifier), ["en"])
 
         let languagesNotStripped = UBLocalization.availableLanguages(stripRegionInformation: false, bundle: testBundle)
-        XCTAssertEqual(Set(languagesNotStripped.map { $0.identifier }), Set(["en", "en-IN"]))
+        XCTAssertEqual(Set(languagesNotStripped.map(\.identifier)), Set(["en", "en-IN"]))
     }
 
     func testBundleLoadFromIdentifier() {
@@ -127,13 +127,13 @@ class LocalizationTests: XCTestCase {
 
     func testNotifications() {
         let localization = UBLocalization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: .default)
-        expectation(forNotification: UBLocalizationNotification.localeWillChange, object: localization) { (notification) -> Bool in
+        expectation(forNotification: UBLocalizationNotification.localeWillChange, object: localization) { notification -> Bool in
             let old = notification.userInfo?[UBLocalizationNotification.oldLocaleKey] as? Locale
             let new = notification.userInfo?[UBLocalizationNotification.newLocaleKey] as? Locale
             return old?.identifier == "en" && new?.identifier == "fr"
         }
 
-        expectation(forNotification: UBLocalizationNotification.localeDidChange, object: localization) { (notification) -> Bool in
+        expectation(forNotification: UBLocalizationNotification.localeDidChange, object: localization) { notification -> Bool in
             let old = notification.userInfo?[UBLocalizationNotification.oldLocaleKey] as? Locale
             let new = notification.userInfo?[UBLocalizationNotification.newLocaleKey] as? Locale
             return old?.identifier == "en" && new?.identifier == "fr"

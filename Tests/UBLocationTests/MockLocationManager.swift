@@ -28,6 +28,8 @@ class MockLocationManager: UBLocationManagerProtocol {
 
     var isUpdatingHeading: Bool = false
 
+    var monitoredRegions: Set<CLRegion> = Set()
+
     // MARK: - UBLocationManagerProtocol properties
 
     var location: CLLocation? {
@@ -42,6 +44,7 @@ class MockLocationManager: UBLocationManagerProtocol {
     var allowsBackgroundLocationUpdates: Bool = false
     var pausesLocationUpdatesAutomatically: Bool = false
     var showsBackgroundLocationIndicator: Bool = false
+    var maximumRegionMonitoringDistance: CLLocationDistance = CLLocationManager().maximumRegionMonitoringDistance
 
     // MARK: - Starting / stopping location services
 
@@ -77,6 +80,14 @@ class MockLocationManager: UBLocationManagerProtocol {
         isUpdatingHeading = false
     }
 
+    func startMonitoring(for region: CLRegion) {
+        monitoredRegions.insert(region)
+    }
+
+    func stopMonitoring(for region: CLRegion) {
+        monitoredRegions.remove(region)
+    }
+
     // MARK: - Authorization
 
     func requestWhenInUseAuthorization() {
@@ -90,14 +101,18 @@ class MockLocationManager: UBLocationManagerProtocol {
     }
 
     func authorizationStatus() -> CLAuthorizationStatus {
-        return _authorizationStatus
+        _authorizationStatus
     }
 
     func locationServicesEnabled() -> Bool {
-        return true
+        true
     }
 
     func significantLocationChangeMonitoringAvailable() -> Bool {
-        return true
+        true
+    }
+
+    func isMonitoringAvailable(for regionClass: AnyClass) -> Bool {
+        true
     }
 }

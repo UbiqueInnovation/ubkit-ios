@@ -30,7 +30,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// The URL of the request.
     public var url: URL? {
         get {
-            return _request.url
+            _request.url
         }
         set {
             _request.url = newValue
@@ -40,7 +40,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// The main document URL associated with this request.
     public var mainDocumentURL: URL? {
         get {
-            return _request.mainDocumentURL
+            _request.mainDocumentURL
         }
         set {
             _request.mainDocumentURL = newValue
@@ -52,7 +52,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// If during a connection attempt the request remains idle for longer than the timeout interval, the request is considered to have timed out. The default timeout interval is 60 seconds.
     public var timeoutInterval: TimeInterval {
         get {
-            return _request.timeoutInterval
+            _request.timeoutInterval
         }
         set {
             _request.timeoutInterval = newValue
@@ -62,7 +62,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// A Boolean value indicating whether the request is allowed to use the built-in cellular radios to satisfy the request.
     public var allowsCellularAccess: Bool {
         get {
-            return _request.allowsCellularAccess
+            _request.allowsCellularAccess
         }
         set {
             _request.allowsCellularAccess = newValue
@@ -72,7 +72,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// The service type associated with this request.
     public var networkServiceType: URLRequest.NetworkServiceType {
         get {
-            return _request.networkServiceType
+            _request.networkServiceType
         }
         set {
             _request.networkServiceType = newValue
@@ -81,7 +81,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// A URLRequest representation of the UBURLRequest
     public func getRequest() -> URLRequest {
-        return _request
+        _request
     }
 
     // MARK: - Initializers
@@ -108,7 +108,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// The data sent as the message body of a request, such as for an HTTP POST request.
     public var httpBody: Data? {
-        return _request.httpBody
+        _request.httpBody
     }
 
     /// Clears the HTTP body
@@ -154,7 +154,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// A dictionary containing all the request’s HTTP header fields.
     public var allHTTPHeaderFields: [String: String]? {
-        return _request.allHTTPHeaderFields
+        _request.allHTTPHeaderFields
     }
 
     /// Sets a value for a header field.
@@ -181,48 +181,97 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// - Parameter field: The header field name to use for the lookup (case-insensitive).
     /// - Returns: The value associated with the header field field, or nil if there is no corresponding header field.
     public func value(forHTTPHeaderField field: String) -> String? {
-        return _request.value(forHTTPHeaderField: field)
+        _request.value(forHTTPHeaderField: field)
     }
 
     // MARK: - URL Parameter
 
     /// Sets the query parameters
     ///
-    /// - Parameter parameters: A dictionary containing the query paramters
+    /// - Parameter parameters: A dictionary containing the query parameters
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public mutating func setQueryParameters(_ parameters: [String: String?]) throws {
-        try setQueryParameters(parameters.map { URLQueryItem(name: $0.key, value: $0.value) })
+        try setQueryParameters(parameters.map { URLQueryItem(name: $0.key, value: $0.value) }, percentEncoded: false)
+    }
+
+    /// Sets the query parameters
+    ///
+    /// - Parameter parameters: A dictionary containing the percent encoded query parameters
+    /// - Throws: `UBNetworkingError` in case of missing or malformed URL
+    @available(iOS 11.0, *)
+    public mutating func setPercentEncodedQueryParameters(_ parameters: [String: String?]) throws {
+        try setQueryParameters(parameters.map { URLQueryItem(name: $0.key, value: $0.value) }, percentEncoded: true)
+    }
+
+    /// Deprecated because of spelling issue, will be removed in next major release.
+    /// Please use `setQueryParameter:`
+    @available(swift, deprecated: 1.0, renamed: "setQueryParameter()")
+    public mutating func setQueryParameters(_ parameter: URLQueryItem) throws {
+        try setQueryParameters([parameter], percentEncoded: false)
     }
 
     /// Sets the query parameter
     ///
     /// - Parameter parameter: A query item
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
-    public mutating func setQueryParameters(_ parameter: URLQueryItem) throws {
-        try setQueryParameters([parameter])
+    public mutating func setQueryParameter(_ parameter: URLQueryItem) throws {
+        try setQueryParameters([parameter], percentEncoded: false)
+    }
+
+    /// Sets the query parameter
+    ///
+    /// - Parameter parameter: A percent encoded query item
+    /// - Throws: `UBNetworkingError` in case of missing or malformed URL
+    @available(iOS 11.0, *)
+    public mutating func setPercentEncodedQueryParameter(_ parameter: URLQueryItem) throws {
+        try setQueryParameters([parameter], percentEncoded: true)
     }
 
     /// Sets the query parameters
     ///
-    /// - Parameter parameters: An array containing the query paramters
+    /// - Parameter parameters: An array containing the query parameters
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public mutating func setQueryParameters(_ parameters: [URLQueryItem]) throws {
+        try setQueryParameters(parameters, percentEncoded: false)
+    }
+
+    /// Sets the query parameters
+    ///
+    /// - Parameter parameters: An array containing the percent encoded query parameters
+    /// - Throws: `UBNetworkingError` in case of missing or malformed URL
+    @available(iOS 11.0, *)
+    public mutating func setPercentEncodedQueryParameters(_ parameters: [URLQueryItem]) throws {
+        try setQueryParameters(parameters, percentEncoded: true)
+    }
+
+    private mutating func setQueryParameters(_ parameters: [URLQueryItem], percentEncoded: Bool) throws {
         guard let url = url else {
             throw UBInternalNetworkingError.missingURL
         }
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             throw UBInternalNetworkingError.malformedURL(url: url)
         }
-        urlComponents.queryItems = parameters
+
+        if percentEncoded {
+            if #available(iOS 11.0, *) {
+                urlComponents.percentEncodedQueryItems = parameters
+            } else {
+                assertionFailure("It's not possible to call percentEncodedQueryItems before iOS 11")
+                urlComponents.queryItems = parameters
+            }
+        } else {
+            urlComponents.queryItems = parameters
+        }
+
         guard let newURL = urlComponents.url else {
             throw UBInternalNetworkingError.couldNotCreateURL
         }
         self.url = newURL
     }
 
-    /// Get all query paramters
+    /// Get all query parameters
     ///
-    /// - Returns: All query paramters
+    /// - Returns: All query parameters
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public func allQueryParameters() throws -> [URLQueryItem] {
         guard let url = url else {
@@ -238,7 +287,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// A textual description of the request.
     public var description: String {
-        return _request.description
+        _request.description
     }
 
     /// A textual description of the request suitable for debugging.
@@ -251,6 +300,6 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
 
     /// A mirror that reflects the request.
     public var customMirror: Mirror {
-        return _request.customMirror
+        _request.customMirror
     }
 }

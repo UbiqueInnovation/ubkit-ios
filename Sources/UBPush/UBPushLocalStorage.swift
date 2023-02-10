@@ -6,22 +6,22 @@
 //  Copyright © 2020 Ubique Apps & Technology. All rights reserved.
 //
 
+import Foundation
 import UBFoundation
 import UIKit
-
 
 public protocol UBPushRegistrationLocalStorage {
     /// The push token obtained from Apple
     var pushToken: String? { get set }
 
     /// Is the push token still valid?
-    var isValid : Bool { get set }
+    var isValid: Bool { get set }
 
     /// The last registration date for this service of the current push token
     var lastRegistrationDate: Date? { get set }
 }
 
-struct UBPushRegistrationStandardLocalStorage : UBPushRegistrationLocalStorage {
+struct UBPushRegistrationStandardLocalStorage: UBPushRegistrationLocalStorage {
     static var shared = UBPushRegistrationStandardLocalStorage()
 
     /// The push token obtained from Apple
@@ -36,5 +36,3 @@ struct UBPushRegistrationStandardLocalStorage : UBPushRegistrationLocalStorage {
     @UBUserDefault(key: "UBPushRegistrationManager_LastRegistrationDate", defaultValue: nil)
     var lastRegistrationDate: Date?
 }
-
-

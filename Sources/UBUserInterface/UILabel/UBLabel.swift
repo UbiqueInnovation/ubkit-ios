@@ -26,8 +26,6 @@ public protocol UBLabelType {
 // MARK: - UBLabel
 
 open class UBLabel<T: UBLabelType>: UILabel {
-    private let type: T
-
     /// Simple way to initialize Label with T and optional textColor to override standard color of type. Standard multiline and left-aligned.
     public init(_ type: T, textColor: UIColor? = nil, numberOfLines: Int = 0, textAlignment: NSTextAlignment = .left) {
         self.type = type
@@ -42,6 +40,13 @@ open class UBLabel<T: UBLabelType>: UILabel {
 
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    public var type: T {
+        didSet {
+            font = type.font
+            update()
+        }
     }
 
     override public var text: String? {
@@ -76,7 +81,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
             let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
                 .documentType: isHtmlContent ? NSAttributedString.DocumentType.html : NSAttributedString.DocumentType.plain,
                 .characterEncoding: String.Encoding.utf8.rawValue,
-                .defaultAttributes: [:]
+                .defaultAttributes: [:],
             ]
 
             textString = try NSMutableAttributedString(data: textContent.data(using: .utf8)!, options: options, documentAttributes: nil)
@@ -116,7 +121,7 @@ extension NSMutableAttributedString {
 
         enumerateAttribute(.font, in: NSRange(location: 0, length: length), options: []) { foundFont, range, _ in
             if let htmlTraits = (foundFont as? UIFont)?.fontDescriptor.symbolicTraits,
-                let adjustedDescriptor = baseFontDescriptor.withSymbolicTraits(htmlTraits) {
+               let adjustedDescriptor = baseFontDescriptor.withSymbolicTraits(htmlTraits) {
                 let newFont = UIFont(descriptor: adjustedDescriptor, size: font.pointSize)
                 changes[range] = newFont
             }

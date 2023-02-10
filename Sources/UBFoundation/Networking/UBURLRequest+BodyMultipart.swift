@@ -45,7 +45,7 @@ public struct UBURLRequestBodyMultipart: URLRequestBodyConvertible {
 
         for parameter in parameters {
             guard let header = "Content-Disposition: form-data; name=\"\(parameter.name)\"\r\n\r\n".data(using: encoding),
-                let value = "\(parameter.value)\r\n".data(using: encoding) else {
+                  let value = "\(parameter.value)\r\n".data(using: encoding) else {
                 throw UBInternalNetworkingError.couldNotEncodeBody
             }
             data.append(boundaryPrefix)
@@ -76,9 +76,9 @@ public struct UBURLRequestBodyMultipart: URLRequestBodyConvertible {
 
 // MARK: - Parts
 
-extension UBURLRequestBodyMultipart {
+public extension UBURLRequestBodyMultipart {
     /// Multipart parameter
-    public struct Parameter {
+    struct Parameter {
         /// Name
         let name: String
         /// Value
@@ -96,7 +96,7 @@ extension UBURLRequestBodyMultipart {
     }
 
     /// Multipart payload
-    public struct Payload {
+    struct Payload {
         /// Name
         let name: String
         /// File name

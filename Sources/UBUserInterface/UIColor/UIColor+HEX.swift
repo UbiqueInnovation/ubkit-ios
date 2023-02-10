@@ -67,7 +67,7 @@ extension UIColor {
         }
 
         guard hexStringResult.numberOfRanges == 2,
-            let hexCapturedRange = Range(hexStringResult.range(at: 1), in: input) else {
+              let hexCapturedRange = Range(hexStringResult.range(at: 1), in: input) else {
             return nil
         }
 
@@ -79,16 +79,16 @@ extension UIColor {
         }
 
         switch hexString.count {
-        case 3:
-            self.init(hex3: UInt16(hexValue))
-        case 4:
-            self.init(hex4: UInt16(hexValue))
-        case 6:
-            self.init(hex6: hexValue)
-        case 8:
-            self.init(hex8: hexValue)
-        default:
-            fatalError("Should not be able to get other then 3-4-6-8 hex. Check regex")
+            case 3:
+                self.init(hex3: UInt16(hexValue))
+            case 4:
+                self.init(hex4: UInt16(hexValue))
+            case 6:
+                self.init(hex6: hexValue)
+            case 8:
+                self.init(hex8: hexValue)
+            default:
+                fatalError("Should not be able to get other then 3-4-6-8 hex. Check regex")
         }
     }
 

@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "UBKit",
     platforms: [
-        .iOS(.v10),
+        .iOS(.v11),
         .watchOS(.v5),
     ],
     products: [
@@ -14,18 +14,24 @@ let package = Package(
         .library(name: "UBUserInterface", targets: ["UBUserInterface"]),
         .library(name: "UBLocation", targets: ["UBLocation"]),
         .library(name: "UBPush", targets: ["UBPush"]),
+        .library(name: "UBQRScanner", targets: ["UBQRScanner"]),
+        .library(name: "UBDevTools", targets: ["UBDevTools"]),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "git@github.com:UbiqueInnovation/ios-local-networking.git", from: "1.0.1"),
+    ],
     targets: [
         .target(name: "UBFoundation"),
         .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
+        .target(name: "UBQRScanner"),
+        .target(name: "UBDevTools", dependencies: ["UBFoundation"]),
         .testTarget(name: "UBFoundationTests",
-                        dependencies: ["UBFoundation"],
-                        resources: [
-                            .copy("TestResources"),
-                        ]),
+                    dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
+                    resources: [
+                        .copy("TestResources"),
+                    ]),
         .testTarget(name: "UBUserInterfaceTests",
                     dependencies: ["UBUserInterface"]),
         .testTarget(name: "UBLocationTests",

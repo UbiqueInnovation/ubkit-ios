@@ -74,7 +74,7 @@ open class UBPushManager: NSObject {
         }
     }
 
-    public var additionalPushRegistrationManagers : [UBPushRegistrationManager] = [] {
+    public var additionalPushRegistrationManagers: [UBPushRegistrationManager] = [] {
         didSet {
             if let token = UBPushTokenStorage.shared.pushToken {
                 for additional in additionalPushRegistrationManagers {
@@ -92,8 +92,8 @@ open class UBPushManager: NSObject {
         var pushToken: String?
     }
 
-    private var allPushRegistrationManagers : [UBPushRegistrationManager] {
-        return [pushRegistrationManager] + self.additionalPushRegistrationManagers
+    private var allPushRegistrationManagers: [UBPushRegistrationManager] {
+        [pushRegistrationManager] + self.additionalPushRegistrationManagers
     }
 
     /// Handles incoming pushes
@@ -153,7 +153,7 @@ open class UBPushManager: NSObject {
     // MARK: - Migration
 
     /// Update push token from a previous version directly
-    public func migratePushToken(currentToken : String) {
+    public func migratePushToken(currentToken: String) {
         // set global token
         UBPushTokenStorage.shared.pushToken = currentToken
 
@@ -171,9 +171,10 @@ open class UBPushManager: NSObject {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             if settings.authorizationStatus == .authorized {
                 UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
-                
+
                 DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications() }
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
             }
         }
     }

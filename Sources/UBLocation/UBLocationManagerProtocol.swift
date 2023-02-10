@@ -21,6 +21,8 @@ public protocol UBLocationManagerProtocol {
     var pausesLocationUpdatesAutomatically: Bool { get set }
     @available(iOS 11.0, *)
     var showsBackgroundLocationIndicator: Bool { get set }
+    var monitoredRegions: Set<CLRegion> { get }
+    var maximumRegionMonitoringDistance: CLLocationDistance { get }
 
     // Starting / stopping updates
     func startUpdatingLocation()
@@ -29,6 +31,8 @@ public protocol UBLocationManagerProtocol {
     func stopMonitoringSignificantLocationChanges()
     func startMonitoringVisits()
     func stopMonitoringVisits()
+    func startMonitoring(for region: CLRegion)
+    func stopMonitoring(for region: CLRegion)
     func startUpdatingHeading()
     func stopUpdatingHeading()
 
@@ -39,18 +43,23 @@ public protocol UBLocationManagerProtocol {
     func authorizationStatus() -> CLAuthorizationStatus
     func locationServicesEnabled() -> Bool
     func significantLocationChangeMonitoringAvailable() -> Bool
+    func isMonitoringAvailable(for regionClass: AnyClass) -> Bool
 }
 
 extension CLLocationManager: UBLocationManagerProtocol {
     public func authorizationStatus() -> CLAuthorizationStatus {
-        return CLLocationManager.authorizationStatus()
+        CLLocationManager.authorizationStatus()
     }
 
     public func locationServicesEnabled() -> Bool {
-        return CLLocationManager.locationServicesEnabled()
+        CLLocationManager.locationServicesEnabled()
     }
 
     public func significantLocationChangeMonitoringAvailable() -> Bool {
-        return CLLocationManager.significantLocationChangeMonitoringAvailable()
+        CLLocationManager.significantLocationChangeMonitoringAvailable()
+    }
+
+    public func isMonitoringAvailable(for regionClass: AnyClass) -> Bool {
+        CLLocationManager.isMonitoringAvailable(for: regionClass)
     }
 }

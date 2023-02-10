@@ -19,17 +19,17 @@ protocol UBReusableView: AnyObject {
 
 extension UBReusableView where Self: UIView {
     static var ub_reuseIdentifier: String {
-        return String(describing: self)
+        String(describing: self)
     }
 }
 
 extension UITableViewCell: UBReusableView {}
 
-extension UITableView {
+public extension UITableView {
     /// Register a table view cell for reuse.
     ///
     /// - Parameter cellType: The class of the table view cell to register.
-    public func ub_register<T: UITableViewCell>(_: T.Type) {
+    func ub_register<T: UITableViewCell>(_: T.Type) {
         register(T.self, forCellReuseIdentifier: T.ub_reuseIdentifier)
     }
 
@@ -37,7 +37,7 @@ extension UITableView {
     ///
     /// - Parameter indexPath: The index path where the cell will be placed.
     /// - Returns: A dequeued reusable cell.
-    public func ub_dequeueReusableCell<T: UITableViewCell>(for indexPath: IndexPath) -> T {
+    func ub_dequeueReusableCell<T: UITableViewCell>(for indexPath: IndexPath) -> T {
         guard let cell = dequeueReusableCell(withIdentifier: T.ub_reuseIdentifier, for: indexPath) as? T else {
             fatalError("Could not dequeue cell with identifier: \(T.ub_reuseIdentifier)")
         }
@@ -49,18 +49,18 @@ extension UITableView {
 
 extension UITableViewHeaderFooterView: UBReusableView {}
 
-extension UITableView {
+public extension UITableView {
     /// Register a view for reuse as header or footer view.
     ///
     /// - Parameter viewType: The class of the view to register.
-    public func ub_register<T: UITableViewHeaderFooterView>(_: T.Type) {
+    func ub_register<T: UITableViewHeaderFooterView>(_: T.Type) {
         register(T.self, forHeaderFooterViewReuseIdentifier: T.ub_reuseIdentifier)
     }
 
     /// Dequeue a reusable view for displaying as a header or footer view.
     ///
     /// - Returns: A dequeued reusable view.
-    public func ub_dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>() -> T {
+    func ub_dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>() -> T {
         guard let view = dequeueReusableHeaderFooterView(withIdentifier: T.ub_reuseIdentifier) as? T else {
             fatalError("Could not dequeue view with identifier: \(T.ub_reuseIdentifier)")
         }

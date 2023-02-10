@@ -18,12 +18,12 @@ class HTTPRequestModifierTests: XCTestCase {
         let group = UBURLRequestModifierGroup(modifiers: [ba1, ba2])
         group.modifyRequest(request) { result in
             switch result {
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
-            case let .success(newRequest):
-                let value = newRequest.value(forHTTPHeaderField: "Authorization")
-                let expectedValue = "Basic bG9naW46cGFzc3dvcmQ="
-                XCTAssertEqual(value, expectedValue)
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+                case let .success(newRequest):
+                    let value = newRequest.value(forHTTPHeaderField: "Authorization")
+                    let expectedValue = "Basic bG9naW46cGFzc3dvcmQ="
+                    XCTAssertEqual(value, expectedValue)
             }
             ex.fulfill()
         }
@@ -35,10 +35,10 @@ class HTTPRequestModifierTests: XCTestCase {
         let group = UBURLRequestModifierGroup()
         group.modifyRequest(request) { result in
             switch result {
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
-            case .success:
-                break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+                case .success:
+                    break
             }
             ex.fulfill()
         }
@@ -53,10 +53,10 @@ class HTTPRequestModifierTests: XCTestCase {
         group.append(m2)
         group.modifyRequest(request) { result in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual(error as? Err, .x)
-            case .success:
-                XCTFail()
+                case let .failure(error):
+                    XCTAssertEqual(error as? Err, .x)
+                case .success:
+                    XCTFail()
             }
             ex.fulfill()
         }
@@ -83,12 +83,12 @@ class HTTPRequestModifierTests: XCTestCase {
         let ba = UBURLRequestBasicAuthorization(login: "login", password: "password")
         ba.modifyRequest(request) { result in
             switch result {
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
-            case let .success(newRequest):
-                let value = newRequest.value(forHTTPHeaderField: "Authorization")
-                let expectedValue = "Basic bG9naW46cGFzc3dvcmQ="
-                XCTAssertEqual(value, expectedValue)
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+                case let .success(newRequest):
+                    let value = newRequest.value(forHTTPHeaderField: "Authorization")
+                    let expectedValue = "Basic bG9naW46cGFzc3dvcmQ="
+                    XCTAssertEqual(value, expectedValue)
             }
             ex.fulfill()
         }
@@ -100,12 +100,12 @@ class HTTPRequestModifierTests: XCTestCase {
         let ba = MockTokenAuthorization()
         ba.modifyRequest(request) { result in
             switch result {
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
-            case let .success(newRequest):
-                let value = newRequest.value(forHTTPHeaderField: "Authorization")
-                let expectedValue = "Bearer AbCdEf123456"
-                XCTAssertEqual(value, expectedValue)
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+                case let .success(newRequest):
+                    let value = newRequest.value(forHTTPHeaderField: "Authorization")
+                    let expectedValue = "Bearer AbCdEf123456"
+                    XCTAssertEqual(value, expectedValue)
             }
             ex.fulfill()
         }
@@ -118,10 +118,10 @@ class HTTPRequestModifierTests: XCTestCase {
         ba.error = Err.x
         ba.modifyRequest(request) { result in
             switch result {
-            case let .failure(error):
-                XCTAssertEqual(error as? Err, .x)
-            case .success:
-                XCTFail()
+                case let .failure(error):
+                    XCTAssertEqual(error as? Err, .x)
+                case .success:
+                    XCTFail()
             }
             ex.fulfill()
         }
@@ -132,19 +132,19 @@ class HTTPRequestModifierTests: XCTestCase {
         let ex = expectation(description: "Request Modification")
 
         guard let testBundlePath = Bundle.module.path(forResource: "TestResources/LocalizationTestBundle", ofType: nil),
-            let testBundle = Bundle(path: testBundlePath) else {
+              let testBundle = Bundle(path: testBundlePath) else {
             fatalError("No test bundle found")
         }
         let frenchCHLocalization = UBLocalization(locale: Locale(identifier: "fr_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())
         let ba = UBURLRequestAcceptedLanguageModifier(includeRegion: false, localization: frenchCHLocalization)
         ba.modifyRequest(request) { result in
             switch result {
-            case let .failure(error):
-                XCTFail(error.localizedDescription)
-            case let .success(newRequest):
-                let value = newRequest.value(forHTTPHeaderField: "Accept-Language")
-                let expectedValue = "fr;q=1.0,en;q=0.9"
-                XCTAssertEqual(value, expectedValue)
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+                case let .success(newRequest):
+                    let value = newRequest.value(forHTTPHeaderField: "Accept-Language")
+                    let expectedValue = "fr;q=1.0,en;q=0.9"
+                    XCTAssertEqual(value, expectedValue)
             }
             ex.fulfill()
         }

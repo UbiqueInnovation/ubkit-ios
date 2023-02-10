@@ -30,7 +30,7 @@ open class UBPushRegistrationManager: NSObject {
     private var registrationUrl: URL?
 
     /// Push local storage
-    private var pushLocalStorage : UBPushRegistrationLocalStorage
+    private var pushLocalStorage: UBPushRegistrationLocalStorage
 
     /// :nodoc:
     private var maxRegistrationAge: TimeInterval {
@@ -44,10 +44,10 @@ open class UBPushRegistrationManager: NSObject {
     // MARK: - Initialization
 
     /// Creates push registration manager for the provided `registrationUrl`
-    public init(pushLocalStorage : UBPushRegistrationLocalStorage? = nil, registrationUrl: URL? = nil) {
+    public init(pushLocalStorage: UBPushRegistrationLocalStorage? = nil, registrationUrl: URL? = nil) {
         self.pushLocalStorage = pushLocalStorage ?? UBPushRegistrationStandardLocalStorage.shared
         self.registrationUrl = registrationUrl
-        
+
         super.init()
     }
 
@@ -102,22 +102,27 @@ open class UBPushRegistrationManager: NSObject {
             }
 
             switch result {
-            case let .success(responseString):
-                self.validate()
-                completion?(nil)
+                case let .success(responseString):
+                    self.validate()
+                    completion?(nil)
 
-                UBPushManager.logger.info("\(String(describing: self)) ended with result: \(responseString)")
+                    UBPushManager.logger.info("\(String(describing: self)) ended with result: \(responseString)")
 
-            case let .failure(error):
-                completion?(error)
+                case let .failure(error):
+                    completion?(error)
 
-                UBPushManager.logger.info("\(String(describing: self)) ended with error: \(error.localizedDescription)")
+                    UBPushManager.logger.info("\(String(describing: self)) ended with error: \(error.localizedDescription)")
             }
 
             if self.backgroundTask != .invalid {
                 UIApplication.shared.endBackgroundTask(self.backgroundTask)
             }
         }
+
+        if task != nil {
+            modifyRegistrationDataTask(&task!)
+        }
+
         task?.start()
         UBPushManager.logger.info("\(String(describing: self)) started")
     }
@@ -140,6 +145,11 @@ open class UBPushRegistrationManager: NSObject {
         }
         return request
     }
+
+    /// This method can be overwritten by subclasses to modify the data task
+    /// for the registration request, e.g. to add request modifiers. It will be called
+    /// each time the push registration is triggered, right before the task is started.
+    open func modifyRegistrationDataTask(_ task: inout UBURLDataTask) {}
 
     /// :nodoc:
     func sendPushRegistrationIfOutdated() {
@@ -166,7 +176,7 @@ open class UBPushRegistrationManager: NSObject {
         UBDeviceUUID.getUUID()
     }
 
-    open var isValid : Bool {
+    open var isValid: Bool {
         self.pushLocalStorage.isValid
     }
 }
