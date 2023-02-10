@@ -48,7 +48,11 @@ public protocol UBLocationManagerProtocol {
 
 extension CLLocationManager: UBLocationManagerProtocol {
     public func authorizationStatus() -> CLAuthorizationStatus {
-        CLLocationManager.authorizationStatus()
+        if #available(iOS 14.0, *) {
+            return authorizationStatus
+        } else {
+            return CLLocationManager.authorizationStatus()
+        }
     }
 
     public func locationServicesEnabled() -> Bool {
