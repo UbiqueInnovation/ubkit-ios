@@ -34,6 +34,20 @@ open class UBURLDataTaskDecoder<T> {
     }
 }
 
+/// Decoder that simply forwards the data without actual parying
+public class UBDataPassthroughDecoder: UBURLDataTaskDecoder<Data> {
+    /// Initializes the decoder
+    public init() {
+        super.init { data, _ -> Data in
+            data
+        }
+    }
+}
+
+public extension UBURLDataTaskDecoder where T == Data {
+    static let passthrough = UBDataPassthroughDecoder()
+}
+
 /// A string decoder
 public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String> {
     /// Initializes the decoder
@@ -49,6 +63,10 @@ public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String> {
     }
 }
 
+public extension UBURLDataTaskDecoder where T == String {
+    static let string = UBHTTPStringDecoder()
+}
+
 /// A JSON Decoder
 public class UBHTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
     /// Initializes the decoder
@@ -56,7 +74,7 @@ public class UBHTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
     /// - Parameters:
     ///   - dateDecodingStrategy: A strategy to decode dates
     ///   - dataDecodingStrategy: A strategy to decode data
-    public convenience init(dateDecodingStrategy: JSONDecoder.DateDecodingStrategy, dataDecodingStrategy: JSONDecoder.DataDecodingStrategy) {
+    public convenience init(dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate, dataDecodingStrategy: JSONDecoder.DataDecodingStrategy = .base64) {
         let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = dateDecodingStrategy
         jsonDecoder.dataDecodingStrategy = dataDecodingStrategy
@@ -70,5 +88,15 @@ public class UBHTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T> {
         super.init { data, _ -> T in
             try decoder.decode(T.self, from: data)
         }
+    }
+}
+
+public extension UBURLDataTaskDecoder where T: Decodable {
+    static func json(decoder: JSONDecoder = JSONDecoder()) -> UBURLDataTaskDecoder {
+        UBHTTPJSONDecoder(decoder: decoder)
+    }
+
+    static func json(dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate, dataDecodingStrategy: JSONDecoder.DataDecodingStrategy = .base64) -> UBURLDataTaskDecoder {
+        UBHTTPJSONDecoder(dateDecodingStrategy: dateDecodingStrategy, dataDecodingStrategy: dataDecodingStrategy)
     }
 }

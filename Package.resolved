@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "UBLocalNetworking",
+        "repositoryURL": "git@github.com:UbiqueInnovation/ios-local-networking.git",
+        "state": {
+          "branch": null,
+          "revision": "5d13eb71fb770d388d602b591e5f65b94764de2c",
+          "version": "1.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
