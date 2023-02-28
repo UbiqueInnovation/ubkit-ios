@@ -54,11 +54,6 @@
             }
             .transition(.opacity)
             .animation(.default, value: isPresented)
-            .onChange(of: isPresented) { newValue in
-                if !newValue {
-                    UBPopupWindowManager.shared.hideWindow()
-                }
-            }
         }
     }
 

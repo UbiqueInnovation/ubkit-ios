@@ -206,7 +206,6 @@ public extension UBURLDataTask {
         await UBURLDataTask.loadOnce(request: request, decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
 
-
     /// Makes a request and returns a TaskResult consisting of Data
     /// - Parameters:
     ///   - url: A URL that represents the request to execute.
@@ -373,6 +372,4 @@ public extension UBURLDataTask.TaskConfig {
     func loadOnce(url: URL, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<Data> {
         await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: self)
     }
-
 }
-

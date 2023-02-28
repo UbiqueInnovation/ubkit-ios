@@ -442,7 +442,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 observer(old, new, self)
             }
         }
-
     }
 
     /// Add an observer that gets called when the state changes. This observer will be called on the specified callback thread.

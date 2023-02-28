@@ -44,6 +44,9 @@
 
         func hideWindow() {
             window?.isUserInteractionEnabled = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                self.hostingController.rootView = UBPopupContainerView(isPresented: .constant(false), style: .init(), content: { AnyView(EmptyView()) })
+            }
         }
     }
 
