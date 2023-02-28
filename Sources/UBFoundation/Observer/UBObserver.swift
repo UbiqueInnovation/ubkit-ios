@@ -1,7 +1,7 @@
 
 import Foundation
 
-extension NotificationCenter {
+public extension NotificationCenter {
     /// Adds an entry to the notification center to receive notifications that passed to the provided block. This is a managed observation
     /// that will be ended as soon as the reference returned object is deallocated.
     ///
@@ -19,7 +19,7 @@ extension NotificationCenter {
     ///   The notification center copies the block. The notification center strongly holds the copied block until you remove the observer registration.
     ///   The block takes one argument: the notification.
     /// - Returns: An opaque object to act as the observer. You must strongly holds to this return value unless it will be deallocated and the observation is removed.
-    public func addUBObserver(forName name: NSNotification.Name?, object: Any? = nil, queue: OperationQueue? = .main, using block: @escaping (Notification) -> Void) -> Any {
+    func addUBObserver(forName name: NSNotification.Name?, object: Any? = nil, queue: OperationQueue? = .main, using block: @escaping (Notification) -> Void) -> Any {
         let reference = self.addObserver(forName: name, object: object, queue: queue, using: block)
         let token = NotificationCenterObservationHolder(reference: reference, notificationCenter: self)
         return token

@@ -1,15 +1,14 @@
 //
 //  UBObserverTests.swift
-//  
+//
 //
 //  Created by Joseph El Mallah on 10.02.23.
 //
 
-import XCTest
 import UBFoundation
+import XCTest
 
 final class UBObserverTests: XCTestCase {
-
     private var reference: Any?
 
     func testManagedNotificationCenterObservationRemoval() {
@@ -26,5 +25,4 @@ final class UBObserverTests: XCTestCase {
         notificationCenter.post(name: notificationName, object: nil)
         wait(for: [expectation], timeout: 1)
     }
-
 }

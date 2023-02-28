@@ -6,12 +6,11 @@
 //
 
 import UBFoundation
-import XCTest
 import UBLocalNetworking
+import XCTest
 
 @available(iOS 15.0.0, *)
 class ConcurrentNetworkTests: XCTestCase {
-
     private let sampleUrl = URL(string: "http://mock.ubique.ch/user.json")!
     private lazy var sampleRequest = UBURLRequest(url: sampleUrl)
 
@@ -23,7 +22,7 @@ class ConcurrentNetworkTests: XCTestCase {
         let request = UBURLRequest(url: url)
         return request
     }
-    
+
     private struct User: Encodable {
         let name: String
     }
@@ -54,7 +53,7 @@ class ConcurrentNetworkTests: XCTestCase {
             "x-amz-meta-cache": "max-age=300",
             "x-amz-version-id": "qSojcs_cgESN8uLviKqiyCiFauZY0kxw",
             "x-amz-meta-next-refresh": "Mon, 06 Feb 2023 14:06:01 GMT",
-            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date())
+            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
         ]))
         cronResponseProvider.addToLocalServer()
     }
