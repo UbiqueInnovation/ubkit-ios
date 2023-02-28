@@ -28,6 +28,8 @@
                 .onPreferenceChange(UBPopupPreferenceKey.self) { popupPreference in
                     if let popupPreference, popupPreference.isPresented.wrappedValue {
                         UBPopupWindowManager.shared.showPopup(isPresented: popupPreference.isPresented, style: popupPreference.customStyle ?? style, content: popupPreference.content)
+                    } else {
+                        UBPopupWindowManager.shared.hideWindow()
                     }
                 }
         }
