@@ -766,9 +766,7 @@ extension UBURLDataTask {
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
-                    callbackQueue.addOperation {
-                        completion(.failure(UBNetworkingError.internal(.responseBodyIsEmpty)), response, info, caller)
-                    }
+                    Self.handleMissingData(from: response, info: info, callbackQueue: callbackQueue, caller: caller, completion: completion)
                     return
                 }
                 do {
@@ -791,15 +789,31 @@ extension UBURLDataTask {
             }
         }
 
+        private static func handleMissingData<T>(from response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask, completion: @escaping CompletionHandlingBlock<T>) {
+            guard caller.request.httpMethod == .head else {
+                callbackQueue.addOperation {
+                    completion(.failure(UBNetworkingError.internal(.responseBodyIsEmpty)), response, info, caller)
+                }
+                return
+            }
+
+            guard let data = Data() as? T else {
+                assertionFailure("HEAD request should always be used with passthrough decoder")
+                return
+            }
+
+            callbackQueue.addOperation {
+                completion(.success(data), response, info, caller)
+            }
+        }
+
         /// :nodoc:
         init<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
             self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
                 guard let data = data else {
-                    callbackQueue.addOperation {
-                        completion(.failure(UBNetworkingError.internal(.responseBodyIsEmpty)), response, info, caller)
-                    }
+                    Self.handleMissingData(from: response, info: info, callbackQueue: callbackQueue, caller: caller, completion: completion)
                     return
                 }
                 do {
