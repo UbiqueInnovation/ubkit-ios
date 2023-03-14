@@ -64,7 +64,7 @@ public protocol UBURLDataTaskErrorBody: Error {
     var baseError: Error? { get set }
 }
 
-extension UBNetworkingError {
+public extension UBNetworkingError {
     init(_ error: Error) {
         switch error {
             case let error as UBNetworkingError:
