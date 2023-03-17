@@ -106,6 +106,8 @@ public extension UBHTTPHeaderField {
         case expires = "x-amz-meta-best-before"
         /// Cache Control header field key
         case cacheControl = "x-amz-meta-cache"
+        /// Uncompressed content length
+        case uncompressedContentLength = "x-amz-meta-contentlengthuncompressed"
     }
 
     enum MSKeys: String {
@@ -115,5 +117,7 @@ public extension UBHTTPHeaderField {
         case expires = "x-ms-meta-bestbefore"
         /// Backoff header field key
         case backoff = "x-ms-meta-backoff"
+        /// Uncompressed content length
+        case uncompressedContentLength = "x-ms-meta-contentlengthuncompressed"
     }
 }
