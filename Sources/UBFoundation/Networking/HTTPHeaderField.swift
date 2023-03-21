@@ -107,7 +107,7 @@ public extension UBHTTPHeaderField {
         /// Cache Control header field key
         case cacheControl = "x-amz-meta-cache"
         /// Uncompressed content length
-        case uncompressedContentLength = "x-amz-meta-contentlengthuncompressed"
+        case uncompressedContentLength = "x-amz-meta-content-length-uncompressed"
     }
 
     enum MSKeys: String {
