@@ -9,7 +9,7 @@ import SwiftUI
 import UBFoundation
 import UIKit
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 public class DevToolsViewController: UIHostingController<DevToolsView> {
     // MARK: - Init
 
@@ -25,7 +25,7 @@ public class DevToolsViewController: UIHostingController<DevToolsView> {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 public struct DevToolsView: View {
     @State private var showingKeychainDeleteAlert = false
     @State private var showingUserDefaultsDeleteAlert = false

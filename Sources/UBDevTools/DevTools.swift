@@ -12,7 +12,7 @@ protocol DevTool {
     static func setup()
 }
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 public enum UBDevTools {
     static var isActivated: Bool = false
 
@@ -55,7 +55,7 @@ public enum UBDevTools {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 extension UIWindow {
     private static var initSwizzled = false
 

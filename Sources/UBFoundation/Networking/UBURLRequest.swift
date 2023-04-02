@@ -136,7 +136,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///   - bodyProvider: The body provider
     /// - Throws: Rethrow the error throws by the request body provider
     public mutating func setHTTPBody(_ bodyProvider: URLRequestBodyConvertible) throws {
-        setHTTPBody(try bodyProvider.httpRequestBody())
+        try setHTTPBody(bodyProvider.httpRequestBody())
     }
 
     /// Sets a JSON body
@@ -146,7 +146,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///   - encoder: The encoder
     /// - Throws: incase the ecoder could not encode
     public mutating func setHTTPJSONBody<T: Encodable>(_ object: T, encoder: JSONEncoder = JSONEncoder()) throws {
-        let body = UBURLRequestBody(data: try encoder.encode(object), mimeType: .json())
+        let body = try UBURLRequestBody(data: encoder.encode(object), mimeType: .json())
         setHTTPBody(body)
     }
 

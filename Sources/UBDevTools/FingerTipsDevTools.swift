@@ -8,7 +8,7 @@
 import UBFoundation
 import UIKit
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 class FingerTipsDevTools: DevTool {
     private static var overlayWindow: FingerTipsWindow?
     private static var notificationHelper: NotificationHelper?
@@ -57,7 +57,7 @@ class FingerTipsDevTools: DevTool {
 
 private class NotificationHelper {
     @objc public func setupFingerTips() {
-        if #available(iOS 13.0, *) {
+        if #available(iOS 14.0, *) {
             FingerTipsDevTools.setupFingerTips()
             NotificationCenter.default.removeObserver(self)
         }
