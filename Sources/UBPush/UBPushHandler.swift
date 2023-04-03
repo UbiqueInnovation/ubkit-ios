@@ -5,6 +5,7 @@
 //  Created by Zeno Koller on 23.03.20.
 //
 
+import Foundation
 import UBFoundation
 import UIKit
 import UserNotifications
@@ -14,7 +15,7 @@ import UserNotifications
 ///     UBPushManager.shared.pushHandler = SubclassedPushHanlder()
 ///
 /// to implement app-specific behaviour.
-open class UBPushHandler {
+open class UBPushHandler: NSObject {
     /// Date of last push message. Override to modify app state after every push (e.g. wipe cache)
     public var lastPushed: Date? {
         get { storedLastPushed }
@@ -26,7 +27,9 @@ open class UBPushHandler {
 
     // MARK: - Initialization
 
-    public init() {}
+    override public init() {
+        super.init()
+    }
 
     // MARK: - Default Implementations
 
@@ -163,7 +166,7 @@ public struct UBPushNotification {
             (aps["content-available"] as? Int) == 1
     }
 
-    init(_ userInfo: [AnyHashable: Any], responseActionIdentifier: String? = nil) {
+    public init(_ userInfo: [AnyHashable: Any], responseActionIdentifier: String? = nil) {
         self.userInfo = userInfo
         self.responseActionIdentifier = responseActionIdentifier
     }
