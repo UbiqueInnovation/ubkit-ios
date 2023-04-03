@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 class UIViewDevTools: DevTool {
     static func setup() {
         if DevToolsView.showViewBorders {

@@ -9,7 +9,7 @@ import Foundation
 import UBFoundation
 import UIKit
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 class LocalizationDevTools: DevTool {
     static func setup() {
         if DevToolsView.showLocalizationKeys {
