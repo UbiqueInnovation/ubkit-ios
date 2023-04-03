@@ -131,13 +131,11 @@ public struct DevToolsView: View {
                 Toggle("Raster tiles debug overlay", isOn: Binding(get: { Self.mapRasterTilesDebugOverlay }, set: { Self.mapRasterTilesDebugOverlay = $0 }))
             }
 
-            if #available(iOS 14.0, *) {
-                #if !targetEnvironment(simulator)
-                    ShareDocumentsView()
-                #endif
-                if #available(iOS 15.0, *) {
-                    LogDevToolsView()
-                }
+            #if !targetEnvironment(simulator)
+                ShareDocumentsView()
+            #endif
+            if #available(iOS 15.0, *) {
+                LogDevToolsView()
             }
         }
     }
@@ -146,21 +144,13 @@ public struct DevToolsView: View {
 
     public var body: some View {
         NavigationView {
-            if #available(iOS 14.0, *) {
-                contentView
-                    .navigationTitle("DevTools")
-                    .toolbar {
-                        Button("Save and exit") {
-                            exit(0)
-                        }
-                    }
-            } else {
-                contentView
-                    .navigationBarTitle(Text("DevTools"))
-                    .navigationBarItems(trailing: Button("Save and exit") {
+            contentView
+                .navigationTitle("DevTools")
+                .toolbar {
+                    Button("Save and exit") {
                         exit(0)
-                    })
-            }
+                    }
+                }
         }
     }
 
