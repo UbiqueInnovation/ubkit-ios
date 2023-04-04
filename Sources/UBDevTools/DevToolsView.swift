@@ -40,60 +40,63 @@ public struct DevToolsView: View {
 
     private var contentView: some View {
         Form {
-            Section(header: Text("UserDefaults.standard")) {
-                Button("Clear UserDefaults.standard") {
-                    showingUserDefaultsDeleteAlert = true
-                }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
-                    Alert(
-                        title: Text("Delete"),
-                        message: Text("Are you sure?"),
-                        primaryButton: .destructive(Text("Delete"), action: {
-                            UserDefaultsDevTools.clearUserDefaults(.standard)
-                        }),
-                        secondaryButton: .cancel(Text("Cancel"), action: {})
-                    )
-                }
-                NavigationLink("Editor") {
-                    UserDefaultsEditor(userDefaults: .standard, displayName: "UserDefaults.standard", store: ObservableUserDefaults(userDefaults: .standard))
-                }
-            }
-
-            Section(header: Text("Shared UserDefaults")) {
-                if let shared = UserDefaultsDevTools.sharedUserDefaults {
-                    Button("Clear Shared UserDefaults") {
+            Group {
+                Section(header: Text("UserDefaults.standard")) {
+                    Button("Clear UserDefaults.standard") {
                         showingUserDefaultsDeleteAlert = true
                     }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
                         Alert(
                             title: Text("Delete"),
                             message: Text("Are you sure?"),
                             primaryButton: .destructive(Text("Delete"), action: {
-                                UserDefaultsDevTools.clearUserDefaults(shared)
+                                UserDefaultsDevTools.clearUserDefaults(.standard)
                             }),
                             secondaryButton: .cancel(Text("Cancel"), action: {})
                         )
                     }
                     NavigationLink("Editor") {
-                        UserDefaultsEditor(userDefaults: shared, displayName: "Shared UserDefaults", store: ObservableUserDefaults(userDefaults: shared))
+                        UserDefaultsEditor(userDefaults: .standard, displayName: "UserDefaults.standard", store: ObservableUserDefaults(userDefaults: .standard))
                     }
-                } else {
-                    Text("No Shared UserDefaults configured.")
                 }
-            }
-            Section(header: Text("Keychain")) {
-                Button("Clear Keychain") {
-                    showingKeychainDeleteAlert = true
-                }.alert(isPresented: $showingKeychainDeleteAlert) {
-                    Alert(
-                        title: Text("Delete"),
-                        message: Text("Are you sure?"),
-                        primaryButton: .destructive(Text("Delete"), action: {
-                            UBKeychain().deleteAllItems()
-                        }),
-                        secondaryButton: .cancel(Text("Cancel"), action: {})
-                    )
+
+                Section(header: Text("Shared UserDefaults")) {
+                    if let shared = UserDefaultsDevTools.sharedUserDefaults {
+                        Button("Clear Shared UserDefaults") {
+                            showingUserDefaultsDeleteAlert = true
+                        }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
+                            Alert(
+                                title: Text("Delete"),
+                                message: Text("Are you sure?"),
+                                primaryButton: .destructive(Text("Delete"), action: {
+                                    UserDefaultsDevTools.clearUserDefaults(shared)
+                                }),
+                                secondaryButton: .cancel(Text("Cancel"), action: {})
+                            )
+                        }
+                        NavigationLink("Editor") {
+                            UserDefaultsEditor(userDefaults: shared, displayName: "Shared UserDefaults", store: ObservableUserDefaults(userDefaults: shared))
+                        }
+                    } else {
+                        Text("No Shared UserDefaults configured.")
+                    }
                 }
-                NavigationLink("Editor") {
-                    KeychainEditor()
+
+                Section(header: Text("Keychain")) {
+                    Button("Clear Keychain") {
+                        showingKeychainDeleteAlert = true
+                    }.alert(isPresented: $showingKeychainDeleteAlert) {
+                        Alert(
+                            title: Text("Delete"),
+                            message: Text("Are you sure?"),
+                            primaryButton: .destructive(Text("Delete"), action: {
+                                UBKeychain().deleteAllItems()
+                            }),
+                            secondaryButton: .cancel(Text("Cancel"), action: {})
+                        )
+                    }
+                    NavigationLink("Editor") {
+                        KeychainEditor()
+                    }
                 }
             }
             Section(header: Text("URLCache.shared")) {
@@ -129,11 +132,16 @@ public struct DevToolsView: View {
             }
             Section(header: Text("Map")) {
                 Toggle("Raster tiles debug overlay", isOn: Binding(get: { Self.mapRasterTilesDebugOverlay }, set: { Self.mapRasterTilesDebugOverlay = $0 }))
+                Button("Remove all map-related cached responses") {
+                    let cache = URLCache(memoryCapacity: 100 * 1024 * 1024, diskCapacity: 500 * 1024 * 1024, diskPath: "ch.openmobilemaps.urlcache")
+                    CacheDevTools.clearCache(cache)
+                }
             }
 
-            #if !targetEnvironment(simulator)
-                ShareDocumentsView()
-            #endif
+#if !targetEnvironment(simulator)
+            ShareDocumentsView()
+#endif
+
             if #available(iOS 15.0, *) {
                 LogDevToolsView()
             }
