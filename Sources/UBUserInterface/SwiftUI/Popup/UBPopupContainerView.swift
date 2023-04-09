@@ -43,7 +43,7 @@
                         }
                         Spacer()
                     }
-                    .background(Color.black.opacity(0.8).onTapGesture {
+                    .background(style.backdropColor.onTapGesture {
                         if style.tapOutsideToDismiss {
                             isPresented = false
                         }
