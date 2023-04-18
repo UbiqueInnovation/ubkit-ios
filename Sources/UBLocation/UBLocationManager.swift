@@ -238,7 +238,9 @@ public class UBLocationManager: NSObject {
                     callback(.notDetermined)
                     self.pendingAuthorizationStatusCallbacks.removeValue(forKey: id)
                 }
+                self.authorizationCallbackTimers.removeValue(forKey: id)
             }
+            authorizationCallbackTimers[id] = timer
             pendingAuthorizationStatusCallbacks[id] = completion
         }
     }
