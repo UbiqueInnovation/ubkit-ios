@@ -92,7 +92,11 @@ public class UBLocationManager: NSObject {
     private var authorizationStatus: CLAuthorizationStatus? {
         didSet {
             if let authorizationStatus {
-                pendingAuthorizationStatusCallbacks.forEach {
+                authorizationCallbackTimers.values.forEach {
+                    $0.invalidate()
+                }
+                authorizationCallbackTimers.removeAll()
+                pendingAuthorizationStatusCallbacks.values.forEach {
                     $0(authorizationStatus)
                 }
                 pendingAuthorizationStatusCallbacks.removeAll()
@@ -100,7 +104,9 @@ public class UBLocationManager: NSObject {
         }
     }
 
-    private var pendingAuthorizationStatusCallbacks: [(CLAuthorizationStatus) -> Void] = []
+    private var pendingAuthorizationStatusCallbacks: [UUID: (CLAuthorizationStatus) -> Void] = [:]
+    private var authorizationCallbackTimers: [UUID: Timer] = [:]
+    private let timeoutTime: TimeInterval = 4
 
     /// The desired location accuracy of the underlying `CLLocationManager`
     public var desiredAccuracy: CLLocationAccuracy {
@@ -225,7 +231,15 @@ public class UBLocationManager: NSObject {
         if let authorizationStatus {
             completion(authorizationStatus)
         } else {
-            pendingAuthorizationStatusCallbacks.append(completion)
+            let id = UUID()
+            let timer = Timer.scheduledTimer(withTimeInterval: timeoutTime, repeats: false) { [weak self] _ in
+                guard let self else { return }
+                if let callback = self.pendingAuthorizationStatusCallbacks[id] {
+                    callback(.notDetermined)
+                    self.pendingAuthorizationStatusCallbacks.removeValue(forKey: id)
+                }
+            }
+            pendingAuthorizationStatusCallbacks[id] = completion
         }
     }
 
