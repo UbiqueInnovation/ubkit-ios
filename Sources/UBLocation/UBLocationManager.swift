@@ -294,9 +294,9 @@ public class UBLocationManager: NSObject {
         let id = ObjectIdentifier(delegate)
         delegateWrappers[id] = wrapper
 
-        let authorizationStatus = locationManager.authorizationStatus()
+        let authStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
-        switch authorizationStatus {
+        switch authStatus {
             case .authorizedAlways:
                 startLocationMonitoringWithoutChecks(delegate)
             case .authorizedWhenInUse:
@@ -412,10 +412,10 @@ public class UBLocationManager: NSObject {
             self.permissionRequestUsage = nil
         }
 
-        let authorizationStatus = locationManager.authorizationStatus()
+        let authStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
 
-        switch authorizationStatus {
+        switch authStatus {
             case .authorizedAlways:
                 callback(.success)
             case .authorizedWhenInUse:
