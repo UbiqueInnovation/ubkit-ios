@@ -9,8 +9,8 @@ import Foundation
 
 /// An object that coordinates a group of related network data transfer tasks.
 public class UBURLSession: UBDataTaskURLSession {
-    /// The underlaying session
-    private let urlSession: URLSession
+    /// The underlying session
+    public let urlSession: URLSession
 
     /// The session delegate handeling everything
     // swiftlint:disable weak_delegate
