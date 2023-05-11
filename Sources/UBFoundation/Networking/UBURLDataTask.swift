@@ -301,7 +301,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         state = .parsing
 
-        notifyCompletion(data: data, response: unwrappedResponse, info: info)
+        // We don't want to distinguish between no body and empty body
+        let dataOrEmpty = data ?? Data()
+
+        notifyCompletion(data: dataOrEmpty, response: unwrappedResponse, info: info)
     }
 
     // MARK: - Request Modifier
