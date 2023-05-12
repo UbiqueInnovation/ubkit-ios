@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCODE_VERSION: 'Xcode_14.1.0'
+  XCODE_VERSION: 'Xcode_14.2.0'
 
 on:
   push:
@@ -18,10 +18,8 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
       
-    - name: "Select Xcode 13"
-      uses: devbotsxyz/xcode-select@v1
-      with:
-        version: "13"
+    - name: Switch to Xcode ${{ env.XCODE_VERSION }}
+      run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
 
     - name: Fastlane
       run: fastlane tests
