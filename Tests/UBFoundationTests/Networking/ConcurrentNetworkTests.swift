@@ -129,20 +129,20 @@ class ConcurrentNetworkTests: XCTestCase {
 }
 
 private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
-    override var nextRefreshHeaderFieldName: String {
-        "x-amz-meta-next-refresh"
+    override var nextRefreshHeaderFieldName: [String] {
+        ["x-amz-meta-next-refresh"]
     }
 
-    override var backoffIntervalHeaderFieldName: String {
-        "x-amz-meta-backoff"
+    override var backoffIntervalHeaderFieldName: [String] {
+        ["x-amz-meta-backoff"]
     }
 
-    override var expiresHeaderFieldName: String {
-        "x-amz-meta-best-before"
+    override var expiresHeaderFieldName: [String] {
+        ["x-amz-meta-best-before"]
     }
 
-    override var cacheControlHeaderFieldName: String {
-        "x-amz-meta-cache"
+    override var cacheControlHeaderFieldName: [String] {
+        ["x-amz-meta-cache"]
     }
 
     override var eTagHeaderFieldName: String {
