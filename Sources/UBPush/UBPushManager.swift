@@ -185,6 +185,7 @@ open class UBPushManager: NSObject {
     ///     - includingCritical: Also requests permissions for critical alerts; requires iOS 12 and needs special authorization from Apple
     ///     - callback: The callback for handling the result of the request
     public func requestPushPermissions(includingCritical: Bool = false,
+                                       includingNotificationSettings: Bool = false,
                                        callback: @escaping PermissionRequestCallback) {
         if let previousCallback = permissionRequestCallback {
             Self.logger.error("Tried to request push permissions while other request pending")
@@ -196,7 +197,7 @@ open class UBPushManager: NSObject {
         latestPushRequest += 1
         let currentPushRequest = latestPushRequest
 
-        let options = makeAuthorizationOptions(includingCritical: includingCritical)
+        let options = makeAuthorizationOptions(includingCritical: includingCritical, includingNotificationSettings: includingNotificationSettings)
         UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, _ in
 
             guard granted else {
@@ -227,13 +228,26 @@ open class UBPushManager: NSObject {
     }
 
     /// :nodoc:
-    private func makeAuthorizationOptions(includingCritical: Bool) -> UNAuthorizationOptions {
-        if #available(iOS 12.0, *) {
-            return includingCritical ? [.alert, .badge, .sound, .criticalAlert] : [.alert, .badge, .sound]
-        } else {
-            assert(!includingCritical)
-            return [.alert, .badge, .sound]
+    private func makeAuthorizationOptions(includingCritical: Bool, includingNotificationSettings: Bool) -> UNAuthorizationOptions {
+        var options : UNAuthorizationOptions = [.alert, .badge, .sound]
+
+        if(includingCritical) {
+            if #available(iOS 12.0, *) {
+                options.insert(.criticalAlert)
+            } else {
+                assert(false)
+            }
         }
+
+        if(includingNotificationSettings) {
+            if #available(iOS 12.0, *) {
+                options.insert(.providesAppNotificationSettings)
+            } else {
+                assert(false)
+            }
+        }
+
+        return options
     }
 
     /// Needs to be called inside `application(_:didRegisterForRemoteNotificationsWithDeviceToken:)`
@@ -311,6 +325,11 @@ extension UBPushManager: UNUserNotificationCenterDelegate {
     /// :nodoc:
     public func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         pushHandler.handleDidReceiveResponse(response, completionHandler: completionHandler)
+    }
+
+    /// :nodoc:
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
+        pushHandler.openInAppSettings(notification)
     }
 }
 

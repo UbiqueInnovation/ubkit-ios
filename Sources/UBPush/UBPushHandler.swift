@@ -65,6 +65,10 @@ open class UBPushHandler: NSObject {
         UBPushManager.logger.error("Subclasses of UBPushHandler should override updateLocalData(withSilent:remoteNotification:)")
     }
 
+    open func openInAppSettings(_ notification: UNNotification?) {
+        // default empty
+    }
+
     // MARK: - Handlers
 
     /// Handles notifications for the app to process upon launch. Resets the application icon badge number after user interaction.
