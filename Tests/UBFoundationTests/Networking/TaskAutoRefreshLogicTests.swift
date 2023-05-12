@@ -498,7 +498,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
     }
 }
 
-class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
+fileprivate class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {

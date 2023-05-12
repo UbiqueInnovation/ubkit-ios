@@ -18,7 +18,7 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
       
-    - name: Switch to Xcode ${{ env.XCODE_VERSION }}
+    - name: Switch to ${{ env.XCODE_VERSION }}
       run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
 
     - name: Fastlane
@@ -44,10 +44,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
   
-    - name: "Select Xcode 13"
-      uses: devbotsxyz/xcode-select@v1
-      with:
-        version: "13"
+    - name: Switch to ${{ env.XCODE_VERSION }}
+      run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
 
     - name: swiftformat
       run: swiftformat Sources,Tests --lint
