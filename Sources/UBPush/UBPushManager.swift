@@ -320,7 +320,7 @@ private extension UBPushManager.PermissionRequestResult {
     /// :nodoc:
     static var failure: UBPushManager.PermissionRequestResult {
         if
-            let settingsUrl = URL(string: UIApplication.openSettingsURLString),
+            let settingsUrl = UIApplication.appNotificationSettingsURL,
             UIApplication.shared.canOpenURL(settingsUrl) {
             return .recoverableFailure(settingsURL: settingsUrl)
         } else {
