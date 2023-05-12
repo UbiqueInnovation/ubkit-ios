@@ -347,7 +347,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let url = URL(string: "https://example.com/file.json")!
 
         let initialResponse = try! BasicResponseProvider(rule: url.absoluteString, body: "Hello, World!", header: BasicResponseProvider.Header(statusCode: 200, headerFields: [
-            "cache-control": "max-age=10",
+            "cache-control": "max-age=5",
             "etag": "0x8DB4542835F84A7",
             "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
         ]))
@@ -385,6 +385,8 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         XCTAssert(info!.cacheHit) // in cache
 
         initialResponse.removeFromLocalServer()
+
+        sleep(6)
 
         let body = CallbackResponseProvider { re in Data() }
         let headers = CallbackHeaderResponseProvider { re in
