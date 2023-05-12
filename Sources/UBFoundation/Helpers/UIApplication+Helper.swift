@@ -11,7 +11,7 @@ extension UIApplication {
     // MARK: - Public
 
     // if available provides best possible link to notification settings of app directly
-    public static let ub_appNotificationSettingsURL = URL(string: notificationSettingsURLString)
+    @objc public static let ub_appNotificationSettingsURL = URL(string: notificationSettingsURLString)
 
     // MARK: - Implementation
 
