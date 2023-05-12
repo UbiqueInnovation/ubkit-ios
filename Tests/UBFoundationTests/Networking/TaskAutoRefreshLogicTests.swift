@@ -9,6 +9,7 @@ import UBFoundation
 import UBLocalNetworking
 import XCTest
 
+@available(iOS 15.0.0, *)
 class TaskAutoRefreshLogicTests: XCTestCase {
     func testCaching() {
         // Load Request with Meteo-specific headers to enable cache
@@ -341,7 +342,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [ex1, ex2], timeout: 10000)
     }
 
-    @available(iOS 13.0, *)
     func testCacheHeaderUpdate() {
         // Load Request that changes cached header
         let url = URL(string: "https://example.com/file.json")!
@@ -385,8 +385,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         XCTAssert(info!.cacheHit) // in cache
 
         initialResponse.removeFromLocalServer()
-        // Cache should only be valid for 60 seconds
-        sleep(10)
 
         let body = CallbackResponseProvider { re in Data() }
         let headers = CallbackHeaderResponseProvider { re in
@@ -568,6 +566,7 @@ class SwisstopoMapAutorefreshCacheLogic: UBAutoRefreshCacheLogic {
     }
 }
 
+@available(iOS 15.0.0, *)
 private struct CallbackResponseProvider: ResponseProviderBody {
     var bodyCallback: (URLRequest) -> (Data)
     func body(for request: URLRequest) async throws -> Data {
@@ -575,6 +574,7 @@ private struct CallbackResponseProvider: ResponseProviderBody {
     }
 }
 
+@available(iOS 15.0.0, *)
 private struct CallbackHeaderResponseProvider: ResponseProviderHeader {
     var headerCallback: (URLRequest) -> (HTTPURLResponse)
     func response(for request: URLRequest) async throws -> HTTPURLResponse {
