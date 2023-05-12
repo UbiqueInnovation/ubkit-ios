@@ -7,6 +7,7 @@
 
 import UBFoundation
 import XCTest
+import UBLocalNetworking
 
 class TaskAutoRefreshLogicTests: XCTestCase {
     func testCaching() {
@@ -340,14 +341,27 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [ex1, ex2], timeout: 10000)
     }
 
+    @available(iOS 13.0, *)
     func testCacheHeaderUpdate() {
         // Load Request that changes cached header
+        let url = URL(string: "https://example.com/file.json")!
 
-        let url = URL(string: "https://dev-static.swisstopo-app.ch/v10/stations/22/412/155.pbf")!
+        let initialResponse = try! BasicResponseProvider(rule: url.absoluteString, body: "Hello, World!", header: BasicResponseProvider.Header(statusCode: 200, headerFields: [
+            "cache-control": "max-age=10",
+            "etag": "0x8DB4542835F84A7",
+            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
+        ]))
+
+        initialResponse.addToLocalServer()
+
+        defer {
+            LocalServer.pauseLocalServer()
+        }
 
         let cache = SwisstopoVectorRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
         conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: nil)
+        conf.sessionConfiguration.protocolClasses = [LocalServerURLProtocol.self]
         let session = UBURLSession(configuration: conf)
 
         let res = expectation(description: "res")
@@ -360,7 +374,6 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         var dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
         dataTask?.startSynchronous()
         dataTask?.cancel()
-        dataTask = nil
 
         // immediately load request again, should be cached
         let dataTask2 = UBURLDataTask(url: url, session: session)
@@ -371,8 +384,22 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit) // in cache
 
+        initialResponse.removeFromLocalServer()
         // Cache should only be valid for 60 seconds
-        sleep(70)
+        sleep(10)
+
+        let body = CallbackResponseProvider { re in Data() }
+        let headers = CallbackHeaderResponseProvider { re in
+            if re.value(forHTTPHeaderField: "If-None-Match") == "0x8DB4542835F84A7" {
+                return HTTPURLResponse(url: url, statusCode: 304, httpVersion: nil, headerFields: nil)!
+            } else {
+                XCTFail()
+                return HTTPURLResponse()
+            }
+        }
+
+        let cachedProv = try! BasicResponseProvider(rule: url.absoluteString, body: body, header: headers)
+        cachedProv.addToLocalServer()
 
         // load request again, now request should return 302
         var dataTask3: UBURLDataTask? = UBURLDataTask(url: url, session: session)
@@ -540,3 +567,19 @@ class SwisstopoMapAutorefreshCacheLogic: UBAutoRefreshCacheLogic {
         possible
     }
 }
+
+private struct CallbackResponseProvider: ResponseProviderBody {
+    var bodyCallback: ((URLRequest)->(Data))
+    func body(for request: URLRequest) async throws -> Data {
+        return bodyCallback(request)
+    }
+}
+
+private struct CallbackHeaderResponseProvider: ResponseProviderHeader {
+    var headerCallback: ((URLRequest)->(HTTPURLResponse))
+    func response(for request: URLRequest) async throws -> HTTPURLResponse {
+        return headerCallback(request)
+    }
+}
+
+
