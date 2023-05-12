@@ -6,8 +6,8 @@
 //
 
 import UBFoundation
-import XCTest
 import UBLocalNetworking
+import XCTest
 
 class TaskAutoRefreshLogicTests: XCTestCase {
     func testCaching() {
@@ -569,17 +569,15 @@ class SwisstopoMapAutorefreshCacheLogic: UBAutoRefreshCacheLogic {
 }
 
 private struct CallbackResponseProvider: ResponseProviderBody {
-    var bodyCallback: ((URLRequest)->(Data))
+    var bodyCallback: (URLRequest) -> (Data)
     func body(for request: URLRequest) async throws -> Data {
-        return bodyCallback(request)
+        bodyCallback(request)
     }
 }
 
 private struct CallbackHeaderResponseProvider: ResponseProviderHeader {
-    var headerCallback: ((URLRequest)->(HTTPURLResponse))
+    var headerCallback: (URLRequest) -> (HTTPURLResponse)
     func response(for request: URLRequest) async throws -> HTTPURLResponse {
-        return headerCallback(request)
+        headerCallback(request)
     }
 }
-
-
