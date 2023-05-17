@@ -295,7 +295,7 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case let .success(data):
-                    XCTAssertNil(data)
+                    XCTAssertTrue(data.isEmpty)
                 case .failure:
                     XCTFail()
             }
