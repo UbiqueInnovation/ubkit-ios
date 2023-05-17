@@ -522,7 +522,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// :nodoc:
-    private func notifyCompletion(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?) {
+    private func notifyCompletion(data: Data, response: HTTPURLResponse, info: UBNetworkingTaskInfo?) {
         state = .finished
         completionHandlers.forEach { $0.parse(data: data, response: response, info: info, callbackQueue: $0.callbackQueue ?? self.getCallbackQueue(), caller: self) }
     }
@@ -759,7 +759,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 extension UBURLDataTask {
     /// This is a wrapper that holds reference for a completion handler
     private struct CompletionHandlerWrapper {
-        private let executionBlock: (Data?, HTTPURLResponse, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
+        private let executionBlock: (Data, HTTPURLResponse, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
         private let failureBlock: (UBNetworkingError, Data?, HTTPURLResponse?, UBNetworkingTaskInfo?, OperationQueue, UBURLDataTask) -> Void
         let callbackQueue: OperationQueue?
 
@@ -768,10 +768,6 @@ extension UBURLDataTask {
             self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
-                guard let data = data else {
-                    Self.handleMissingData(from: response, info: info, callbackQueue: callbackQueue, caller: caller, completion: completion)
-                    return
-                }
                 do {
                     let decoded = try decoder.decode(data: data, response: response)
                     callbackQueue.addOperation {
@@ -792,33 +788,11 @@ extension UBURLDataTask {
             }
         }
 
-        private static func handleMissingData<T>(from response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask, completion: @escaping CompletionHandlingBlock<T>) {
-            guard caller.request.httpMethod == .head else {
-                callbackQueue.addOperation {
-                    completion(.failure(UBNetworkingError.internal(.responseBodyIsEmpty)), response, info, caller)
-                }
-                return
-            }
-
-            guard let data = Data() as? T else {
-                assertionFailure("HEAD request should always be used with passthrough decoder")
-                return
-            }
-
-            callbackQueue.addOperation {
-                completion(.success(data), response, info, caller)
-            }
-        }
-
         /// :nodoc:
         init<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
             self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
-                guard let data = data else {
-                    Self.handleMissingData(from: response, info: info, callbackQueue: callbackQueue, caller: caller, completion: completion)
-                    return
-                }
                 do {
                     let decoded = try decoder.decode(data: data, response: response)
                     callbackQueue.addOperation {
@@ -865,7 +839,7 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        func parse(data: Data?, response: HTTPURLResponse, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
+        func parse(data: Data, response: HTTPURLResponse, info: UBNetworkingTaskInfo?, callbackQueue: OperationQueue, caller: UBURLDataTask) {
             executionBlock(data, response, info, callbackQueue, caller)
         }
 
