@@ -20,7 +20,7 @@ class HTTPRequestInterceptorsTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.requestInterceptor = EmptyInterceptor()
-        dataTask.addCompletionHandler { result, response, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
             switch result {
                 case .success:
                     XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
@@ -42,7 +42,7 @@ class HTTPRequestInterceptorsTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.requestInterceptor = Interceptor()
-        dataTask.addCompletionHandler { result, response, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
             switch result {
                 case let .success(data):
                     XCTAssertEqual(response?.statusCode, 401)

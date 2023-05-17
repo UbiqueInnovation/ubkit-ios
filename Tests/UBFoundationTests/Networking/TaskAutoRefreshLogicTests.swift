@@ -35,7 +35,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let ex = expectation(description: "s")
         ex.assertForOverFulfill = false
-        dataTask?.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             ex.fulfill()
             dataTask?.cancel() // make sure that cron doesn't trigger
             dataTask = nil
@@ -53,7 +53,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url, session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
@@ -86,7 +86,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex.fulfill()
         }
@@ -98,7 +98,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url, session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
@@ -131,7 +131,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex.fulfill()
         }
@@ -143,7 +143,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url, session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
@@ -152,7 +152,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         }
 
         let ex3 = expectation(description: "s3")
-        dataTask2.addCompletionHandler { _, _, _, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex3.fulfill()
         }
@@ -177,7 +177,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask?.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex.fulfill()
             dataTask?.cancel()
@@ -194,7 +194,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
@@ -235,7 +235,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask?.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             dataTask?.cancel() // make sure that cron doesn't trigger
             dataTask = nil
             ex.fulfill()
@@ -251,7 +251,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url, session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit == secondShouldCache)
@@ -278,7 +278,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex.fulfill()
         }
@@ -292,7 +292,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
@@ -328,7 +328,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let ex1 = expectation(description: "s")
         let ex2 = expectation(description: "s2")
 
-        dataTask.addCompletionHandler { _, _, info, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
 
@@ -371,8 +371,8 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [res], timeout: 10000)
 
         // load request to fill cache
-        var dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
-        dataTask?.startSynchronous()
+        let dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
+        dataTask?.startSynchronous(decoder: .passthrough)
         dataTask?.cancel()
 
         // immediately load request again, should be cached
@@ -380,7 +380,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask2.addStateTransitionObserver { _, to, _ in
             XCTAssert(to != .fetching) // never make the request
         }
-        let (_, _, info, _) = dataTask2.startSynchronous()
+        let (_, _, info, _) = dataTask2.startSynchronous(decoder: .passthrough)
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit) // in cache
 
@@ -409,7 +409,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
                 seenFetching = true
             }
         }
-        let (_, _, info3, _) = dataTask3!.startSynchronous()
+        let (_, _, info3, _) = dataTask3!.startSynchronous(decoder: .passthrough)
 
         XCTAssert(info3 != nil)
         XCTAssert(info3!.cacheHit)
@@ -419,7 +419,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         // load request again, should be cached again
         let dataTask4 = UBURLDataTask(url: url, session: session)
-        let (_, _, info4, _) = dataTask4.startSynchronous()
+        let (_, _, info4, _) = dataTask4.startSynchronous(decoder: .passthrough)
         XCTAssert(info4 != nil)
         XCTAssert(info4!.cacheHit) // in cache again
     }
@@ -446,7 +446,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let dataTask = UBURLDataTask(url: url, session: session)
 
-        dataTask.startSynchronous()
+        dataTask.startSynchronous(decoder: .passthrough)
 
         // load request again
 
@@ -454,7 +454,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask2.addStateTransitionObserver { _, to, _ in
             XCTAssert(to != .fetching) // never make the request
         }
-        let (_, _, info, _) = dataTask2.startSynchronous()
+        let (_, _, info, _) = dataTask2.startSynchronous(decoder: .passthrough)
 
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit)
@@ -480,7 +480,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let ex = expectation(description: "s")
         ex.assertForOverFulfill = false
-        dataTask?.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             ex.fulfill()
             dataTask?.cancel() // make sure that cron doesn't trigger
             dataTask = nil
@@ -499,7 +499,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(request: UBURLRequest(request: request2), session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
@@ -513,7 +513,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask3 = UBURLDataTask(request: UBURLRequest(request: request2), session: session)
 
         let ex3 = expectation(description: "s2")
-        dataTask3.addCompletionHandler { _, _, info, _ in
+        dataTask3.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)

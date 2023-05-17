@@ -25,7 +25,7 @@ class HTTPDataTaskTests: XCTestCase {
         let operationQueue = OperationQueue()
 
         operationQueue.addOperation {
-            let response = dataTask.startSynchronous()
+            let response = dataTask.startSynchronous(decoder: .passthrough)
             switch response.result {
                 case .success:
                     break
@@ -43,7 +43,7 @@ class HTTPDataTaskTests: XCTestCase {
         DispatchQueue.concurrentPerform(iterations: 500) { _ in
             let request = UBURLRequest(url: URL(string: "http://no-cache-but-pie.glitch.me")!)
             let task = UBURLDataTask(request: request, callbackQueue: queue)
-            let result = task.startSynchronous()
+            let result = task.startSynchronous(decoder: .passthrough)
             XCTAssert(result.info?.cacheHit != true)
         }
     }
@@ -58,7 +58,7 @@ class HTTPDataTaskTests: XCTestCase {
             URLSessionDataTaskMock.Configuration(data: nil, response: nil, error: error)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .failure:
                     break
@@ -101,7 +101,7 @@ class HTTPDataTaskTests: XCTestCase {
         let recovery = MockRecovery()
         recovery.ex = ex2
         dataTask.addFailureRecoveryStrategy(recovery)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .failure:
                     break
@@ -148,7 +148,7 @@ class HTTPDataTaskTests: XCTestCase {
 
         let recovery = MockRecovery()
         dataTask.addFailureRecoveryStrategy(recovery)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case let .failure(error):
                     if case let UBNetworkingError.internal(.recoverableError(recovery)) = error {
@@ -178,7 +178,7 @@ class HTTPDataTaskTests: XCTestCase {
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     break
@@ -202,7 +202,7 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         dataTask.addRequestModifier(UBURLRequestBasicAuthorization(login: "login", password: "password"))
-        dataTask.addCompletionHandler { _, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             ex1.fulfill()
         }
         dataTask.start()
@@ -250,7 +250,7 @@ class HTTPDataTaskTests: XCTestCase {
         }
 
         let dataTask = UBURLDataTask(request: request, session: mockSession)
-        dataTask.addCompletionHandler { result, response, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
             switch result {
                 case .success:
                     break
@@ -292,7 +292,7 @@ class HTTPDataTaskTests: XCTestCase {
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case let .success(data):
                     XCTAssertNil(data)
@@ -317,7 +317,7 @@ class HTTPDataTaskTests: XCTestCase {
         dataTask.addResponseValidator { _ in
             throw UBNetworkingError.internal(.responseMIMETypeValidationFailed)
         }
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case let .failure(error):
                     XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
@@ -343,7 +343,7 @@ class HTTPDataTaskTests: XCTestCase {
             UBHTTPResponseStatusValidator(.success),
             UBHTTPResponseContentTypeValidator(expectedMIMEType: .png),
         ])
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case let .failure(error):
                     XCTAssertEqual(error, UBNetworkingError.internal(.responseMIMETypeValidationFailed))
@@ -442,7 +442,7 @@ class HTTPDataTaskTests: XCTestCase {
             XCTFail()
         }
 
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case let .failure(error):
                     XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
@@ -506,7 +506,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
 
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case let .failure(error):
                     XCTAssertEqual((error as NSError).code, NSURLErrorCancelled)
@@ -539,7 +539,7 @@ class HTTPDataTaskTests: XCTestCase {
             var dataTask: UBURLDataTask? = UBURLDataTask(request: request, session: mockSession)
             weak var ref = dataTask
 
-            dataTask!.addCompletionHandler { _, _, _, _ in
+            dataTask!.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
                 XCTFail()
             }
 

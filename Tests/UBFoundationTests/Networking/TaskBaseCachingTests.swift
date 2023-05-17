@@ -28,12 +28,12 @@ class BaseCachingTests: XCTestCase {
         var request = UBURLRequest(url: url)
         request.httpMethod = .head
         let dataTask = UBURLDataTask(request: request)
-        dataTask.startSynchronous()
+        dataTask.startSynchronous(decoder: .passthrough)
 
         // load request again with different method
         request.httpMethod = .get
         let dataTask2 = UBURLDataTask(request: request)
-        let (_, _, info, _) = dataTask2.startSynchronous()
+        let (_, _, info, _) = dataTask2.startSynchronous(decoder: .passthrough)
 
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit == false)

@@ -574,15 +574,16 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// Starts the data task and blocks the current thread until a response or an error are returned
     ///
     /// - Returns: The result of the task
+    @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
     @discardableResult
-    public func startSynchronous() -> (result: Result<Data?, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
+    public func startSynchronous() -> (result: Result<Data, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
 
         flags.insert(.synchronous)
 
-        var fetchedResult: (Result<Data?, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
+        var fetchedResult: (Result<Data, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
 
-        let completionBlockIdentifier = addCompletionHandler { [weak self] result, response, taskInfo, dataTask in
+        let completionBlockIdentifier = addCompletionHandler(decoder: .passthrough) { [weak self] result, response, taskInfo, dataTask in
             fetchedResult = (result, response, taskInfo, dataTask)
             self?.synchronousStartSemaphore.signal()
         }
