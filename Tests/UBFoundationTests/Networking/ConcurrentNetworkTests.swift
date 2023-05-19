@@ -64,23 +64,23 @@ class ConcurrentNetworkTests: XCTestCase {
     }
 
     func testBasicRequest() async throws {
-        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest)
+        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest, decoder: .passthrough)
     }
 
     func testBasicRequestWithUrl() async throws {
-        let data1 = try await UBURLDataTask.with(session: sharedSession).loadOnce(url: sampleUrl).data
-        let data2 = try await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest).data
+        let data1 = try await UBURLDataTask.with(session: sharedSession).loadOnce(url: sampleUrl, decoder: .passthrough).data
+        let data2 = try await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest, decoder: .passthrough).data
         XCTAssertEqual(data1, data2)
     }
 
     func testRepeatedRequestAsync() async throws {
-        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest)
-        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest)
+        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest, decoder: .passthrough)
+        let _ = await UBURLDataTask.with(session: sharedSession).loadOnce(request: sampleRequest, decoder: .passthrough)
     }
 
     func testRequestError() async throws {
         do {
-            let _ = try await UBURLDataTask.with(session: sharedSession).loadOnce(request: brokenSampleRequest).data
+            let _ = try await UBURLDataTask.with(session: sharedSession).loadOnce(request: brokenSampleRequest, decoder: .passthrough).data
             XCTFail("Should not reach this")
         } catch {
             // error is good
@@ -90,7 +90,7 @@ class ConcurrentNetworkTests: XCTestCase {
     func testCronStream() async throws {
         let task = UBURLDataTask(request: cronRequest, session: fastCronSession)
         var count = 0
-        for try await _ in task.startStream() {
+        for try await _ in task.startStream(decoder: .passthrough) {
             count += 1
             if count >= 3 {
                 return
@@ -101,11 +101,11 @@ class ConcurrentNetworkTests: XCTestCase {
     func testRepeatingStream() async throws {
         let task = UBURLDataTask(request: cronRequest, session: fastCronSession)
         var count = 0
-        for try await _ in task.startStream() {
+        for try await _ in task.startStream(decoder: .passthrough) {
             count += 1
             break
         }
-        for try await _ in task.startStream() {
+        for try await _ in task.startStream(decoder: .passthrough) {
             count += 1
             break
         }
@@ -117,7 +117,7 @@ class ConcurrentNetworkTests: XCTestCase {
         let exp2 = expectation(description: "After cancel")
         let t = Task.detached {
             let task = UBURLDataTask(request: self.cronRequest, session: self.fastCronSession)
-            for try await _ in task.startStream() {
+            for try await _ in task.startStream(decoder: .passthrough) {
                 exp1.fulfill()
             }
             exp2.fulfill()

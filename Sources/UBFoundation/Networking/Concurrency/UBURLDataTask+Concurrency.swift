@@ -201,9 +201,10 @@ public extension UBURLDataTask {
     ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
+    @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
     @discardableResult
     static func loadOnce(request: UBURLRequest, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<Data> {
-        await UBURLDataTask.loadOnce(request: request, decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: taskConfig)
+        await UBURLDataTask.loadOnce(request: request, decoder: .passthrough, ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
 
     /// Makes a request and returns a TaskResult consisting of Data
@@ -240,9 +241,10 @@ public extension UBURLDataTask {
     ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
+    @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
     @discardableResult
     static func loadOnce(url: URL, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<Data> {
-        await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: taskConfig)
+        await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: .passthrough, ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
 
     /// Starts a stream of requests which will be executed repeatedly based on next-refresh header
@@ -295,8 +297,9 @@ public extension UBURLDataTask {
 
     /// Starts a stream of requests which will be executed repeatedly based on next-refresh header
     /// - Returns: A throwing stream of data with metadata
+    @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
     func startStream() -> AsyncThrowingStream<(Data, MetaData), Error> {
-        self.startStream(decoder: UBDataPassthroughDecoder())
+        self.startStream(decoder: .passthrough)
     }
 }
 
@@ -332,9 +335,10 @@ public extension UBURLDataTask.TaskConfig {
     ///   - ignoreCache: Whether to ignore the cache or not
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
+    @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
     @discardableResult
     func loadOnce(request: UBURLRequest, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<Data> {
-        await UBURLDataTask.loadOnce(request: request, decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: self)
+        await UBURLDataTask.loadOnce(request: request, decoder: .passthrough, ignoreCache: ignoreCache, taskConfig: self)
     }
 
     /// Makes a request and returns a TaskResult consisting of Data
@@ -368,8 +372,9 @@ public extension UBURLDataTask.TaskConfig {
     ///   - ignoreCache: Whether to ignore the cache or not
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
+    @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
     @discardableResult
     func loadOnce(url: URL, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<Data> {
-        await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: UBDataPassthroughDecoder(), ignoreCache: ignoreCache, taskConfig: self)
+        await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: .passthrough, ignoreCache: ignoreCache, taskConfig: self)
     }
 }
