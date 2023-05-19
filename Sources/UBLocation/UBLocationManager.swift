@@ -91,15 +91,17 @@ public class UBLocationManager: NSObject {
     public var logLocationPermissionChange: ((CLAuthorizationStatus) -> Void)?
     private var authorizationStatus: CLAuthorizationStatus? {
         didSet {
-            if let authorizationStatus {
-                authorizationCallbackTimers.values.forEach {
-                    $0.invalidate()
+            DispatchQueue.main.async {
+                if let authorizationStatus = self.authorizationStatus {
+                    self.authorizationCallbackTimers.values.forEach {
+                        $0.invalidate()
+                    }
+                    self.authorizationCallbackTimers.removeAll()
+                    self.pendingAuthorizationStatusCallbacks.values.forEach {
+                        $0(authorizationStatus)
+                    }
+                    self.pendingAuthorizationStatusCallbacks.removeAll()
                 }
-                authorizationCallbackTimers.removeAll()
-                pendingAuthorizationStatusCallbacks.values.forEach {
-                    $0(authorizationStatus)
-                }
-                pendingAuthorizationStatusCallbacks.removeAll()
             }
         }
     }
@@ -234,14 +236,18 @@ public class UBLocationManager: NSObject {
             let id = UUID()
             let timer = Timer.scheduledTimer(withTimeInterval: timeoutTime, repeats: false) { [weak self] _ in
                 guard let self else { return }
-                if let callback = self.pendingAuthorizationStatusCallbacks[id] {
-                    callback(.notDetermined)
-                    self.pendingAuthorizationStatusCallbacks.removeValue(forKey: id)
+                DispatchQueue.main.async {
+                    if let callback = self.pendingAuthorizationStatusCallbacks[id] {
+                        callback(.notDetermined)
+                        self.pendingAuthorizationStatusCallbacks.removeValue(forKey: id)
+                    }
+                    self.authorizationCallbackTimers.removeValue(forKey: id)
                 }
-                self.authorizationCallbackTimers.removeValue(forKey: id)
             }
-            authorizationCallbackTimers[id] = timer
-            pendingAuthorizationStatusCallbacks[id] = completion
+            DispatchQueue.main.async {
+                self.authorizationCallbackTimers[id] = timer
+                self.pendingAuthorizationStatusCallbacks[id] = completion
+            }
         }
     }
 
