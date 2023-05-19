@@ -18,7 +18,7 @@ let package = Package(
         .library(name: "UBDevTools", targets: ["UBDevTools"]),
     ],
     dependencies: [
-        .package(url: "git@github.com:UbiqueInnovation/ios-local-networking.git", from: "1.0.2"),
+        .package(url: "https://github.com/UbiqueInnovation/ios-local-networking.git", from: "1.0.2"),
     ],
     targets: [
         .target(name: "UBFoundation"),

@@ -30,7 +30,7 @@ class UBSessionTests: XCTestCase {
         let ex = expectation(description: "s")
         let url = URL(string: "https://limmat.ubique.ch/sandbox/status/404")!
         let dataTask = UBURLDataTask(url: url)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     XCTFail()
@@ -47,7 +47,7 @@ class UBSessionTests: XCTestCase {
         let ex = expectation(description: "s")
         let url = URL(string: "https://limmat.ubique.ch/sandbox/status/200")!
         let dataTask = UBURLDataTask(url: url)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     break
@@ -66,7 +66,7 @@ class UBSessionTests: XCTestCase {
         let configuration = UBURLSessionConfiguration(allowRedirections: false)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     XCTFail()
@@ -83,7 +83,7 @@ class UBSessionTests: XCTestCase {
         let ex = expectation(description: "s")
         let url = URL(string: "http://ubique.ch")!
         let dataTask = UBURLDataTask(url: url, session: Networking.sharedLowPrioritySession)
-        dataTask.addCompletionHandler { result, response, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
             switch result {
                 case .success:
                     break
@@ -105,7 +105,7 @@ class UBSessionTests: XCTestCase {
         dataTask.addResponseValidator { _ in
             throw Err.x
         }
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     XCTFail()
@@ -125,7 +125,7 @@ class UBSessionTests: XCTestCase {
         let configuration = UBURLSessionConfiguration(hostsServerTrusts: ["www.ubique.ch": evaluator])
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, response, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
             switch result {
                 case .success:
                     break
@@ -146,7 +146,7 @@ class UBSessionTests: XCTestCase {
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     XCTFail("Certificate Pinning should have failed")
@@ -166,7 +166,7 @@ class UBSessionTests: XCTestCase {
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     XCTFail("Certificate Pinning should have failed")
@@ -186,7 +186,7 @@ class UBSessionTests: XCTestCase {
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     XCTFail("Certificate Pinning should have failed")
@@ -206,7 +206,7 @@ class UBSessionTests: XCTestCase {
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     XCTFail("Certificate Pinning should have failed")
@@ -226,7 +226,7 @@ class UBSessionTests: XCTestCase {
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     break
@@ -246,7 +246,7 @@ class UBSessionTests: XCTestCase {
         let configuration = UBURLSessionConfiguration(defaultServerTrust: evaluator)
         let session = UBURLSession(configuration: configuration)
         let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler { result, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
                 case .success:
                     break

@@ -6,8 +6,10 @@
 //
 
 import UBFoundation
+import UBLocalNetworking
 import XCTest
 
+@available(iOS 15.0.0, *)
 class TaskAutoRefreshLogicTests: XCTestCase {
     func testCaching() {
         // Load Request with Meteo-specific headers to enable cache
@@ -33,7 +35,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let ex = expectation(description: "s")
         ex.assertForOverFulfill = false
-        dataTask?.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             ex.fulfill()
             dataTask?.cancel() // make sure that cron doesn't trigger
             dataTask = nil
@@ -51,7 +53,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url, session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
@@ -84,7 +86,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex.fulfill()
         }
@@ -96,7 +98,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url, session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
@@ -129,7 +131,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask = UBURLDataTask(url: url, session: session)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex.fulfill()
         }
@@ -141,7 +143,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url, session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
@@ -150,7 +152,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         }
 
         let ex3 = expectation(description: "s3")
-        dataTask2.addCompletionHandler { _, _, _, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex3.fulfill()
         }
@@ -175,7 +177,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask?.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex.fulfill()
             dataTask?.cancel()
@@ -192,7 +194,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
@@ -233,7 +235,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask?.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             dataTask?.cancel() // make sure that cron doesn't trigger
             dataTask = nil
             ex.fulfill()
@@ -249,7 +251,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url, session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit == secondShouldCache)
@@ -276,7 +278,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask.addCompletionHandler { _, _, _, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
             ex.fulfill()
         }
@@ -290,7 +292,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(url: url)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
@@ -326,7 +328,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let ex1 = expectation(description: "s")
         let ex2 = expectation(description: "s2")
 
-        dataTask.addCompletionHandler { _, _, info, _ in
+        dataTask.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
 
@@ -342,12 +344,24 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
     func testCacheHeaderUpdate() {
         // Load Request that changes cached header
+        let url = URL(string: "https://example.com/file.json")!
 
-        let url = URL(string: "https://dev-static.swisstopo-app.ch/v10/stations/22/412/155.pbf")!
+        let initialResponse = try! BasicResponseProvider(rule: url.absoluteString, body: "Hello, World!", header: BasicResponseProvider.Header(statusCode: 200, headerFields: [
+            "cache-control": "max-age=5",
+            "etag": "0x8DB4542835F84A7",
+            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
+        ]))
+
+        initialResponse.addToLocalServer()
+
+        defer {
+            LocalServer.pauseLocalServer()
+        }
 
         let cache = SwisstopoVectorRefreshCacheLogic()
         let conf = UBURLSessionConfiguration(cachingLogic: cache)
         conf.sessionConfiguration.urlCache = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: nil)
+        conf.sessionConfiguration.protocolClasses = [LocalServerURLProtocol.self]
         let session = UBURLSession(configuration: conf)
 
         let res = expectation(description: "res")
@@ -357,22 +371,35 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [res], timeout: 10000)
 
         // load request to fill cache
-        var dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
-        dataTask?.startSynchronous()
+        let dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
+        dataTask?.startSynchronous(decoder: .passthrough)
         dataTask?.cancel()
-        dataTask = nil
 
         // immediately load request again, should be cached
         let dataTask2 = UBURLDataTask(url: url, session: session)
         dataTask2.addStateTransitionObserver { _, to, _ in
             XCTAssert(to != .fetching) // never make the request
         }
-        let (_, _, info, _) = dataTask2.startSynchronous()
+        let (_, _, info, _) = dataTask2.startSynchronous(decoder: .passthrough)
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit) // in cache
 
-        // Cache should only be valid for 60 seconds
-        sleep(70)
+        initialResponse.removeFromLocalServer()
+
+        sleep(6)
+
+        let body = CallbackResponseProvider { re in Data() }
+        let headers = CallbackHeaderResponseProvider { re in
+            if re.value(forHTTPHeaderField: "If-None-Match") == "0x8DB4542835F84A7" {
+                return HTTPURLResponse(url: url, statusCode: 304, httpVersion: nil, headerFields: nil)!
+            } else {
+                XCTFail()
+                return HTTPURLResponse()
+            }
+        }
+
+        let cachedProv = try! BasicResponseProvider(rule: url.absoluteString, body: body, header: headers)
+        cachedProv.addToLocalServer()
 
         // load request again, now request should return 302
         var dataTask3: UBURLDataTask? = UBURLDataTask(url: url, session: session)
@@ -382,7 +409,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
                 seenFetching = true
             }
         }
-        let (_, _, info3, _) = dataTask3!.startSynchronous()
+        let (_, _, info3, _) = dataTask3!.startSynchronous(decoder: .passthrough)
 
         XCTAssert(info3 != nil)
         XCTAssert(info3!.cacheHit)
@@ -392,7 +419,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         // load request again, should be cached again
         let dataTask4 = UBURLDataTask(url: url, session: session)
-        let (_, _, info4, _) = dataTask4.startSynchronous()
+        let (_, _, info4, _) = dataTask4.startSynchronous(decoder: .passthrough)
         XCTAssert(info4 != nil)
         XCTAssert(info4!.cacheHit) // in cache again
     }
@@ -419,7 +446,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let dataTask = UBURLDataTask(url: url, session: session)
 
-        dataTask.startSynchronous()
+        dataTask.startSynchronous(decoder: .passthrough)
 
         // load request again
 
@@ -427,7 +454,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask2.addStateTransitionObserver { _, to, _ in
             XCTAssert(to != .fetching) // never make the request
         }
-        let (_, _, info, _) = dataTask2.startSynchronous()
+        let (_, _, info, _) = dataTask2.startSynchronous(decoder: .passthrough)
 
         XCTAssert(info != nil)
         XCTAssert(info!.cacheHit)
@@ -453,7 +480,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let ex = expectation(description: "s")
         ex.assertForOverFulfill = false
-        dataTask?.addCompletionHandler { _, _, _, _ in
+        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             ex.fulfill()
             dataTask?.cancel() // make sure that cron doesn't trigger
             dataTask = nil
@@ -472,7 +499,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask2 = UBURLDataTask(request: UBURLRequest(request: request2), session: session)
 
         let ex2 = expectation(description: "s2")
-        dataTask2.addCompletionHandler { _, _, info, _ in
+        dataTask2.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssertFalse(info!.cacheHit)
@@ -486,7 +513,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask3 = UBURLDataTask(request: UBURLRequest(request: request2), session: session)
 
         let ex3 = expectation(description: "s2")
-        dataTask3.addCompletionHandler { _, _, info, _ in
+        dataTask3.addCompletionHandler(decoder: .passthrough) { _, _, info, _ in
 
             XCTAssert(info != nil)
             XCTAssert(info!.cacheHit)
@@ -498,7 +525,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
     }
 }
 
-class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
+private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
@@ -538,5 +565,21 @@ class SwisstopoMapAutorefreshCacheLogic: UBAutoRefreshCacheLogic {
 
     override func modifyCacheResult(proposed _: UBCacheResult, possible: UBCacheResult, reason _: UBBaseCachingLogic.CacheDecisionReason) -> UBCacheResult {
         possible
+    }
+}
+
+@available(iOS 15.0.0, *)
+private struct CallbackResponseProvider: ResponseProviderBody {
+    var bodyCallback: (URLRequest) -> (Data)
+    func body(for request: URLRequest) async throws -> Data {
+        bodyCallback(request)
+    }
+}
+
+@available(iOS 15.0.0, *)
+private struct CallbackHeaderResponseProvider: ResponseProviderHeader {
+    var headerCallback: (URLRequest) -> (HTTPURLResponse)
+    func response(for request: URLRequest) async throws -> HTTPURLResponse {
+        headerCallback(request)
     }
 }
