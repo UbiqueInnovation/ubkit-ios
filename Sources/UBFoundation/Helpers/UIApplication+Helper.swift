@@ -6,26 +6,26 @@
 //
 
 #if os(iOS) || os(tvOS)
-import UIKit
+    import UIKit
 
-extension UIApplication {
-    // MARK: - Public
+    extension UIApplication {
+        // MARK: - Public
 
-    // if available provides best possible link to notification settings of app directly
-    @objc public static let ub_appNotificationSettingsURL = URL(string: notificationSettingsURLString)
+        // if available provides best possible link to notification settings of app directly
+        @objc public static let ub_appNotificationSettingsURL = URL(string: notificationSettingsURLString)
 
-    // MARK: - Implementation
+        // MARK: - Implementation
 
-    private static let notificationSettingsURLString: String = {
-        if #available(iOS 16, *) {
-            return UIApplication.openNotificationSettingsURLString
-        }
+        private static let notificationSettingsURLString: String = {
+            if #available(iOS 16, *) {
+                return UIApplication.openNotificationSettingsURLString
+            }
 
-        if #available(iOS 15.4, *) {
-            return UIApplicationOpenNotificationSettingsURLString
-        }
+            if #available(iOS 15.4, *) {
+                return UIApplicationOpenNotificationSettingsURLString
+            }
 
-        return UIApplication.openSettingsURLString
-    }()
-}
+            return UIApplication.openSettingsURLString
+        }()
+    }
 #endif
