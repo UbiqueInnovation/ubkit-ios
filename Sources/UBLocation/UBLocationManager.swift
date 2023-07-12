@@ -8,6 +8,7 @@
 
 import CoreLocation
 import UBFoundation
+import UIKit
 
 /// An object defining methods that handle events related to GPS location.
 public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
@@ -86,6 +87,8 @@ public class UBLocationManager: NSObject {
             .map(\.usage)
             .reduce([]) { $0.union($1) }
     }
+
+    private var appIsInBackground: Bool
 
     /// Allows logging all the changes in authorization status, separately from any delegates
     public var logLocationPermissionChange: ((CLAuthorizationStatus) -> Void)?
@@ -270,9 +273,12 @@ public class UBLocationManager: NSObject {
         self.locationManager = locationManager
         timeout = Self.defaultTimeout
 
+        appIsInBackground = UIApplication.shared.applicationState == .background
+
         super.init()
 
         setupLocationManager()
+        setupAppLifeCycleNotifications()
     }
 
     /// Applies the initial configuration for the location manager
@@ -285,9 +291,25 @@ public class UBLocationManager: NSObject {
         locationManager.pausesLocationUpdatesAutomatically = false
 
         // Only applies if the "Always" authorization is granted and `allowsBackgroundLocationUpdates`
-        if #available(iOS 11.0, *) {
-            locationManager.showsBackgroundLocationIndicator = true
-        }
+        locationManager.showsBackgroundLocationIndicator = true
+    }
+
+    private func setupAppLifeCycleNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+
+    @objc private func appDidEnterBackground() {
+        appIsInBackground = true
+
+        stopLocationMonitoring()
+        startLocationMonitoringForAllDelegates()
+    }
+
+    @objc private func appDidBecomeActive() {
+        appIsInBackground = false
+
+        startLocationMonitoringForAllDelegates()
     }
 
     /// Start monitoring location service events (varies by `usage`)
@@ -470,8 +492,10 @@ public class UBLocationManager: NSObject {
         }
 
         if usage.containsLocation {
-            locationManager.startUpdatingLocation()
-            startLocationTimer()
+            if !appIsInBackground || usage.contains(.backgroundLocation) {
+                locationManager.startUpdatingLocation()
+                startLocationTimer()
+            }
         }
         if usage.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.startMonitoringSignificantLocationChanges()
@@ -480,7 +504,9 @@ public class UBLocationManager: NSObject {
             locationManager.startMonitoringVisits()
         }
         if usage.containsHeading {
-            locationManager.startUpdatingHeading()
+            if !appIsInBackground || usage.contains(.backgroundHeading) {
+                locationManager.startUpdatingHeading()
+            }
         }
         if usage.containsRegions {
             for region in usage.regionsToMonitor {
