@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCODE_VERSION: 'Xcode_14.2.0'
+  XCODE_VERSION: "Xcode_14.2.0"
 
 on:
   push:
@@ -12,40 +12,40 @@ on:
 jobs:
   build-and-test:
     name: Build & Tests
-    runs-on: macos-12
+    runs-on: ["self-hosted", "macOS"]
 
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-      
-    - name: Switch to ${{ env.XCODE_VERSION }}
-      run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
 
-    - name: Fastlane
-      run: fastlane tests
+      - name: Switch to ${{ env.XCODE_VERSION }}
+        run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
 
-    - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action/composite@95a3aff882d4abe2838b187c66477be7fbf3ddb8
-      if: always()
-      with:
-        files: build/*.xml
+      - name: Fastlane
+        run: fastlane tests
 
-    - name: Archive logs
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: build-test-logs
-        path: build
-        
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action/composite@95a3aff882d4abe2838b187c66477be7fbf3ddb8
+        if: always()
+        with:
+          files: build/*.xml
+
+      - name: Archive logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-test-logs
+          path: build
+
   codequality:
     name: Codequality
-    runs-on: macos-latest
+    runs-on: ["self-hosted", "macOS"]
 
     steps:
-    - uses: actions/checkout@v2
-  
-    - name: Switch to ${{ env.XCODE_VERSION }}
-      run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
+      - uses: actions/checkout@v2
 
-    - name: swiftformat
-      run: swiftformat Sources,Tests --lint
+      - name: Switch to ${{ env.XCODE_VERSION }}
+        run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
+
+      - name: swiftformat
+        run: swiftformat Sources,Tests --lint
