@@ -1,12 +1,13 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+import CompilerPluginSupport
 
 let package = Package(
     name: "UBKit",
     platforms: [
-        .iOS(.v11),
+        .iOS(.v13),
         .watchOS(.v5),
     ],
     products: [
@@ -19,14 +20,21 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/UbiqueInnovation/ios-local-networking.git", from: "1.0.2"),
+        .package(url: "https://github.com/apple/swift-syntax", .upToNextMajor(from: "509.0.0")),
     ],
     targets: [
-        .target(name: "UBFoundation"),
-        .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
+        .target(name: "UBFoundation", dependencies: ["UBMacros"]),
+        .target(name: "UBUserInterface", dependencies: ["UBFoundation", "UBMacros"]),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
         .target(name: "UBQRScanner"),
         .target(name: "UBDevTools", dependencies: ["UBFoundation"]),
+
+        .macro(name: "UBMacros", dependencies: [
+            .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+            .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+        ]),
+
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
                     resources: [
