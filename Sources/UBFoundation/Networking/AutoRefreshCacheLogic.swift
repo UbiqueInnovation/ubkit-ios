@@ -12,9 +12,13 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     /// The refresh cron jobs
     private let refreshJobs = NSMapTable<UBURLDataTask, UBCronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
+    private let refreshJobsAccess = DispatchQueue(label: "refresh-jobs", qos: .default)
+
     /// Cancels a cron job for a given data task
     private func cancelRefreshCronJob(for task: UBURLDataTask) {
-        refreshJobs.removeObject(forKey: task)
+        refreshJobsAccess.sync {
+            refreshJobs.removeObject(forKey: task)
+        }
     }
 
     /// Schedule a refresh cron job
@@ -28,7 +32,9 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         let job = UBCronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
             task?.start(flags: [.systemTriggered, .ignoreCache])
         }
-        refreshJobs.setObject(job, forKey: task)
+        refreshJobsAccess.sync {
+            refreshJobs.setObject(job, forKey: task)
+        }
     }
 
     /// Computes the next refresh date for a given header fields.
