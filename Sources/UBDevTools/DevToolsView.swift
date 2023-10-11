@@ -32,6 +32,8 @@ public struct DevToolsView: View {
 
     @StateObject private var backendUrls = BackendDevTools.viewModel
 
+    @State private var cacheUpdateValue = UUID()
+
     // MARK: - Init
 
     public init?() {
@@ -99,12 +101,18 @@ public struct DevToolsView: View {
                     }
                 }
             }
-            Section(header: Text("URLCache.shared")) {
-                Text(cacheSizeText)
-                Button("Remove all cached responses") {
-                    CacheDevTools.clearCache(URLCache.shared)
-                    cacheSizeText = CacheDevTools.currentSizes(URLCache.shared)
+            Section(header: Text("Caches")) {
+                ForEach(CacheDevTools.caches, id: \.id) { cache in
+                    VStack(alignment: .leading) {
+                        Text(cache.id).bold()
+                        Text(CacheDevTools.currentSizes(cache.id, updateValue: cacheUpdateValue))
+                        Button("Clear") {
+                            CacheDevTools.clearCache(cache.id)
+                            cacheUpdateValue = UUID()
+                        }
+                    }
                 }
+
             }
             Section(header: Text("UIView")) {
                 Toggle("Show debug border", isOn: Binding(get: { Self.showViewBorders }, set: { Self.showViewBorders = $0 }))
@@ -176,5 +184,4 @@ public struct DevToolsView: View {
     @UBUserDefault(key: "io.openmobilemaps.debug.rastertiles.enabled", defaultValue: false)
     public static var mapRasterTilesDebugOverlay: Bool
 
-    @State var cacheSizeText: String = CacheDevTools.currentSizes(URLCache.shared)
 }

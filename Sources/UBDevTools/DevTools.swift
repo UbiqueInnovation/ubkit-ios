@@ -38,6 +38,10 @@ public enum UBDevTools {
         UserDefaultsDevTools.setupSharedUserDefaults(userDefaults)
     }
 
+    public static func setupCaches(additional caches: [(id: String, cache: URLCache)]) {
+        CacheDevTools.additionalCaches = caches
+    }
+
     // MARK: - Helper methods
 
     private static func setupNavbarAppearance() {
