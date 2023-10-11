@@ -102,6 +102,12 @@ public struct DevToolsView: View {
                 }
             }
             Section(header: Text("Caches")) {
+                Button("Clear all") {
+                    for cache in CacheDevTools.caches {
+                        CacheDevTools.clearCache(cache.id)
+                    }
+                    cacheUpdateValue = UUID()
+                }
                 ForEach(CacheDevTools.caches, id: \.id) { cache in
                     VStack(alignment: .leading) {
                         Text(cache.id).bold()
