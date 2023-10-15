@@ -463,6 +463,12 @@ public class UBLocationManager: NSObject {
 
     /// :nodoc:
     private func startLocationMonitoringWithoutChecks(_ delegate: UBLocationManagerDelegate) {
+        guard locationManager.locationServicesEnabled() else {
+            let requiredAuthorizationLevel = usage.minimumAuthorizationLevelRequired
+            delegate.locationManager(self, requiresPermission: requiredAuthorizationLevel)
+            return
+        }
+
         if usage.containsLocation {
             locationManager.startUpdatingLocation()
             startLocationTimer()
