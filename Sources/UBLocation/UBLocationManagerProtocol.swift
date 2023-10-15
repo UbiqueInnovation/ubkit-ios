@@ -51,6 +51,7 @@ extension CLLocationManager: UBLocationManagerProtocol {
         CLLocationManager.authorizationStatus()
     }
 
+    @available(*, deprecated, message: "locationServicesEnabled() not exposed to avoid use on main thread. Use CLLocationManager.locationServicesEnabled() directly if needed.")
     public func locationServicesEnabled() -> Bool {
         CLLocationManager.locationServicesEnabled()
     }
