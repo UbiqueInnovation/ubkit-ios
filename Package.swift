@@ -25,7 +25,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "UBFoundation", dependencies: ["UBMacros"]),
-        .target(name: "UBUserInterface", dependencies: ["UBFoundation", "UBMacros"]),
+        .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
         .target(name: "UBQRScanner"),
