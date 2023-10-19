@@ -118,7 +118,6 @@ public struct DevToolsView: View {
                         }
                     }
                 }
-
             }
             Section(header: Text("UIView")) {
                 Toggle("Show debug border", isOn: Binding(get: { Self.showViewBorders }, set: { Self.showViewBorders = $0 }))
@@ -189,5 +188,4 @@ public struct DevToolsView: View {
 
     @UBUserDefault(key: "io.openmobilemaps.debug.rastertiles.enabled", defaultValue: false)
     public static var mapRasterTilesDebugOverlay: Bool
-
 }

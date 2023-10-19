@@ -1,5 +1,5 @@
 //
-//  Application+Helpers.swift
+//  UIApplication+Helper.swift
 //  UBFoundation
 //
 //  Created by Marco Zimmermann on 12.05.23.

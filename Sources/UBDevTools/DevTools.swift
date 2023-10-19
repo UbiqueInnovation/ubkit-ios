@@ -19,7 +19,7 @@ public enum UBDevTools {
     private static let devTools: [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self, UIViewDevTools.self]
 
     public static func setup() {
-        Self.isActivated = true
+        isActivated = true
 
         setupNavbarAppearance()
 
@@ -64,7 +64,7 @@ extension UIWindow {
     private static var initSwizzled = false
 
     static func sendInitSwizzleWizzle() {
-        guard !Self.initSwizzled else { return }
+        guard !initSwizzled else { return }
 
         if let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.init(windowScene:))),
            let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzled_windowSceneInit)) {

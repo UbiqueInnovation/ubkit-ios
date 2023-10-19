@@ -35,10 +35,10 @@ class FingerTipsDevTools: DevTool {
                 UIWindow.sendEventSwizzleWizzle()
                 overlayWindow?.isHidden = false
                 overlayWindow?.rootViewController = UIViewController()
-                Self.setMainAssociatedObject(overlayWindow)
+                setMainAssociatedObject(overlayWindow)
             }
         } else {
-            Self.setMainAssociatedObject(nil)
+            setMainAssociatedObject(nil)
             overlayWindow?.remove()
             overlayWindow = nil
         }

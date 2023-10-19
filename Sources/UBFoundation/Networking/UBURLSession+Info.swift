@@ -1,5 +1,5 @@
 //
-//  NetworkingTaskInfo.swift
+//  UBURLSession+Info.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 03.04.19.

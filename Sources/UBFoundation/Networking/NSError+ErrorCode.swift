@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  NSError+ErrorCode.swift
 //
 //
 //  Created by Patrick Amrein on 26.08.22.

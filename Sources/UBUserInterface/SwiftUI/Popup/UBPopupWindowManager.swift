@@ -1,5 +1,5 @@
 //
-//  UBPopupManager.swift
+//  UBPopupWindowManager.swift
 //
 //
 //  Created by Matthias Felix on 27.09.22.

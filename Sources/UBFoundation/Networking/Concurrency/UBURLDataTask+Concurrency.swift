@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UBURLDataTask+Concurrency.swift
 //
 //
 //  Created by Nicolas Märki on 16.05.22.
@@ -71,7 +71,7 @@ public extension UBURLDataTask {
     }
 
     struct TaskResult<T> {
-        internal init(resultTuple: ResultTuple<T>) {
+        init(resultTuple: ResultTuple<T>) {
             self.resultTuple = resultTuple
         }
 

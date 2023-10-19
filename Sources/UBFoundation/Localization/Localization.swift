@@ -13,7 +13,7 @@ import Foundation
 /// - SeeAlso: `LocalizationNotification` for the available notifications.
 public class UBLocalization: Codable {
     /// A logger associated with localization
-    internal static let logger: UBLogger = UBLogging.frameworkLoggerFactory(category: "Localization")
+    static let logger: UBLogger = UBLogging.frameworkLoggerFactory(category: "Localization")
 
     // MARK: - Properties
 

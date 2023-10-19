@@ -8,7 +8,6 @@
 import Foundation
 
 class CacheDevTools {
-
     public static var caches: [(id: String, cache: URLCache)] {
         [(id: "Shared", cache: URLCache.shared)] + additionalCaches
     }
