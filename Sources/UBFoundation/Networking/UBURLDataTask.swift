@@ -596,7 +596,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         let waitResult = synchronousStartSemaphore.wait(timeout: DispatchTime.now() + DispatchTimeInterval.seconds(timeout))
 
         if waitResult == .timedOut {
-            return (Result.failure(.timedOut), nil, nil, self)
+            return (Result.failure(.timedOut()), nil, nil, self)
         }
 
         removeCompletionHandler(identifier: completionBlockIdentifier)

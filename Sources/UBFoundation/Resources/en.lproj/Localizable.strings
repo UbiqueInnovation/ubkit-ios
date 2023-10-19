@@ -1,0 +1,5 @@
+"error_unexpected" = "An unexpected error has occurred.";
+"error_invalid_certificate_message" = "A secure connection cannot be made to the server. Please check or deactivate your VPN and/or your proxy or check whether you are connected via a public Wi-Fi network.";
+"error_code_prefix" = "Error code:";
+"error_timeout" = "The request timed out. Please check your network and try again";
+"error_connection_failed" = "Unable to establish a connection to the server. Please check your network and try again.";

@@ -1,0 +1,5 @@
+"error_unexpected" = "Si è verificato un errore imprevisto.";
+"error_invalid_certificate_message" = "Impossibile stabilire una connessione sicura al server. Verifica o disattiva la tua rete VPN o il tuo proxy oppure controlla se sei connesso attraverso una WLAN pubblica.";
+"error_code_prefix" = "Codice d‘errore:";
+"error_timeout" = "La richiesta è scaduta. Si prega di controllare la rete e riprovare.";
+"error_connection_failed" = "Impossibile stabilire una connessione con il server. Si prega di controllare la rete e riprovare.";
