@@ -13,13 +13,15 @@ public class StackScrollView: UIView {
 
     private let stackViewContainer = UIView()
     public let stackView = UIStackView()
-    public let scrollView = UIScrollView()
+    public let scrollView: UIScrollView
 
     private var addedViewControllers: [UIView: UIViewController] = [:]
 
     // MARK: - Initialization
 
-    public init(axis: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0) {
+    public init(axis: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0, customScrollView: UIScrollView? = nil) {
+        scrollView = customScrollView ?? UIScrollView()
+
         super.init(frame: .zero)
 
         switch axis {
