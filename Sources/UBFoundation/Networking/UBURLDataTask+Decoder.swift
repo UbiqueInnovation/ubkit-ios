@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 /// An object that can decode data into the desired type
 open class UBURLDataTaskDecoder<T> {
     /// The logic for data decoding
@@ -100,3 +104,24 @@ public extension UBURLDataTaskDecoder where T: Decodable {
         UBHTTPJSONDecoder(dateDecodingStrategy: dateDecodingStrategy, dataDecodingStrategy: dataDecodingStrategy)
     }
 }
+
+#if canImport(UIKit)
+public class UBImageDecoder: UBURLDataTaskDecoder<UIImage> {
+    /// Initializes the decoder
+    ///
+    /// - Parameter scale: Use 2 or 3 to create images with more pixels than points
+    public init(scale: Double = 1) {
+        super.init { data, _ -> UIImage in
+            guard let image = UIImage(data: data, scale: scale) else {
+                throw UBInternalNetworkingError.couldNotDecodeBody
+            }
+            return image
+        }
+    }
+}
+
+public extension UBURLDataTaskDecoder where T == UIImage {
+    static let image = UBImageDecoder()
+}
+
+#endif
