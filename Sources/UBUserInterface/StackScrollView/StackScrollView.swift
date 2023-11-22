@@ -90,7 +90,8 @@ public class StackScrollView: UIView {
     ///    - size: If specified, a height or width constraint will be added to the added view
     ///    - index: If specified, the view will be inserted at the specified index. If nil, the view will be added to the end of the stack view
     ///    - inset: If specified, the view will be put into a wrapper view with the specified insets, and the wrapper view will be added to the stack view
-    public func addArrangedView(_ view: UIView, size: CGFloat? = nil, index: Int? = nil, inset: UIEdgeInsets? = nil) {
+    @discardableResult
+    public func addArrangedView(_ view: UIView, size: CGFloat? = nil, index: Int? = nil, inset: UIEdgeInsets? = nil) -> UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         if let s = size {
             switch stackView.axis {
@@ -122,13 +123,15 @@ public class StackScrollView: UIView {
         } else {
             stackView.addArrangedSubview(subView)
         }
+        return subView
     }
 
     /// Adds a view to the stack view and centers it either horizontally or vertically
     /// - Parameters:
     ///    - view: The view to be added
     ///    - inset: If specified, the view will be inset from the horizontal or vertical edges by this amount
-    public func addArrangedViewCentered(_ view: UIView, inset: CGFloat = 0) {
+    @discardableResult
+    public func addArrangedViewCentered(_ view: UIView, inset: CGFloat = 0) -> UIView {
         let wrapper = UIView()
         wrapper.addSubview(view)
 
@@ -155,7 +158,7 @@ public class StackScrollView: UIView {
                 fatalError()
         }
 
-        addArrangedView(wrapper)
+        return addArrangedView(wrapper)
     }
 
     /// Adds the view of another view controller to the stack view, taking care of adding the view controller as a child as well
@@ -164,12 +167,15 @@ public class StackScrollView: UIView {
     ///    - parent: The view controller will be added as child to this parent
     ///    - size: If specified, the view will have this height or width, depending on the stack view's orientation
     ///    - index: If specified, the view will be inserted to this index in the stack view instead of added at the end
-    public func addArrangedViewController(_ viewController: UIViewController, parent: UIViewController, size: CGFloat? = nil, index: Int? = nil) {
+    @discardableResult
+    public func addArrangedViewController(_ viewController: UIViewController, parent: UIViewController, size: CGFloat? = nil, index: Int? = nil) -> UIView {
         parent.addChild(viewController)
-        addArrangedView(viewController.view, size: size, index: index)
+        let v = addArrangedView(viewController.view, size: size, index: index)
         viewController.didMove(toParent: parent)
 
         self.addedViewControllers[viewController.view] = viewController
+
+        return v
     }
 
     /// Adds a spacer view of the specified size to the stack view
