@@ -22,10 +22,10 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     }
 
     /// Schedule a refresh cron job
-    private func scheduleRefreshCronJob(for task: UBURLDataTask, headers: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) {
+    private func scheduleRefreshCronJob(for task: UBURLDataTask, headers: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date? = nil) {
         cancelRefreshCronJob(for: task)
 
-        guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics) else {
+        guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics, referenceDate: referenceDate) else {
             return
         }
         // Schedule a new job
@@ -41,8 +41,8 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     ///
     /// - Parameter allHeaderFields: The header fiealds.
     /// - Returns: The next refresh date. `nil` if no next refresh date is available
-    open func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
-        guard let responseDateHeader = allHeaderFields.getCaseInsensitiveValue(key: dateHeaderFieldName) as? String, let responseDate = dateFormatter.date(from: responseDateHeader) else {
+    open func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date?) -> Date? {
+        guard let responseDateHeader = allHeaderFields.getCaseInsensitiveValue(key: dateHeaderFieldName) as? String, let responseDate = referenceDate ?? dateFormatter.date(from: responseDateHeader) else {
             // If we cannot find a date in the response header then we cannot comput the next refresh date
             return nil
         }
