@@ -86,7 +86,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         if cachedURLResponse != nil ||
             response == UBStandardHTTPCode.notModified {
             // If there is a response or the response is not modified, reschedule the cron job
-            scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics)
+            scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics, referenceDate: Date())
         } else {
             // Otherwise cancel any current cron jobs
             cancelRefreshCronJob(for: ubDataTask)
