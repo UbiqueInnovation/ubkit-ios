@@ -22,7 +22,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     }
 
     /// Schedule a refresh cron job
-    private func scheduleRefreshCronJob(for task: UBURLDataTask, headers: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date? = nil) {
+    private func scheduleRefreshCronJob(for task: UBURLDataTask, headers: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date?) {
         cancelRefreshCronJob(for: task)
 
         guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics, referenceDate: referenceDate) else {
@@ -59,12 +59,19 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
             backoffInterval = 60
         }
 
+        let age: TimeInterval
+        if let ageHeader = allHeaderFields.getCaseInsensitiveValue(key: ageHeaderFieldName) as? String, let interval = TimeInterval(ageHeader) {
+            age = interval
+        } else {
+            age = 0
+        }
+
         // The backoff date is the response date added to the backoff interval
         let backoffDate: Date
         if let metrics = metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
-            backoffDate = max(responseDate + backoffInterval, date + backoffInterval)
+            backoffDate = max(responseDate + age + backoffInterval, date + backoffInterval)
         } else {
-            backoffDate = responseDate + backoffInterval
+            backoffDate = responseDate + age + backoffInterval
         }
 
         // Return the date that is the most in the future.
@@ -103,6 +110,6 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     /// :nodoc:
 
     override public func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
-        scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics)
+        scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics, referenceDate: nil)
     }
 }
