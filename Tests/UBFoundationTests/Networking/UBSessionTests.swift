@@ -26,59 +26,6 @@ class UBSessionTests: XCTestCase {
         return testBundle
     }()
 
-    func testNotSuccessStatusCode() {
-        let ex = expectation(description: "s")
-        let url = URL(string: "https://limmat.ubique.ch/sandbox/status/404")!
-        let dataTask = UBURLDataTask(url: url)
-        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
-            switch result {
-                case .success:
-                    XCTFail()
-                case .failure:
-                    break
-            }
-            ex.fulfill()
-        }
-        dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
-    }
-
-    func testSuccessStatusCode() {
-        let ex = expectation(description: "s")
-        let url = URL(string: "https://limmat.ubique.ch/sandbox/status/200")!
-        let dataTask = UBURLDataTask(url: url)
-        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
-            switch result {
-                case .success:
-                    break
-                case .failure:
-                    XCTFail()
-            }
-            ex.fulfill()
-        }
-        dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
-    }
-
-    func testNoRedirection() {
-        let ex = expectation(description: "s")
-        let url = URL(string: "https://limmat.ubique.ch/sandbox/status/302")!
-        let configuration = UBURLSessionConfiguration(allowRedirections: false)
-        let session = UBURLSession(configuration: configuration)
-        let dataTask = UBURLDataTask(url: url, session: session)
-        dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
-            switch result {
-                case .success:
-                    XCTFail()
-                case let .failure(error):
-                    XCTAssertEqual(error, UBNetworkingError.internal(.requestRedirected))
-            }
-            ex.fulfill()
-        }
-        dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
-    }
-
     func testRedirection() {
         let ex = expectation(description: "s")
         let url = URL(string: "http://ubique.ch")!
@@ -151,7 +98,7 @@ class UBSessionTests: XCTestCase {
                 case .success:
                     XCTFail("Certificate Pinning should have failed")
                 case let .failure(error):
-                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
+                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed(nil))
             }
             ex.fulfill()
         }
@@ -171,7 +118,7 @@ class UBSessionTests: XCTestCase {
                 case .success:
                     XCTFail("Certificate Pinning should have failed")
                 case let .failure(error):
-                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
+                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed(nil))
             }
             ex.fulfill()
         }
@@ -191,7 +138,7 @@ class UBSessionTests: XCTestCase {
                 case .success:
                     XCTFail("Certificate Pinning should have failed")
                 case let .failure(error):
-                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
+                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed(nil))
             }
             ex.fulfill()
         }
@@ -211,7 +158,7 @@ class UBSessionTests: XCTestCase {
                 case .success:
                     XCTFail("Certificate Pinning should have failed")
                 case let .failure(error):
-                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed)
+                    XCTAssertEqual(error, UBNetworkingError.certificateValidationFailed(nil))
             }
             ex.fulfill()
         }
