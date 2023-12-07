@@ -17,6 +17,22 @@ public enum UBCacheResult {
     case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
     /// Cached data found and is valid
     case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
+
+    var reloadHeaders: [String: String] {
+        switch self {
+            case .miss: return [:]
+            case .expired(cachedResponse: _, reloadHeaders: let h, metrics: _): return h
+            case .hit(cachedResponse: _, reloadHeaders: let h, metrics: _): return h
+        }
+    }
+
+    var cachedResponse: CachedURLResponse? {
+        switch self {
+            case .miss: return nil
+            case .expired(cachedResponse: let r, reloadHeaders: _, metrics: _): return r
+            case .hit(cachedResponse: let r, reloadHeaders: _, metrics: _): return r
+        }
+    }
 }
 
 /// A caching logic object can provide decision when comes to requests and response that needs caching
