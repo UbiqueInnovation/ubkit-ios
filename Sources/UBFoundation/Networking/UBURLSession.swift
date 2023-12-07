@@ -51,13 +51,16 @@ public class UBURLSession: UBDataTaskURLSession {
         guard let cacheResult else {
             return createTask(request.getRequest())
         }
-
-        guard owner.flags.contains(.ignoreCache) == false else {
+        
+        if owner.flags.contains(.refresh) {
             var reloadRequest = request.getRequest()
             for header in cacheResult.reloadHeaders {
                 reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
             }
             return createTask(reloadRequest, cachedResponse: cacheResult.cachedResponse)
+        }
+        else if owner.flags.contains(.ignoreCache) {
+            return createTask(request.getRequest(), cachedResponse: nil)
         }
 
         switch (urlSession.configuration.requestCachePolicy, cacheResult) {
