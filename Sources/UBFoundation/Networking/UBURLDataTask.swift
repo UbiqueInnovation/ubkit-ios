@@ -38,6 +38,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         public static let systemTriggered = Flags(rawValue: 1 << 1)
         /// If the task is running synchronous
         public static let synchronous = Flags(rawValue: 1 << 2)
+        /// The request reloads existing data and will always load from network
+        public static let refresh = Flags(rawValue: 1 << 3)
     }
 
     public private(set) var flags: Flags = []
@@ -159,6 +161,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         } else {
             flags.remove(.ignoreCache)
         }
+        flags.remove(.refresh)
         start(flags: flags)
     }
 
