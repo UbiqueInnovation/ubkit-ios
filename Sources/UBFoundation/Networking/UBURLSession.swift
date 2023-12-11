@@ -41,6 +41,8 @@ public class UBURLSession: UBDataTaskURLSession {
     public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
         // Creats and adds a data task to the delegate
         func createTask(_ request: URLRequest, cachedResponse: CachedURLResponse? = nil) -> URLSessionDataTask? {
+            var request = request
+            sessionDelegate.cachingLogic?.prepareRequest(&request)
             let sessionDataTask = urlSession.dataTask(with: request)
             sessionDelegate.addTaskPair(key: sessionDataTask, value: owner, cachedResponse: cachedResponse)
             return sessionDataTask

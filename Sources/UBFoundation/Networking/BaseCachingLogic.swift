@@ -40,6 +40,10 @@ open class UBBaseCachingLogic: UBCachingLogic {
         dateFormatter = df
     }
 
+    public func prepareRequest(_ request: inout URLRequest) {
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+    }
+
     /// Gets a cached url response from a url session.
     ///
     /// - Parameters:

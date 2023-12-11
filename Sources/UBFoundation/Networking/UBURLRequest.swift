@@ -93,7 +93,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///   - method: The HTTP Method to use. Default to GET.
     ///   - timeoutInterval: The timeout interval for the request. The default is 60.0.
     public init(url: URL, method: UBHTTPMethod = .get, timeoutInterval: TimeInterval = 60.0) {
-        self.init(request: URLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: timeoutInterval))
+        self.init(request: URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: timeoutInterval))
         httpMethod = method
     }
 
