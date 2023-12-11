@@ -111,5 +111,8 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
 
     override public func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
         scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics, referenceDate: nil)
+    override public func hasUsed(cachedResponse: HTTPURLResponse, nonModifiedResponse: HTTPURLResponse?, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
+        let referenceDate = dataTask.flags.contains(.refresh) ? Date() : nil
+        scheduleRefreshCronJob(for: dataTask, headers: (nonModifiedResponse ?? cachedResponse).allHeaderFields, metrics: metrics, referenceDate: referenceDate)
     }
 }

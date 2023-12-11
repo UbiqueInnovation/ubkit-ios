@@ -89,8 +89,8 @@ public class UBURLSession: UBDataTaskURLSession {
 
                 owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
                 owner.completionHandlersDispatchQueue.sync {
-                    if let response = cachedResponse.response as? HTTPURLResponse {
-                        sessionDelegate.cachingLogic?.hasUsed(response: response, metrics: metrics, request: request.getRequest(), dataTask: owner)
+                    if let cachedResponse = cachedResponse.response as? HTTPURLResponse {
+                        sessionDelegate.cachingLogic?.hasUsed(cachedResponse: cachedResponse, nonModifiedResponse: nil, metrics: metrics, request: request.getRequest(), dataTask: owner)
                     }
                 }
                 return nil
