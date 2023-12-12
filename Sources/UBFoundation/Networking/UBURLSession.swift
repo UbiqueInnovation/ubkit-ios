@@ -41,6 +41,8 @@ public class UBURLSession: UBDataTaskURLSession {
     public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
         // Creats and adds a data task to the delegate
         func createTask(_ request: URLRequest, cachedResponse: CachedURLResponse? = nil) -> URLSessionDataTask? {
+            var request = request
+            sessionDelegate.cachingLogic?.prepareRequest(&request)
             let sessionDataTask = urlSession.dataTask(with: request)
             sessionDelegate.addTaskPair(key: sessionDataTask, value: owner, cachedResponse: cachedResponse)
             return sessionDataTask
@@ -87,8 +89,8 @@ public class UBURLSession: UBDataTaskURLSession {
 
                 owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
                 owner.completionHandlersDispatchQueue.sync {
-                    if let response = cachedResponse.response as? HTTPURLResponse {
-                        sessionDelegate.cachingLogic?.hasUsed(response: response, metrics: metrics, request: request.getRequest(), dataTask: owner)
+                    if let cachedResponse = cachedResponse.response as? HTTPURLResponse {
+                        sessionDelegate.cachingLogic?.hasUsed(cachedResponse: cachedResponse, nonModifiedResponse: nil, metrics: metrics, request: request.getRequest(), dataTask: owner)
                     }
                 }
                 return nil

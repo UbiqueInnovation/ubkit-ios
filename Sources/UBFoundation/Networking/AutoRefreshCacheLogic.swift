@@ -6,6 +6,12 @@
 //
 
 import Foundation
+import OSLog
+
+@available(iOS 14.0, watchOS 7.0, *)
+fileprivate struct Log {
+    static let logger = Logger(subsystem: "UBKit", category: "AutoRefreshCacheLogic")
+}
 
 /// A caching logic that will launch and refresh the data automatically when the data expires
 open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
@@ -26,10 +32,26 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         cancelRefreshCronJob(for: task)
 
         guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics, referenceDate: referenceDate) else {
+            if #available(iOS 14.0, watchOS 7.0, *) {
+                Log.logger.trace("No refresh date for task \(task)")
+            }
             return
         }
+
+        if #available(iOS 14.0, watchOS 7.0, *) {
+            Log.logger.trace("Schedule refresh for \(task) at \(nextRefreshDate) (\(round(nextRefreshDate.timeIntervalSinceNow))s)")
+        }
+
         // Schedule a new job
         let job = UBCronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
+            if #available(iOS 14.0, watchOS 7.0, *) {
+                if let task {
+                    Log.logger.trace("Start cron refresh for task \(task)")
+                }
+                else {
+                    Log.logger.trace("Not start cron refresh, task doesn't exist anymore.")
+                }
+            }
             task?.start(flags: [.systemTriggered, .refresh])
         }
         refreshJobsAccess.sync {
@@ -42,7 +64,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     /// - Parameter allHeaderFields: The header fiealds.
     /// - Returns: The next refresh date. `nil` if no next refresh date is available
     open func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date?) -> Date? {
-        guard let responseDateHeader = allHeaderFields.getCaseInsensitiveValue(key: dateHeaderFieldName) as? String, let responseDate = referenceDate ?? dateFormatter.date(from: responseDateHeader) else {
+        guard let responseDateHeader = allHeaderFields.getCaseInsensitiveValue(key: dateHeaderFieldName) as? String, var responseDate = dateFormatter.date(from: responseDateHeader) else {
             // If we cannot find a date in the response header then we cannot comput the next refresh date
             return nil
         }
@@ -65,13 +87,14 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         } else {
             age = 0
         }
+        responseDate = referenceDate ?? responseDate + age
 
         // The backoff date is the response date added to the backoff interval
         let backoffDate: Date
         if let metrics = metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
-            backoffDate = max(responseDate + age + backoffInterval, date + backoffInterval)
+            backoffDate = max(responseDate + backoffInterval, date + backoffInterval)
         } else {
-            backoffDate = responseDate + age + backoffInterval
+            backoffDate = responseDate + backoffInterval
         }
 
         // Return the date that is the most in the future.
@@ -93,7 +116,8 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         if cachedURLResponse != nil ||
             response == UBStandardHTTPCode.notModified {
             // If there is a response or the response is not modified, reschedule the cron job
-            scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics, referenceDate: Date())
+            let referenceDate = ubDataTask.flags.contains(.refresh) ? Date() : nil
+            scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics, referenceDate: referenceDate)
         } else {
             // Otherwise cancel any current cron jobs
             cancelRefreshCronJob(for: ubDataTask)
@@ -109,7 +133,8 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
 
     /// :nodoc:
 
-    override public func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
-        scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics, referenceDate: nil)
+    override public func hasUsed(cachedResponse: HTTPURLResponse, nonModifiedResponse: HTTPURLResponse?, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
+        let referenceDate = dataTask.flags.contains(.refresh) ? Date() : nil
+        scheduleRefreshCronJob(for: dataTask, headers: (nonModifiedResponse ?? cachedResponse).allHeaderFields, metrics: metrics, referenceDate: referenceDate)
     }
 }

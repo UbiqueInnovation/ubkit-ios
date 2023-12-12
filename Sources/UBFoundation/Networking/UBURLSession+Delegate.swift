@@ -112,9 +112,11 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
                let request = task.currentRequest {
                 session.configuration.urlCache?.storeCachedResponse(newCachedResponse, for: request)
             }
-            ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: info)
+            if !ubDataTask.flags.contains(.refresh) {
+                ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: info)
+            }
             if let response = cached.response as? HTTPURLResponse {
-                cachingLogic?.hasUsed(response: response, metrics: collectedData.metrics, request: collectedData.request, dataTask: ubDataTask)
+                cachingLogic?.hasUsed(cachedResponse: response, nonModifiedResponse: response, metrics: collectedData.metrics, request: collectedData.request, dataTask: ubDataTask)
             }
             return
         }
