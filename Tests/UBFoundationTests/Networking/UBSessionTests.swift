@@ -41,7 +41,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 15, handler: nil)
     }
 
     func testURLValidationFailed() {

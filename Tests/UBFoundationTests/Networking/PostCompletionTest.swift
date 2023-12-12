@@ -31,12 +31,26 @@ class PostCompletionTest: XCTestCase {
         }
 
         let exp2 = expectation(description: "json")
-        task.addCompletionHandler(decoder: .json(Body.self)) { result, _, _, _ in
+        task.addCompletionHandler(decoder: .json(Body.self)) { result, response, _, _ in
+            switch result {
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+            }
+            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.ok)
             exp2.fulfill()
         }
 
         let exp3 = expectation(description: "string")
-        task.addCompletionHandler(decoder: .string) { result, _, _, _ in
+        task.addCompletionHandler(decoder: .string) { result, response, _, _ in
+            switch result {
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+            }
+            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.ok)
             exp3.fulfill()
         }
 
@@ -67,12 +81,26 @@ class PostCompletionTest: XCTestCase {
         }
 
         let exp2 = expectation(description: "json")
-        task.addCompletionHandler(decoder: .json(Body.self)) { result, _, _, _ in
+        task.addCompletionHandler(decoder: .json(Body.self)) { result, response, _, _ in
+            switch result {
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+            }
+            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.notFound)
             exp2.fulfill()
         }
 
         let exp3 = expectation(description: "string")
-        task.addCompletionHandler(decoder: .string) { result, _, _, _ in
+        task.addCompletionHandler(decoder: .string) { result, response, _, _ in
+            switch result {
+                case .success:
+                    break
+                case let .failure(error):
+                    XCTFail(error.localizedDescription)
+            }
+            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.notFound)
             exp3.fulfill()
         }
 
