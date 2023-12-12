@@ -84,9 +84,9 @@ class PostCompletionTest: XCTestCase {
         task.addCompletionHandler(decoder: .json(Body.self)) { result, response, _, _ in
             switch result {
                 case .success:
+                    XCTFail()
+                case .failure(_):
                     break
-                case let .failure(error):
-                    XCTFail(error.localizedDescription)
             }
             XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.notFound)
             exp2.fulfill()
@@ -96,9 +96,9 @@ class PostCompletionTest: XCTestCase {
         task.addCompletionHandler(decoder: .string) { result, response, _, _ in
             switch result {
                 case .success:
+                    XCTFail()
+                case .failure(_):
                     break
-                case let .failure(error):
-                    XCTFail(error.localizedDescription)
             }
             XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.notFound)
             exp3.fulfill()
