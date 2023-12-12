@@ -32,6 +32,11 @@ public enum Networking {
         return global.addStateObserver(block)
     }
 
+    public static func addTaskCreationObserver(_ block: @escaping (UBURLDataTask) -> Void) {
+        globalActivityTracking = true
+        global.addTaskCreationObserver(block)
+    }
+
     /// Adds a task for the global network activity.
     ///
     /// - Parameter task: The task to add.

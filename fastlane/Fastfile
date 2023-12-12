@@ -7,7 +7,7 @@ platform :ios do
       scan(
         package_path: ".",
         scheme: "UBKit-Package",
-        destination: "platform=iOS Simulator,name=iPhone 14 Pro",
+        device: "iPhone 15 Pro",
         result_bundle: true,
         output_directory: "./build/"
       )

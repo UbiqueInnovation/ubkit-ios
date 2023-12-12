@@ -31,6 +31,8 @@ public class UBNetworkActivityTracker {
     /// :nodoc:
     private var stateObservers: [StateObservationBlock]
     /// :nodoc:
+    private var taskCreationObservers: [(UBURLDataTask) -> Void]
+    /// :nodoc:
     public var callbackQueue: OperationQueue?
 
     /// The current state of the network activity of all the added tasks.
@@ -50,6 +52,7 @@ public class UBNetworkActivityTracker {
     public init() {
         serialQueue = DispatchQueue(label: "Network Activity Tracker")
         stateObservers = []
+        taskCreationObservers = []
         trackedTasks = NSHashTable<UBURLDataTask>(options: [.weakMemory])
     }
 
@@ -66,6 +69,7 @@ public class UBNetworkActivityTracker {
     public func add(_ task: UBURLDataTask) {
         serialQueue.sync {
             trackedTasks.add(task)
+            taskCreationObservers.forEach { $0(task) }
         }
         updateState()
         task.addStateTransitionObserver { [weak self] _, _, _ in
@@ -110,6 +114,12 @@ public class UBNetworkActivityTracker {
 
             // Add the block to the list of observers
             stateObservers.append(block)
+        }
+    }
+
+    public func addTaskCreationObserver(_ block: @escaping (UBURLDataTask) -> Void) {
+        serialQueue.sync {
+            taskCreationObservers.append(block)
         }
     }
 
