@@ -10,8 +10,6 @@ import XCTest
 
 class PostCompletionTest: XCTestCase {
     func testPostCompletionSuccess() {
-
-
         let url = URL(string: "https://github.com/UbiqueInnovation/ubkit-ios")!
         var request = URLRequest(url: url)
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -48,8 +46,6 @@ class PostCompletionTest: XCTestCase {
     }
 
     func testPostCompletionError() {
-
-
         let url = URL(string: "https://github.com/UbiqueInnovation/ubkit-ios-not-existing")!
         var request = URLRequest(url: url)
         request.addValue("application/json", forHTTPHeaderField: "Accept")
