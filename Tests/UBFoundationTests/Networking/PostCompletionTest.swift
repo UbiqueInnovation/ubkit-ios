@@ -85,7 +85,7 @@ class PostCompletionTest: XCTestCase {
             switch result {
                 case .success:
                     XCTFail()
-                case .failure(_):
+                case .failure:
                     break
             }
             XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.notFound)
@@ -97,7 +97,7 @@ class PostCompletionTest: XCTestCase {
             switch result {
                 case .success:
                     XCTFail()
-                case .failure(_):
+                case .failure:
                     break
             }
             XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.notFound)
