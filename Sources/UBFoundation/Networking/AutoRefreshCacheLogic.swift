@@ -6,37 +6,65 @@
 //
 
 import Foundation
+import OSLog
+
+@available(iOS 14.0, watchOS 7.0, *)
+fileprivate struct Log {
+    static let logger = Logger(subsystem: "UBKit", category: "AutoRefreshCacheLogic")
+}
 
 /// A caching logic that will launch and refresh the data automatically when the data expires
 open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
     /// The refresh cron jobs
     private let refreshJobs = NSMapTable<UBURLDataTask, UBCronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
+    private let refreshJobsAccess = DispatchQueue(label: "refresh-jobs", qos: .default)
+
     /// Cancels a cron job for a given data task
     private func cancelRefreshCronJob(for task: UBURLDataTask) {
-        refreshJobs.removeObject(forKey: task)
+        refreshJobsAccess.sync {
+            refreshJobs.removeObject(forKey: task)
+        }
     }
 
     /// Schedule a refresh cron job
-    private func scheduleRefreshCronJob(for task: UBURLDataTask, headers: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) {
+    private func scheduleRefreshCronJob(for task: UBURLDataTask, headers: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date?) {
         cancelRefreshCronJob(for: task)
 
-        guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics) else {
+        guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics, referenceDate: referenceDate) else {
+            if #available(iOS 14.0, watchOS 7.0, *) {
+                Log.logger.trace("No refresh date for task \(task)")
+            }
             return
         }
+
+        if #available(iOS 14.0, watchOS 7.0, *) {
+            Log.logger.trace("Schedule refresh for \(task) at \(nextRefreshDate) (\(round(nextRefreshDate.timeIntervalSinceNow))s)")
+        }
+
         // Schedule a new job
         let job = UBCronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
-            task?.start(flags: [.systemTriggered, .ignoreCache])
+            if #available(iOS 14.0, watchOS 7.0, *) {
+                if let task {
+                    Log.logger.trace("Start cron refresh for task \(task)")
+                }
+                else {
+                    Log.logger.trace("Not start cron refresh, task doesn't exist anymore.")
+                }
+            }
+            task?.start(flags: [.systemTriggered, .refresh])
         }
-        refreshJobs.setObject(job, forKey: task)
+        refreshJobsAccess.sync {
+            refreshJobs.setObject(job, forKey: task)
+        }
     }
 
     /// Computes the next refresh date for a given header fields.
     ///
     /// - Parameter allHeaderFields: The header fiealds.
     /// - Returns: The next refresh date. `nil` if no next refresh date is available
-    open func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
-        guard let responseDateHeader = allHeaderFields.getCaseInsensitiveValue(key: dateHeaderFieldName) as? String, let responseDate = dateFormatter.date(from: responseDateHeader) else {
+    open func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date?) -> Date? {
+        guard let responseDateHeader = allHeaderFields.getCaseInsensitiveValue(key: dateHeaderFieldName) as? String, var responseDate = dateFormatter.date(from: responseDateHeader) else {
             // If we cannot find a date in the response header then we cannot comput the next refresh date
             return nil
         }
@@ -52,6 +80,14 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         } else {
             backoffInterval = 60
         }
+
+        let age: TimeInterval
+        if let ageHeader = allHeaderFields.getCaseInsensitiveValue(key: ageHeaderFieldName) as? String, let interval = TimeInterval(ageHeader) {
+            age = interval
+        } else {
+            age = 0
+        }
+        responseDate = referenceDate ?? responseDate + age
 
         // The backoff date is the response date added to the backoff interval
         let backoffDate: Date
@@ -80,7 +116,8 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         if cachedURLResponse != nil ||
             response == UBStandardHTTPCode.notModified {
             // If there is a response or the response is not modified, reschedule the cron job
-            scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics)
+            let referenceDate = ubDataTask.flags.contains(.refresh) ? Date() : nil
+            scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics, referenceDate: referenceDate)
         } else {
             // Otherwise cancel any current cron jobs
             cancelRefreshCronJob(for: ubDataTask)
@@ -96,7 +133,8 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
 
     /// :nodoc:
 
-    override public func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
-        scheduleRefreshCronJob(for: dataTask, headers: response.allHeaderFields, metrics: metrics)
+    override public func hasUsed(cachedResponse: HTTPURLResponse, nonModifiedResponse: HTTPURLResponse?, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask) {
+        let referenceDate = dataTask.flags.contains(.refresh) ? Date() : nil
+        scheduleRefreshCronJob(for: dataTask, headers: (nonModifiedResponse ?? cachedResponse).allHeaderFields, metrics: metrics, referenceDate: referenceDate)
     }
 }

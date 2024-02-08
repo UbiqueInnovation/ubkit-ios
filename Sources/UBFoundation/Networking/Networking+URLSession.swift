@@ -1,5 +1,5 @@
 //
-//  URLSession+Networking.swift
+//  Networking+URLSession.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 02.04.19.

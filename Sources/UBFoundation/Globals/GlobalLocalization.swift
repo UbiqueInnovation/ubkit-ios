@@ -23,7 +23,7 @@ public var UBAppLocalization: UBLocalization {
 }
 
 /// The localization to be used within the framework
-internal var frameworkLocalization: UBLocalization {
+var frameworkLocalization: UBLocalization {
     globalLocalization.frameworkLocalization
 }
 

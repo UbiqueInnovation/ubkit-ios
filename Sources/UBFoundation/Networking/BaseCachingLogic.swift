@@ -40,6 +40,10 @@ open class UBBaseCachingLogic: UBCachingLogic {
         dateFormatter = df
     }
 
+    public func prepareRequest(_ request: inout URLRequest) {
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+    }
+
     /// Gets a cached url response from a url session.
     ///
     /// - Parameters:
@@ -269,7 +273,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
     }
 
     /// :nodoc:
-    public func hasUsed(response _: HTTPURLResponse, metrics _: URLSessionTaskMetrics?, request _: URLRequest, dataTask _: UBURLDataTask) {
+    public func hasUsed(cachedResponse _: HTTPURLResponse, nonModifiedResponse _: HTTPURLResponse?, metrics _: URLSessionTaskMetrics?, request _: URLRequest, dataTask _: UBURLDataTask) {
         // don't care, subclasses might
     }
 
