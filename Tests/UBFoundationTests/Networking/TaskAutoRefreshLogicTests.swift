@@ -98,6 +98,14 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         wait(for: [ex2], timeout: 10000)
     }
 
+    func testCache304() async throws {
+        let url = URL(string: "https://www.ubique.ch")!
+
+        _ = await UBURLDataTask.loadOnce(url: url, decoder: .passthrough)
+        let r = await UBURLDataTask.loadOnce(url: url, decoder: .passthrough)
+        XCTAssert(r.metadata.info!.cacheHit)
+    }
+
     func testMaxAge0() {
         // Load Request with default headers and max-age=0 directive
 
