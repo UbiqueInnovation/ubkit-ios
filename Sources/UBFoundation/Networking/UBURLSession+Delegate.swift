@@ -99,8 +99,14 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         // Execute the caching logic
         let cachedResponse = executeCachingLogic(cachingLogic: cachingLogic, session: session, task: task, ubDataTask: ubDataTask, request: collectedData.request, response: response, data: collectedData.data, metrics: collectedData.metrics, error: error)
 
+        var hasReceivedNotModified = false
+        if let m = collectedData.metrics {
+            let statusCodes = m.transactionMetrics.compactMap({ ($0.response as? HTTPURLResponse)?.statusCode })
+            hasReceivedNotModified = statusCodes.contains(UBStandardHTTPCode.notModified.rawValue)
+        }
+
         // If not modified return the cached data
-        if response.statusCode == UBStandardHTTPCode.notModified, let cached = collectedData.cached {
+        if hasReceivedNotModified, let cached = collectedData.cached {
             #if os(watchOS)
                 let info = UBNetworkingTaskInfo(cacheHit: true, refresh: ubDataTask.flags.contains(.refresh))
             #else
