@@ -37,7 +37,6 @@ public enum UBCacheResult {
 
 /// A caching logic object can provide decision when comes to requests and response that needs caching
 public protocol UBCachingLogic {
-
     /// Modify the request before starting
     /// Allows to change the cache policy
     func prepareRequest(_ request: inout URLRequest)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UserDefaultsDevTools {
+enum UserDefaultsDevTools {
     static var sharedUserDefaults: UserDefaults?
 
     static func clearUserDefaults(_ defaults: UserDefaults) {
