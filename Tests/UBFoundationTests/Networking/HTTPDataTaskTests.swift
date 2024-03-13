@@ -528,6 +528,30 @@ class HTTPDataTaskTests: XCTestCase {
         XCTAssertEqual(dataTask.progress.fractionCompleted, 0)
     }
 
+
+    @available(iOS 16.0, *)
+    public func testFastCancellation() async throws {
+
+        struct Modifier: UBAsyncURLRequestModifier {
+            var i: Int
+            func modifyRequest(_ request: inout UBFoundation.UBURLRequest) async throws {
+                let v = await UIDevice.current.systemVersion
+                request.setHTTPHeaderField(.init(key: "os-version", value: v))
+            }
+
+        }
+
+        for i in 0 ..< 100 {
+            let t = Task {
+                _ = await UBURLDataTask.with(requestModifier: Modifier(i: i)).loadOnce(url: URL(string: "http://ubique.ch")!, decoder: .passthrough)
+            }
+            try await Task.sleep(for: .milliseconds(i))
+            await MainActor.run {
+                t.cancel()
+            }
+        }
+    }
+
     func testDeallocation() {
         autoreleasepool {
             let request = UBURLRequest(url: url)

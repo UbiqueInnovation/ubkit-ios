@@ -178,58 +178,21 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         self.flags = flags
 
+        let modifier = requestModifier
+
+        let r = request
+
+        requestStartSemaphore.signal()
+
         // Apply all modification
-        requestModifier.modifyRequest(request) { [weak self] result in
+        modifier.modifyRequest(r) { [weak self] result in
             guard let self = self else {
                 return
             }
             switch result {
                 case let .failure(error):
-                    self.requestStartSemaphore.signal()
                     self.attemptRecovery(data: nil, response: nil, error: error)
                 case let .success(modifiedRequest):
-
-                    func startRequest() {
-                        // Create a new task from the preferences
-                        guard let dataTask = self.session.dataTask(with: modifiedRequest, owner: self) else {
-                            if self.state == .cancelled {
-                                self.state = .finished
-                            }
-                            self.requestStartSemaphore.signal()
-                            return
-                        }
-
-                        // Set priority and description
-                        dataTask.priority = self.priority
-                        dataTask.taskDescription = self.taskDescription
-
-                        if #available(iOS 11.0, *) {
-                            // Observe the task progress
-                            self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-                                guard let self = self else {
-                                    return
-                                }
-
-                                self.notifyProgress(task.progress.fractionCompleted)
-                            })
-                        }
-
-                        // Observe the task state
-                        self.dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
-                            switch task.state {
-                                case .running:
-                                    if self?.state != .fetching, self?.state != .cancelled {
-                                        self?.state = .fetching
-                                    }
-                                default:
-                                    break
-                            }
-                        })
-
-                        self.dataTask = dataTask
-                        self.requestStartSemaphore.signal()
-                        dataTask.resume()
-                    }
 
                     if let interceptor = self.requestInterceptor {
                         interceptor.interceptRequest(modifiedRequest) { [weak self] interceptorResult in
@@ -237,14 +200,59 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                             if let result = interceptorResult {
                                 self.dataTaskCompleted(data: result.data, response: result.response, error: result.error, info: result.info)
                             } else {
-                                startRequest()
+                                self.startRequest(modifiedRequest)
                             }
                         }
                     } else {
-                        startRequest()
+                        self.startRequest(modifiedRequest)
                     }
             }
         }
+    }
+
+    private func startRequest(_ modifiedRequest: UBURLRequest) {
+        // Create a new task from the preferences
+        guard let dataTask = self.session.dataTask(with: modifiedRequest, owner: self) else {
+            if self.state == .cancelled {
+                self.state = .finished
+            }
+            return
+        }
+
+        // Set priority and description
+        dataTask.priority = self.priority
+        dataTask.taskDescription = self.taskDescription
+
+        requestStartSemaphore.wait()
+
+        if #available(iOS 11.0, *) {
+            // Observe the task progress
+            self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
+                guard let self = self else {
+                    return
+                }
+
+                self.notifyProgress(task.progress.fractionCompleted)
+            })
+        }
+
+        // Observe the task state
+        self.dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
+            switch task.state {
+                case .running:
+                    if self?.state != .fetching, self?.state != .cancelled {
+                        self?.state = .fetching
+                    }
+                default:
+                    break
+            }
+        })
+
+        self.dataTask = dataTask
+
+        requestStartSemaphore.signal()
+
+        dataTask.resume()
     }
 
     public func cancel() {
@@ -253,11 +261,17 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// Cancel the current request
     public func cancel(notifyCompletion: Bool) {
+        requestStartSemaphore.wait()
         dataTaskProgressObservation = nil
         dataTaskStateObservation = nil
+        requestStartSemaphore.signal()
         requestModifier.cancelCurrentModification()
         failureRecoveryStrategy.cancelCurrentRecovery()
+
+        requestStartSemaphore.wait()
         dataTask?.cancel()
+        requestStartSemaphore.signal()
+        
         switch state {
             case .initial, .parsing, .finished, .cancelled:
                 break
