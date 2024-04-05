@@ -16,4 +16,14 @@ class UBLocationManagerDelegateWrapper {
         self.delegate = delegate
         self.usage = usage
     }
+
+    func wantsUpdate(for usg: Set<UBLocationManager.LocationMonitoringUsage>?, isBackground: Bool) -> Bool {
+        if let usg {
+            guard !usage.isDisjoint(with: usg) else { return false }
+            let union = usage.union(usg)
+            return isBackground ? union.requiresBackgroundUpdates : true
+        } else {
+            return isBackground ? usage.requiresBackgroundUpdates : true
+        }
+    }
 }
