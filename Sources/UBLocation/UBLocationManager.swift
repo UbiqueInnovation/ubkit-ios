@@ -70,6 +70,9 @@ public class UBLocationManager: NSObject {
             }
         }
     }
+    private var regionDelegates: [UBLocationManagerDelegate] {
+        delegateWrappers.values.filter { $0.usage.containsRegions }.compactMap(\.delegate)
+    }
 
     private var permissionRequestCallback: ((LocationPermissionRequestResult) -> Void)?
     private var permissionRequestUsage: Set<LocationMonitoringUsage>?
@@ -493,14 +496,6 @@ public class UBLocationManager: NSObject {
 
     /// :nodoc:
     private func startLocationMonitoringWithoutChecks(_ delegate: UBLocationManagerDelegate, usage: Set<LocationMonitoringUsage>) {
-        guard locationManager.locationServicesEnabled() else {
-            let requiredAuthorizationLevel = usage.minimumAuthorizationLevelRequired
-            delegate.locationManager(self, requiresPermission: requiredAuthorizationLevel)
-            return
-        }
-
-        let id = ObjectIdentifier(delegate)
-
         if usage.containsLocation {
             if !appIsInBackground || usage.contains(.backgroundLocation) {
                 locationManager.startUpdatingLocation()
@@ -657,13 +652,13 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        for delegate in delegates(onlyActive: true) {
+        for delegate in regionDelegates {
             delegate.locationManager(self, didEnterRegion: region)
         }
     }
 
     public func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        for delegate in delegates(onlyActive: true) {
+        for delegate in regionDelegates {
             delegate.locationManager(self, didExitRegion: region)
         }
     }
