@@ -1,5 +1,5 @@
 //
-//  DeviceUUID.swift
+//  UBDeviceUUID.swift
 //  UBFoundation iOS
 //
 //  Created by Nicolas Märki on 29.03.20.

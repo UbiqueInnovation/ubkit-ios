@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ConcurrentNetworkTests.swift
 //
 //
 //  Created by Nicolas Märki on 16.05.22.
@@ -150,8 +150,8 @@ private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     }
 
     // scale relative time for faster unit test
-    override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?) -> Date? {
-        if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics) {
+    override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date?) -> Date? {
+        if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics, referenceDate: referenceDate) {
             return Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
         } else {
             return nil

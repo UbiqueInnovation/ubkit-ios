@@ -1,5 +1,5 @@
 //
-//  UBKeychainStored.swift
+//  UBKeychain.swift
 //  UBFoundation iOS
 //
 //  Created by Zeno Koller on 31.03.20.

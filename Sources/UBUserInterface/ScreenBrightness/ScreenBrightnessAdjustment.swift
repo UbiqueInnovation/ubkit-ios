@@ -1,5 +1,5 @@
 //
-//  ScreenBrightness.swift
+//  ScreenBrightnessAdjustment.swift
 //  UBFoundation iOS
 //
 //  Created by Marco Zimmermann on 11.02.22.

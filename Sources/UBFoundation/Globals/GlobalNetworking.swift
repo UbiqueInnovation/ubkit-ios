@@ -28,7 +28,7 @@ public enum Networking {
     ///
     /// - Parameter block: The block to be called when the state changes
     public static func addGlobalNetworkActivityStateObserver(_ block: @escaping UBNetworkActivityTracker.StateObservationBlock) {
-        Self.globalActivityTracking = true
+        globalActivityTracking = true
         return global.addStateObserver(block)
     }
 

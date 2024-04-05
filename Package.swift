@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "UBKit",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v11),
         .watchOS(.v5),

@@ -1,5 +1,5 @@
 //
-//  UserDefaultsEditor.swift
+//  KeychainEditor.swift
 //
 //
 //  Created by Stefan Mitterrutzner on 03.10.22.
