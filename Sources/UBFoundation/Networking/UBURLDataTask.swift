@@ -271,7 +271,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         requestStartSemaphore.wait()
         dataTask?.cancel()
         requestStartSemaphore.signal()
-        
+
         switch state {
             case .initial, .parsing, .finished, .cancelled:
                 break

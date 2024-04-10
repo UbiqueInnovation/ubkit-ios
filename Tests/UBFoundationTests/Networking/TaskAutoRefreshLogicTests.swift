@@ -11,7 +11,6 @@ import XCTest
 
 @available(iOS 15.0.0, *)
 class TaskAutoRefreshLogicTests: XCTestCase {
-
     func testNoCacheHeaders() {
         // Load Request with default headers and no cache
 

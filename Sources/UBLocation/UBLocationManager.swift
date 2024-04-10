@@ -70,8 +70,9 @@ public class UBLocationManager: NSObject {
             }
         }
     }
+
     private var regionDelegates: [UBLocationManagerDelegate] {
-        delegateWrappers.values.filter { $0.usage.containsRegions }.compactMap(\.delegate)
+        delegateWrappers.values.filter(\.usage.containsRegions).compactMap(\.delegate)
     }
 
     private var permissionRequestCallback: ((LocationPermissionRequestResult) -> Void)?

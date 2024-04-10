@@ -23,7 +23,7 @@ class UBLocationManagerDelegateWrapper {
         }
 
         let intersection = usage.intersection(usg)
-        
+
         if intersection.isEmpty {
             return false
         }

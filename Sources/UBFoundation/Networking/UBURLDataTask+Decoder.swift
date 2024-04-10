@@ -8,7 +8,7 @@
 import Foundation
 
 #if canImport(UIKit)
-import UIKit
+    import UIKit
 #endif
 
 /// An object that can decode data into the desired type
@@ -106,22 +106,22 @@ public extension UBURLDataTaskDecoder where T: Decodable {
 }
 
 #if canImport(UIKit)
-public class UBImageDecoder: UBURLDataTaskDecoder<UIImage> {
-    /// Initializes the decoder
-    ///
-    /// - Parameter scale: Use 2 or 3 to create images with more pixels than points
-    public init(scale: Double = 1) {
-        super.init { data, _ -> UIImage in
-            guard let image = UIImage(data: data, scale: scale) else {
-                throw UBInternalNetworkingError.couldNotDecodeBody
+    public class UBImageDecoder: UBURLDataTaskDecoder<UIImage> {
+        /// Initializes the decoder
+        ///
+        /// - Parameter scale: Use 2 or 3 to create images with more pixels than points
+        public init(scale: Double = 1) {
+            super.init { data, _ -> UIImage in
+                guard let image = UIImage(data: data, scale: scale) else {
+                    throw UBInternalNetworkingError.couldNotDecodeBody
+                }
+                return image
             }
-            return image
         }
     }
-}
 
-public extension UBURLDataTaskDecoder where T == UIImage {
-    static let image = UBImageDecoder()
-}
+    public extension UBURLDataTaskDecoder where T == UIImage {
+        static let image = UBImageDecoder()
+    }
 
 #endif
