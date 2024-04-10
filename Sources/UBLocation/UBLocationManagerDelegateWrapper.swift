@@ -18,12 +18,20 @@ class UBLocationManagerDelegateWrapper {
     }
 
     func wantsUpdate(for usg: Set<UBLocationManager.LocationMonitoringUsage>?, isBackground: Bool) -> Bool {
-        if let usg {
-            guard !usage.isDisjoint(with: usg) else { return false }
-            let union = usage.union(usg)
-            return isBackground ? union.requiresBackgroundUpdates : true
-        } else {
+        guard let usg else {
             return isBackground ? usage.requiresBackgroundUpdates : true
         }
+
+        let intersection = usage.intersection(usg)
+        
+        if intersection.isEmpty {
+            return false
+        }
+
+        if !isBackground {
+            return true
+        }
+
+        return intersection.requiresBackgroundUpdates
     }
 }

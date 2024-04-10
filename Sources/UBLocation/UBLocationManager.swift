@@ -184,11 +184,6 @@ public class UBLocationManager: NSObject {
         }
     }
 
-    /// Does this location manager use the location in the background?
-    public var usesLocationInBackground: Bool {
-        allUsages.requiresBackgroundLocation
-    }
-
     /// The amount of seconds after which a location obtained by `CLLocationManager` should be considered stale
     /// and not trigger a call of the `locationManager(_:didUpdateLocations)` delegate method
     public var maximumLastLocationTimestampSeconds: UInt = 3600
@@ -320,6 +315,7 @@ public class UBLocationManager: NSObject {
     @objc private func appDidBecomeActive() {
         appIsInBackground = false
 
+        stopLocationMonitoring()
         startLocationMonitoringForAllDelegates()
     }
 
@@ -718,11 +714,6 @@ public extension UBLocationManager {
 
 extension Set where Element == UBLocationManager.LocationMonitoringUsage {
     /// :nodoc:
-    var requiresBackgroundLocation: Bool {
-        contains(.backgroundLocation) || contains(.backgroundHeading)
-    }
-
-    /// :nodoc:
     var containsRegions: Bool {
         for element in self {
             if case .regions = element {
@@ -744,7 +735,7 @@ extension Set where Element == UBLocationManager.LocationMonitoringUsage {
 
     /// :nodoc:
     var minimumAuthorizationLevelRequired: UBLocationManager.AuthorizationLevel {
-        if contains(.significantChange) || contains(.visits) || containsRegions || requiresBackgroundLocation {
+        if requiresBackgroundUpdates {
             return .always
         } else {
             return .whenInUse
@@ -753,7 +744,7 @@ extension Set where Element == UBLocationManager.LocationMonitoringUsage {
 
     /// :nodoc:
     var requiresBackgroundUpdates: Bool {
-        contains(.significantChange) || contains(.visits) || containsRegions || requiresBackgroundLocation
+        contains(.significantChange) || contains(.visits) || containsRegions || contains(.backgroundLocation) || contains(.backgroundHeading)
     }
 
     /// :nodoc:
