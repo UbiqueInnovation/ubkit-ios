@@ -16,4 +16,22 @@ class UBLocationManagerDelegateWrapper {
         self.delegate = delegate
         self.usage = usage
     }
+
+    func wantsUpdate(for usg: Set<UBLocationManager.LocationMonitoringUsage>?, isBackground: Bool) -> Bool {
+        guard let usg else {
+            return isBackground ? usage.requiresBackgroundUpdates : true
+        }
+
+        let intersection = usage.intersection(usg)
+
+        if intersection.isEmpty {
+            return false
+        }
+
+        if !isBackground {
+            return true
+        }
+
+        return intersection.requiresBackgroundUpdates
+    }
 }

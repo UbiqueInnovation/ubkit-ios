@@ -118,27 +118,27 @@ extension UBNetworkingError: UBCodedError {
     }
 }
 
-extension UBNetworkingError {
-    public var errorDescription: String? {
+public extension UBNetworkingError {
+    var errorDescription: String? {
         switch self {
-        case .notConnected:
-            return NSLocalizedString("error_timeout", bundle: Bundle.module, comment: "Connection to the server failed")
-        case .timedOut:
-            return NSLocalizedString("error_timeout", bundle: Bundle.module, comment: "The request timed out")
-        case .certificateValidationFailed: 
-            return NSLocalizedString("error_invalid_certificate_message", bundle: Bundle.module, comment: "Validation of TLS certificate failed")
-        default: 
-            return NSLocalizedString("error_unexpected", bundle: Bundle.module, comment: "Generic unexpected error message")
+            case .notConnected:
+                return NSLocalizedString("error_timeout", bundle: Bundle.module, comment: "Connection to the server failed")
+            case .timedOut:
+                return NSLocalizedString("error_timeout", bundle: Bundle.module, comment: "The request timed out")
+            case .certificateValidationFailed:
+                return NSLocalizedString("error_invalid_certificate_message", bundle: Bundle.module, comment: "Validation of TLS certificate failed")
+            default:
+                return NSLocalizedString("error_unexpected", bundle: Bundle.module, comment: "Generic unexpected error message")
         }
     }
 
-    public var localizedDescription: String {
+    var localizedDescription: String {
         var errorMessage = NSLocalizedString("error_unexpected", bundle: Bundle.module, comment: "Generic unexpected error message")
         if let description = errorDescription {
             errorMessage = description
         }
         let errorCodePrefix = NSLocalizedString("error_code_prefix", bundle: Bundle.module, comment: "Prefix of error code")
-        
+
         return "\(errorMessage)\n\n\(errorCodePrefix) \(errorCode)"
     }
 }

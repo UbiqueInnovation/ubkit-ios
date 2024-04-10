@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 
 @available(iOS 14.0, watchOS 7.0, *)
-fileprivate struct Log {
+private struct Log {
     static let logger = Logger(subsystem: "UBKit", category: "AutoRefreshCacheLogic")
 }
 
@@ -47,8 +47,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
             if #available(iOS 14.0, watchOS 7.0, *) {
                 if let task {
                     Log.logger.trace("Start cron refresh for task \(task)")
-                }
-                else {
+                } else {
                     Log.logger.trace("Not start cron refresh, task doesn't exist anymore.")
                 }
             }
