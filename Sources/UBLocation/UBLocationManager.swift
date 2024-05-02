@@ -621,7 +621,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         guard let lastLocation = locations.last else { return }
         self.lastLocation = lastLocation
 
-        for delegate in delegates(onlyActive: true, usage: [.foregroundLocation, .backgroundLocation]) {
+        for delegate in delegates(onlyActive: true, usage: [.foregroundLocation, .backgroundLocation, .significantChange]) {
             let filteredLocations: [CLLocation]
             if let filteredAccuracy = delegate.locationManagerFilterAccuracy {
                 let targetAccuracy = (filteredAccuracy > 0 ? filteredAccuracy : 10)
