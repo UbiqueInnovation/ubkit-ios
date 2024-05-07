@@ -7,4 +7,4 @@
 --disable preferForLoop
 
 # Don't format generated files
---exclude **/Strings+Generated.swift
+--exclude **/*Generated.swift
