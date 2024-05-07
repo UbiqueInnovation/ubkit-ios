@@ -76,10 +76,10 @@ public class UBURLSession: UBDataTaskURLSession {
                 }
                 return createTask(request.getRequest())
 
-            case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
-                 let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
-                 let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)),
-                 let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _, metrics: metrics)):
+            case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
+                 let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
+                 let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
+                 let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
                 #if os(watchOS)
                     let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
                 #else
@@ -89,12 +89,12 @@ public class UBURLSession: UBDataTaskURLSession {
                 owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
                 owner.completionHandlersDispatchQueue.sync {
                     if let cachedResponse = cachedResponse.response as? HTTPURLResponse {
-                        sessionDelegate.cachingLogic?.hasUsed(cachedResponse: cachedResponse, nonModifiedResponse: nil, metrics: metrics, request: request.getRequest(), dataTask: owner)
+                        sessionDelegate.cachingLogic?.hasUsed(cachedResponse: cachedResponse, nonModifiedResponse: nil, metrics: nil, request: request.getRequest(), dataTask: owner)
                     }
                 }
                 return nil
 
-            case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _, metrics: _)),
+            case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _)),
                  (.returnCacheDataDontLoad, .miss):
                 sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
                 owner.completionHandlersDispatchQueue.sync {
@@ -102,9 +102,9 @@ public class UBURLSession: UBDataTaskURLSession {
                 }
                 return nil
 
-            case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
-                 let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)),
-                 let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders, metrics: _)):
+            case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
+                 let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
+                 let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)):
                 var reloadRequest = request.getRequest()
                 for header in reloadHeaders {
                     reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)
