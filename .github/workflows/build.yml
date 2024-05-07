@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCODE_VERSION: "Xcode_15.0"
+  XCODE_VERSION: "Xcode_15.3"
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 jobs:
   build-and-test:
     name: Tests
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -26,7 +26,7 @@ jobs:
 
   codequality:
     name: Format
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v2
