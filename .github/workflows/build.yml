@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build & Tests
+    name: Tests
     runs-on: macos-13
 
     steps:
@@ -24,21 +24,8 @@ jobs:
       - name: Fastlane
         run: fastlane tests
 
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action/composite@95a3aff882d4abe2838b187c66477be7fbf3ddb8
-        if: always()
-        with:
-          files: build/*.xml
-
-      - name: Archive logs
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-test-logs
-          path: build
-
   codequality:
-    name: Codequality
+    name: Format
     runs-on: macos-13
 
     steps:
