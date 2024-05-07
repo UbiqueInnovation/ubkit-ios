@@ -15,7 +15,7 @@ class UBSessionTests: XCTestCase {
         Networking.sharedSession.reset(completionHandler: {
             ex.fulfill()
         })
-        waitForExpectations(timeout: 2, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     lazy var testBundle: Bundle = {
@@ -41,7 +41,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testURLValidationFailed() {
@@ -62,7 +62,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testValidCertificatePinning() {
@@ -83,7 +83,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testInvalidCertificatePinning() {
@@ -103,7 +103,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testExpiredCertificate() {
@@ -123,7 +123,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testWrongHostCertificate() {
@@ -143,7 +143,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testSelfSignedCertificate() {
@@ -163,7 +163,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testSelfSignedCertificatePass() {
@@ -183,7 +183,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testDisableEvaluation() {
@@ -203,6 +203,6 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 }

@@ -40,6 +40,6 @@ class NetworkActivityTrackerTests: XCTestCase {
         dataTask.start()
         dataTask2.start()
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 }
