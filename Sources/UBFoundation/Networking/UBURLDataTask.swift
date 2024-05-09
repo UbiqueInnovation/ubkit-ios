@@ -447,7 +447,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
         set {
             stateDispatchQueue.sync {
-                print("new state", _state, newValue)
                 _state = newValue
             }
         }
