@@ -54,25 +54,20 @@ public class UBURLSessionConfiguration {
             headers["App-Version"] = "\(appName) v\(shortVersionNumber ?? "unknown") (\(buildNumber ?? "unknown"))"
         }
 
-        // Add framework information
-        if let info = Bundle(for: UBURLSessionConfiguration.self).infoDictionary {
-            let shortVersionNumber = info["CFBundleShortVersionString"] as? String
-            let buildNumber = info[kCFBundleVersionKey as String] as? String
-            headers["UBFoundation-Version"] = "v\(shortVersionNumber ?? "unknown") (\(buildNumber ?? "unknown"))"
-        }
-
         // Add OS information
         let osVersion = ProcessInfo.processInfo.operatingSystemVersion
         let osVersionString = "\(osVersion.majorVersion).\(osVersion.minorVersion).\(osVersion.patchVersion)"
-        #if os(iOS)
-            headers["OS-Version"] = "iOS \(osVersionString)"
-        #elseif os(watchOS)
-            headers["OS-Version"] = "watchOS \(osVersionString)"
-        #elseif os(tvOS)
-            headers["OS-Version"] = "tvOS \(osVersionString)"
-        #elseif os(macOS)
-            headers["OS-Version"] = "macOS \(osVersionString)"
-        #endif
+#if os(iOS)
+        headers["OS-Version"] = "iOS \(osVersionString)"
+#elseif os(watchOS)
+        headers["OS-Version"] = "watchOS \(osVersionString)"
+#elseif os(tvOS)
+        headers["OS-Version"] = "tvOS \(osVersionString)"
+#elseif os(macOS)
+        headers["OS-Version"] = "macOS \(osVersionString)"
+#elseif os(visionOS)
+        headers["OS-Version"] = "visionOS \(osVersionString)"
+#endif
 
         if let configHeaders = configuration.httpAdditionalHeaders {
             for header in configHeaders {
