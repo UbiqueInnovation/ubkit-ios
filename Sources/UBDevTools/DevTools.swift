@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import UBFoundation
 
 protocol DevTool {
     static func setup()
@@ -40,6 +41,12 @@ public enum UBDevTools {
 
     public static func setupCaches(additional caches: [(id: String, cache: URLCache)]) {
         CacheDevTools.additionalCaches = caches
+    }
+
+    public static func setupProxySettings(host: String, port: Int, username: String?, password: String?, proxiedDomains: [String]? = nil) {
+        UBDevToolsProxyHelper.shared.setProxy(
+            host: host, port: port, username: username, password: password, proxiedDomains: proxiedDomains
+        )
     }
 
     // MARK: - Helper methods

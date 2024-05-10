@@ -150,6 +150,9 @@ public struct DevToolsView: View {
                     CacheDevTools.clearCache(cache)
                 }
             }
+            Section(header: Text("Proxy settings")) {
+                Toggle("Start Proxy", isOn: Binding(get: { Self.enableNetworkingProxySettings }, set: { Self.enableNetworkingProxySettings = $0 }))
+            }
 
             #if !targetEnvironment(simulator)
                 ShareDocumentsView()
@@ -188,4 +191,7 @@ public struct DevToolsView: View {
 
     @UBUserDefault(key: "io.openmobilemaps.debug.rastertiles.enabled", defaultValue: false)
     public static var mapRasterTilesDebugOverlay: Bool
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.enabled.key", defaultValue: false)
+    public static var enableNetworkingProxySettings: Bool
 }
