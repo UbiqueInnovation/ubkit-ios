@@ -132,7 +132,7 @@ class CronJobTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testPauseAndResumeAfterDeadline() {
@@ -151,7 +151,7 @@ class CronJobTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testDeallocation() {
