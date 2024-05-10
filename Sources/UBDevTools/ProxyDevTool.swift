@@ -36,20 +36,28 @@ public class UBFriendlyEvaluator: UBServerTrustEvaluator {
 public extension Networking {
     /// This is a copy of the sharedSession including the proxy and friendly trust settings
     static let friendlyDefaultSession: UBURLSession = {
-        guard DevToolsView.enableNetworkingProxySettings,
-              let proxy = UBDevToolsProxyHelper.shared.proxy
-        else { return Networking.sharedSession }
+        guard DevToolsView.enableNetworkingProxySettings else { return Networking.sharedSession }
 
         let queue = OperationQueue()
         queue.name = "Friendly UBURLSession Shared"
         queue.qualityOfService = .userInitiated
 
-        let configuration: UBURLSessionConfiguration
-        if let domains = proxy.proxiedDomains, domains.isEmpty == false {
-            let trusts: [String: UBFriendlyEvaluator] = domains.reduce([:], { var dict = $0; dict[$1] = UBFriendlyEvaluator(); return dict })
-            configuration = UBURLSessionConfiguration(hostsServerTrusts: trusts, proxy: UBDevToolsProxyHelper.shared.proxy)
+        let proxy: UBDevToolsProxyHelper.Proxy?
+        if let host = DevToolsView.proxySettingsHost, host.isEmpty == false,
+            let port = DevToolsView.proxySettingsPort {
+            proxy = UBDevToolsProxyHelper.Proxy(host: host, port: port)
+        } else if let devProy = UBDevToolsProxyHelper.shared.proxy {
+            proxy = devProy
         } else {
-            configuration = UBURLSessionConfiguration(defaultServerTrust: UBFriendlyEvaluator(), proxy: UBDevToolsProxyHelper.shared.proxy)
+            proxy = nil
+        }
+
+        let configuration: UBURLSessionConfiguration
+        if let domains = proxy?.proxiedDomains, domains.isEmpty == false {
+            let trusts: [String: UBFriendlyEvaluator] = domains.reduce([:], { var dict = $0; dict[$1] = UBFriendlyEvaluator(); return dict })
+            configuration = UBURLSessionConfiguration(hostsServerTrusts: trusts, proxy: proxy)
+        } else {
+            configuration = UBURLSessionConfiguration(defaultServerTrust: UBFriendlyEvaluator(), proxy: proxy)
         }
 
         configuration.sessionConfiguration.networkServiceType = .responsiveData

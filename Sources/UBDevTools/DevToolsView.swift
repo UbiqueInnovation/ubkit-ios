@@ -152,6 +152,12 @@ public struct DevToolsView: View {
             }
             Section(header: Text("Proxy settings")) {
                 Toggle("Start Proxy", isOn: Binding(get: { Self.enableNetworkingProxySettings }, set: { Self.enableNetworkingProxySettings = $0 }))
+                TextField("Host", text: Binding(get: { Self.proxySettingsHost ?? "" }, set: { Self.proxySettingsHost = $0 }))
+                TextField("Port", text: Binding(get: {
+                    Self.proxySettingsPort != nil ? String(Self.proxySettingsPort!) : ""
+                }, set: {
+                    Self.proxySettingsPort = Int($0)
+                }))
             }
 
             #if !targetEnvironment(simulator)
@@ -194,4 +200,10 @@ public struct DevToolsView: View {
 
     @UBUserDefault(key: "ubkit.devtools.proxy.enabled.key", defaultValue: false)
     public static var enableNetworkingProxySettings: Bool
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.host.key", defaultValue: nil)
+    public static var proxySettingsHost: String?
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.port.key", defaultValue: nil)
+    public static var proxySettingsPort: Int?
 }
