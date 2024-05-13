@@ -14,23 +14,23 @@ public enum UBCacheResult {
     /// The cache missed
     case miss
     /// Cached data found but is expired
-    case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
+    case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
     /// Cached data found and is valid
-    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
+    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
 
     var reloadHeaders: [String: String] {
         switch self {
             case .miss: return [:]
-            case .expired(cachedResponse: _, reloadHeaders: let h, metrics: _): return h
-            case .hit(cachedResponse: _, reloadHeaders: let h, metrics: _): return h
+            case .expired(cachedResponse: _, reloadHeaders: let h): return h
+            case .hit(cachedResponse: _, reloadHeaders: let h): return h
         }
     }
 
     var cachedResponse: CachedURLResponse? {
         switch self {
             case .miss: return nil
-            case .expired(cachedResponse: let r, reloadHeaders: _, metrics: _): return r
-            case .hit(cachedResponse: let r, reloadHeaders: _, metrics: _): return r
+            case .expired(cachedResponse: let r, reloadHeaders: _): return r
+            case .hit(cachedResponse: let r, reloadHeaders: _): return r
         }
     }
 }
