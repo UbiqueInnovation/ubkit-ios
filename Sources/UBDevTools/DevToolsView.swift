@@ -150,6 +150,23 @@ public struct DevToolsView: View {
                     CacheDevTools.clearCache(cache)
                 }
             }
+            Section(header: Text("Proxy settings")) {
+                Toggle("Start Proxy for today", isOn: Binding(
+                    get: {
+                        guard Self.enableNetworkingProxySettings, let enabledDate = Self.proxyEnabledDate else { return false }
+                        return Calendar.current.isDateInToday(enabledDate)
+                    }, set: {
+                        Self.enableNetworkingProxySettings = $0
+                        Self.proxyEnabledDate = $0 ? Date() : nil
+                    }
+                ))
+                TextField("Host", text: Binding(get: { Self.proxySettingsHost ?? "" }, set: { Self.proxySettingsHost = $0 }))
+                TextField("Port", text: Binding(get: {
+                    Self.proxySettingsPort != nil ? String(Self.proxySettingsPort!) : ""
+                }, set: {
+                    Self.proxySettingsPort = Int($0)
+                }))
+            }
 
             #if !targetEnvironment(simulator)
                 ShareDocumentsView()
@@ -188,4 +205,16 @@ public struct DevToolsView: View {
 
     @UBUserDefault(key: "io.openmobilemaps.debug.rastertiles.enabled", defaultValue: false)
     public static var mapRasterTilesDebugOverlay: Bool
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.enabled.key", defaultValue: false)
+    static var enableNetworkingProxySettings: Bool
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.enabled.date.key", defaultValue: nil)
+    private static var proxyEnabledDate: Date?
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.host.key", defaultValue: nil)
+    static var proxySettingsHost: String?
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.port.key", defaultValue: nil)
+    static var proxySettingsPort: Int?
 }

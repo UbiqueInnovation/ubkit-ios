@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import UBFoundation
 
 protocol DevTool {
     static func setup()
@@ -40,6 +41,22 @@ public enum UBDevTools {
 
     public static func setupCaches(additional caches: [(id: String, cache: URLCache)]) {
         CacheDevTools.additionalCaches = caches
+    }
+
+    /// Sets a static proxy for networking debugging, if all requests should be proxied through a predefined proxy.
+    ///
+    /// This only works in combination with the `friendlySharedSession` as this proxy setup is used only there.
+    /// Additionally you might want to set the `NSAllowsArbitraryLoads` flag in your `Info.plist`
+    ///
+    /// - Parameters:
+    ///   - host: The host of your proxy, e.g. 'myproxy.ubique.ch'
+    ///   - port: The port of your proxy, e.g. 8888
+    ///   - username: Set the username if the proxy needs authorization
+    ///   - password: Set the password if the proxy needs authorization
+    public static func setupProxySettings(host: String, port: Int, username: String?, password: String?) {
+        UBDevToolsProxyHelper.shared.setProxy(
+            host: host, port: port, username: username, password: password
+        )
     }
 
     // MARK: - Helper methods

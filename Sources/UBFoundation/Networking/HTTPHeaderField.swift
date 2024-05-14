@@ -94,6 +94,8 @@ public extension UBHTTPHeaderField {
         case backoff = "Backoff"
         /// Next refresh header field key
         case nextRefresh = "X-Next-Refresh"
+        /// For authorized proxys
+        case proxyAuthorization = "Proxy-Authorization"
     }
 
     /// Amazon Header Keys
