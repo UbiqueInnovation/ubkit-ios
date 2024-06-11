@@ -430,7 +430,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                      (.cancelled, .waitingExecution): // Restart task
                     break
                 default:
-                    fatalError("Invalid state transition from \(_state) -> \(newValue)")
+                    let errorMessage = "Invalid state transition from \(_state) -> \(newValue)"
+                    assertionFailure(errorMessage)
+                    UBNonFatalErrorReporter.report(NSError(domain: "UBURLDataTask", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
             }
         }
         didSet {
