@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UBNonFatalErrorReporter {
+public enum UBNonFatalErrorReporter {
     public static var handler: ((Error) -> Void)?
 
     static func report(_ error: Error) {
