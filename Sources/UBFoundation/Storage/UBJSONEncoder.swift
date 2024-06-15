@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class UBJSONEncoder: JSONEncoder {
+public class UBJSONEncoder: JSONEncoder, @unchecked Sendable {
     override public func encode<T>(_ value: T) throws -> Data where T: Encodable {
         if #available(iOS 13.1, *) {
             return try super.encode(value)

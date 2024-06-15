@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class UBJSONDecoder: JSONDecoder {
+public class UBJSONDecoder: JSONDecoder, @unchecked Sendable {
     override public func decode<T>(_ type: T.Type, from data: Data) throws -> T where T: Decodable {
         if #available(iOS 13.1, *) {
             return try super.decode(type, from: data)
