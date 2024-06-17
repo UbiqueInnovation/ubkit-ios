@@ -23,7 +23,13 @@ let package = Package(
     ],
     targets: [
         .target(name: "UBFoundation"),
-        .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
+        .target(
+            name: "UBUserInterface",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency")
+            ]
+        ),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
         .target(

@@ -15,6 +15,7 @@ import UIKit
 ///
 /// This object WILL also restore the initial brightness when the app resigns active and WILL set it
 /// to the target brightness when the app becomes active again.
+@MainActor
 final class ScreenBrightness: NSObject {
     private var targetBrightness: CGFloat
 
@@ -57,6 +58,7 @@ final class ScreenBrightness: NSObject {
 
 // MARK: - Aninmator
 
+@MainActor
 private final class ScreenBrightnessAnimator {
     static let shared = ScreenBrightnessAnimator()
 
