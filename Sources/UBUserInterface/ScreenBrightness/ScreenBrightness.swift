@@ -23,7 +23,7 @@ final class ScreenBrightness: NSObject {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-        ScreenBrightnessAnimator.shared.setBrightness(to: self.originalBrightness, animated: true)
+//        ScreenBrightnessAnimator.shared.setBrightness(to: self.originalBrightness, animated: true)
     }
 
     init(targetBrightness: CGFloat, currentBrightness: CGFloat = UIScreen.main.brightness) {
@@ -75,7 +75,7 @@ private final class ScreenBrightnessAnimator {
     private var targetBrightness: CGFloat = UIScreen.main.brightness
 
     deinit {
-        self.timer?.invalidate()
+//        self.timer?.invalidate()
     }
 
     private init() {}

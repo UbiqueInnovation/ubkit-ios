@@ -27,7 +27,7 @@ let package = Package(
             name: "UBUserInterface",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency")
+                .swiftLanguageVersion(.v6)
             ]
         ),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
@@ -35,7 +35,6 @@ let package = Package(
         .target(
             name: "UBQRScanner",
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency"),
                 .swiftLanguageVersion(.v6)
             ]
         ),
