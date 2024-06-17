@@ -5,7 +5,7 @@
 //  Created by Matthias Felix on 11.02.22.
 //
 
-import AVFoundation
+@preconcurrency import AVFoundation
 import Foundation
 import UIKit
 
@@ -42,21 +42,25 @@ public class QRScannerView: UIView {
         self.delegate = delegate
         clipsToBounds = true
 
-        NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { [weak self] _ in
+        NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
-            self.lastIsRunning = self.isRunning
-            self.lastIsTorchOn = self.isTorchOn
-            self.stopScanning()
-        }
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [weak self] _ in
-            guard let self = self else { return }
-            if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
-                self.startScanning()
-                if let lastIsTorchOn = self.lastIsTorchOn, lastIsTorchOn == true {
-                    self.setTorch(on: true)
-                }
+            MainActor.assumeIsolated {
+                self.lastIsRunning = self.isRunning
+                self.lastIsTorchOn = self.isTorchOn
+                self.stopScanning()
             }
-            self.lastIsRunning = nil
+        }
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            MainActor.assumeIsolated {
+                if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
+                    self.startScanning()
+                    if let lastIsTorchOn = self.lastIsTorchOn, lastIsTorchOn == true {
+                        self.setTorch(on: true)
+                    }
+                }
+                self.lastIsRunning = nil
+            }
         }
     }
 
@@ -192,14 +196,16 @@ public class QRScannerView: UIView {
 }
 
 extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
-    public func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
-        guard !isScanningPaused else { return } // Don't process any input if scanning is paused
+    nonisolated public func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
+        MainActor.assumeIsolated {
+            guard !isScanningPaused else { return } // Don't process any input if scanning is paused
 
-        for metadataObject in metadataObjects {
-            guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { continue }
-            guard let stringValue = readableObject.stringValue else { continue }
-            if found(code: stringValue) {
-                return
+            for metadataObject in metadataObjects {
+                guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { continue }
+                guard let stringValue = readableObject.stringValue else { continue }
+                if found(code: stringValue) {
+                    return
+                }
             }
         }
     }

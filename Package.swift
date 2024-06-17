@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -7,7 +7,7 @@ let package = Package(
     name: "UBKit",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v11),
+        .iOS(.v13),
         .watchOS(.v5),
     ],
     products: [
@@ -26,7 +26,12 @@ let package = Package(
         .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
-        .target(name: "UBQRScanner"),
+        .target(
+            name: "UBQRScanner",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency")
+            ]
+        ),
         .target(name: "UBDevTools", dependencies: ["UBFoundation"]),
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
