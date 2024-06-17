@@ -7,7 +7,7 @@ let package = Package(
     name: "UBKit",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v13),
+        .iOS(.v11),
         .watchOS(.v5),
     ],
     products: [

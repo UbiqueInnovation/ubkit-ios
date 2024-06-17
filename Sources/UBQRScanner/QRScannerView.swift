@@ -44,22 +44,43 @@ public class QRScannerView: UIView {
 
         NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
-            MainActor.assumeIsolated {
-                self.lastIsRunning = self.isRunning
-                self.lastIsTorchOn = self.isTorchOn
-                self.stopScanning()
+
+            if #available(iOS 13.0, *) {
+                MainActor.assumeIsolated {
+                    self.lastIsRunning = self.isRunning
+                    self.lastIsTorchOn = self.isTorchOn
+                    self.stopScanning()
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.lastIsRunning = self.isRunning
+                    self.lastIsTorchOn = self.isTorchOn
+                    self.stopScanning()
+                }
             }
         }
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
-            MainActor.assumeIsolated {
-                if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
-                    self.startScanning()
-                    if let lastIsTorchOn = self.lastIsTorchOn, lastIsTorchOn == true {
-                        self.setTorch(on: true)
+            if #available(iOS 13.0, *) {
+                MainActor.assumeIsolated {
+                    if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
+                        self.startScanning()
+                        if let lastIsTorchOn = self.lastIsTorchOn, lastIsTorchOn == true {
+                            self.setTorch(on: true)
+                        }
                     }
+                    self.lastIsRunning = nil
                 }
-                self.lastIsRunning = nil
+            } else {
+                DispatchQueue.main.async {
+                    if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
+                        self.startScanning()
+                        if let lastIsTorchOn = self.lastIsTorchOn, lastIsTorchOn == true {
+                            self.setTorch(on: true)
+                        }
+                    }
+                    self.lastIsRunning = nil
+                }
             }
         }
     }
@@ -197,14 +218,28 @@ public class QRScannerView: UIView {
 
 extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
     nonisolated public func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
-        Task { @MainActor in
-            guard !isScanningPaused else { return } // Don't process any input if scanning is paused
+        if #available(iOS 13.0, *) {
+            Task { @MainActor in
+                guard !isScanningPaused else { return } // Don't process any input if scanning is paused
+                
+                for metadataObject in metadataObjects {
+                    guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { continue }
+                    guard let stringValue = readableObject.stringValue else { continue }
+                    if found(code: stringValue) {
+                        return
+                    }
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+                guard !self.isScanningPaused else { return } // Don't process any input if scanning is paused
 
-            for metadataObject in metadataObjects {
-                guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { continue }
-                guard let stringValue = readableObject.stringValue else { continue }
-                if found(code: stringValue) {
-                    return
+                for metadataObject in metadataObjects {
+                    guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { continue }
+                    guard let stringValue = readableObject.stringValue else { continue }
+                    if self.found(code: stringValue) {
+                        return
+                    }
                 }
             }
         }
