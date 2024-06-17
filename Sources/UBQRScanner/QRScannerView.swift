@@ -197,7 +197,7 @@ public class QRScannerView: UIView {
 
 extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
     nonisolated public func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
-        MainActor.assumeIsolated {
+        Task { @MainActor in
             guard !isScanningPaused else { return } // Don't process any input if scanning is paused
 
             for metadataObject in metadataObjects {

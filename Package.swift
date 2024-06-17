@@ -29,7 +29,8 @@ let package = Package(
         .target(
             name: "UBQRScanner",
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency")
+                .enableUpcomingFeature("StrictConcurrency"),
+                .swiftLanguageVersion(.v6)
             ]
         ),
         .target(name: "UBDevTools", dependencies: ["UBFoundation"]),
