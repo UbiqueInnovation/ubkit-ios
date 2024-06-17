@@ -21,13 +21,18 @@ struct ShareDocumentsView: View {
             Button {
                 compressingDirectory = true
                 DispatchQueue.global(qos: .userInteractive).async {
-                    if let path = CompressDocumentsDirectory().compress() {
-                        archvieURL = path
-                        showShareSheet = true
+                    if let path = CompressDocumentsDirectory.compress() {
+                        DispatchQueue.main.async {
+                            archvieURL = path
+                            showShareSheet = true
+                            compressingDirectory = false
+                        }
                     } else {
-                        showErrorAlert = true
+                        DispatchQueue.main.async {
+                            showErrorAlert = true
+                            compressingDirectory = false
+                        }
                     }
-                    compressingDirectory = false
                 }
             } label: {
                 Label("Share .documentDirectory", systemImage: "square.and.arrow.up")
@@ -80,8 +85,8 @@ private struct ShareView: UIViewControllerRepresentable {
 }
 
 @available(iOS 14.0, *)
-class CompressDocumentsDirectory {
-    func compress() -> URL? {
+enum CompressDocumentsDirectory: Sendable {
+    static func compress() -> URL? {
         #if !targetEnvironment(simulator)
             let archiveDestination = NSTemporaryDirectory() + "documentDirectory.aar"
 
@@ -138,7 +143,7 @@ class CompressDocumentsDirectory {
         #endif
     }
 
-    func getDocumentsDirectory() -> URL {
+    static func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
         return documentsDirectory

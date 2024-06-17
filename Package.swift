@@ -38,7 +38,13 @@ let package = Package(
                 .swiftLanguageVersion(.v6)
             ]
         ),
-        .target(name: "UBDevTools", dependencies: ["UBFoundation"]),
+        .target(
+            name: "UBDevTools",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency")
+            ]
+        ),
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
                     resources: [

@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 @available(iOS 13.0, *)
+@MainActor
 public class BaseUrl: ObservableObject {
     let title: String
     let url: String
@@ -89,8 +90,10 @@ class BackendDevTools: DevTool {
 
 @available(iOS 13.0, *)
 private extension NSURL {
+    @MainActor
     private static var didSwizzle = false
 
+    @MainActor
     static func initSwizzleWizzle() {
         guard !self.didSwizzle else { return }
 
@@ -107,11 +110,13 @@ private extension NSURL {
         Self.didSwizzle = true
     }
 
+    @MainActor
     @objc func swizzled_init(string: String, relativeTo: NSURL?) -> NSURL? {
         let changed = changedUrl(string)
         return self.swizzled_init(string: changed ?? string, relativeTo: relativeTo)
     }
 
+    @MainActor
     @objc func swizzled_init(string: String) -> NSURL? {
         let changed = changedUrl(string)
         return self.swizzled_init(string: changed ?? string)
@@ -119,6 +124,7 @@ private extension NSURL {
 
     // MARK: - Exchange implementations
 
+    @MainActor
     private func changedUrl(_ string: String) -> String? {
         for b in BackendDevTools.baseUrls {
             let alternative = BackendDevTools.currentUrlString(url: b.url)

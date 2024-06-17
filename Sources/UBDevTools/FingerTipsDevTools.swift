@@ -56,6 +56,7 @@ class FingerTipsDevTools: DevTool {
 }
 
 private class NotificationHelper {
+    @MainActor
     @objc public func setupFingerTips() {
         if #available(iOS 14.0, *) {
             FingerTipsDevTools.setupFingerTips()

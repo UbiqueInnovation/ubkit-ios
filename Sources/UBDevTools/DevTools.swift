@@ -9,11 +9,13 @@ import Foundation
 import UIKit
 import UBFoundation
 
+@MainActor
 protocol DevTool {
     static func setup()
 }
 
 @available(iOS 14.0, *)
+@MainActor
 public enum UBDevTools {
     static var isActivated: Bool = false
 
