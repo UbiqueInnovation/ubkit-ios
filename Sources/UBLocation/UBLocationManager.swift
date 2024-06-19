@@ -64,7 +64,7 @@ public class UBLocationManager: NSObject {
     private func delegates(onlyActive: Bool = false, usage: Set<LocationMonitoringUsage>? = nil) -> [UBLocationManagerDelegate] {
         delegateWrappers.values.compactMap { wrapper in
             if onlyActive {
-                wrapper.wantsUpdate(for: usage, isBackground: appIsInBackground) ? wrapper.delegate : nil
+                wrapper.wantsUpdate(for: usage, isBackground: appIsInBackground, allowsBackgroundLocationUpdates: allowsBackgroundLocationUpdates) ? wrapper.delegate : nil
             } else {
                 wrapper.delegate
             }
@@ -494,7 +494,7 @@ public class UBLocationManager: NSObject {
     /// :nodoc:
     private func startLocationMonitoringWithoutChecks(_ delegate: UBLocationManagerDelegate, usage: Set<LocationMonitoringUsage>) {
         if usage.containsLocation {
-            if !appIsInBackground || usage.contains(.backgroundLocation) {
+            if !appIsInBackground || usage.contains(.backgroundLocation) || allowsBackgroundLocationUpdates {
                 locationManager.startUpdatingLocation()
                 startLocationTimer()
             }
@@ -506,7 +506,7 @@ public class UBLocationManager: NSObject {
             locationManager.startMonitoringVisits()
         }
         if usage.containsHeading {
-            if !appIsInBackground || usage.contains(.backgroundHeading) {
+            if !appIsInBackground || usage.contains(.backgroundHeading) || allowsBackgroundLocationUpdates {
                 locationManager.startUpdatingHeading()
             }
         }
