@@ -305,10 +305,10 @@ public class UBLocationManager: NSObject {
     @objc private func appDidEnterBackground() {
         appIsInBackground = true
 
-        if allUsages.containsLocation, !allUsages.contains(.backgroundLocation) {
+        if allUsages.containsLocation, !allUsages.contains(.backgroundLocation), !allowsBackgroundLocationUpdates {
             locationManager.stopUpdatingLocation()
         }
-        if allUsages.containsHeading, !allUsages.contains(.backgroundHeading) {
+        if allUsages.containsHeading, !allUsages.contains(.backgroundHeading), !allowsBackgroundLocationUpdates {
             locationManager.stopUpdatingHeading()
         }
     }
