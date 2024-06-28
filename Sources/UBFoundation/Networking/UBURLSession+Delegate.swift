@@ -10,9 +10,9 @@ import Foundation
 /// An object defining methods that URL session instances call to handle task-level events.
 class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate {
     /// Storage of the task mapping
-    private let tasks = NSMapTable<URLSessionTask, UBURLDataTask>(keyOptions: .weakMemory, valueOptions: .weakMemory)
+    nonisolated(unsafe) private let tasks = NSMapTable<URLSessionTask, UBURLDataTask>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     /// Storage of the task data
-    private let tasksData = NSMapTable<URLSessionTask, DataHolder>(keyOptions: .weakMemory, valueOptions: .strongMemory)
+    nonisolated(unsafe) private let tasksData = NSMapTable<URLSessionTask, DataHolder>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
     private let serialQueue: DispatchQueue = DispatchQueue(label: "UBURLSessionDelegate")
 

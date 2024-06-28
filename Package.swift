@@ -42,7 +42,7 @@ let package = Package(
             name: "UBDevTools",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency")
+                .swiftLanguageVersion(.v6)
             ]
         ),
         .testTarget(name: "UBFoundationTests",
