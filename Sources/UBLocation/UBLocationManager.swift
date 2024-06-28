@@ -11,7 +11,7 @@ import UBFoundation
 import UIKit
 
 /// An object defining methods that handle events related to GPS location.
-public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
+public protocol UBLocationManagerDelegate: CLLocationManagerDelegate, Sendable {
     /// Notifies the delegate that the permission level for the desired usage has been granted.
     func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.AuthorizationLevel, accuracy: UBLocationManager.AccuracyLevel)
     func locationManager(permissionDeniedFor manager: UBLocationManager)
@@ -54,6 +54,7 @@ public extension UBLocationManagerDelegate {
 
 /// A convenience wrapper for `CLLocationManager` which facilitates obtaining the required authorization
 /// for the desired usage (defined as a set of `UBLocationManager.LocationMonitoringUsage`)
+@MainActor
 public class UBLocationManager: NSObject {
     /// The shared location manager.
     public static let shared = UBLocationManager()
@@ -522,10 +523,12 @@ public class UBLocationManager: NSObject {
     private func startLocationTimer() {
         locationTimer?.invalidate()
         locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] _ in
-            guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
-            self.timedOut = true
+            MainActor.assumeIsolated {
+                guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
+                self.timedOut = true
 
-            self.notifyDelegates(withLocations: [location])
+                self.notifyDelegates(withLocations: [location])
+            }
         })
     }
 
@@ -536,12 +539,14 @@ public class UBLocationManager: NSObject {
             guard let time = delegate.locationManagerMaxFreshAge else { return nil }
 
             return Timer.scheduledTimer(withTimeInterval: time, repeats: false, block: { [weak self, weak delegate] _ in
-                guard let self = self, let delegate = delegate else { return }
+                MainActor.assumeIsolated {
+                    guard let self = self, let delegate = delegate else { return }
 
-                let lastState = self.lastDelegateFreshState[ObjectIdentifier(delegate), default: true]
-                if lastState != false {
-                    delegate.locationManager(self, locationIsFresh: false)
-                    self.lastDelegateFreshState[ObjectIdentifier(delegate)] = false
+                    let lastState = self.lastDelegateFreshState[ObjectIdentifier(delegate), default: true]
+                    if lastState != false {
+                        delegate.locationManager(self, locationIsFresh: false)
+                        self.lastDelegateFreshState[ObjectIdentifier(delegate)] = false
+                    }
                 }
             })
         }
@@ -568,53 +573,57 @@ public class UBLocationManager: NSObject {
 }
 
 extension UBLocationManager: CLLocationManagerDelegate {
-    public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
-        authorizationStatus = authorization
-        logLocationPermissionChange?(authorization)
+    nonisolated public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
+        Task { @MainActor in
+            authorizationStatus = authorization
+            logLocationPermissionChange?(authorization)
 
-        self.startLocationMonitoringForAllDelegates()
+            self.startLocationMonitoringForAllDelegates()
 
-        if Self.hasRequiredAuthorizationLevel(forUsage: allUsages) {
-            let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
+            if Self.hasRequiredAuthorizationLevel(forUsage: allUsages) {
+                let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
 
-            for delegate in delegates() {
-                delegate.locationManager(self, grantedPermission: permission, accuracy: accuracyLevel)
+                for delegate in delegates() {
+                    delegate.locationManager(self, grantedPermission: permission, accuracy: accuracyLevel)
+                }
             }
-        }
-        if authorization == .denied {
-            for delegate in delegates() {
-                delegate.locationManager(permissionDeniedFor: self)
+            if authorization == .denied {
+                for delegate in delegates() {
+                    delegate.locationManager(permissionDeniedFor: self)
+                }
             }
-        }
 
-        // permission request callbacks
-        if let usage = self.permissionRequestUsage,
-           let callback = self.permissionRequestCallback {
-            let hasRequiredLevel = Self.hasRequiredAuthorizationLevel(forUsage: usage)
-            callback(hasRequiredLevel ? .success : .failure)
+            // permission request callbacks
+            if let usage = self.permissionRequestUsage,
+               let callback = self.permissionRequestCallback {
+                let hasRequiredLevel = Self.hasRequiredAuthorizationLevel(forUsage: usage)
+                callback(hasRequiredLevel ? .success : .failure)
 
-            self.permissionRequestCallback = nil
-            self.permissionRequestUsage = nil
+                self.permissionRequestCallback = nil
+                self.permissionRequestUsage = nil
+            }
         }
     }
 
-    public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // remove invalid locations
-        let results: [CLLocation] = locations.filter { location -> Bool in
-            // A negative value indicates that the latitude and longitude are invalid
-            location.horizontalAccuracy >= 0 &&
+    nonisolated public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        Task { @MainActor in
+            // remove invalid locations
+            let results: [CLLocation] = locations.filter { location -> Bool in
+                // A negative value indicates that the latitude and longitude are invalid
+                location.horizontalAccuracy >= 0 &&
                 // GPS  may return 0 to indicate no location
                 location.coordinate.latitude != 0 && location.coordinate.longitude != 0
+            }
+
+            if !results.isEmpty {
+                locationTimer?.invalidate()
+                locationTimer = nil
+            }
+
+            notifyDelegates(withLocations: results)
+
+            startLocationFreshTimers()
         }
-
-        if !results.isEmpty {
-            locationTimer?.invalidate()
-            locationTimer = nil
-        }
-
-        notifyDelegates(withLocations: results)
-
-        startLocationFreshTimers()
     }
 
     private func notifyDelegates(withLocations locations: [CLLocation]) {
@@ -642,40 +651,54 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
-    public func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
-        for delegate in delegates(onlyActive: true, usage: [.visits]) {
-            delegate.locationManager(self, didVisit: visit)
+    nonisolated public func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
+        Task { @MainActor in
+            for delegate in delegates(onlyActive: true, usage: [.visits]) {
+                delegate.locationManager(self, didVisit: visit)
+            }
         }
     }
 
-    public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        for delegate in regionDelegates {
-            delegate.locationManager(self, didEnterRegion: region)
+    nonisolated public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        Task { @MainActor in
+            for delegate in regionDelegates {
+                delegate.locationManager(self, didEnterRegion: region)
+            }
         }
     }
 
-    public func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        for delegate in regionDelegates {
-            delegate.locationManager(self, didExitRegion: region)
+    nonisolated public func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        Task { @MainActor in
+            for delegate in regionDelegates {
+                delegate.locationManager(self, didExitRegion: region)
+            }
         }
     }
 
-    public func locationManager(_: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        lastHeading = newHeading
-        for delegate in delegates(onlyActive: true, usage: [.foregroundHeading, .backgroundHeading]) {
-            delegate.locationManager(self, didUpdateHeading: newHeading)
+    nonisolated public func locationManager(_: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        Task { @MainActor in
+            lastHeading = newHeading
+            for delegate in delegates(onlyActive: true, usage: [.foregroundHeading, .backgroundHeading]) {
+                delegate.locationManager(self, didUpdateHeading: newHeading)
+            }
         }
     }
 
-    public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
-        // This might be some temporary error. Just report it but do not stop
-        // monitoring as it could be some temporary error and we just have to
-        // wait for the next event
-        for delegate in delegates(onlyActive: true) {
-            delegate.locationManager(self, didFailWithError: error)
+    nonisolated public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
+        Task { @MainActor in
+            // This might be some temporary error. Just report it but do not stop
+            // monitoring as it could be some temporary error and we just have to
+            // wait for the next event
+            for delegate in delegates(onlyActive: true) {
+                delegate.locationManager(self, didFailWithError: error)
+            }
         }
     }
 }
+
+extension CLVisit: @unchecked @retroactive Sendable {}
+extension CLRegion: @unchecked @retroactive Sendable {}
+extension CLHeading: @unchecked @retroactive Sendable {}
 
 public extension UBLocationManager {
     /// An authorization level granted by the user which allows starting location services
