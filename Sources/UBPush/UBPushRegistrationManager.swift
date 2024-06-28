@@ -15,6 +15,7 @@ import UIKit
 ///
 /// or subclass `UBPushRegistrationManager`, overriding `pushRegistrationRequest` if they
 /// require a custom registration request.
+@MainActor
 open class UBPushRegistrationManager: NSObject {
     /// The push token for this device, if any
     public var pushToken: String? {

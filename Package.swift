@@ -37,7 +37,13 @@ let package = Package(
                 .swiftLanguageVersion(.v6)
             ]
         ),
-        .target(name: "UBPush", dependencies: ["UBFoundation"]),
+        .target(
+            name: "UBPush",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency")
+            ]
+        ),
         .target(
             name: "UBQRScanner",
             swiftSettings: [
