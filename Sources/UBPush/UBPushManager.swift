@@ -7,7 +7,7 @@
 
 import UBFoundation
 import UIKit
-import UserNotifications
+@preconcurrency import UserNotifications
 
 /// Handles requesting push permissions. Clients should customize the following components specific to the client application:
 ///
@@ -46,6 +46,7 @@ import UserNotifications
 ///         }
 ///
 
+@MainActor
 open class UBPushManager: NSObject {
     static let logger: UBLogger = UBPushLogging.frameworkLoggerFactory(category: "PushManager")
 
@@ -53,6 +54,7 @@ open class UBPushManager: NSObject {
     public typealias PermissionRequestCallback = (PermissionRequestResult) -> Void
 
     /// :nodoc:
+    @MainActor
     public enum PermissionRequestResult {
         /// Push permission was obtained successfully
         case success
@@ -84,6 +86,7 @@ open class UBPushManager: NSObject {
         }
     }
 
+    @MainActor
     private struct UBPushTokenStorage {
         static var shared = UBPushTokenStorage()
 
@@ -318,18 +321,24 @@ open class UBPushManager: NSObject {
 
 extension UBPushManager: UNUserNotificationCenterDelegate {
     /// :nodoc:
-    public func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        pushHandler.handleWillPresentNotification(notification, completionHandler: completionHandler)
+    nonisolated public func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        Task { @MainActor in
+            pushHandler.handleWillPresentNotification(notification, completionHandler: completionHandler)
+        }
     }
 
     /// :nodoc:
-    public func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        pushHandler.handleDidReceiveResponse(response, completionHandler: completionHandler)
+    nonisolated public func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        Task { @MainActor in
+            pushHandler.handleDidReceiveResponse(response, completionHandler: completionHandler)
+        }
     }
 
     /// :nodoc:
-    public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
-        pushHandler.openInAppSettings(notification)
+    nonisolated public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
+        Task { @MainActor in
+            pushHandler.openInAppSettings(notification)
+        }
     }
 }
 

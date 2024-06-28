@@ -8,10 +8,10 @@
 
 import Foundation
 import os.log
-import UBFoundation
+@preconcurrency import UBFoundation
 
 /// Internal logger group that holds all loggers
-private var loggerGroup: UBLoggerGroup = UBLoggerGroup()
+private let loggerGroup: UBLoggerGroup = UBLoggerGroup()
 
 /// A domain for framework logging manipulation
 public enum UBPushLogging {

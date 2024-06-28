@@ -31,7 +31,13 @@ let package = Package(
             ]
         ),
         .target(name: "UBLocation", dependencies: ["UBFoundation"]),
-        .target(name: "UBPush", dependencies: ["UBFoundation"]),
+        .target(
+            name: "UBPush",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency")
+            ]
+        ),
         .target(
             name: "UBQRScanner",
             swiftSettings: [
