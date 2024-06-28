@@ -30,7 +30,13 @@ let package = Package(
                 .swiftLanguageVersion(.v6)
             ]
         ),
-        .target(name: "UBLocation", dependencies: ["UBFoundation"]),
+        .target(
+            name: "UBLocation",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .swiftLanguageVersion(.v6)
+            ]
+        ),
         .target(name: "UBPush", dependencies: ["UBFoundation"]),
         .target(
             name: "UBQRScanner",
