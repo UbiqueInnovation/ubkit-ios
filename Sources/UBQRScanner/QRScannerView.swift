@@ -96,7 +96,7 @@ public class QRScannerView: UIView {
         setupCaptureSessionIfNeeded()
 
         if let c = captureSession, !c.isRunning {
-            DispatchQueue.global().async {
+            Task.detached {
                 c.startRunning()
             }
         }

@@ -11,7 +11,7 @@ import System
 
 @available(iOS 14.0, *)
 struct ShareDocumentsView: View {
-    @State private var archvieURL: URL?
+    @State private var archiveURL: URL?
     @State private var compressingDirectory = false
     @State private var showShareSheet = false
     @State private var showErrorAlert = false
@@ -20,15 +20,15 @@ struct ShareDocumentsView: View {
         Section(header: Text("Export")) {
             Button {
                 compressingDirectory = true
-                DispatchQueue.global(qos: .userInteractive).async {
+                Task.detached(priority: .userInitiated) {
                     if let path = CompressDocumentsDirectory.compress() {
-                        DispatchQueue.main.async {
-                            archvieURL = path
+                        Task { @MainActor in
+                            archiveURL = path
                             showShareSheet = true
                             compressingDirectory = false
                         }
                     } else {
-                        DispatchQueue.main.async {
+                        Task { @MainActor in
                             showErrorAlert = true
                             compressingDirectory = false
                         }
@@ -40,7 +40,7 @@ struct ShareDocumentsView: View {
             }
             .disabled(compressingDirectory == true)
             .sheet(isPresented: $showShareSheet) {
-                if let url = archvieURL {
+                if let url = archiveURL {
                     ShareView(url: url)
                 }
             }.alert(isPresented: $showErrorAlert) {
