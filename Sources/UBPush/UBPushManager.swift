@@ -321,14 +321,14 @@ open class UBPushManager: NSObject {
 
 extension UBPushManager: UNUserNotificationCenterDelegate {
     /// :nodoc:
-    nonisolated public func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    nonisolated public func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping @Sendable (UNNotificationPresentationOptions) -> Void) {
         Task { @MainActor in
             pushHandler.handleWillPresentNotification(notification, completionHandler: completionHandler)
         }
     }
 
     /// :nodoc:
-    nonisolated public func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    nonisolated public func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping @Sendable () -> Void) {
         Task { @MainActor in
             pushHandler.handleDidReceiveResponse(response, completionHandler: completionHandler)
         }
