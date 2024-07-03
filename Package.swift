@@ -22,7 +22,12 @@ let package = Package(
         .package(url: "https://github.com/UbiqueInnovation/ios-local-networking.git", from: "1.0.2"),
     ],
     targets: [
-        .target(name: "UBFoundation"),
+        .target(
+            name: "UBFoundation",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency")
+            ]
+        ),
         .target(
             name: "UBUserInterface",
             dependencies: ["UBFoundation"],
