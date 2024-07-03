@@ -11,6 +11,7 @@ import UBFoundation
 import UIKit
 
 /// An object defining methods that handle events related to GPS location.
+@MainActor
 public protocol UBLocationManagerDelegate: CLLocationManagerDelegate, Sendable {
     /// Notifies the delegate that the permission level for the desired usage has been granted.
     func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.AuthorizationLevel, accuracy: UBLocationManager.AccuracyLevel)
