@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import os.log
 
 /// A class that manages localization, locale and bundles
 /// The object will post notifications in the specified notification center to notify of the locale changement.
 /// - SeeAlso: `LocalizationNotification` for the available notifications.
 public class UBLocalization: Codable {
     /// A logger associated with localization
-    static let logger: UBLogger = UBLogging.frameworkLoggerFactory(category: "Localization")
+    static let logger = Logger(subsystem: "ch.ubique.ubkit", category: "Localization")
 
     // MARK: - Properties
 
@@ -109,12 +110,12 @@ public extension UBLocalization {
     func setLocale(identifier localeIdentifier: String, baseBundle: Bundle = .main) throws {
         let localeComponents = Locale.components(fromIdentifier: localeIdentifier)
         guard let languageCode = localeComponents[NSLocale.Key.languageCode.rawValue], Locale.isoLanguageCodes.contains(languageCode) else {
-            UBLocalization.logger.error("The language code is not valid \(localeIdentifier)")
+            UBLocalization.logger.error("The language code is not valid \(localeIdentifier, privacy: .public)")
             throw UBLocalizationError.invalidLanguageCode
         }
 
         if let regionCode = localeComponents[NSLocale.Key.countryCode.rawValue], Locale.isoRegionCodes.contains(regionCode) == false {
-            UBLocalization.logger.error("The region code is not valid \(localeIdentifier)")
+            UBLocalization.logger.error("The region code is not valid \(localeIdentifier, privacy: .public)")
             throw UBLocalizationError.invalidRegionCode
         }
 
@@ -132,12 +133,12 @@ public extension UBLocalization {
         let newIdentifier = locale.identifier
         let userInfo = [UBLocalizationNotification.oldLocaleKey: self.locale, UBLocalizationNotification.newLocaleKey: locale]
 
-        UBLocalization.logger.debug("Locale will change from [\(oldIdentifier)] to [\(newIdentifier)]")
+        UBLocalization.logger.debug("Locale will change from [\(oldIdentifier, privacy: .public)] to [\(newIdentifier, privacy: .public)]")
         notificationCenter.post(name: UBLocalizationNotification.localeWillChange, object: self, userInfo: userInfo)
         self.locale = locale
         self.baseBundle = baseBundle
         localizedBundle = Bundle(locale: locale, in: baseBundle)
-        UBLocalization.logger.debug("Locale did change from [\(oldIdentifier)] to [\(newIdentifier)]")
+        UBLocalization.logger.debug("Locale did change from [\(oldIdentifier, privacy: .public)] to [\(newIdentifier, privacy: .public)]")
         notificationCenter.post(name: UBLocalizationNotification.localeDidChange, object: self, userInfo: userInfo)
     }
 }
