@@ -112,9 +112,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         self.priority = priority
         self.callbackQueue = callbackQueue
         _state = .initial
-
-        // Add the created task to the global network activity
-        Networking.addToGlobalNetworkActivity(self)
     }
 
     /// Initializes the data task.
