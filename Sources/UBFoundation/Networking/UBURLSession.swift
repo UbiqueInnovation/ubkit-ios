@@ -130,7 +130,7 @@ public final class UBURLSession: UBDataTaskURLSession, Sendable {
     }
 
     /// :nodoc:
-    public func reset(completionHandler: @escaping () -> Void) {
+    public func reset(completionHandler: @escaping @Sendable () -> Void) {
         urlSession.reset(completionHandler: completionHandler)
     }
 }

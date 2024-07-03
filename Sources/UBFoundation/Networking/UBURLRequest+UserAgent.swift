@@ -16,10 +16,11 @@
 import Foundation
 
 extension UBURLRequest {
-    public mutating func setDefaultUserAgent() {
-        setHTTPHeaderField(UBHTTPHeaderField(key: .userAgent, value: UBURLRequest.userAgent))
+    public mutating func setDefaultUserAgent() async {
+        await setHTTPHeaderField(UBHTTPHeaderField(key: .userAgent, value: UBURLRequest.userAgent))
     }
 
+    @MainActor
     static var userAgent: String {
         let bundleId = Bundle.bundleId
         let appVersion = Bundle.appVersion
