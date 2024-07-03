@@ -41,7 +41,7 @@ let package = Package(
             name: "UBPush",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency")
+                .swiftLanguageVersion(.v6)
             ]
         ),
         .target(
