@@ -25,7 +25,7 @@ let package = Package(
         .target(
             name: "UBFoundation",
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency")
+                .swiftLanguageVersion(.v6)
             ]
         ),
         .target(

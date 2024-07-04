@@ -8,7 +8,7 @@
 import Foundation
 
 /// A request modifier is called before a HTTPDataTask starts and have the chance to change the request.
-public protocol UBURLRequestModifier {
+public protocol UBURLRequestModifier: Sendable {
     /// Modifies the request before it will start.
     ///
     /// - Parameters:
@@ -30,7 +30,7 @@ public protocol UBAsyncURLRequestModifier: UBURLRequestModifier {
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
 public extension UBAsyncURLRequestModifier {
-    func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
+    func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping @Sendable (Result<UBURLRequest, Error>) -> Void) {
         Task {
             do {
                 var newRequest = originalRequest

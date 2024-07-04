@@ -8,13 +8,13 @@
 import Foundation
 
 /// A group of request modifiers
-public class UBURLRequestModifierGroup: UBURLRequestModifier {
+public final class UBURLRequestModifierGroup: UBURLRequestModifier {
     // - MARK: Properties
 
     /// :nodoc:
     private let serialModifiers = DispatchQueue(label: "Group Modifiers")
     /// :nodoc:
-    private var _modifiers: [UBURLRequestModifier]
+    nonisolated(unsafe) private var _modifiers: [UBURLRequestModifier]
     /// The list of modifier in the group
     public var modifiers: [UBURLRequestModifier] {
         serialModifiers.sync {
@@ -58,7 +58,7 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     /// :nodoc:
     private let serialOperation = DispatchQueue(label: "Group Modifiers Operation")
     /// :nodoc:
-    private var currentModification: Modification?
+    nonisolated(unsafe) private var currentModification: Modification?
     /// Cancels the ongowing modification
     public func cancelCurrentModification() {
         serialOperation.sync {

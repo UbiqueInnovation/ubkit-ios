@@ -14,7 +14,7 @@ private struct Log {
 }
 
 /// A caching logic that will launch and refresh the data automatically when the data expires
-open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
+open class UBAutoRefreshCacheLogic: UBBaseCachingLogic, @unchecked Sendable {
     /// The refresh cron jobs
     private let refreshJobs = NSMapTable<UBURLDataTask, UBCronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 

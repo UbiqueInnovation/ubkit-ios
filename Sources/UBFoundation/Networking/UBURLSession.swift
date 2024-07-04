@@ -29,7 +29,7 @@ public final class UBURLSession: UBDataTaskURLSession, Sendable {
         let sessionDelegate = UBURLSessionDelegate(configuration: configuration)
         urlSession = URLSession(configuration: configuration.sessionConfiguration, delegate: sessionDelegate, delegateQueue: queue)
         self.sessionDelegate = sessionDelegate
-        sessionDelegate.urlSession = urlSession
+        sessionDelegate.setSession(urlSession)
     }
 
     /// :nodoc:

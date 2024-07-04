@@ -8,7 +8,7 @@
 import Foundation
 
 /// A URL load request that is independent of protocol or URL scheme.
-public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomStringConvertible, CustomDebugStringConvertible {
+public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomStringConvertible, CustomDebugStringConvertible, Sendable {
     // MARK: - Properties
 
     /// Underlaying data holder
