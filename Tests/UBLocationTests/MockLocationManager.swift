@@ -100,7 +100,7 @@ class MockLocationManager: UBLocationManagerProtocol {
         delegate?.locationManager?(CLLocationManager(), didChangeAuthorization: _authorizationStatus)
     }
 
-    func authorizationStatus() -> CLAuthorizationStatus {
+    var authorizationStatus: CLAuthorizationStatus {
         _authorizationStatus
     }
 
