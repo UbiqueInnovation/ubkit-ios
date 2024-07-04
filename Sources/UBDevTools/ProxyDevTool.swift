@@ -26,7 +26,7 @@ class UBDevToolsProxyHelper {
     }
 }
 
-public class UBFriendlyEvaluator: UBServerTrustEvaluator {
+public final class UBFriendlyEvaluator: UBServerTrustEvaluator {
     public func evaluate(_ trust: SecTrust, forHost host: String) throws {
         // on purpose not throwing, we allow it all
     }

@@ -7,6 +7,7 @@
 
 import UBFoundation
 import UIKit
+import os.log
 @preconcurrency import UserNotifications
 
 /// Handles requesting push permissions. Clients should customize the following components specific to the client application:
@@ -48,7 +49,7 @@ import UIKit
 
 @MainActor
 open class UBPushManager: NSObject {
-    static let logger: UBLogger = UBPushLogging.frameworkLoggerFactory(category: "PushManager")
+    static let logger = Logger(subsystem: "ch.ubique.ubkit", category: "PushManager")
 
     /// Closure to handle the permission request result
     public typealias PermissionRequestCallback = (PermissionRequestResult) -> Void
@@ -286,7 +287,7 @@ open class UBPushManager: NSObject {
             permissionRequestCallback = nil
         }
 
-        Self.logger.error("didFailToRegisterForRemoteNotificationsWithError: \(error.localizedDescription)")
+        Self.logger.error("didFailToRegisterForRemoteNotificationsWithError: \(error.localizedDescription, privacy: .public)")
     }
 
     /// Querys the current push permissions from the system
@@ -310,7 +311,7 @@ open class UBPushManager: NSObject {
     }
 
     /// Invalidates the current push registration, forcing a new registration request
-    public func invalidateAndResendPushRegistration(completion: ((Error?) -> Void)? = nil) {
+    public func invalidateAndResendPushRegistration(completion: (@Sendable (Error?) -> Void)? = nil) {
         for prm in self.allPushRegistrationManagers {
             prm.invalidate(completion: completion)
         }
