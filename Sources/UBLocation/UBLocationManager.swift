@@ -207,8 +207,7 @@ public class UBLocationManager: NSObject {
     private var lastDelegateFreshState: [ObjectIdentifier: Bool] = [:]
 
     /// Does the location manager have the required authorization level for `usage`?
-    public static func hasRequiredAuthorizationLevel(forUsage usage: Set<LocationMonitoringUsage>) -> Bool {
-        let authorizationStatus = CLLocationManager.authorizationStatus()
+    public func hasRequiredAuthorizationLevel(forUsage usage: Set<LocationMonitoringUsage>) -> Bool {
         switch authorizationStatus {
             case .authorizedAlways:
                 return true
@@ -223,13 +222,15 @@ public class UBLocationManager: NSObject {
                 return false
             case .notDetermined:
                 return false
+            case .none:
+                return false
             @unknown default:
                 fatalError()
         }
     }
 
     /// Does the location manager have the required authorization level for `usage`?
-    public static func hasRequiredAuthorizationLevel(forUsage usage: LocationMonitoringUsage) -> Bool {
+    public func hasRequiredAuthorizationLevel(forUsage usage: LocationMonitoringUsage) -> Bool {
         hasRequiredAuthorizationLevel(forUsage: Set([usage]))
     }
 
@@ -324,9 +325,8 @@ public class UBLocationManager: NSObject {
         let id = ObjectIdentifier(delegate)
         delegateWrappers[id] = wrapper
 
-        let authStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
-        switch authStatus {
+        switch authorizationStatus {
             case .authorizedAlways:
                 startLocationMonitoringWithoutChecks(delegate, usage: usage)
             case .authorizedWhenInUse:
@@ -345,7 +345,7 @@ public class UBLocationManager: NSObject {
                     requestPermission(for: minimumAuthorizationLevelRequired)
                 }
                 delegate.locationManager(self, requiresPermission: minimumAuthorizationLevelRequired)
-            case .notDetermined:
+            case .notDetermined, .none:
                 stopLocationMonitoring()
                 if canAskForPermission {
                     requestPermission(for: minimumAuthorizationLevelRequired)
@@ -442,10 +442,9 @@ public class UBLocationManager: NSObject {
             self.permissionRequestUsage = nil
         }
 
-        let authStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
 
-        switch authStatus {
+        switch authorizationStatus {
             case .authorizedAlways:
                 callback(.success)
 
@@ -468,7 +467,7 @@ public class UBLocationManager: NSObject {
             case .denied, .restricted:
                 callback(.showSettings)
 
-            case .notDetermined:
+            case .notDetermined, .none:
                 self.permissionRequestUsage = usage
                 self.permissionRequestCallback = callback
                 self.requestPermission(for: minimumAuthorizationLevelRequired)
@@ -574,7 +573,7 @@ extension UBLocationManager: @preconcurrency CLLocationManagerDelegate {
 
         self.startLocationMonitoringForAllDelegates()
 
-        if Self.hasRequiredAuthorizationLevel(forUsage: allUsages) {
+        if hasRequiredAuthorizationLevel(forUsage: allUsages) {
             let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
 
             for delegate in delegates() {
@@ -590,7 +589,7 @@ extension UBLocationManager: @preconcurrency CLLocationManagerDelegate {
         // permission request callbacks
         if let usage = self.permissionRequestUsage,
            let callback = self.permissionRequestCallback {
-            let hasRequiredLevel = Self.hasRequiredAuthorizationLevel(forUsage: usage)
+            let hasRequiredLevel = hasRequiredAuthorizationLevel(forUsage: usage)
             callback(hasRequiredLevel ? .success : .failure)
 
             self.permissionRequestCallback = nil
