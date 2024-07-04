@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-@available(iOS 13.0, *)
 @MainActor
 public class BaseUrl: ObservableObject {
     let title: String
@@ -22,7 +21,6 @@ public class BaseUrl: ObservableObject {
     }
 }
 
-@available(iOS 13.0, *)
 class BackendDevTools: DevTool {
     private static var didSwizzle = false
     public static var baseUrls: [BaseUrl] = []
@@ -88,7 +86,6 @@ class BackendDevTools: DevTool {
     }
 }
 
-@available(iOS 13.0, *)
 private extension NSURL {
     @MainActor
     private static var didSwizzle = false

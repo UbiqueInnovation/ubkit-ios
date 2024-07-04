@@ -10,7 +10,6 @@
     import Foundation
     import SwiftUI
 
-    @available(iOS 13.0, *)
     public extension Text {
         /**
          Styles a SwiftUI `Text` view with the values specified in a given `UBLabelType`, with the option to override specific style attributes.
@@ -24,22 +23,14 @@
                       color: Color? = nil,
                       numberOfLines: Int? = nil,
                       textAlignment: TextAlignment = .leading) -> some View {
-            let view = self
+            return self
                 .font(Font(labelType.font))
                 .tracking(labelType.letterSpacing ?? 0)
                 .lineSpacing(labelType.font.pointSize * (labelType.lineSpacing - 1))
                 .foregroundColor(color ?? Color(labelType.textColor))
                 .lineLimit(numberOfLines)
                 .multilineTextAlignment(textAlignment)
-
-            return Group {
-                if #available(iOS 14.0, *) {
-                    view
-                        .textCase(labelType.isUppercased ? .uppercase : nil)
-                } else {
-                    view
-                }
-            }
+                .textCase(labelType.isUppercased ? .uppercase : nil)
         }
     }
 

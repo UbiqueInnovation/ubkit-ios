@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import UBFoundation
 
-@available(iOS 13.0, *)
 @MainActor
 class ObservableKeychainEditor: ObservableObject {
     var dictionary: [String: String] = [:]
@@ -58,7 +57,6 @@ class ObservableKeychainEditor: ObservableObject {
     }
 }
 
-@available(iOS 13.0, *)
 public struct KeychainEditor: View {
     @ObservedObject var store = ObservableKeychainEditor()
 

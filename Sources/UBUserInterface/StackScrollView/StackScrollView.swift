@@ -225,10 +225,7 @@ public class StackScrollView: UIView {
     /// Scrolls the scrollview all the way to the top
     public func scrollToTop(animated _: Bool) {
         var offset = CGPoint(x: -scrollView.contentInset.left, y: -scrollView.contentInset.top)
-
-        if #available(iOS 11.0, *) {
-            offset = CGPoint(x: -scrollView.adjustedContentInset.left, y: -scrollView.adjustedContentInset.top)
-        }
+        offset = CGPoint(x: -scrollView.adjustedContentInset.left, y: -scrollView.adjustedContentInset.top)
 
         scrollView.setContentOffset(offset, animated: true)
     }

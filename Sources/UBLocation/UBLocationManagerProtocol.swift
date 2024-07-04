@@ -19,7 +19,6 @@ public protocol UBLocationManagerProtocol {
     var activityType: CLActivityType { get set }
     var allowsBackgroundLocationUpdates: Bool { get set }
     var pausesLocationUpdatesAutomatically: Bool { get set }
-    @available(iOS 11.0, *)
     var showsBackgroundLocationIndicator: Bool { get set }
     var monitoredRegions: Set<CLRegion> { get }
     var maximumRegionMonitoringDistance: CLLocationDistance { get }

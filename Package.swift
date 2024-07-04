@@ -8,7 +8,7 @@ let package = Package(
     defaultLocalization: "en",
     platforms: [
         .iOS(.v14),
-        .watchOS(.v5),
+        .watchOS(.v7),
     ],
     products: [
         .library(name: "UBFoundation", targets: ["UBFoundation"]),

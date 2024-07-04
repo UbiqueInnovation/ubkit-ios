@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-@available(iOS 13.0, *)
 @MainActor
 class ObservableUserDefaults: ObservableObject {
     let userDefaults: UserDefaults
@@ -97,7 +96,6 @@ class ObservableUserDefaults: ObservableObject {
     }
 }
 
-@available(iOS 13.0, *)
 public struct UserDefaultsEditor: View {
     let userDefaults: UserDefaults
     let displayName: String

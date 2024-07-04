@@ -10,7 +10,6 @@
     import Foundation
     import SwiftUI
 
-    @available(iOS 14.0, *)
     public struct UBPopupWrapper<V: View>: View {
         let style: UBPopupStyle
         @ViewBuilder let wrappedContent: () -> V

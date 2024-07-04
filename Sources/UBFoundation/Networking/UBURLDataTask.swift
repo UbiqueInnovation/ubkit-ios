@@ -63,7 +63,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// A representation of the overall task progress.
     public var progress: Progress {
-        guard #available(iOS 11.0, *), let progress = dataTask?.progress else {
+        guard let progress = dataTask?.progress else {
             return Progress(totalUnitCount: 0)
         }
         return progress
@@ -241,16 +241,14 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         requestStartSemaphore.wait()
 
-        if #available(iOS 11.0, *) {
-            // Observe the task progress
-            self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-                guard let self = self else {
-                    return
-                }
+        // Observe the task progress
+        self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
+            guard let self = self else {
+                return
+            }
 
-                self.notifyProgress(task.progress.fractionCompleted)
-            })
-        }
+            self.notifyProgress(task.progress.fractionCompleted)
+        })
 
         // Observe the task state
         let observation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
@@ -371,7 +369,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// This modifier will be called everytime before the request is sent, and it gets a chance to modify the request.
     ///
     /// - Parameter modifier: The request modifier to add
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
     @discardableResult
     public func addRequestModifier(_ modifier: UBAsyncURLRequestModifier) -> Self {
         requestModifier.append(modifier)

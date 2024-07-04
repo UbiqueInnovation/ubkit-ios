@@ -236,19 +236,11 @@ open class UBPushManager: NSObject {
         var options: UNAuthorizationOptions = [.alert, .badge, .sound]
 
         if includingCritical {
-            if #available(iOS 12.0, *) {
-                options.insert(.criticalAlert)
-            } else {
-                assertionFailure()
-            }
+            options.insert(.criticalAlert)
         }
 
         if includingNotificationSettings {
-            if #available(iOS 12.0, *) {
-                options.insert(.providesAppNotificationSettings)
-            } else {
-                assertionFailure()
-            }
+            options.insert(.providesAppNotificationSettings)
         }
 
         return options

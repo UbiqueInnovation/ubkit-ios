@@ -9,7 +9,6 @@ import AppleArchive
 import SwiftUI
 import System
 
-@available(iOS 14.0, *)
 struct ShareDocumentsView: View {
     @State private var archiveURL: URL?
     @State private var compressingDirectory = false
@@ -56,7 +55,6 @@ struct ShareDocumentsView: View {
     }
 }
 
-@available(iOS 14.0, *)
 private struct CustomLabelStyle: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack {
@@ -67,7 +65,6 @@ private struct CustomLabelStyle: LabelStyle {
     }
 }
 
-@available(iOS 13.0, *)
 private struct ShareView: UIViewControllerRepresentable {
     let url: URL
 
@@ -84,8 +81,7 @@ private struct ShareView: UIViewControllerRepresentable {
                                 context: UIViewControllerRepresentableContext<ShareView>) {}
 }
 
-@available(iOS 14.0, *)
-enum CompressDocumentsDirectory: Sendable {
+enum CompressDocumentsDirectory {
     static func compress() -> URL? {
         #if !targetEnvironment(simulator)
             let archiveDestination = NSTemporaryDirectory() + "documentDirectory.aar"

@@ -145,11 +145,7 @@ public class UBLocationManager: NSObject {
     }
 
     public var accuracyLevel: UBLocationManager.AccuracyLevel {
-        if #available(iOS 14.0, *) {
-            return (locationManager as? CLLocationManager)?.accuracyAuthorization.accuracyLevel ?? .full
-        } else {
-            return .full
-        }
+        (locationManager as? CLLocationManager)?.accuracyAuthorization.accuracyLevel ?? .full
     }
 
     /// The heading filter of the underlying `CLLocationManager`

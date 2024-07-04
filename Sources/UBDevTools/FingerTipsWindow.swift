@@ -20,9 +20,7 @@ class FingerTipsWindow: UIWindow {
         self.rootViewController = nil
         self.isHidden = true
 
-        if #available(iOS 13, *) {
-            windowScene = nil
-        }
+        windowScene = nil
     }
 
     public func handleTouchEvent(_ event: UIEvent) {

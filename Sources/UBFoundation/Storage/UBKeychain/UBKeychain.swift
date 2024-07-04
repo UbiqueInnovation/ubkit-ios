@@ -26,8 +26,8 @@ public class UBKeychain: UBKeychainProtocol {
     ///   - encoder: a optional custom encoder
     ///   - decoder: a optional custom decoder
     public init(accessGroup: String? = nil,
-                encoder: JSONEncoder = UBJSONEncoder(),
-                decoder: JSONDecoder = UBJSONDecoder()) {
+                encoder: JSONEncoder = JSONEncoder(),
+                decoder: JSONDecoder = JSONDecoder()) {
         self.encoder = encoder
         self.decoder = decoder
         self.accessGroup = accessGroup
@@ -65,9 +65,7 @@ public class UBKeychain: UBKeychainProtocol {
                     return .failure(.decodingError(error))
                 }
             default:
-                if #available(iOS 11.3, *) {
-                    logger.error("SecItemCopyMatching returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
-                }
+                logger.error("SecItemCopyMatching returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
                 return .failure(.cannotAccess(status))
         }
     }
@@ -94,9 +92,7 @@ public class UBKeychain: UBKeychainProtocol {
                 }
                 return .success(item)
             default:
-                if #available(iOS 11.3, *) {
-                    logger.error("SecItemCopyMatching returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
-                }
+                logger.error("SecItemCopyMatching returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
                 return .failure(.cannotAccess(status))
         }
     }
@@ -125,9 +121,7 @@ public class UBKeychain: UBKeychainProtocol {
                 let attributes = [kSecValueData: data]
                 status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
                 if status != errSecSuccess {
-                    if #available(iOS 11.3, *) {
-                        logger.error("SecItemUpdate returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
-                    }
+                    logger.error("SecItemUpdate returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
                     return .failure(.storingError(status))
                 } else {
                     return .success(())
@@ -137,9 +131,7 @@ public class UBKeychain: UBKeychainProtocol {
                 status = SecItemAdd(query as CFDictionary, nil)
 
                 if status != noErr {
-                    if #available(iOS 11.3, *) {
-                        logger.error("SecItemAdd returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
-                    }
+                    logger.error("SecItemAdd returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
                     return .failure(.storingError(status))
                 }
                 return .success(())
@@ -160,9 +152,7 @@ public class UBKeychain: UBKeychainProtocol {
             case noErr, errSecItemNotFound:
                 return .success(())
             default:
-                if #available(iOS 11.3, *) {
-                    logger.error("SecItemDelete returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
-                }
+                logger.error("SecItemDelete returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
                 return .failure(.cannotDelete(status))
         }
     }
@@ -211,9 +201,7 @@ public class UBKeychain: UBKeychainProtocol {
             let status = SecItemDelete(query as CFDictionary)
 
             if !(status == errSecSuccess || status == errSecItemNotFound) {
-                if #available(iOS 11.3, *) {
-                    logger.error("SecItemDelete returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
-                }
+                logger.error("SecItemDelete returned status:\(status, privacy: .public) errorMessage: \(SecCopyErrorMessageString(status, nil) ?? "N/A" as CFString, privacy: .public)")
             }
 
             if status == errSecSuccess || status == errSecItemNotFound {
