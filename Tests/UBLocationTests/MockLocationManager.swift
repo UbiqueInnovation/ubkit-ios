@@ -11,11 +11,15 @@ import UBLocation
 
 class MockLocationManager: UBLocationManagerProtocol {
     /// The sequence of authorizationStatues that is traversed when requesting Authorization
-    var authorizationStatuses: [CLAuthorizationStatus] = []
+    var authorizationStatuses: [CLAuthorizationStatus] = [] {
+        didSet {
+            delegate?.locationManager?(CLLocationManager(), didChangeAuthorization: _authorizationStatus)
+        }
+    }
 
     var _authorizationStatus: CLAuthorizationStatus {
         guard let currentAuthorizationStatus = authorizationStatuses.first else {
-            fatalError()
+            return .notDetermined
         }
         return currentAuthorizationStatus
     }
