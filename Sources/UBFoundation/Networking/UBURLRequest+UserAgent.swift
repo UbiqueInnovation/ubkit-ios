@@ -16,8 +16,9 @@
 import Foundation
 
 extension UBURLRequest {
-    public mutating func setDefaultUserAgent() async {
-        await setHTTPHeaderField(UBHTTPHeaderField(key: .userAgent, value: UBURLRequest.userAgent))
+    @MainActor
+    public mutating func setDefaultUserAgent() {
+        setHTTPHeaderField(UBHTTPHeaderField(key: .userAgent, value: UBURLRequest.userAgent))
     }
 
     @MainActor
