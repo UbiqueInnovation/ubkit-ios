@@ -84,13 +84,21 @@ class HTTPDataTaskTests: XCTestCase {
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
 
-        class MockRecovery: UBNetworkingTaskRecoveryStrategy {
-            private var counter = 1
-            var ex: XCTestExpectation?
+        final class MockRecovery: UBNetworkingTaskRecoveryStrategy {
+            nonisolated(unsafe) private var counter = 1
+            private let queue = DispatchQueue(label: "counter")
+            let ex: XCTestExpectation?
+
+            init(expectation: XCTestExpectation?) {
+                ex = expectation
+            }
+
             func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (UBNetworkingTaskRecoveryResult) -> Void) {
                 ex?.fulfill()
-                if counter == 1 {
-                    counter -= 1
+                if queue.sync(execute: { counter == 1 }) {
+                    queue.sync {
+                        counter -= 1
+                    }
                     completion(.restartDataTask)
                 } else {
                     completion(.cannotRecover)
@@ -98,8 +106,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
 
-        let recovery = MockRecovery()
-        recovery.ex = ex2
+        let recovery = MockRecovery(expectation: ex2)
         dataTask.addFailureRecoveryStrategy(recovery)
         dataTask.addCompletionHandler(decoder: .passthrough) { result, _, _, _ in
             switch result {
@@ -130,8 +137,8 @@ class HTTPDataTaskTests: XCTestCase {
             case x
         }
 
-        class MockRecoveryOption: UBNetworkTaskRecoveryOption {
-            var localizedDisplayName: String = "Test"
+        final class MockRecoveryOption: UBNetworkTaskRecoveryOption {
+            let localizedDisplayName: String = "Test"
             func attemptRecovery(resultHandler handler: @escaping (Bool) -> Void) {
                 handler(true)
             }
@@ -139,7 +146,7 @@ class HTTPDataTaskTests: XCTestCase {
             func cancelOngoingRecovery() {}
         }
 
-        class MockRecovery: UBNetworkingTaskRecoveryStrategy {
+        final class MockRecovery: UBNetworkingTaskRecoveryStrategy {
             func recoverTask(_: UBURLDataTask, data _: Data?, response _: URLResponse?, error _: Error, completion: @escaping (UBNetworkingTaskRecoveryResult) -> Void) {
                 let options = UBNetworkTaskRecoveryOptions(recoveringFrom: Err.x, recoveryOptions: [MockRecoveryOption()])
                 completion(.recoveryOptions(options: options))

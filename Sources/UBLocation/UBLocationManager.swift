@@ -106,17 +106,15 @@ public class UBLocationManager: NSObject {
     public var logLocationPermissionChange: ((CLAuthorizationStatus) -> Void)?
     private var authorizationStatus: CLAuthorizationStatus? {
         didSet {
-            DispatchQueue.main.async {
-                if let authorizationStatus = self.authorizationStatus {
-                    self.authorizationCallbackTimers.values.forEach {
-                        $0.invalidate()
-                    }
-                    self.authorizationCallbackTimers.removeAll()
-                    self.pendingAuthorizationStatusCallbacks.values.forEach {
-                        $0(authorizationStatus)
-                    }
-                    self.pendingAuthorizationStatusCallbacks.removeAll()
+            if let authorizationStatus {
+                self.authorizationCallbackTimers.values.forEach {
+                    $0.invalidate()
                 }
+                self.authorizationCallbackTimers.removeAll()
+                self.pendingAuthorizationStatusCallbacks.values.forEach {
+                    $0(authorizationStatus)
+                }
+                self.pendingAuthorizationStatusCallbacks.removeAll()
             }
         }
     }
@@ -242,7 +240,7 @@ public class UBLocationManager: NSObject {
             let id = UUID()
             let timer = Timer.scheduledTimer(withTimeInterval: timeoutTime, repeats: false) { [weak self] _ in
                 guard let self else { return }
-                DispatchQueue.main.async {
+                MainActor.assumeIsolated {
                     if let callback = self.pendingAuthorizationStatusCallbacks[id] {
                         callback(.notDetermined)
                         self.pendingAuthorizationStatusCallbacks.removeValue(forKey: id)
@@ -250,10 +248,8 @@ public class UBLocationManager: NSObject {
                     self.authorizationCallbackTimers.removeValue(forKey: id)
                 }
             }
-            DispatchQueue.main.async {
-                self.authorizationCallbackTimers[id] = timer
-                self.pendingAuthorizationStatusCallbacks[id] = completion
-            }
+            authorizationCallbackTimers[id] = timer
+            pendingAuthorizationStatusCallbacks[id] = completion
         }
     }
 
@@ -571,7 +567,7 @@ public class UBLocationManager: NSObject {
 
 extension UBLocationManager: CLLocationManagerDelegate {
     nonisolated public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
-        Task { @MainActor in
+        MainActor.assumeIsolated {
             authorizationStatus = authorization
             logLocationPermissionChange?(authorization)
 
@@ -603,7 +599,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     nonisolated public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        Task { @MainActor in
+        MainActor.assumeIsolated {
             // remove invalid locations
             let results: [CLLocation] = locations.filter { location -> Bool in
                 // A negative value indicates that the latitude and longitude are invalid
@@ -649,7 +645,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     nonisolated public func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
-        Task { @MainActor in
+        MainActor.assumeIsolated {
             for delegate in delegates(onlyActive: true, usage: [.visits]) {
                 delegate.locationManager(self, didVisit: visit)
             }
@@ -657,7 +653,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     nonisolated public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        Task { @MainActor in
+        MainActor.assumeIsolated {
             for delegate in regionDelegates {
                 delegate.locationManager(self, didEnterRegion: region)
             }
@@ -665,7 +661,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     nonisolated public func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        Task { @MainActor in
+        MainActor.assumeIsolated {
             for delegate in regionDelegates {
                 delegate.locationManager(self, didExitRegion: region)
             }
@@ -673,7 +669,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     nonisolated public func locationManager(_: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        Task { @MainActor in
+        MainActor.assumeIsolated {
             lastHeading = newHeading
             for delegate in delegates(onlyActive: true, usage: [.foregroundHeading, .backgroundHeading]) {
                 delegate.locationManager(self, didUpdateHeading: newHeading)
@@ -682,7 +678,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 
     nonisolated public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
-        Task { @MainActor in
+        MainActor.assumeIsolated {
             // This might be some temporary error. Just report it but do not stop
             // monitoring as it could be some temporary error and we just have to
             // wait for the next event

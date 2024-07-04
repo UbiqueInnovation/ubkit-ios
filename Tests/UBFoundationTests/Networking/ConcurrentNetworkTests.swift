@@ -128,7 +128,7 @@ class ConcurrentNetworkTests: XCTestCase {
     }
 }
 
-private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
+private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic, @unchecked Sendable {
     override var nextRefreshHeaderFieldName: [String] {
         ["x-amz-meta-next-refresh"]
     }

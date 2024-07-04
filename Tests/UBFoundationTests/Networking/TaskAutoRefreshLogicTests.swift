@@ -18,7 +18,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         // load request to (not) fill cache
 
-        var dataTask: UBURLDataTask? = UBURLDataTask(url: url)
+        let dataTask: UBURLDataTask? = UBURLDataTask(url: url)
 
         let res = expectation(description: "res")
         dataTask?.session.reset {
@@ -31,13 +31,11 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
             ex.fulfill()
             dataTask?.cancel()
-            dataTask = nil
         }
         dataTask?.start()
         wait(for: [ex], timeout: 10000)
 
         dataTask?.cancel() // make sure that cron doesn't trigger
-        dataTask = nil
 
         // load request again
 
@@ -61,7 +59,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         // load request to (not) fill cache
 
-        var dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
+        let dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
 
         let res = expectation(description: "res")
         dataTask?.session.reset {
@@ -72,14 +70,12 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let ex = expectation(description: "s")
         dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             dataTask?.cancel() // make sure that cron doesn't trigger
-            dataTask = nil
             ex.fulfill()
         }
         dataTask?.start()
         wait(for: [ex], timeout: 10000)
 
         dataTask?.cancel() // make sure that cron doesn't trigger
-        dataTask = nil
 
         // load request again
 
@@ -243,20 +239,18 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         // load request to fill cache
         var request = URLRequest(url: url)
         request.addValue("de", forHTTPHeaderField: "Accept-Language")
-        var dataTask: UBURLDataTask? = UBURLDataTask(request: UBURLRequest(request: request), session: session)
+        let dataTask: UBURLDataTask? = UBURLDataTask(request: UBURLRequest(request: request), session: session)
 
         let ex = expectation(description: "s")
         ex.assertForOverFulfill = false
         dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
             ex.fulfill()
             dataTask?.cancel() // make sure that cron doesn't trigger
-            dataTask = nil
         }
         dataTask?.start()
         wait(for: [ex], timeout: 10000)
 
         dataTask?.cancel() // make sure that cron doesn't trigger
-        dataTask = nil
 
         sleep(5)
 
