@@ -39,17 +39,13 @@ public protocol UBLocationManagerProtocol {
     func requestWhenInUseAuthorization()
     func requestAlwaysAuthorization()
 
-    func authorizationStatus() -> CLAuthorizationStatus
+    var authorizationStatus: CLAuthorizationStatus { get }
     func locationServicesEnabled() -> Bool
     func significantLocationChangeMonitoringAvailable() -> Bool
     func isMonitoringAvailable(for regionClass: AnyClass) -> Bool
 }
 
 extension CLLocationManager: UBLocationManagerProtocol {
-    public func authorizationStatus() -> CLAuthorizationStatus {
-        CLLocationManager.authorizationStatus()
-    }
-
     @available(*, deprecated, message: "locationServicesEnabled() not exposed to avoid use on main thread. Use CLLocationManager.locationServicesEnabled() directly if needed.")
     public func locationServicesEnabled() -> Bool {
         CLLocationManager.locationServicesEnabled()
