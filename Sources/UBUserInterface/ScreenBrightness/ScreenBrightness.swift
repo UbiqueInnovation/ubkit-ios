@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 
+#if !os(visionOS)
+
 /// A helper class for the screen brightness.
 ///
 /// This object SHOULD be kept alive as long as the view that requires a brightness change is still
@@ -118,3 +120,5 @@ private final class ScreenBrightnessAnimator {
         UIScreen.main.brightness = targetBrightness
     }
 }
+
+#endif

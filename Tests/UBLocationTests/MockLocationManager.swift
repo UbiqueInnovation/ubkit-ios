@@ -24,11 +24,13 @@ class MockLocationManager: UBLocationManagerProtocol {
 
     var isMonitoringSignificantLocationChanges: Bool = false
 
+#if !os(visionOS)
     var isMonitoringVisits: Bool = false
 
     var isUpdatingHeading: Bool = false
 
     var monitoredRegions: Set<CLRegion> = Set()
+#endif
 
     // MARK: - UBLocationManagerProtocol properties
 
@@ -44,7 +46,10 @@ class MockLocationManager: UBLocationManagerProtocol {
     var allowsBackgroundLocationUpdates: Bool = false
     var pausesLocationUpdatesAutomatically: Bool = false
     var showsBackgroundLocationIndicator: Bool = false
+
+#if !os(visionOS)
     var maximumRegionMonitoringDistance: CLLocationDistance = CLLocationManager().maximumRegionMonitoringDistance
+#endif
 
     // MARK: - Starting / stopping location services
 
@@ -64,6 +69,7 @@ class MockLocationManager: UBLocationManagerProtocol {
         isMonitoringSignificantLocationChanges = false
     }
 
+#if !os(visionOS)
     func startMonitoringVisits() {
         isMonitoringVisits = true
     }
@@ -88,17 +94,23 @@ class MockLocationManager: UBLocationManagerProtocol {
         monitoredRegions.remove(region)
     }
 
+#endif
+
     // MARK: - Authorization
 
     func requestWhenInUseAuthorization() {
         _ = authorizationStatuses.removeFirst()
-        delegate?.locationManager?(CLLocationManager(), didChangeAuthorization: _authorizationStatus)
+        delegate?.locationManagerDidChangeAuthorization?(CLLocationManager())
     }
+
+#if !os(visionOS)
 
     func requestAlwaysAuthorization() {
         _ = authorizationStatuses.removeFirst()
         delegate?.locationManager?(CLLocationManager(), didChangeAuthorization: _authorizationStatus)
     }
+
+#endif
 
     func authorizationStatus() -> CLAuthorizationStatus {
         _authorizationStatus

@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -7,8 +7,10 @@ let package = Package(
     name: "UBKit",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v11),
+        .iOS(.v12),
         .watchOS(.v5),
+        .visionOS(.v1),
+        .macOS(.v14)
     ],
     products: [
         .library(name: "UBFoundation", targets: ["UBFoundation"]),

@@ -20,15 +20,17 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
     /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didUpdateLocations locations: [CLLocation])
     /// :nodoc:
+    func locationManager(_ manager: UBLocationManager, didFailWithError error: Error)
+#if !os(visionOS)
+    /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didUpdateHeading newHeading: CLHeading)
     /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didVisit visit: CLVisit)
     /// :nodoc:
-    func locationManager(_ manager: UBLocationManager, didFailWithError error: Error)
-    /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didEnterRegion region: CLRegion)
     /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didExitRegion region: CLRegion)
+    #endif
 
     /// If set, the locations returned for this delegate will be filtered for the given accuracy
     var locationManagerFilterAccuracy: CLLocationAccuracy? { get }
@@ -44,10 +46,12 @@ public extension UBLocationManagerDelegate {
     func locationManager(permissionDeniedFor _: UBLocationManager) {}
     func locationManager(_: UBLocationManager, grantedPermission _: UBLocationManager.AuthorizationLevel, accuracy _: UBLocationManager.AccuracyLevel) {}
     func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
+#if !os(visionOS)
     func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
     func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
     func locationManager(_: UBLocationManager, didEnterRegion region: CLRegion) {}
     func locationManager(_: UBLocationManager, didExitRegion region: CLRegion) {}
+    #endif
     var locationManagerMaxFreshAge: TimeInterval? { nil }
     func locationManager(_: UBLocationManager, locationIsFresh _: Bool) {}
 }
@@ -64,16 +68,23 @@ public class UBLocationManager: NSObject {
     private func delegates(onlyActive: Bool = false, usage: Set<LocationMonitoringUsage>? = nil) -> [UBLocationManagerDelegate] {
         delegateWrappers.values.compactMap { wrapper in
             if onlyActive {
+#if !os(visionOS)
                 wrapper.wantsUpdate(for: usage, isBackground: appIsInBackground, allowsBackgroundLocationUpdates: allowsBackgroundLocationUpdates) ? wrapper.delegate : nil
+                #else
+                wrapper.wantsUpdate(for: usage, isBackground: false, allowsBackgroundLocationUpdates: false) ? wrapper.delegate : nil
+                #endif
+
             } else {
                 wrapper.delegate
             }
         }
     }
 
+#if !os(visionOS)
     private var regionDelegates: [UBLocationManagerDelegate] {
         delegateWrappers.values.filter(\.usage.containsRegions).compactMap(\.delegate)
     }
+#endif
 
     private var permissionRequestCallback: ((LocationPermissionRequestResult) -> Void)?
     private var permissionRequestUsage: Set<LocationMonitoringUsage>?
@@ -150,6 +161,7 @@ public class UBLocationManager: NSObject {
         }
     }
 
+#if !os(visionOS)
     /// The heading filter of the underlying `CLLocationManager`
     public var headingFilter: CLLocationDegrees {
         get { locationManager.headingFilter }
@@ -157,6 +169,7 @@ public class UBLocationManager: NSObject {
             locationManager.headingFilter = newValue
         }
     }
+#endif
 
     /// The activity type of the underlying `CLLocationManager`
     public var activityType: CLActivityType {
@@ -166,6 +179,7 @@ public class UBLocationManager: NSObject {
         }
     }
 
+#if !os(visionOS)
     /// The set of regions that are currently being monitored.
     public var monitoredRegions: Set<CLRegion> {
         locationManager.monitoredRegions
@@ -184,6 +198,7 @@ public class UBLocationManager: NSObject {
             locationManager.allowsBackgroundLocationUpdates = newValue
         }
     }
+#endif
 
     /// The amount of seconds after which a location obtained by `CLLocationManager` should be considered stale
     /// and not trigger a call of the `locationManager(_:didUpdateLocations)` delegate method
@@ -265,8 +280,10 @@ public class UBLocationManager: NSObject {
     /// The last location update received from the system.
     public private(set) var lastLocation: CLLocation?
 
+#if !os(visionOS)
     /// The last heading update received from the system.
     public private(set) var lastHeading: CLHeading?
+#endif
 
     // MARK: - Initialization
 
@@ -289,7 +306,9 @@ public class UBLocationManager: NSObject {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.delegate = self
         locationManager.distanceFilter = kCLDistanceFilterNone
+#if !os(visionOS)
         locationManager.headingFilter = kCLHeadingFilterNone
+#endif
         locationManager.activityType = .other
         locationManager.pausesLocationUpdatesAutomatically = false
 
@@ -305,12 +324,14 @@ public class UBLocationManager: NSObject {
     @objc private func appDidEnterBackground() {
         appIsInBackground = true
 
+#if !os(visionOS)
         if allUsages.containsLocation, !allUsages.contains(.backgroundLocation), !allowsBackgroundLocationUpdates {
             locationManager.stopUpdatingLocation()
         }
         if allUsages.containsHeading, !allUsages.contains(.backgroundHeading), !allowsBackgroundLocationUpdates {
             locationManager.stopUpdatingHeading()
         }
+#endif
     }
 
     @objc private func appDidBecomeActive() {
@@ -378,6 +399,7 @@ public class UBLocationManager: NSObject {
         if allUsages.containsLocation {
             locationManager.startUpdatingLocation()
         }
+#if !os(visionOS)
         if allUsages.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.startMonitoringSignificantLocationChanges()
         }
@@ -394,6 +416,7 @@ public class UBLocationManager: NSObject {
                 }
             }
         }
+#endif
     }
 
     /// Stops monitoring location service events and removes the delegate
@@ -419,6 +442,7 @@ public class UBLocationManager: NSObject {
         if usg.containsLocation {
             locationManager.stopUpdatingLocation()
         }
+#if !os(visionOS)
         if usg.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.stopMonitoringSignificantLocationChanges()
         }
@@ -433,6 +457,7 @@ public class UBLocationManager: NSObject {
                 locationManager.stopMonitoring(for: region)
             }
         }
+#endif
     }
 
     /// Permission request to get state of location permission (varies by `usage`)
@@ -457,10 +482,12 @@ public class UBLocationManager: NSObject {
             case .authorizedWhenInUse:
                 guard minimumAuthorizationLevelRequired == .whenInUse else {
                     // can only ask once
+#if !os(visionOS)
                     if minimumAuthorizationLevelRequired == .always, self.askedForAlwaysPermissionAtLeastOnce {
                         callback(.showSettings)
                         return
                     }
+#endif
 
                     self.permissionRequestUsage = usage
                     self.permissionRequestCallback = callback
@@ -494,11 +521,19 @@ public class UBLocationManager: NSObject {
     /// :nodoc:
     private func startLocationMonitoringWithoutChecks(_ delegate: UBLocationManagerDelegate, usage: Set<LocationMonitoringUsage>) {
         if usage.containsLocation {
+#if !os(visionOS)
             if !appIsInBackground || usage.contains(.backgroundLocation) || allowsBackgroundLocationUpdates {
                 locationManager.startUpdatingLocation()
                 startLocationTimer()
             }
+#else
+            if !appIsInBackground {
+                locationManager.startUpdatingLocation()
+                startLocationTimer()
+            }
+#endif
         }
+#if !os(visionOS)
         if usage.contains(.significantChange), locationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.startMonitoringSignificantLocationChanges()
         }
@@ -517,6 +552,7 @@ public class UBLocationManager: NSObject {
                 }
             }
         }
+#endif
     }
 
     private func startLocationTimer() {
@@ -558,9 +594,11 @@ public class UBLocationManager: NSObject {
     /// request permission from the location manager
     func requestPermission(for authorizationLevel: AuthorizationLevel) {
         switch authorizationLevel {
+#if !os(visionOS)
             case .always:
                 locationManager.requestAlwaysAuthorization()
                 self.askedForAlwaysPermissionAtLeastOnce = true
+#endif
             case .whenInUse:
                 locationManager.requestWhenInUseAuthorization()
         }
@@ -568,14 +606,19 @@ public class UBLocationManager: NSObject {
 }
 
 extension UBLocationManager: CLLocationManagerDelegate {
-    public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
+    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let authorization = manager.authorizationStatus
         authorizationStatus = authorization
         logLocationPermissionChange?(authorization)
 
         self.startLocationMonitoringForAllDelegates()
 
         if Self.hasRequiredAuthorizationLevel(forUsage: allUsages) {
+            #if !os(visionOS)
             let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
+            #else
+            let permission: AuthorizationLevel = .whenInUse
+            #endif
 
             for delegate in delegates() {
                 delegate.locationManager(self, grantedPermission: permission, accuracy: accuracyLevel)
@@ -642,6 +685,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
+#if !os(visionOS)
     public func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
         for delegate in delegates(onlyActive: true, usage: [.visits]) {
             delegate.locationManager(self, didVisit: visit)
@@ -666,6 +710,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
             delegate.locationManager(self, didUpdateHeading: newHeading)
         }
     }
+#endif
 
     public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
         // This might be some temporary error. Just report it but do not stop
@@ -682,8 +727,10 @@ public extension UBLocationManager {
     enum AuthorizationLevel: Int {
         /// User authorized the app to start location services while it is in use
         case whenInUse
+#if !os(visionOS)
         /// User authorized the app to start location services at any time
         case always
+#endif
     }
 
     /// Defines the level of accuracy granted by the user.
@@ -699,7 +746,9 @@ public extension UBLocationManager {
         case backgroundHeading
         case significantChange
         case visits
+#if !os(visionOS)
         case regions(Set<CLRegion>)
+#endif
 
         /// Monitors location
         public static func location(background: Bool) -> LocationMonitoringUsage {
@@ -714,6 +763,7 @@ public extension UBLocationManager {
 }
 
 extension Set where Element == UBLocationManager.LocationMonitoringUsage {
+#if !os(visionOS)
     /// :nodoc:
     var containsRegions: Bool {
         for element in self {
@@ -733,20 +783,29 @@ extension Set where Element == UBLocationManager.LocationMonitoringUsage {
         }
         return regions
     }
+#endif
 
     /// :nodoc:
     var minimumAuthorizationLevelRequired: UBLocationManager.AuthorizationLevel {
+#if !os(visionOS)
         if requiresBackgroundUpdates {
             return .always
         } else {
             return .whenInUse
         }
+        #else
+        return .whenInUse
+#endif
+
     }
 
+#if !os(visionOS)
     /// :nodoc:
     var requiresBackgroundUpdates: Bool {
         contains(.significantChange) || contains(.visits) || containsRegions || contains(.backgroundLocation) || contains(.backgroundHeading)
+        return false
     }
+#endif
 
     /// :nodoc:
     var containsLocation: Bool {

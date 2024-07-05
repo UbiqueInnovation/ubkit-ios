@@ -9,6 +9,8 @@ import AVFoundation
 import Foundation
 import UIKit
 
+#if !os(visionOS)
+
 /// A view that provides functionalty related to the scanning of QR codes and other supported formats,
 /// using the device's video camera. When started, the view displays the video camera feed. Events, like
 /// the successful scanning of a code or specific errors are received via the `QRScannerViewDelegate` methods.
@@ -216,3 +218,5 @@ private extension AVCaptureDevice {
         unlockForConfiguration()
     }
 }
+
+#endif

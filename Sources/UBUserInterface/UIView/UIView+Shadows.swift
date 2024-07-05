@@ -18,6 +18,10 @@ public extension UIView {
         layer.shadowRadius = radius
         layer.masksToBounds = false
         layer.shouldRasterize = true
+#if !os(visionOS)
         layer.rasterizationScale = UIScreen.main.scale
+        #else
+        layer.rasterizationScale = 3.0 // ?
+#endif
     }
 }
