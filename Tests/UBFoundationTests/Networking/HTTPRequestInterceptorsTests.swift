@@ -19,7 +19,7 @@ class HTTPRequestInterceptorsTests: XCTestCase {
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
-        dataTask.requestInterceptor = EmptyInterceptor()
+        dataTask.setRequestInterceptor(EmptyInterceptor())
         dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
             switch result {
                 case .success:
@@ -41,7 +41,7 @@ class HTTPRequestInterceptorsTests: XCTestCase {
             URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil)
         }
         let dataTask = UBURLDataTask(request: request, session: mockSession)
-        dataTask.requestInterceptor = Interceptor()
+        dataTask.setRequestInterceptor(Interceptor())
         dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
             switch result {
                 case let .success(data):

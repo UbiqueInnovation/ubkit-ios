@@ -15,6 +15,7 @@ import UIKit
 ///
 /// This object WILL also restore the initial brightness when the app resigns active and WILL set it
 /// to the target brightness when the app becomes active again.
+@MainActor
 final class ScreenBrightness: NSObject {
     private var targetBrightness: CGFloat
 
@@ -22,7 +23,9 @@ final class ScreenBrightness: NSObject {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-        ScreenBrightnessAnimator.shared.setBrightness(to: self.originalBrightness, animated: true)
+        Task { @MainActor in
+            ScreenBrightnessAnimator.shared.setBrightness(to: self.originalBrightness, animated: true)
+        }
     }
 
     init(targetBrightness: CGFloat, currentBrightness: CGFloat = UIScreen.main.brightness) {
@@ -57,6 +60,7 @@ final class ScreenBrightness: NSObject {
 
 // MARK: - Aninmator
 
+@MainActor
 private final class ScreenBrightnessAnimator {
     static let shared = ScreenBrightnessAnimator()
 
@@ -73,7 +77,9 @@ private final class ScreenBrightnessAnimator {
     private var targetBrightness: CGFloat = UIScreen.main.brightness
 
     deinit {
-        self.timer?.invalidate()
+        Task { @MainActor in
+            self.timer?.invalidate()
+        }
     }
 
     private init() {}

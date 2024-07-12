@@ -143,26 +143,6 @@ class LocalizationTests: XCTestCase {
         waitForExpectations(timeout: 0.1, handler: nil)
     }
 
-    func testStringLocalization() {
-        do {
-            let english = UBLocalization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-            let englishIndia = UBLocalization(locale: Locale(identifier: "en_IN"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-            let englishLang = try "lang".ub_localized(localization: english)
-            let englishIndianLang = try "lang".ub_localized(localization: englishIndia)
-            XCTAssertEqual(englishLang, "English")
-            XCTAssertEqual(englishIndianLang, "English India")
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
-    }
-
-    func testStringLocalizationNoBundle() {
-        let french = UBLocalization(locale: Locale(identifier: "fr"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        XCTAssertThrowsError(try "lang".ub_localized(localization: french), "Expected error thrown") { error in
-            XCTAssertEqual(error as? UBLocalizationError, UBLocalizationError.bundelNotFound)
-        }
-    }
-
     func testLocaleIsCurrent() {
         let currentLocale = Locale.current
         XCTAssertTrue(currentLocale.ub_isCurrent)

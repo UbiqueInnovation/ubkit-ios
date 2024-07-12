@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 /// Handles the brightness of the screen when a different targetBrightness is needed. This brightness is also restored when the app resigns active and becomes active again. Also keeps the screen at the target brightness by disabling the idle timer.
+@MainActor
 open class ScreenBrightnessAdjustment {
     private var screenBrightness: ScreenBrightness?
     private let targetBrightness: CGFloat

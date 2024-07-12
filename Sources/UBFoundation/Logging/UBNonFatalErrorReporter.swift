@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 public enum UBNonFatalErrorReporter {
     public static var handler: ((Error) -> Void)?
 

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import UBFoundation
 
-@available(iOS 13.0, *)
+@MainActor
 class ObservableKeychainEditor: ObservableObject {
     var dictionary: [String: String] = [:]
     var keys: [String] = []
@@ -22,9 +22,7 @@ class ObservableKeychainEditor: ObservableObject {
         let temp = getAllKeyChainItems()
         self.dictionary = temp
         self.keys = Array(dictionary.keys).sorted()
-        DispatchQueue.main.async {
-            self.objectWillChange.send()
-        }
+        self.objectWillChange.send()
     }
 
     private func getAllKeyChainItems() -> [String: String] {
@@ -59,7 +57,6 @@ class ObservableKeychainEditor: ObservableObject {
     }
 }
 
-@available(iOS 13.0, *)
 public struct KeychainEditor: View {
     @ObservedObject var store = ObservableKeychainEditor()
 

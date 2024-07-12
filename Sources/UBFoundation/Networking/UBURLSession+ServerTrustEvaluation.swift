@@ -5,13 +5,13 @@
 //  Created by Joseph El Mallah on 03.04.19.
 //
 
-import Foundation
+@preconcurrency import Foundation
 
 // Most of this file is inspired by Alamofire ServerTrustEvaluation.swift
 // https://github.com/Alamofire/Alamofire/blob/master/Source/ServerTrustEvaluation.swift
 
 /// Manages for each host the preferred trust evaluator
-class UBServerTrustManager {
+final class UBServerTrustManager: Sendable {
     /// The default evaluation in case none of the host matches
     let `default`: UBServerTrustEvaluator?
     /// The list of evaluators per host
@@ -29,7 +29,7 @@ class UBServerTrustManager {
 }
 
 /// A protocol describing the API used to evaluate server trusts.
-public protocol UBServerTrustEvaluator {
+public protocol UBServerTrustEvaluator: Sendable {
     /// Evaluates the given `SecTrust` value for the given `host`.
     ///
     /// - Parameters:

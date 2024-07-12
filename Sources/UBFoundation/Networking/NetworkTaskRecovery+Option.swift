@@ -8,7 +8,7 @@
 import Foundation
 
 /// An option to recover from a network task failure
-public protocol UBNetworkTaskRecoveryOption {
+public protocol UBNetworkTaskRecoveryOption: Sendable {
     /// The localized name of the recovery
     var localizedDisplayName: String { get }
     /// Attempt to recover from the error.

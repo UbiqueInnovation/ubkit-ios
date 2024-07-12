@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class UserDefaultsDevTools {
     static var sharedUserDefaults: UserDefaults?
 

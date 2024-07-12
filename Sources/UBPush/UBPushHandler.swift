@@ -15,6 +15,7 @@ import UserNotifications
 ///     UBPushManager.shared.pushHandler = SubclassedPushHanlder()
 ///
 /// to implement app-specific behaviour.
+@MainActor
 open class UBPushHandler: NSObject {
     /// Date of last push message. Override to modify app state after every push (e.g. wipe cache)
     public var lastPushed: Date? {
@@ -47,11 +48,7 @@ open class UBPushHandler: NSObject {
     /// arriving while the application is running.
     open func showInAppPushAlert(withTitle _: String, proposedMessage _: String, notification _: UBPushNotification, shouldPresentCompletionHandler: ((UNNotificationPresentationOptions) -> Void)? = nil) {
         // Show notification banner also when app is already in foreground
-        if #available(iOS 14.0, *) {
-            shouldPresentCompletionHandler?([.banner, .sound])
-        } else {
-            shouldPresentCompletionHandler?([.alert, .sound])
-        }
+        shouldPresentCompletionHandler?([.banner, .sound])
     }
 
     /// Override to present detail view after app is started when user responded to a push.

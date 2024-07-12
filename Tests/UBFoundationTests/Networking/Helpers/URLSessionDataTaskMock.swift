@@ -7,7 +7,7 @@
 
 import Foundation
 
-class URLSessionDataTaskMock: URLSessionDataTask {
+class URLSessionDataTaskMock: URLSessionDataTask, @unchecked Sendable {
     var completionHandler: (Data?, URLResponse?, Error?) -> Void
     var config: Configuration
     var timeoutInterval: TimeInterval

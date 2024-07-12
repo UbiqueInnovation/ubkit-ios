@@ -49,7 +49,6 @@ public enum UBKeychainAccessibility {
      without a passcode. Disabling the device passcode will cause all
      items in this class to be deleted.
      */
-    @available(iOS 8.0, OSX 10.10, *)
     case whenPasscodeSetThisDeviceOnly
 
     /**

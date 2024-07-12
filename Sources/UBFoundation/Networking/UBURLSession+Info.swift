@@ -8,7 +8,7 @@
 import Foundation
 
 /// Holds information on the networking task
-public struct UBNetworkingTaskInfo: CustomDebugStringConvertible {
+public struct UBNetworkingTaskInfo: CustomDebugStringConvertible, Sendable {
     // Apple linker has a bug that prevents the `URLSessionTaskMetrics` to be correctly linked
     // Althow it is marked as available from watchOS 3.0 and up
     #if !os(watchOS)

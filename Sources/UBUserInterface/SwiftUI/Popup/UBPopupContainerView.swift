@@ -9,7 +9,6 @@
 
     import SwiftUI
 
-    @available(iOS 14.0, *)
     struct UBPopupContainerView: View {
         @Binding var isPresented: Bool
         let style: UBPopupStyle

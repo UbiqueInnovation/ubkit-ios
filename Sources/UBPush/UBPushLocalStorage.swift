@@ -10,6 +10,7 @@ import Foundation
 import UBFoundation
 import UIKit
 
+@MainActor
 public protocol UBPushRegistrationLocalStorage {
     /// The push token obtained from Apple
     var pushToken: String? { get set }

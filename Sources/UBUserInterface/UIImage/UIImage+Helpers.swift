@@ -23,42 +23,4 @@ public extension UIImage {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         return image
     }
-
-    /// Create a tinted version of the image with the specified color
-    func ub_withColor(_ color: UIColor) -> UIImage {
-        if #available(iOS 13.0, *) {
-            return withTintColor(color)
-        } else {
-            let opaque: Bool
-
-            if let alpha = cgImage?.alphaInfo {
-                opaque = alpha == .none || alpha == .noneSkipFirst || alpha == .noneSkipLast
-            } else {
-                opaque = true
-            }
-
-            UIGraphicsBeginImageContextWithOptions(size, opaque, scale)
-
-            guard let context = UIGraphicsGetCurrentContext(), let img = cgImage else { return self }
-
-            color.setFill()
-
-            context.translateBy(x: 0, y: size.height)
-            context.scaleBy(x: 1, y: -1)
-            context.setBlendMode(.colorBurn)
-
-            let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-            context.draw(img, in: rect)
-
-            context.setBlendMode(.sourceIn)
-            context.addRect(rect)
-            context.drawPath(using: .fill)
-
-            let result = UIGraphicsGetImageFromCurrentImageContext()
-
-            UIGraphicsEndImageContext()
-
-            return result ?? self
-        }
-    }
 }

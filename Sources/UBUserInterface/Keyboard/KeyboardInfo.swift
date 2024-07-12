@@ -8,6 +8,7 @@
 import UIKit
 
 /// Translating the keyboard info into a struct
+@MainActor
 struct KeyboardInfo {
     // :nodoc:
     let endFrame: CGRect
@@ -43,13 +44,19 @@ struct KeyboardInfo {
     }
 
     // :nodoc:
-    func animateAlongsideKeyboard(_ animations: () -> Void) {
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDelay(0)
-        UIView.setAnimationDuration(animationDuration)
-        UIView.setAnimationCurve(animationCurve)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        animations()
-        UIView.commitAnimations()
+    func animateAlongsideKeyboard(_ animations: @escaping () -> Void) {
+        UIView.animate(withDuration: animationDuration, delay: 0, options: [.beginFromCurrentState, getAnimationOption(from: animationCurve)]) {
+            animations()
+        }
+    }
+
+    private func getAnimationOption(from curve: UIView.AnimationCurve) -> UIView.AnimationOptions {
+        switch curve {
+            case .easeInOut: .curveEaseInOut
+            case .easeIn: .curveEaseIn
+            case .easeOut: .curveEaseOut
+            case .linear: .curveLinear
+            @unknown default: fatalError()
+        }
     }
 }

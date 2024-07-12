@@ -19,7 +19,7 @@ public extension NotificationCenter {
     ///   The notification center copies the block. The notification center strongly holds the copied block until you remove the observer registration.
     ///   The block takes one argument: the notification.
     /// - Returns: An opaque object to act as the observer. You must strongly holds to this return value unless it will be deallocated and the observation is removed.
-    func addUBObserver(forName name: NSNotification.Name?, object: Any? = nil, queue: OperationQueue? = .main, using block: @escaping (Notification) -> Void) -> Any {
+    func addUBObserver(forName name: NSNotification.Name?, object: Any? = nil, queue: OperationQueue? = .main, using block: @escaping @Sendable (Notification) -> Void) -> Any {
         let reference = self.addObserver(forName: name, object: object, queue: queue, using: block)
         let token = NotificationCenterObservationHolder(reference: reference, notificationCenter: self)
         return token

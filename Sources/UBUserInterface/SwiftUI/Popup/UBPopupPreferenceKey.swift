@@ -10,7 +10,6 @@
     import Foundation
     import SwiftUI
 
-    @available(iOS 14.0, *)
     struct UBPopupPreferenceKey: PreferenceKey {
         static func reduce(value: inout UBPopupPreference?, nextValue: () -> UBPopupPreference?) {
             if let next = nextValue() {
@@ -21,7 +20,6 @@
         }
     }
 
-    @available(iOS 14.0, *)
     struct UBPopupPreference: Equatable {
         let id = UUID()
         let isPresented: Binding<Bool>

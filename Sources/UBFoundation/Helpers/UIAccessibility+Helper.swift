@@ -5,7 +5,7 @@
 //  Created by Jan Huber on 06.05.2024.
 //
 
-import UIKit
+@preconcurrency import UIKit
 
 public extension UIAccessibility {
     /// Reads an announcement to VoiceOver users that cannot be interrupted by other announcements on devices running iOS 17 or never.

@@ -114,8 +114,7 @@ class HTTPRequestModifierTests: XCTestCase {
 
     func testTokenFailure() {
         let ex = expectation(description: "Request Modification")
-        let ba = MockTokenAuthorization()
-        ba.error = Err.x
+        let ba = MockTokenAuthorization(error: Err.x)
         ba.modifyRequest(request) { result in
             switch result {
                 case let .failure(error):
@@ -171,9 +170,14 @@ private struct FailureModifier: UBURLRequestModifier {
     }
 }
 
-private class MockTokenAuthorization: UBURLRequestTokenAuthorization {
+private final class MockTokenAuthorization: UBURLRequestTokenAuthorization {
     let token: String = "AbCdEf123456"
-    var error: Error?
+    let error: Error?
+
+    init(error: Error? = nil) {
+        self.error = error
+    }
+
     func getToken(completion: (Result<String, Error>) -> Void) {
         if let error = error {
             completion(.failure(error))

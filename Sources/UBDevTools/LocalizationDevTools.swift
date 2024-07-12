@@ -9,7 +9,6 @@ import Foundation
 import UBFoundation
 import UIKit
 
-@available(iOS 14.0, *)
 class LocalizationDevTools: DevTool {
     static func setup() {
         if DevToolsView.showLocalizationKeys {
@@ -19,8 +18,10 @@ class LocalizationDevTools: DevTool {
 }
 
 public extension Bundle {
-    static var localizationKeySwizzled = false
+    @MainActor
+    private static var localizationKeySwizzled = false
 
+    @MainActor
     static func localizationKeySwizzleWizzle() {
         guard let originalMethod = class_getInstanceMethod(Bundle.self, #selector(localizedString(forKey:value:table:))), let swizzledMethod = class_getInstanceMethod(Bundle.self, #selector(specialLocalizedString(forKey:value:table:))), !Self.localizationKeySwizzled
         else { return }
@@ -28,6 +29,7 @@ public extension Bundle {
         Self.localizationKeySwizzled = true
     }
 
+    @MainActor
     @objc func specialLocalizedString(forKey key: String, value: String?, table tableName: String?) -> String {
         key
     }

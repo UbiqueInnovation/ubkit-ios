@@ -8,7 +8,7 @@
 import Foundation
 
 /// A class that provides auto refreshing caching logic
-open class UBBaseCachingLogic: UBCachingLogic {
+open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
     /// The date formatter to use
     open var dateFormatter: DateFormatter
 
