@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import UBFoundation
+import SwiftUI
 
 protocol DevTool {
     static func setup()
@@ -29,6 +30,10 @@ public enum UBDevTools {
         for d in devTools {
             d.setup()
         }
+    }
+
+    public static func setAppSettingsView(view: some View) {
+        BackendDevTools.setAppSettingsView(view: view)
     }
 
     public static func setupBaseUrls(baseUrls: [BaseUrl]) {
