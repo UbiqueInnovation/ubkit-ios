@@ -256,7 +256,7 @@ extension SecPolicy {
     }
 }
 
-extension Array where Element == SecCertificate {
+extension [SecCertificate] {
     /// All `Data` values for the contained `SecCertificate`s.
     var data: [Data] {
         map { SecCertificateCopyData($0) as Data }

@@ -74,7 +74,7 @@ class URLSessionDataTaskMock: URLSessionDataTask {
         waiting = true
 
         let exec: () -> Void = { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             self.waiting = false

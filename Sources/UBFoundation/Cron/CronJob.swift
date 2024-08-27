@@ -29,13 +29,13 @@ public class UBCronJob {
         public var debugDescription: String {
             switch self {
                 case .initial:
-                    return "Initial"
+                    "Initial"
                 case .resumed:
-                    return "Resumed"
+                    "Resumed"
                 case .paused:
-                    return "Paused"
+                    "Paused"
                 case .finished:
-                    return "Finished"
+                    "Finished"
             }
         }
     }
@@ -195,7 +195,7 @@ public class UBCronJob {
     /// Resume or start an initial or paused job
     public func resume() {
         serialQueue.sync {
-            guard let timer = timer else {
+            guard let timer else {
                 return
             }
             if state == .paused || state == .initial {
@@ -233,7 +233,7 @@ extension UBCronJob {
         }
 
         timer.setEventHandler { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
 

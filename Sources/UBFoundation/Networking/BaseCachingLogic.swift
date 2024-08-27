@@ -214,7 +214,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
         // Get the content language from the cached response header. If no language header was stored, assume that the content was cached in the language of the accept header
         let contentLanguage = response.ub_getHeaderField(key: contentLanguageHeaderFieldName) ?? (cachedResponse.userInfo?[UserInfoKeyAcceptLanguage] as? String)
         // Check that the content language of the cached response is contained in the request accepted language
-        if let contentLanguage = contentLanguage,
+        if let contentLanguage,
            let acceptLanguage = request.value(forHTTPHeaderField: acceptedLanguageHeaderFieldName),
            acceptLanguage.lowercased().contains(contentLanguage.lowercased()) == false {
             return modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .contentLanguageNotAccepted(contentLanguage))

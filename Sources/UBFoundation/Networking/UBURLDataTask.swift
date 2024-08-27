@@ -85,9 +85,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     private func getCallbackQueue() -> OperationQueue {
         if flags.contains(.synchronous) {
-            return Self.syncTasksCallbackQueue
+            Self.syncTasksCallbackQueue
         } else {
-            return callbackQueue
+            callbackQueue
         }
     }
 
@@ -186,7 +186,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         // Apply all modification
         modifier.modifyRequest(r) { [weak self] result in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             switch result {
@@ -196,7 +196,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
                     if let interceptor = self.requestInterceptor {
                         interceptor.interceptRequest(modifiedRequest) { [weak self] interceptorResult in
-                            guard let self = self else { return }
+                            guard let self else { return }
                             if let result = interceptorResult {
                                 self.dataTaskCompleted(data: result.data, response: result.response, error: result.error, info: result.info)
                             } else {
@@ -228,7 +228,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         if #available(iOS 11.0, *) {
             // Observe the task progress
             self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-                guard let self = self else {
+                guard let self else {
                     return
                 }
 
@@ -394,17 +394,17 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         public var debugDescription: String {
             switch self {
                 case .initial:
-                    return "Initial"
+                    "Initial"
                 case .waitingExecution:
-                    return "Waiting Execution"
+                    "Waiting Execution"
                 case .fetching:
-                    return "Fetching"
+                    "Fetching"
                 case .parsing:
-                    return "Parsing"
+                    "Parsing"
                 case .finished:
-                    return "Finished"
+                    "Finished"
                 case .cancelled:
-                    return "Canceled"
+                    "Canceled"
             }
         }
     }
@@ -458,7 +458,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private func notifyStateTransition(old: State, new: State) {
         self.stateTransitionObservers.forEach { observer in
             getCallbackQueue().addOperation { [weak self] in
-                guard let self = self else {
+                guard let self else {
                     return
                 }
                 observer(old, new, self)
@@ -496,7 +496,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private func notifyProgress(_ progress: Double) {
         self.progressObservers.forEach { observer in
             getCallbackQueue().addOperation { [weak self] in
-                guard let self = self else {
+                guard let self else {
                     return
                 }
                 observer(self, progress)
@@ -675,7 +675,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - completionHandler: A completion handler
     ///   - callbackQueue: If not null, where the callback will be executed
     @discardableResult
-    public func addCompletionHandler<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, callbackQueue: OperationQueue? = nil, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
+    public func addCompletionHandler<T>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, callbackQueue: OperationQueue? = nil, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
         let wrapper = CompletionHandlerWrapper(decoder: decoder, errorDecoder: errorDecoder, completion: completionHandler, callbackQueue: callbackQueue)
         let uuid = CompletionHandlerIdentifier()
         completionHandlersDispatchQueue.sync {
@@ -809,7 +809,7 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        init<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
+        init<T>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
             self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
@@ -828,7 +828,7 @@ extension UBURLDataTask {
             // Create a block to be called on failure
             failureBlock = { error, data, response, info, callbackQueue, caller in
                 let newError: Error
-                if let data = data, let response = response {
+                if let data, let response {
                     var decodedError = try? errorDecoder.decode(data: data, response: response)
                     decodedError?.baseError = error
                     newError = decodedError ?? error

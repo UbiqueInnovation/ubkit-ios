@@ -105,7 +105,7 @@ public class StackScrollView: UIView {
         }
 
         let subView: UIView
-        if let inset = inset {
+        if let inset {
             subView = UIView()
             subView.addSubview(view)
             NSLayoutConstraint.activate([

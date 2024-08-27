@@ -41,7 +41,7 @@ public class UBLoggerGroup {
     /// - Parameter logger: A logger to add
     public func add(logger: UBLogger) {
         loggersDispatchQueue.async(flags: .barrier) { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             // Check if it is not already added

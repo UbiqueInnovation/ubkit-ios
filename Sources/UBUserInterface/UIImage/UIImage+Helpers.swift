@@ -29,12 +29,10 @@ public extension UIImage {
         if #available(iOS 13.0, *) {
             return withTintColor(color)
         } else {
-            let opaque: Bool
-
-            if let alpha = cgImage?.alphaInfo {
-                opaque = alpha == .none || alpha == .noneSkipFirst || alpha == .noneSkipLast
+            let opaque: Bool = if let alpha = cgImage?.alphaInfo {
+                alpha == .none || alpha == .noneSkipFirst || alpha == .noneSkipLast
             } else {
-                opaque = true
+                true
             }
 
             UIGraphicsBeginImageContextWithOptions(size, opaque, scale)

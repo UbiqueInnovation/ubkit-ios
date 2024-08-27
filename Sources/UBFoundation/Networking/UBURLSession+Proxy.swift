@@ -1,6 +1,6 @@
 //
-//  UBURLSessionConfigurationProxy.swift
-//  
+//  UBURLSession+Proxy.swift
+//
 //
 //  Created by Sandro Kolly on 07.05.2024.
 //

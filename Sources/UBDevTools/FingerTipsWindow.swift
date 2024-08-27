@@ -46,7 +46,6 @@ class FingerTipsWindow: UIWindow {
                     ftv.center = t.location(in: self)
                     self.addSubview(ftv)
                     self.fingerViews[t.hash] = ftv
-
                 case .moved, .stationary:
                     if let ftv = self.fingerViews[t.hash] {
                         ftv.center = t.location(in: self)

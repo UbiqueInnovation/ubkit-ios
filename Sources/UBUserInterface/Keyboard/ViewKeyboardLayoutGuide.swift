@@ -46,7 +46,7 @@ class ViewKeyboardLayoutGuide: UILayoutGuide {
             establishedToWindow = nil
         }
         didSet {
-            guard owningView != oldValue, let owningView = owningView else {
+            guard owningView != oldValue, let owningView else {
                 return
             }
 
@@ -92,7 +92,7 @@ class ViewKeyboardLayoutGuide: UILayoutGuide {
 extension ViewKeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillChangeFrame(notification: Notification) {
-        guard let owningView = owningView, let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else {
+        guard let owningView, let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else {
             return
         }
 
@@ -104,13 +104,13 @@ extension ViewKeyboardLayoutGuide {
             }
         }
 
-        if let establishedToWindow = establishedToWindow, establishedToWindow == owningView.window, keyboardConstraint != nil {
+        if let establishedToWindow, establishedToWindow == owningView.window, keyboardConstraint != nil {
             // If everything is still the same then just make sure we are using the keyboard constraint
             noKeyboardConstraint?.isActive = false
             return
         }
 
-        if let keyboardConstraint = keyboardConstraint {
+        if let keyboardConstraint {
             owningView.removeConstraint(keyboardConstraint)
         }
 

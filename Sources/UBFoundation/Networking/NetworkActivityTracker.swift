@@ -99,7 +99,7 @@ public class UBNetworkActivityTracker {
     public func addStateObserver(_ block: @escaping UBNetworkActivityTracker.StateObservationBlock) {
         serialQueue.sync {
             // Pass the current status to the block when added
-            if let callbackQueue = callbackQueue {
+            if let callbackQueue {
                 let state = self.networkActivityState
                 callbackQueue.addOperation {
                     block(state)
@@ -115,7 +115,7 @@ public class UBNetworkActivityTracker {
 
     /// :nodoc:
     private func notifyObservers() {
-        if let callbackQueue = callbackQueue {
+        if let callbackQueue {
             let state = networkActivityState
             callbackQueue.addOperation { [weak self] in
                 self?.stateObservers.forEach { $0(state) }
