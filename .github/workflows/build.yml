@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCODE_VERSION: "Xcode_15.3"
+  XCODE_VERSION: "Xcode_15.4"
 
 on:
   push:
@@ -21,4 +21,3 @@ jobs:
 
       - name: Fastlane
         run: fastlane tests
-
