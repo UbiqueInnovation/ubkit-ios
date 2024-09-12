@@ -42,10 +42,7 @@ public struct UBPrintMacro {
 
     public static var errorCallback: ((String) -> Void)?
 
-    public static func sendError(_ message: OSLogMessage) {
-        self.errorCallback?("\(message)")
-//        print("Send Error: \(message)")
+    public static func sendError(_ message: String) {
+        self.errorCallback?(message)
     }
 }
-
-

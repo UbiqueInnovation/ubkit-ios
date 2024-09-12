@@ -13,11 +13,13 @@ import XCTest
 class MacroTests: XCTestCase {
     func testMacro() {
         #print("\(52.0)")
+
+        let variable = "test"
+        #print("Test = \(variable, privacy: .public)")
     }
 
     func testError() {
         var obe = "Hello"
-        #printError("Failed to not fail \(obe, privacy: .public)")
+        #printError("Failed to not fail \(obe)")
     }
 }
-
