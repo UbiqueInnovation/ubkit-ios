@@ -67,7 +67,7 @@ public struct UBMIMEType {
     /// The MIME type formatted as a String
     public var stringValue: String {
         var resultString: String = type.rawValue + "/" + subtype
-        if let parameter = parameter {
+        if let parameter {
             resultString += "; " + parameter.key + "=" + parameter.value
         }
         return resultString

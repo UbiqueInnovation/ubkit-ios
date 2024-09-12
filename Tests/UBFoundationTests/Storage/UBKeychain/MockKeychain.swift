@@ -37,7 +37,7 @@ class MockKeychain: UBKeychainProtocol {
         return .success(())
     }
 
-    func delete<T>(for key: UBKeychainKey<T>) -> Result<Void, UBKeychainError> {
+    func delete(for key: UBKeychainKey<some Any>) -> Result<Void, UBKeychainError> {
         store.removeValue(forKey: key.key)
         return .success(())
     }

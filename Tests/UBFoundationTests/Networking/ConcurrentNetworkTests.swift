@@ -152,9 +152,9 @@ private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics, referenceDate: referenceDate) {
-            return Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
+            Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
         } else {
-            return nil
+            nil
         }
     }
 }

@@ -94,26 +94,24 @@ private let errorCodePrefix = "[NE]"
 
 extension UBNetworkingError: UBCodedError {
     public var errorCode: String {
-        let code: String = {
-            switch self {
-                case let .notConnected(error):
-                    return "[NOCONN]\(error.errorCode)"
-                case let .timedOut(error):
-                    if let err = error {
-                        return "[TMOUT]\(err.errorCode)"
-                    } else {
-                        return "[TMOUT]"
-                    }
-                case let .certificateValidationFailed(error):
-                    if let err = error {
-                        return "[CVF]\(err.errorCode)"
-                    } else {
-                        return "[CVF]"
-                    }
-                case let .internal(error):
-                    return "\(error.errorCode)"
-            }
-        }()
+        let code: String = switch self {
+            case let .notConnected(error):
+                "[NOCONN]\(error.errorCode)"
+            case let .timedOut(error):
+                if let err = error {
+                    "[TMOUT]\(err.errorCode)"
+                } else {
+                    "[TMOUT]"
+                }
+            case let .certificateValidationFailed(error):
+                if let err = error {
+                    "[CVF]\(err.errorCode)"
+                } else {
+                    "[CVF]"
+                }
+            case let .internal(error):
+                "\(error.errorCode)"
+        }
         return "\(errorCodePrefix)\(code)"
     }
 }
@@ -122,13 +120,13 @@ public extension UBNetworkingError {
     var errorDescription: String? {
         switch self {
             case .notConnected:
-                return NSLocalizedString("error_timeout", bundle: Bundle.module, comment: "Connection to the server failed")
+                NSLocalizedString("error_timeout", bundle: Bundle.module, comment: "Connection to the server failed")
             case .timedOut:
-                return NSLocalizedString("error_timeout", bundle: Bundle.module, comment: "The request timed out")
+                NSLocalizedString("error_timeout", bundle: Bundle.module, comment: "The request timed out")
             case .certificateValidationFailed:
-                return NSLocalizedString("error_invalid_certificate_message", bundle: Bundle.module, comment: "Validation of TLS certificate failed")
+                NSLocalizedString("error_invalid_certificate_message", bundle: Bundle.module, comment: "Validation of TLS certificate failed")
             default:
-                return NSLocalizedString("error_unexpected", bundle: Bundle.module, comment: "Generic unexpected error message")
+                NSLocalizedString("error_unexpected", bundle: Bundle.module, comment: "Generic unexpected error message")
         }
     }
 
@@ -145,28 +143,26 @@ public extension UBNetworkingError {
 
 extension UBInternalNetworkingError: UBCodedError {
     public var errorCode: String {
-        let code: String = {
-            switch self {
-                case .couldNotCreateURL: return "[CNCU]"
-                case .couldNotDecodeBody: return "[CNDB]"
-                case .couldNotEncodeBody: return "[CNEB]"
-                case .malformedURL: return "[MALURL]"
-                case .missingURL: return "[MIURL]"
-                case .noCachedData: return "[NOCACHE]"
-                case .notHTTPResponse: return "[NOHTTPR]"
-                case let .requestFailed(httpStatusCode: status): return "[RF-\(status)]"
-                case .requestRedirected: return "[RR]"
-                case .responseBodyIsEmpty: return "[RBIE]"
-                case .responseBodyIsNotEmpty: return "[RBINE]"
-                case .responseMIMETypeValidationFailed: return "[RMIMETVF]"
-                case let .responseStatusValidationFailed(status: status): return "[RSVF-\(status)]"
-                case .unwrapError: return "[UNWRP]"
-                case .synchronousTimedOut: return "[SEMTIMEOUT]"
-                case .canceled: return "[CANCELLED]"
-                case .recoverableError: return "[REC]"
-                case let .otherError(error): return error.errorCode
-            }
-        }()
+        let code: String = switch self {
+            case .couldNotCreateURL: "[CNCU]"
+            case .couldNotDecodeBody: "[CNDB]"
+            case .couldNotEncodeBody: "[CNEB]"
+            case .malformedURL: "[MALURL]"
+            case .missingURL: "[MIURL]"
+            case .noCachedData: "[NOCACHE]"
+            case .notHTTPResponse: "[NOHTTPR]"
+            case let .requestFailed(httpStatusCode: status): "[RF-\(status)]"
+            case .requestRedirected: "[RR]"
+            case .responseBodyIsEmpty: "[RBIE]"
+            case .responseBodyIsNotEmpty: "[RBINE]"
+            case .responseMIMETypeValidationFailed: "[RMIMETVF]"
+            case let .responseStatusValidationFailed(status: status): "[RSVF-\(status)]"
+            case .unwrapError: "[UNWRP]"
+            case .synchronousTimedOut: "[SEMTIMEOUT]"
+            case .canceled: "[CANCELLED]"
+            case .recoverableError: "[REC]"
+            case let .otherError(error): error.errorCode
+        }
         return code
     }
 }

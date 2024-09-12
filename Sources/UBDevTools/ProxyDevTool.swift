@@ -1,5 +1,5 @@
 //
-//  ProxyDevTools.swift
+//  ProxyDevTool.swift
 //
 //
 //  Created by Sandro Kolly on 10.05.2024.
@@ -11,7 +11,7 @@ import UIKit
 class UBDevToolsProxyHelper {
     static let shared = UBDevToolsProxyHelper()
 
-    fileprivate private(set) var proxy: Proxy? = nil
+    fileprivate private(set) var proxy: Proxy?
 
     func setProxy(host: String, port: Int, username: String?, password: String?) {
         proxy = Proxy(host: host, port: port, username: username, password: password)
@@ -41,14 +41,13 @@ public extension Networking {
         queue.name = "Friendly UBURLSession Shared"
         queue.qualityOfService = .userInitiated
 
-        let proxy: UBDevToolsProxyHelper.Proxy?
-        if let host = DevToolsView.proxySettingsHost, host.isEmpty == false,
-            let port = DevToolsView.proxySettingsPort {
-            proxy = UBDevToolsProxyHelper.Proxy(host: host, port: port)
+        let proxy: UBDevToolsProxyHelper.Proxy? = if let host = DevToolsView.proxySettingsHost, host.isEmpty == false,
+                                                     let port = DevToolsView.proxySettingsPort {
+            UBDevToolsProxyHelper.Proxy(host: host, port: port)
         } else if let devProy = UBDevToolsProxyHelper.shared.proxy {
-            proxy = devProy
+            devProy
         } else {
-            proxy = nil
+            nil
         }
 
         let configuration = UBURLSessionConfiguration(defaultServerTrust: UBFriendlyEvaluator(), proxy: proxy)

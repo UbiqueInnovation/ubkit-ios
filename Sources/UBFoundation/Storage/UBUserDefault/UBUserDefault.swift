@@ -154,9 +154,9 @@ extension Optional: UBUserDefaultValue where Wrapped: UBUserDefaultValue {
     public func object() -> Any? {
         switch self {
             case let .some(value):
-                return value.object()
+                value.object()
             case .none:
-                return nil
+                nil
         }
     }
 }

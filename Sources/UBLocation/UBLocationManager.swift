@@ -144,9 +144,9 @@ public class UBLocationManager: NSObject {
 
     public var accuracyLevel: UBLocationManager.AccuracyLevel {
         if #available(iOS 14.0, *) {
-            return (locationManager as? CLLocationManager)?.accuracyAuthorization.accuracyLevel ?? .full
+            (locationManager as? CLLocationManager)?.accuracyAuthorization.accuracyLevel ?? .full
         } else {
-            return .full
+            .full
         }
     }
 
@@ -454,6 +454,7 @@ public class UBLocationManager: NSObject {
         switch authStatus {
             case .authorizedAlways:
                 callback(.success)
+
             case .authorizedWhenInUse:
                 guard minimumAuthorizationLevelRequired == .whenInUse else {
                     // can only ask once
@@ -469,6 +470,7 @@ public class UBLocationManager: NSObject {
                 }
 
                 callback(.success)
+
             case .denied, .restricted:
                 callback(.showSettings)
 
@@ -522,7 +524,7 @@ public class UBLocationManager: NSObject {
     private func startLocationTimer() {
         locationTimer?.invalidate()
         locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] _ in
-            guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
+            guard let self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
             self.timedOut = true
 
             self.notifyDelegates(withLocations: [location])
@@ -536,7 +538,7 @@ public class UBLocationManager: NSObject {
             guard let time = delegate.locationManagerMaxFreshAge else { return nil }
 
             return Timer.scheduledTimer(withTimeInterval: time, repeats: false, block: { [weak self, weak delegate] _ in
-                guard let self = self, let delegate = delegate else { return }
+                guard let self, let delegate else { return }
 
                 let lastState = self.lastDelegateFreshState[ObjectIdentifier(delegate), default: true]
                 if lastState != false {
@@ -713,7 +715,7 @@ public extension UBLocationManager {
     }
 }
 
-extension Set where Element == UBLocationManager.LocationMonitoringUsage {
+extension Set<UBLocationManager.LocationMonitoringUsage> {
     /// :nodoc:
     var containsRegions: Bool {
         for element in self {
@@ -737,9 +739,9 @@ extension Set where Element == UBLocationManager.LocationMonitoringUsage {
     /// :nodoc:
     var minimumAuthorizationLevelRequired: UBLocationManager.AuthorizationLevel {
         if requiresBackgroundUpdates {
-            return .always
+            .always
         } else {
-            return .whenInUse
+            .whenInUse
         }
     }
 

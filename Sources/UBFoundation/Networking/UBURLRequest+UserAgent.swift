@@ -6,11 +6,11 @@
 //
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #elseif os(watchOS)
-    import WatchKit
+import WatchKit
 #elseif os(macOS)
-    import AppKit
+import AppKit
 #endif
 
 import Foundation
@@ -26,14 +26,14 @@ extension UBURLRequest {
         let os = "iOS"
 
         let systemVersion: String
-        #if os(iOS) || os(tvOS)
-            systemVersion = UIDevice.current.systemVersion
-        #elseif os(watchOS)
-            systemVersion = WKInterfaceDevice.current().systemVersion
-        #elseif os(macOS)
-            let osv = ProcessInfo.processInfo.operatingSystemVersion
-            systemVersion = "macOS \(osv.majorVersion).\(osv.minorVersion).\(osv.patchVersion)"
-        #endif
+#if os(iOS) || os(tvOS)
+        systemVersion = UIDevice.current.systemVersion
+#elseif os(watchOS)
+        systemVersion = WKInterfaceDevice.current().systemVersion
+#elseif os(macOS)
+        let osv = ProcessInfo.processInfo.operatingSystemVersion
+        systemVersion = "macOS \(osv.majorVersion).\(osv.minorVersion).\(osv.patchVersion)"
+#endif
 
         let header = [bundleId, appVersion, os, systemVersion].joined(separator: ";")
         return header

@@ -134,7 +134,7 @@ public class UBLogger {
     ///   - fileName: The file from where the log was called
     ///   - functionName: The function from where the log was called
     ///   - lineNumber: The line from where the log was called
-    public func info<Subject>(_ subject: Subject, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
+    public func info(_ subject: some Any, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
         log(message: String(describing: subject), type: .info, accessLevel: accessLevel, fileName: fileName, functionName: functionName, lineNumber: lineNumber)
     }
 
@@ -146,7 +146,7 @@ public class UBLogger {
     ///   - fileName: The file from where the log was called
     ///   - functionName: The function from where the log was called
     ///   - lineNumber: The line from where the log was called
-    public func error<Subject>(_ subject: Subject, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
+    public func error(_ subject: some Any, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
         log(message: String(describing: subject), type: .error, accessLevel: accessLevel, fileName: fileName, functionName: functionName, lineNumber: lineNumber)
     }
 
@@ -158,7 +158,7 @@ public class UBLogger {
     ///   - fileName: The file from where the log was called
     ///   - functionName: The function from where the log was called
     ///   - lineNumber: The line from where the log was called
-    public func debug<Subject>(_ subject: Subject, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
+    public func debug(_ subject: some Any, accessLevel: AccessLevel = .private, fileName: String = #file, functionName: String = #function, lineNumber: Int = #line) {
         log(message: String(describing: subject), type: .debug, accessLevel: accessLevel, fileName: fileName, functionName: functionName, lineNumber: lineNumber)
     }
 }
@@ -216,12 +216,12 @@ extension UBLogger {
 extension OSLogType {
     var string: String {
         switch self {
-            case .debug: return "debug"
-            case .error: return "error"
-            case .fault: return "fault"
-            case .info: return "info"
+            case .debug: "debug"
+            case .error: "error"
+            case .fault: "fault"
+            case .info: "info"
             default:
-                return "default"
+                "default"
         }
     }
 }
