@@ -9,6 +9,7 @@
 import Foundation
 
 /// A group of loggers. The UBLoggerGroup is thread safe
+@available(*, message: "Use #print or OS.Logger instead")
 public class UBLoggerGroup {
     /// The backing data of the group
     private var _loggers: [UBLogger]

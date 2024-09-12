@@ -19,7 +19,44 @@ class MacroTests: XCTestCase {
     }
 
     func testError() {
-        var obe = "Hello"
-        #printError("Failed to not fail \(obe)")
+        let exp = expectation(description: "Failed")
+        UBNonFatalErrorReporter.handler = { _ in
+            exp.fulfill()
+        }
+
+        #printError("Failed to not fail")
+
+        wait(for: [exp])
+    }
+
+    func testAssertTrue() {
+        #assert(true, "Test")
+        #assert(true)
+    }
+
+    func testAssertFalse() {
+        let exp = expectation(description: "Failed")
+        UBNonFatalErrorReporter.handler = { _ in 
+            exp.fulfill()
+        }
+
+        #assert(false, "Test")
+
+        wait(for: [exp])
+    }
+
+    func testAssertionFailure() {
+        let exp = expectation(description: "Failed")
+        exp.expectedFulfillmentCount = 2
+        UBNonFatalErrorReporter.handler = { _ in
+            exp.fulfill()
+        }
+
+        #assertionFailure("Failed")
+        #assertionFailure()
+
+        wait(for: [exp])
     }
 }
+
+

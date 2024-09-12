@@ -8,27 +8,32 @@
 import Foundation
 import os
 
-#if DEBUG
 @available(iOS 14.0, *)
 @freestanding(expression)
 public macro print(_ message: OSLogMessage) = #externalMacro(
     module: "UBMacros",
-    type: "UBPrintMacroDebug"
+    type: "UBPrintMacro"
 )
-#else
-@available(iOS 14.0, *)
-@freestanding(expression)
-public macro print(_ message: OSLogMessage) = #externalMacro(
-    module: "UBMacros",
-    type: "UBPrintMacroRelease"
-)
-#endif
 
 @available(iOS 14.0, *)
 @freestanding(expression)
 public macro printError(_ message: String) = #externalMacro(
     module: "UBMacros",
     type: "UBPrintErrorMacro"
+)
+
+@available(iOS 14.0, *)
+@freestanding(expression)
+public macro assert(_ condition: Bool, _ message: @autoclosure () -> String = String()) = #externalMacro(
+    module: "UBMacros",
+    type: "UBAssertMacro"
+)
+
+@available(iOS 14.0, *)
+@freestanding(expression)
+public macro assertionFailure(_ message: @autoclosure () -> String = String()) = #externalMacro(
+    module: "UBMacros",
+    type: "UBAssertionFailureMacro"
 )
 
 @available(iOS 14.0, *)

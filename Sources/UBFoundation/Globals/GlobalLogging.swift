@@ -13,6 +13,7 @@ import os.log
 private var loggerGroup: UBLoggerGroup = UBLoggerGroup()
 
 /// A domain for framework logging manipulation
+@available(*, message: "Use #print or OS.Logger instead")
 public enum UBLogging {
     /// Sets the global log level for all framework loggers
     ///

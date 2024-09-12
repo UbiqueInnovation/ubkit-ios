@@ -9,11 +9,13 @@
 import Foundation
 import os.log
 
+@available(*, message: "Use #print or OS.Logger instead")
 public protocol UBLoggerListener: AnyObject {
     func log(message: String)
 }
 
 /// A logger wrapper for the OSLog that provide an easy way to log. The UBLogger is thread safe.
+@available(*, message: "Use #print or OS.Logger instead")
 public class UBLogger {
     /// The logger to use
     private let logger: OSLog

@@ -8,6 +8,7 @@
 import Foundation
 
 /// Errors thrown by the localization
+@available(*, message: "Use #print or OS.Logger instead")
 public enum UBLoggingError: Error {
     /// The bundle identifier is not found
     case bundelIdentifierNotFound
