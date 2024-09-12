@@ -28,6 +28,7 @@ class BackendDevTools: DevTool {
 
     class ViewModel: ObservableObject {
         @Published var urls: [BaseUrl] = []
+        var appSpecificView: AnyView = AnyView(EmptyView())
     }
 
     public static var viewModel = ViewModel()
@@ -38,13 +39,17 @@ class BackendDevTools: DevTool {
         Self.baseUrls = baseUrls
 
         for b in baseUrls {
-            if UserDefaults.standard.string(forKey: Self.key(url: b.url)) != nil {
-                Self.startSwizzling()
+            if UserDefaults.standard.string(forKey: key(url: b.url)) != nil {
+                startSwizzling()
                 break
             }
         }
 
-        Self.viewModel.urls = baseUrls
+        viewModel.urls = baseUrls
+    }
+
+    public static func setAppSettingsView(view: some View) {
+        viewModel.appSpecificView = AnyView(view)
     }
 
     public static func saveNewUrl(baseUrl: BaseUrl, newUrl: String) {
@@ -57,7 +62,7 @@ class BackendDevTools: DevTool {
     }
 
     public static func resetAllUrls() {
-        for bu in Self.baseUrls {
+        for bu in baseUrls {
             UserDefaults.standard.removeObject(forKey: key(url: bu.url))
         }
 
@@ -69,8 +74,8 @@ class BackendDevTools: DevTool {
     }
 
     private static func updateUrls() {
-        for url in Self.viewModel.urls {
-            url.currentUrl = Self.currentUrlString(url: url.url)
+        for url in viewModel.urls {
+            url.currentUrl = currentUrlString(url: url.url)
         }
     }
 

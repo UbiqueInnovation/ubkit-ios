@@ -82,60 +82,60 @@ private struct ShareView: UIViewControllerRepresentable {
 @available(iOS 14.0, *)
 class CompressDocumentsDirectory {
     func compress() -> URL? {
-        #if !targetEnvironment(simulator)
-            let archiveDestination = NSTemporaryDirectory() + "documentDirectory.aar"
+#if !targetEnvironment(simulator)
+        let archiveDestination = NSTemporaryDirectory() + "documentDirectory.aar"
 
-            let archiveFilePath = FilePath(archiveDestination)
+        let archiveFilePath = FilePath(archiveDestination)
 
-            guard let writeFileStream = ArchiveByteStream.fileStream(
-                path: archiveFilePath,
-                mode: .writeOnly,
-                options: [.create],
-                permissions: FilePermissions(rawValue: 0o644)
-            ) else {
-                return nil
-            }
-            defer {
-                try? writeFileStream.close()
-            }
+        guard let writeFileStream = ArchiveByteStream.fileStream(
+            path: archiveFilePath,
+            mode: .writeOnly,
+            options: [.create],
+            permissions: FilePermissions(rawValue: 0o644)
+        ) else {
+            return nil
+        }
+        defer {
+            try? writeFileStream.close()
+        }
 
-            guard let compressStream = ArchiveByteStream.compressionStream(
-                using: .lzfse,
-                writingTo: writeFileStream
-            ) else {
-                return nil
-            }
-            defer {
-                try? compressStream.close()
-            }
+        guard let compressStream = ArchiveByteStream.compressionStream(
+            using: .lzfse,
+            writingTo: writeFileStream
+        ) else {
+            return nil
+        }
+        defer {
+            try? compressStream.close()
+        }
 
-            guard let encodeStream = ArchiveStream.encodeStream(writingTo: compressStream) else {
-                return nil
-            }
-            defer {
-                try? encodeStream.close()
-            }
+        guard let encodeStream = ArchiveStream.encodeStream(writingTo: compressStream) else {
+            return nil
+        }
+        defer {
+            try? encodeStream.close()
+        }
 
-            guard let keySet = ArchiveHeader.FieldKeySet("TYP,PAT,LNK,DEV,DAT,UID,GID,MOD,FLG,MTM,BTM,CTM") else {
-                return nil
-            }
+        guard let keySet = ArchiveHeader.FieldKeySet("TYP,PAT,LNK,DEV,DAT,UID,GID,MOD,FLG,MTM,BTM,CTM") else {
+            return nil
+        }
 
-            let sourcePath = getDocumentsDirectory()
-            let source = FilePath(sourcePath.path)
+        let sourcePath = getDocumentsDirectory()
+        let source = FilePath(sourcePath.path)
 
-            do {
-                try encodeStream.writeDirectoryContents(
-                    archiveFrom: source,
-                    keySet: keySet
-                )
-            } catch {
-                fatalError("Write directory contents failed.")
-            }
+        do {
+            try encodeStream.writeDirectoryContents(
+                archiveFrom: source,
+                keySet: keySet
+            )
+        } catch {
+            fatalError("Write directory contents failed.")
+        }
 
-            return NSURL(fileURLWithPath: archiveDestination) as URL
-        #else
-            fatalError("Apple Archive isn't supported on simulator https://developer.apple.com/forums/thread/665465")
-        #endif
+        return NSURL(fileURLWithPath: archiveDestination) as URL
+#else
+        fatalError("Apple Archive isn't supported on simulator https://developer.apple.com/forums/thread/665465")
+#endif
     }
 
     func getDocumentsDirectory() -> URL {

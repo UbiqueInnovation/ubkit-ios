@@ -6,6 +6,7 @@ import CompilerPluginSupport
 
 let package = Package(
     name: "UBKit",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v13),
         .watchOS(.v5),

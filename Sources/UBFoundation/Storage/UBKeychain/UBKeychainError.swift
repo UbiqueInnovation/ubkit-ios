@@ -27,19 +27,19 @@ public enum UBKeychainError: Error {
     var localizedDescription: String {
         switch self {
             case let .encodingError(error):
-                return "encodingError: \(error.localizedDescription)"
+                "encodingError: \(error.localizedDescription)"
             case let .decodingError(error):
-                return "decodingError: \(error.localizedDescription)"
+                "decodingError: \(error.localizedDescription)"
             case let .storingError(status):
-                return "storingError OSStatus: \(status)"
+                "storingError OSStatus: \(status)"
             case .notFound:
-                return "notFound"
+                "notFound"
             case let .cannotAccess(status):
-                return "cannotAccess OSStatus: \(status)"
+                "cannotAccess OSStatus: \(status)"
             case let .cannotDelete(status):
-                return "cannotDelete OSStatus: \(status)"
+                "cannotDelete OSStatus: \(status)"
             case .keychainNotReturningData:
-                return "not returning data"
+                "not returning data"
         }
     }
 }

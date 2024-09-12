@@ -4,6 +4,8 @@
 --disable redundantSelf
 --disable unusedArguments
 --indentcase true
+--ifdef outdent
+--disable preferForLoop
 
 # Don't format generated files
---exclude **/Strings+Generated.swift
+--exclude **/*Generated.swift

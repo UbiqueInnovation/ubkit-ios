@@ -22,9 +22,9 @@ public extension HTTPURLResponse {
     /// - Returns: The value associated with the key
     func ub_getHeaderField(key headerKey: String) -> String? {
         if #available(iOS 13.0, watchOS 6.0, macOS 10.15, *) {
-            return value(forHTTPHeaderField: headerKey)
+            value(forHTTPHeaderField: headerKey)
         } else {
-            return allHeaderFields.getCaseInsensitiveValue(key: headerKey) as? String
+            allHeaderFields.getCaseInsensitiveValue(key: headerKey) as? String
         }
     }
 

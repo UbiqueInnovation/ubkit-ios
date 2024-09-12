@@ -118,7 +118,7 @@ public final class UBPinnedCertificatesTrustEvaluator: UBServerTrustEvaluator {
         let pinnedCertificatesData = Set(certificates.data)
         let pinnedCertificatesInServerData = !serverCertificatesData.isDisjoint(with: pinnedCertificatesData)
         if !pinnedCertificatesInServerData {
-            throw UBNetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed()
         }
     }
 }
@@ -175,7 +175,7 @@ extension SecTrust {
         let status = SecTrustSetPolicies(self, policy)
 
         guard status.isSuccess else {
-            throw UBNetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed()
         }
 
         return self
@@ -191,7 +191,7 @@ extension SecTrust {
         let status = SecTrustEvaluate(self, &result)
 
         guard status.isSuccess, result.isSuccess else {
-            throw UBNetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed()
         }
     }
 
@@ -203,13 +203,13 @@ extension SecTrust {
         // Add additional anchor certificates.
         let status = SecTrustSetAnchorCertificates(self, certificates as CFArray)
         guard status.isSuccess else {
-            throw UBNetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed()
         }
 
         // Reenable system anchor certificates.
         let systemStatus = SecTrustSetAnchorCertificatesOnly(self, true)
         guard systemStatus.isSuccess else {
-            throw UBNetworkingError.certificateValidationFailed
+            throw UBNetworkingError.certificateValidationFailed()
         }
     }
 
@@ -256,7 +256,7 @@ extension SecPolicy {
     }
 }
 
-extension Array where Element == SecCertificate {
+extension [SecCertificate] {
     /// All `Data` values for the contained `SecCertificate`s.
     var data: [Data] {
         map { SecCertificateCopyData($0) as Data }

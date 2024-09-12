@@ -91,14 +91,17 @@ open class UBPushHandler: NSObject {
 
     /// Handles a notification that arrived while the app was running in the foreground.
     public func handleWillPresentNotification(_ notification: UNNotification, completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let ubNotification = UBPushNotification(notification.request.content.userInfo)
+        let ubNotification = UBPushNotification(notification.request.content.userInfo,
+                                                notificationRequestIdentifier: notification.request.identifier)
         // Let app decide (by overriding) whether and how to show a banner or not
         didReceive(ubNotification, whileActive: true, shouldPresentCompletionHandler: completionHandler)
     }
 
     /// Handles the user's response to an incoming notification.
     public func handleDidReceiveResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
-        let ubNotification = UBPushNotification(response.notification.request.content.userInfo, responseActionIdentifier: response.actionIdentifier)
+        let ubNotification = UBPushNotification(response.notification.request.content.userInfo,
+                                                notificationRequestIdentifier: response.notification.request.identifier,
+                                                responseActionIdentifier: response.actionIdentifier)
         didReceive(ubNotification, whileActive: false)
         completionHandler()
     }
@@ -130,14 +133,13 @@ open class UBPushHandler: NSObject {
         if isActive {
             let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "App Name Missing"
 
-            let message: String
-            switch (notification.userInfo["aps"] as? [String: Any])?["alert"] {
+            let message: String = switch (notification.userInfo["aps"] as? [String: Any])?["alert"] {
                 case let stringAlert as String:
-                    message = stringAlert
+                    stringAlert
                 case let dictAlert as [String: Any]:
-                    message = (dictAlert["body"] as? String) ?? ""
+                    (dictAlert["body"] as? String) ?? ""
                 default:
-                    message = ""
+                    ""
             }
 
             showInAppPushAlert(withTitle: appName, proposedMessage: message, notification: notification, shouldPresentCompletionHandler: shouldPresentCompletionHandler)
@@ -157,6 +159,7 @@ open class UBPushHandler: NSObject {
 /// A convenience wrapper for the notification received via a push message.
 public struct UBPushNotification {
     public let userInfo: [AnyHashable: Any]
+    public let notificationRequestIdentifier: String?
     public let responseActionIdentifier: String?
 
     public var isSilentPush: Bool {
@@ -170,8 +173,9 @@ public struct UBPushNotification {
             (aps["content-available"] as? Int) == 1
     }
 
-    public init(_ userInfo: [AnyHashable: Any], responseActionIdentifier: String? = nil) {
+    public init(_ userInfo: [AnyHashable: Any], notificationRequestIdentifier: String? = nil, responseActionIdentifier: String? = nil) {
         self.userInfo = userInfo
+        self.notificationRequestIdentifier = notificationRequestIdentifier
         self.responseActionIdentifier = responseActionIdentifier
     }
 

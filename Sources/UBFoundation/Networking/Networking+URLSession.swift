@@ -1,5 +1,5 @@
 //
-//  URLSession+Networking.swift
+//  Networking+URLSession.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 02.04.19.
@@ -12,7 +12,7 @@ extension URLSession: UBDataTaskURLSession {
     /// :nodoc:
     public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
         dataTask(with: request.getRequest(), completionHandler: { [weak owner] data, response, baseError in
-            guard let owner = owner else {
+            guard let owner else {
                 return
             }
             var error = baseError

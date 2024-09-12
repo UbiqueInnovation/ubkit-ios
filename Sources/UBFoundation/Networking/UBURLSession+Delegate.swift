@@ -51,13 +51,6 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     /// :nodoc:
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         assert(session == urlSession, "The sessions are not matching")
-        defer {
-            // Clear the collected data
-            serialQueue.sync {
-                tasksData.removeObject(forKey: task)
-                tasks.removeObject(forKey: task)
-            }
-        }
 
         var _ubDataTask: UBURLDataTask?
         var _collectedData: UBURLSessionDelegate.DataHolder?
@@ -66,8 +59,16 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             _collectedData = tasksData.object(forKey: task)
         }
 
-        guard let ubDataTask = _ubDataTask else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == task else {
             return
+        }
+
+        defer {
+            // Clear the collected data
+            serialQueue.sync {
+                tasksData.removeObject(forKey: task)
+                tasks.removeObject(forKey: task)
+            }
         }
 
         guard let collectedData = _collectedData else {
@@ -76,11 +77,11 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
         }
 
         guard let response = collectedData.response as? HTTPURLResponse else {
-            #if os(watchOS)
-                let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
-            #else
-                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
-            #endif
+#if os(watchOS)
+            let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.flags.contains(.refresh))
+#else
+            let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.refresh))
+#endif
             ubDataTask.dataTaskCompleted(data: collectedData.data, response: nil, error: collectedData.error ?? error, info: info)
             return
         }
@@ -91,7 +92,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             return
         }
 
-        if let error = error {
+        if let error {
             ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: error, info: nil)
             return
         }
@@ -101,46 +102,47 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
 
         // If not modified return the cached data
         if response.statusCode == UBStandardHTTPCode.notModified, let cached = collectedData.cached {
-            #if os(watchOS)
-                let info = UBNetworkingTaskInfo(cacheHit: true, refresh: ubDataTask.flags.contains(.ignoreCache))
-            #else
-                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true, refresh: ubDataTask.flags.contains(.ignoreCache))
-            #endif
+#if os(watchOS)
+            let info = UBNetworkingTaskInfo(cacheHit: true, refresh: ubDataTask.flags.contains(.refresh))
+#else
+            let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: true, refresh: ubDataTask.flags.contains(.refresh))
+#endif
 
             // Update the cache if needed
             if let newCachedResponse = cachingLogic?.proposeUpdatedCachedResponse(cached, newResponse: response),
                let request = task.currentRequest {
                 session.configuration.urlCache?.storeCachedResponse(newCachedResponse, for: request)
             }
-            ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: info)
+            if !ubDataTask.flags.contains(.refresh) {
+                ubDataTask.dataTaskCompleted(data: cached.data, response: cached.response as? HTTPURLResponse, error: collectedData.error ?? error, info: info)
+            }
             if let response = cached.response as? HTTPURLResponse {
-                cachingLogic?.hasUsed(response: response, metrics: collectedData.metrics, request: collectedData.request, dataTask: ubDataTask)
+                cachingLogic?.hasUsed(cachedResponse: response, nonModifiedResponse: response, metrics: collectedData.metrics, request: collectedData.request, dataTask: ubDataTask)
             }
             return
         }
 
         // Make sure we do not process error status
         guard response.statusCode == UBHTTPCodeCategory.success else {
-            let responseError: Error
-            if response.statusCode == UBHTTPCodeCategory.redirection, allowsRedirection == false {
-                responseError = UBInternalNetworkingError.requestRedirected
+            let responseError: Error = if response.statusCode == UBHTTPCodeCategory.redirection, allowsRedirection == false {
+                UBInternalNetworkingError.requestRedirected
             } else {
-                responseError = UBInternalNetworkingError.requestFailed(httpStatusCode: response.statusCode)
+                UBInternalNetworkingError.requestFailed(httpStatusCode: response.statusCode)
             }
-            #if os(watchOS)
-                let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
-            #else
-                let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
-            #endif
+#if os(watchOS)
+            let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.flags.contains(.refresh))
+#else
+            let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.refresh))
+#endif
             ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: responseError, info: info)
             return
         }
 
-        #if os(watchOS)
-            let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
-        #else
-            let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.ignoreCache))
-        #endif
+#if os(watchOS)
+        let info = UBNetworkingTaskInfo(cacheHit: false, refresh: ubDataTask.flags.contains(.refresh))
+#else
+        let info = UBNetworkingTaskInfo(metrics: collectedData.metrics, cacheHit: false, refresh: ubDataTask.flags.contains(.refresh))
+#endif
         ubDataTask.dataTaskCompleted(data: collectedData.data, response: response, error: collectedData.error ?? error, info: info)
 
         ubDataTask.completionHandlersDispatchQueue.sync {
@@ -174,7 +176,7 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
             _collectedData = tasksData.object(forKey: dataTask)
         }
 
-        guard let ubDataTask = _ubDataTask, let dataHolder = _collectedData else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == dataTask, let dataHolder = _collectedData else {
             completionHandler(.cancel)
             return
         }
@@ -200,12 +202,14 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         assert(session == urlSession, "The sessions are not matching")
 
+        var _ubDataTask: UBURLDataTask?
         var _collectedData: UBURLSessionDelegate.DataHolder?
         serialQueue.sync {
+            _ubDataTask = tasks.object(forKey: dataTask)
             _collectedData = tasksData.object(forKey: dataTask)
         }
 
-        guard let dataHolder = _collectedData else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == dataTask, let dataHolder = _collectedData else {
             return
         }
         if dataHolder.data == nil {
@@ -231,12 +235,14 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         assert(session == urlSession, "The sessions are not matching")
 
+        var _ubDataTask: UBURLDataTask?
         var _collectedData: UBURLSessionDelegate.DataHolder?
         serialQueue.sync {
+            _ubDataTask = tasks.object(forKey: task)
             _collectedData = tasksData.object(forKey: task)
         }
 
-        guard let dataHolder = _collectedData else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == task, let dataHolder = _collectedData else {
             completionHandler(request)
             return
         }
@@ -259,22 +265,22 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         assert(session == urlSession, "The sessions are not matching")
 
+        var _ubDataTask: UBURLDataTask?
         var _collectedData: UBURLSessionDelegate.DataHolder?
         serialQueue.sync {
+            _ubDataTask = tasks.object(forKey: task)
             _collectedData = tasksData.object(forKey: task)
         }
 
-        guard let dataHolder = _collectedData else {
+        guard let ubDataTask = _ubDataTask, ubDataTask.dataTask == task, let dataHolder = _collectedData else {
             return
         }
 
-        let evaluation: ChallengeEvaluation
-
-        switch challenge.protectionSpace.authenticationMethod {
+        let evaluation: ChallengeEvaluation = switch challenge.protectionSpace.authenticationMethod {
             case NSURLAuthenticationMethodServerTrust:
-                evaluation = attemptServerTrustAuthentication(with: challenge)
+                attemptServerTrustAuthentication(with: challenge)
             default:
-                evaluation = (.performDefaultHandling, nil, nil)
+                (.performDefaultHandling, nil, nil)
         }
 
         if let error = evaluation.error {
@@ -307,13 +313,13 @@ class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDele
     }
 
     private func executeCachingLogic(cachingLogic: UBCachingLogic?, session: URLSession, task: URLSessionTask, ubDataTask: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?, error: Error?) -> CachedURLResponse? {
-        guard let cachingLogic = cachingLogic, let task = task as? URLSessionDataTask, let originalRequest = task.originalRequest else {
+        guard let cachingLogic, let task = task as? URLSessionDataTask, let originalRequest = task.originalRequest else {
             return nil
         }
 
         let proposedResponse = cachingLogic.proposeCachedResponse(for: session, dataTask: task, ubDataTask: ubDataTask, request: request, response: response, data: data, metrics: metrics, error: error)
 
-        if let proposedResponse = proposedResponse {
+        if let proposedResponse {
             // If there is a proposed caching, cache it
             session.configuration.urlCache?.storeCachedResponse(proposedResponse, for: originalRequest)
         }

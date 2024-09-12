@@ -14,13 +14,33 @@ public enum UBCacheResult {
     /// The cache missed
     case miss
     /// Cached data found but is expired
-    case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
+    case expired(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
     /// Cached data found and is valid
-    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String], metrics: URLSessionTaskMetrics?)
+    case hit(cachedResponse: CachedURLResponse, reloadHeaders: [String: String])
+
+    var reloadHeaders: [String: String] {
+        switch self {
+            case .miss: [:]
+            case .expired(cachedResponse: _, reloadHeaders: let h): h
+            case .hit(cachedResponse: _, reloadHeaders: let h): h
+        }
+    }
+
+    var cachedResponse: CachedURLResponse? {
+        switch self {
+            case .miss: nil
+            case .expired(cachedResponse: let r, reloadHeaders: _): r
+            case .hit(cachedResponse: let r, reloadHeaders: _): r
+        }
+    }
 }
 
 /// A caching logic object can provide decision when comes to requests and response that needs caching
 public protocol UBCachingLogic {
+    /// Modify the request before starting
+    /// Allows to change the cache policy
+    func prepareRequest(_ request: inout URLRequest)
+
     /// Asks the caching logic to provide a cached proposition.
     ///
     /// Returning `nil` will indicate that the response should not be cached
@@ -59,7 +79,7 @@ public protocol UBCachingLogic {
     func hasMissedCache(dataTask: UBURLDataTask)
 
     /// Tell the caching logic that the result was used
-    func hasUsed(response: HTTPURLResponse, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask)
+    func hasUsed(cachedResponse: HTTPURLResponse, nonModifiedResponse: HTTPURLResponse?, metrics: URLSessionTaskMetrics?, request _: URLRequest, dataTask: UBURLDataTask)
 
     /// Tell the caching logic that a new result was cached
     func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session: URLSession, request: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?)

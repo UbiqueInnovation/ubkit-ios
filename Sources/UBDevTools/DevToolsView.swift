@@ -30,7 +30,9 @@ public struct DevToolsView: View {
     @State private var showingKeychainDeleteAlert = false
     @State private var showingUserDefaultsDeleteAlert = false
 
-    @StateObject private var backendUrls = BackendDevTools.viewModel
+    @StateObject private var viewModel = BackendDevTools.viewModel
+
+    @State private var cacheUpdateValue = UUID()
 
     // MARK: - Init
 
@@ -40,6 +42,7 @@ public struct DevToolsView: View {
 
     private var contentView: some View {
         Form {
+            viewModel.appSpecificView
             Group {
                 Section(header: Text("UserDefaults.standard")) {
                     Button("Clear UserDefaults.standard") {
@@ -99,11 +102,22 @@ public struct DevToolsView: View {
                     }
                 }
             }
-            Section(header: Text("URLCache.shared")) {
-                Text(cacheSizeText)
-                Button("Remove all cached responses") {
-                    CacheDevTools.clearCache(URLCache.shared)
-                    cacheSizeText = CacheDevTools.currentSizes(URLCache.shared)
+            Section(header: Text("Caches")) {
+                Button("Clear all") {
+                    for cache in CacheDevTools.caches {
+                        CacheDevTools.clearCache(cache.id)
+                    }
+                    cacheUpdateValue = UUID()
+                }
+                ForEach(CacheDevTools.caches, id: \.id) { cache in
+                    VStack(alignment: .leading) {
+                        Text(cache.id).bold()
+                        Text(CacheDevTools.currentSizes(cache.id, updateValue: cacheUpdateValue))
+                        Button("Clear") {
+                            CacheDevTools.clearCache(cache.id)
+                            cacheUpdateValue = UUID()
+                        }
+                    }
                 }
             }
             Section(header: Text("UIView")) {
@@ -116,8 +130,8 @@ public struct DevToolsView: View {
                 Toggle("Show localization keys", isOn: Binding(get: { Self.showLocalizationKeys }, set: { Self.showLocalizationKeys = $0 }))
             }
             Section(header: Text("Backend URL Config")) {
-                if backendUrls.urls.count > 0 {
-                    List(backendUrls.urls, id: \.title) { bu in
+                if viewModel.urls.count > 0 {
+                    List(viewModel.urls, id: \.title) { bu in
                         BackendUrlEditor(url: bu)
                     }
                     Button {
@@ -137,10 +151,27 @@ public struct DevToolsView: View {
                     CacheDevTools.clearCache(cache)
                 }
             }
+            Section(header: Text("Proxy settings")) {
+                Toggle("Start Proxy for today", isOn: Binding(
+                    get: {
+                        guard Self.enableNetworkingProxySettings, let enabledDate = Self.proxyEnabledDate else { return false }
+                        return Calendar.current.isDateInToday(enabledDate)
+                    }, set: {
+                        Self.enableNetworkingProxySettings = $0
+                        Self.proxyEnabledDate = $0 ? Date() : nil
+                    }
+                ))
+                TextField("Host", text: Binding(get: { Self.proxySettingsHost ?? "" }, set: { Self.proxySettingsHost = $0 }))
+                TextField("Port", text: Binding(get: {
+                    Self.proxySettingsPort != nil ? String(Self.proxySettingsPort!) : ""
+                }, set: {
+                    Self.proxySettingsPort = Int($0)
+                }))
+            }
 
-            #if !targetEnvironment(simulator)
-                ShareDocumentsView()
-            #endif
+#if !targetEnvironment(simulator)
+            ShareDocumentsView()
+#endif
 
             if #available(iOS 15.0, *) {
                 LogDevToolsView()
@@ -176,5 +207,15 @@ public struct DevToolsView: View {
     @UBUserDefault(key: "io.openmobilemaps.debug.rastertiles.enabled", defaultValue: false)
     public static var mapRasterTilesDebugOverlay: Bool
 
-    @State var cacheSizeText: String = CacheDevTools.currentSizes(URLCache.shared)
+    @UBUserDefault(key: "ubkit.devtools.proxy.enabled.key", defaultValue: false)
+    static var enableNetworkingProxySettings: Bool
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.enabled.date.key", defaultValue: nil)
+    private static var proxyEnabledDate: Date?
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.host.key", defaultValue: nil)
+    static var proxySettingsHost: String?
+
+    @UBUserDefault(key: "ubkit.devtools.proxy.port.key", defaultValue: nil)
+    static var proxySettingsPort: Int?
 }

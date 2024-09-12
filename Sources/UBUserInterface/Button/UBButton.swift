@@ -21,9 +21,8 @@ open class UBButton: UIButton {
     // MARK: - Title for button
 
     public var title: String? {
-        didSet {
-            setTitle(title, for: .normal)
-        }
+        get { title(for: .normal) }
+        set { setTitle(newValue, for: .normal) }
     }
 
     // MARK: - Highlight view
@@ -59,7 +58,7 @@ open class UBButton: UIButton {
         titleLabel?.textAlignment = .center
 
         highlightView.alpha = 0
-        if let imageView = imageView {
+        if let imageView {
             insertSubview(highlightView, belowSubview: imageView)
         } else {
             insertSubview(highlightView, at: 0)

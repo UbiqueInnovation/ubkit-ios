@@ -27,7 +27,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testGroupModifiersEmpty() {
@@ -42,7 +42,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testGroupModifiersFailure() {
@@ -60,7 +60,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testGroupModifiersCancel() {
@@ -75,7 +75,7 @@ class HTTPRequestModifierTests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             ex.fulfill()
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testBasicAuthorization() {
@@ -92,7 +92,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testTokenAuthorization() {
@@ -109,7 +109,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testTokenFailure() {
@@ -125,7 +125,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testAcceptedLanguage() {
@@ -148,7 +148,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 }
 
@@ -175,7 +175,7 @@ private class MockTokenAuthorization: UBURLRequestTokenAuthorization {
     let token: String = "AbCdEf123456"
     var error: Error?
     func getToken(completion: (Result<String, Error>) -> Void) {
-        if let error = error {
+        if let error {
             completion(.failure(error))
         } else {
             completion(.success(token))

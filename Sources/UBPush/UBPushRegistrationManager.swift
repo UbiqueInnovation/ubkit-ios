@@ -86,7 +86,7 @@ open class UBPushRegistrationManager: NSObject {
 
         if backgroundTask == .invalid {
             backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-                guard let self = self else {
+                guard let self else {
                     return
                 }
                 if self.backgroundTask != .invalid {
@@ -97,7 +97,7 @@ open class UBPushRegistrationManager: NSObject {
 
         task = UBURLDataTask(request: registrationRequest, session: session)
         task?.addCompletionHandler(decoder: UBHTTPStringDecoder()) { [weak self] result, _, _, _ in
-            guard let self = self else {
+            guard let self else {
                 return
             }
 

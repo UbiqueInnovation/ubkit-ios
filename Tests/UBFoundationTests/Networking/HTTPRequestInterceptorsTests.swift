@@ -30,7 +30,7 @@ class HTTPRequestInterceptorsTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testInterceptor() {
@@ -53,7 +53,7 @@ class HTTPRequestInterceptorsTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 }
 

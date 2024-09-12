@@ -13,7 +13,7 @@ import Foundation
 /// - SeeAlso: `LocalizationNotification` for the available notifications.
 public class UBLocalization: Codable {
     /// A logger associated with localization
-    internal static let logger: UBLogger = UBLogging.frameworkLoggerFactory(category: "Localization")
+    static let logger: UBLogger = UBLogging.frameworkLoggerFactory(category: "Localization")
 
     // MARK: - Properties
 
@@ -90,7 +90,7 @@ public extension UBLocalization {
         var localeComponents: [String: String] = Locale.components(fromIdentifier: baseLocale.identifier)
         localeComponents[NSLocale.Key.languageCode.rawValue] = languageCode
 
-        if let regionCode = regionCode {
+        if let regionCode {
             localeComponents[NSLocale.Key.countryCode.rawValue] = regionCode
         } else {
             localeComponents.removeValue(forKey: NSLocale.Key.countryCode.rawValue)

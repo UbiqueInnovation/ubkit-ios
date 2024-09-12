@@ -35,7 +35,7 @@ class WindowKeyboardLayoutGuide: UILayoutGuide {
     // :nodoc:
     override var owningView: UIView? {
         didSet {
-            guard owningView != oldValue, let owningView = owningView else {
+            guard owningView != oldValue, let owningView else {
                 return
             }
 
@@ -58,7 +58,7 @@ class WindowKeyboardLayoutGuide: UILayoutGuide {
 extension WindowKeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
-        guard let owningView = owningView,
+        guard let owningView,
               let window = owningView as? UIWindow,
               let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else {
             return

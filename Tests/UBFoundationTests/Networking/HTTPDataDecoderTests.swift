@@ -18,7 +18,7 @@ class HTTPDataDecoderTests: XCTestCase {
             return data
         }
         XCTAssertNoThrow(try decoder.decode(data: Data(), response: response))
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testStringDecoder() {

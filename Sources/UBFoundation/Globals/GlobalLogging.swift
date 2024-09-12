@@ -24,7 +24,7 @@ public enum UBLogging {
     /// Add a logger to the global logger groups
     ///
     /// - Parameter logger: The logger to add
-    internal static func addLogger(_ logger: UBLogger) {
+    static func addLogger(_ logger: UBLogger) {
         loggerGroup.add(logger: logger)
     }
 
@@ -35,7 +35,7 @@ public enum UBLogging {
     ///
     /// - Parameter category: The category of the logger
     /// - Returns: A logger for the framework use
-    internal static func frameworkLoggerFactory(category: String) -> UBLogger {
+    static func frameworkLoggerFactory(category: String) -> UBLogger {
         do {
             let logger = try UBLogger(category: category, bundle: Bundle(for: UBLogger.self))
             addLogger(logger)

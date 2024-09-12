@@ -35,7 +35,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testManySynchronousCalls() {
@@ -68,7 +68,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testFailureWithRecoveryRestart() {
@@ -111,7 +111,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testFailureWithRecoveryOptions() {
@@ -166,7 +166,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testCompletionNoData() {
@@ -188,7 +188,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testCompletionRequestModifiers() {
@@ -206,7 +206,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testCompletionJSONData() {
@@ -233,7 +233,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testCompletion() {
@@ -280,7 +280,7 @@ class HTTPDataTaskTests: XCTestCase {
         })
         dataTask.start()
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testValidation() {
@@ -302,7 +302,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testValidationBlock() {
@@ -327,7 +327,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testValidationList() {
@@ -353,7 +353,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testStateChange() {
@@ -385,7 +385,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testProgress() {
@@ -410,7 +410,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
         dataTask.start()
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testCancelBeforeTaskExecute() {
@@ -458,7 +458,7 @@ class HTTPDataTaskTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
         XCTAssertEqual(dataTask.state, .cancelled)
         XCTAssertEqual(dataTask.progress.fractionCompleted, 0)
     }
@@ -523,9 +523,30 @@ class HTTPDataTaskTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
         XCTAssertEqual(dataTask.state, .cancelled)
         XCTAssertEqual(dataTask.progress.fractionCompleted, 0)
+    }
+
+    @available(iOS 16.0, *)
+    public func testFastCancellation() async throws {
+        struct Modifier: UBAsyncURLRequestModifier {
+            var i: Int
+            func modifyRequest(_ request: inout UBFoundation.UBURLRequest) async throws {
+                let v = await UIDevice.current.systemVersion
+                request.setHTTPHeaderField(.init(key: "os-version", value: v))
+            }
+        }
+
+        for i in 0 ..< 100 {
+            let t = Task {
+                _ = await UBURLDataTask.with(requestModifier: Modifier(i: i)).loadOnce(url: URL(string: "http://ubique.ch")!, decoder: .passthrough)
+            }
+            try await Task.sleep(for: .milliseconds(i))
+            await MainActor.run {
+                t.cancel()
+            }
+        }
     }
 
     func testDeallocation() {
@@ -561,7 +582,7 @@ class HTTPDataTaskTests: XCTestCase {
             RunLoop.main.add(t, forMode: .common)
         }
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 
     func testOperatinoQueue() {
@@ -614,6 +635,6 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.start()
 
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
     }
 }

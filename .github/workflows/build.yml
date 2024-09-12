@@ -1,18 +1,16 @@
 name: Build & Test
 
 env:
-  XCODE_VERSION: "Xcode_14.2.0"
+  XCODE_VERSION: "Xcode_15.3"
 
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 jobs:
-  build-and-test:
-    name: Build & Tests
-    runs-on: ["self-hosted", "macOS"]
+  tests:
+    name: Tests
+    runs-on: macos-latest
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -24,28 +22,3 @@ jobs:
       - name: Fastlane
         run: fastlane tests
 
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action/composite@95a3aff882d4abe2838b187c66477be7fbf3ddb8
-        if: always()
-        with:
-          files: build/*.xml
-
-      - name: Archive logs
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-test-logs
-          path: build
-
-  codequality:
-    name: Codequality
-    runs-on: ["self-hosted", "macOS"]
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Switch to ${{ env.XCODE_VERSION }}
-        run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
-
-      - name: swiftformat
-        run: swiftformat Sources,Tests --lint

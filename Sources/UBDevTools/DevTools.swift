@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftUI
+import UBFoundation
 import UIKit
 
 protocol DevTool {
@@ -19,7 +21,7 @@ public enum UBDevTools {
     private static let devTools: [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self, UIViewDevTools.self]
 
     public static func setup() {
-        Self.isActivated = true
+        isActivated = true
 
         setupNavbarAppearance()
 
@@ -30,12 +32,36 @@ public enum UBDevTools {
         }
     }
 
+    public static func setAppSettingsView(view: some View) {
+        BackendDevTools.setAppSettingsView(view: view)
+    }
+
     public static func setupBaseUrls(baseUrls: [BaseUrl]) {
         BackendDevTools.setup(baseUrls: baseUrls)
     }
 
     public static func setupSharedUserDefaults(_ userDefaults: UserDefaults) {
         UserDefaultsDevTools.setupSharedUserDefaults(userDefaults)
+    }
+
+    public static func setupCaches(additional caches: [(id: String, cache: URLCache)]) {
+        CacheDevTools.additionalCaches = caches
+    }
+
+    /// Sets a static proxy for networking debugging, if all requests should be proxied through a predefined proxy.
+    ///
+    /// This only works in combination with the `friendlySharedSession` as this proxy setup is used only there.
+    /// Additionally you might want to set the `NSAllowsArbitraryLoads` flag in your `Info.plist`
+    ///
+    /// - Parameters:
+    ///   - host: The host of your proxy, e.g. 'myproxy.ubique.ch'
+    ///   - port: The port of your proxy, e.g. 8888
+    ///   - username: Set the username if the proxy needs authorization
+    ///   - password: Set the password if the proxy needs authorization
+    public static func setupProxySettings(host: String, port: Int, username: String?, password: String?) {
+        UBDevToolsProxyHelper.shared.setProxy(
+            host: host, port: port, username: username, password: password
+        )
     }
 
     // MARK: - Helper methods
@@ -60,7 +86,7 @@ extension UIWindow {
     private static var initSwizzled = false
 
     static func sendInitSwizzleWizzle() {
-        guard !Self.initSwizzled else { return }
+        guard !initSwizzled else { return }
 
         if let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.init(windowScene:))),
            let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzled_windowSceneInit)) {

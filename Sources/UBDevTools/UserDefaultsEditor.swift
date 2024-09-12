@@ -77,7 +77,7 @@ class ObservableUserDefaults: ObservableObject {
         self.userDefaults = userDefaults
         reload()
         observer = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.reload()
         }
     }

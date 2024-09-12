@@ -211,7 +211,7 @@ open class UBPushManager: NSObject {
             // If registering for remote notifications was not handled by the system within a short period,
             // assume the permission request failed
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 15) { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 if let callback = self.permissionRequestCallback, currentPushRequest == self.latestPushRequest {
                     callback(.failure)
@@ -341,9 +341,9 @@ private extension UBPushManager.PermissionRequestResult {
         if
             let settingsUrl = UIApplication.ub_appNotificationSettingsURL,
             UIApplication.shared.canOpenURL(settingsUrl) {
-            return .recoverableFailure(settingsURL: settingsUrl)
+            .recoverableFailure(settingsURL: settingsUrl)
         } else {
-            return .nonRecoverableFailure
+            .nonRecoverableFailure
         }
     }
 }
