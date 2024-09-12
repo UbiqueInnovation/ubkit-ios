@@ -1,25 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "UBLocalNetworking",
-        "repositoryURL": "git@github.com:UbiqueInnovation/ios-local-networking.git",
-        "state": {
-          "branch": null,
-          "revision": "c370cf7fad8b113011391a1ef5b4cf3282722a0e",
-          "version": "1.0.2"
-        }
-      },
-      {
-        "package": "swift-syntax",
-        "repositoryURL": "https://github.com/apple/swift-syntax",
-        "state": {
-          "branch": null,
-          "revision": "74203046135342e4a4a627476dd6caf8b28fe11b",
-          "version": "509.0.0"
-        }
+  "pins" : [
+    {
+      "identity" : "ios-local-networking",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/UbiqueInnovation/ios-local-networking.git",
+      "state" : {
+        "revision" : "c370cf7fad8b113011391a1ef5b4cf3282722a0e",
+        "version" : "1.0.2"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax",
+      "state" : {
+        "revision" : "74203046135342e4a4a627476dd6caf8b28fe11b",
+        "version" : "509.0.0"
+      }
+    }
+  ],
+  "version" : 2
 }
