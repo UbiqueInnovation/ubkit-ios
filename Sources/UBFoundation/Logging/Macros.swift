@@ -26,7 +26,7 @@ public macro print(_ message: OSLogMessage) = #externalMacro(
 
 @available(iOS 14.0, *)
 @freestanding(expression)
-public macro printError(_ message: OSLogMessage) = #externalMacro(
+public macro printError(_ message: String) = #externalMacro(
     module: "UBMacros",
     type: "UBPrintErrorMacro"
 )
@@ -40,9 +40,9 @@ public struct UBPrintMacro {
         // This function will be optimized away
     }
 
-    public static var errorCallback: ((String) -> Void)?
-
-    public static func sendError(_ message: String) {
-        self.errorCallback?(message)
+    public static func sendError(_ message: String, file: String = #file, line: Int = #line) {
+        UBNonFatalErrorReporter.report(NSError(domain: (file as NSString).lastPathComponent,
+                                               code: line,
+                                               userInfo: [NSDebugDescriptionErrorKey: message]))
     }
 }
