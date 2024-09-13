@@ -1,5 +1,5 @@
 //
-//  Macros.swift
+//  LoggingMacros+Shadowing.swift
 //  UBKit
 //
 //  Created by Nicolas Märki on 12.09.2024.
@@ -7,34 +7,6 @@
 
 import Foundation
 import os
-
-@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-@freestanding(expression)
-public macro print(_ message: OSLogMessage) = #externalMacro(
-    module: "UBMacros",
-    type: "PrintMacro"
-)
-
-@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-@freestanding(expression)
-public macro printError(_ message: String) = #externalMacro(
-    module: "UBMacros",
-    type: "PrintErrorMacro"
-)
-
-@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-@freestanding(expression)
-public macro assert(_ condition: Bool, _ message: @autoclosure () -> String = String()) = #externalMacro(
-    module: "UBMacros",
-    type: "AssertMacro"
-)
-
-@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-@freestanding(expression)
-public macro assertionFailure(_ message: @autoclosure () -> String = String()) = #externalMacro(
-    module: "UBMacros",
-    type: "AssertionFailureMacro"
-)
 
 @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 public struct _PrintMacro {
@@ -71,6 +43,5 @@ public struct _PrintMacro {
             Swift.assertionFailure()
         }
     }
-
-
 }
+
