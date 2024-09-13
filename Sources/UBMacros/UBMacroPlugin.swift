@@ -13,9 +13,9 @@ import SwiftSyntaxMacros
 struct UBMacroPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         URLMacro.self,
-        UBPrintMacro.self,
-        UBPrintErrorMacro.self,
-        UBAssertMacro.self,
-        UBAssertionFailureMacro.self
+        PrintMacro.self,
+        PrintErrorMacro.self,
+        AssertMacro.self,
+        AssertionFailureMacro.self
     ]
 }

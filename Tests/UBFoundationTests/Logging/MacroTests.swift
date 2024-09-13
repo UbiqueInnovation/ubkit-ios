@@ -36,10 +36,10 @@ class MacroTests: XCTestCase {
 
     func testAssertFalse() {
         let exp = expectation(description: "Failed")
-        UBNonFatalErrorReporter.handler = { _ in 
+        UBNonFatalErrorReporter.handler = { _ in
             exp.fulfill()
         }
-
+        _PrintMacro.disableAssertionFailure = true
         #assert(false, "Test")
 
         wait(for: [exp])
@@ -52,6 +52,9 @@ class MacroTests: XCTestCase {
             exp.fulfill()
         }
 
+
+        _PrintMacro.disableAssertionFailure = true
+        
         #assertionFailure("Failed")
         #assertionFailure()
 

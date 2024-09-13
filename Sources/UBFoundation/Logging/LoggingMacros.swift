@@ -12,32 +12,32 @@ import os
 @freestanding(expression)
 public macro print(_ message: OSLogMessage) = #externalMacro(
     module: "UBMacros",
-    type: "UBPrintMacro"
+    type: "PrintMacro"
 )
 
 @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 @freestanding(expression)
 public macro printError(_ message: String) = #externalMacro(
     module: "UBMacros",
-    type: "UBPrintErrorMacro"
+    type: "PrintErrorMacro"
 )
 
 @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 @freestanding(expression)
 public macro assert(_ condition: Bool, _ message: @autoclosure () -> String = String()) = #externalMacro(
     module: "UBMacros",
-    type: "UBAssertMacro"
+    type: "AssertMacro"
 )
 
 @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 @freestanding(expression)
 public macro assertionFailure(_ message: @autoclosure () -> String = String()) = #externalMacro(
     module: "UBMacros",
-    type: "UBAssertionFailureMacro"
+    type: "AssertionFailureMacro"
 )
 
 @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-public struct UBPrintMacro {
+public struct _PrintMacro {
     public static let Logger = os.Logger(subsystem: "UBLog", category: "Default")
 
     @_transparent
@@ -45,9 +45,32 @@ public struct UBPrintMacro {
         // This function will be optimized away
     }
 
-    public static func sendError(_ message: String, file: String = #file, line: Int = #line) {
+    // Assertion Failure can be disabled
+    // Useful for unit tests to avoid crash
+    public static var disableAssertionFailure = false
+
+    public static func sendError(_ message: String, file: String = #file, line: Int = #line) -> String {
         UBNonFatalErrorReporter.report(NSError(domain: (file as NSString).lastPathComponent,
                                                code: line,
                                                userInfo: [NSDebugDescriptionErrorKey: message]))
+        return message // allows nesting sendError ins os_log statements
     }
+
+    public static func assert(_ condition: Bool, _ handler: ()->Void) {
+        if !condition {
+            handler()
+            if !Self.disableAssertionFailure {
+                Swift.assertionFailure()
+            }
+        }
+    }
+
+    public static func assertionFailure(_ handler: ()->Void) {
+        handler()
+        if !Self.disableAssertionFailure {
+            Swift.assertionFailure()
+        }
+    }
+
+
 }
