@@ -20,10 +20,8 @@ public struct PrintMacro: ExpressionMacro {
             throw CustomError.message("Expected a single argument for #print")
         }
         return "_PrintMacro.Logger.debug(\(firstArgument))"
-        #elseif RELEASE
-        return "_PrintMacro.noop()"
         #else
-        throw CustomError.message("Neither DEBUG or RELEASE is defined.")
+        return "_PrintMacro.noop()"
         #endif
     }
 }
