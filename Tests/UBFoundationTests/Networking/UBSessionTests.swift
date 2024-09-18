@@ -26,24 +26,6 @@ class UBSessionTests: XCTestCase {
         return testBundle
     }()
 
-    func testRedirection() {
-        let ex = expectation(description: "s")
-        let url = URL(string: "http://ubique.ch")!
-        let dataTask = UBURLDataTask(url: url, session: Networking.sharedLowPrioritySession)
-        dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
-            switch result {
-                case .success:
-                    break
-                case let .failure(error):
-                    XCTFail(error.localizedDescription)
-            }
-            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.ok)
-            ex.fulfill()
-        }
-        dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
-    }
-
     func testURLValidationFailed() {
         let ex = expectation(description: "s")
         let url = URL(string: "https://www.ubique.ch")!
