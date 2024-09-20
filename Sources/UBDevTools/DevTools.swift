@@ -125,7 +125,7 @@ extension UIWindow {
         return window
     }
 
-    @objc private func openDevTools() {
+    @objc public func openDevTools() {
         if let rootVC = rootViewController, let devToolsVC = DevToolsViewController() {
             var vc = rootVC
             while let presented = vc.presentedViewController {
