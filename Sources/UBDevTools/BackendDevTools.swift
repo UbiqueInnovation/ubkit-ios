@@ -22,11 +22,11 @@ public class BaseUrl: ObservableObject {
 }
 
 @available(iOS 13.0, *)
-class BackendDevTools: DevTool {
+public class BackendDevTools: DevTool {
     private static var didSwizzle = false
     public static var baseUrls: [BaseUrl] = []
 
-    class ViewModel: ObservableObject {
+    public class ViewModel: ObservableObject {
         @Published var urls: [BaseUrl] = []
         var appSpecificView: AnyView = AnyView(EmptyView())
     }
