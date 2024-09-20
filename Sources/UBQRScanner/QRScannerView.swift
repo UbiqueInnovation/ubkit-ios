@@ -197,12 +197,15 @@ public class QRScannerView: UIView {
 
 extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
     nonisolated public func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
-        Task { @MainActor in
-            guard !isScanningPaused else { return } // Don't process any input if scanning is paused
+        let stringValues: [String] = metadataObjects.compactMap {
+            guard let object = $0 as? AVMetadataMachineReadableCodeObject else {
+                return nil
+            }
 
-            for metadataObject in metadataObjects {
-                guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { continue }
-                guard let stringValue = readableObject.stringValue else { continue }
+            return object.stringValue
+        }
+        Task { @MainActor in
+            for stringValue in stringValues {
                 if found(code: stringValue) {
                     return
                 }

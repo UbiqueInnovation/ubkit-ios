@@ -329,8 +329,14 @@ extension UBPushManager: UNUserNotificationCenterDelegate {
 
     /// :nodoc:
     nonisolated public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
-        Task { @MainActor in
-            pushHandler.openInAppSettings(notification)
+        if let notification {
+            Task { @MainActor in
+                pushHandler.openInAppSettings(notification)
+            }
+        } else {
+            Task { @MainActor in
+                pushHandler.openInAppSettings(nil)
+            }
         }
     }
 }
