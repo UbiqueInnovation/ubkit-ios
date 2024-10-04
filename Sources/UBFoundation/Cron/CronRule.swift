@@ -86,7 +86,7 @@ public struct UBFireAtIntervalRule: UBCronRule {
     ///   - isRepeating: If the job should keep repeat afterwards
     ///   - tolerence: The accepted tolerence with the firing date
     public init(_ interval: TimeInterval, repeat isRepeating: Bool = false, tolerence: DispatchTimeInterval? = nil) {
-        assert((isRepeating && interval > 0) || !isRepeating)
+        #assert((isRepeating && interval > 0) || !isRepeating)
         repeatRule = isRepeating ? .after(interval.dispatchTimeInterval) : .never
         self.tolerence = tolerence
         self.interval = interval

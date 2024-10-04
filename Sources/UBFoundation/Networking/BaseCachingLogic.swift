@@ -222,7 +222,7 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
 
         // Check Max Age
         if let cacheControlHeader = response.ub_getHeaderField(key: cacheControlHeaderFieldName),
-           let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), let maxAge = cacheControlDirectives.maxAge, let responseDateHearder = response.ub_getHeaderField(key: dateHeaderFieldName), let responseDate = dateFormatter.date(from: responseDateHearder) {
+           let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), let maxAge = cacheControlDirectives.maxAge, let responseDateHeader = response.ub_getHeaderField(key: dateHeaderFieldName), let responseDate = dateFormatter.date(from: responseDateHeader) {
             // cacheAge: Round up to next seconds
             // Rounding is important s.t. re-requests with interval < 1s are not
             // treated differently that requests after > 1s
@@ -246,7 +246,7 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
             }
 
             // If there is no max age neither expires, don't cache
-        } else if let responseDateHearder = response.ub_getHeaderField(key: dateHeaderFieldName), let responseDate = dateFormatter.date(from: responseDateHearder) {
+        } else if let responseDateHeader = response.ub_getHeaderField(key: dateHeaderFieldName), let _ = dateFormatter.date(from: responseDateHeader) {
             // We could do heuristic caching, but behaviour could be unexpected
             return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders), possible: possibleResult, reason: .noCacheHeaders)
 
