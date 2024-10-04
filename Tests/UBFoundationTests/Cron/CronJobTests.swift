@@ -18,7 +18,7 @@ class CronJobTests: XCTestCase {
             ex.fulfill()
         }
         XCTAssertEqual(job.name, "Test Cron")
-        waitForExpectations(timeout: testDuration * 1.1, handler: nil)
+        wait(for: [ex], timeout: testDuration * 1.1)
     }
 
     func testCronInvocationAtDate() {
@@ -30,7 +30,7 @@ class CronJobTests: XCTestCase {
             ex.fulfill()
         }
         XCTAssertEqual(job.name, "Test Cron")
-        waitForExpectations(timeout: testDuration * 1.1, handler: nil)
+        wait(for: [ex], timeout: testDuration * 1.1)
     }
 
     func testCronInvocationOnMainThread() {
@@ -43,7 +43,7 @@ class CronJobTests: XCTestCase {
             ex.fulfill()
         }
         job.callbackQueue = .main
-        waitForExpectations(timeout: testDuration * 1.1, handler: nil)
+        wait(for: [ex], timeout: testDuration * 1.1)
     }
 
     func testCronChangeExecutionBlock() {
@@ -57,7 +57,7 @@ class CronJobTests: XCTestCase {
             XCTAssertGreaterThan(abs(date.timeIntervalSinceNow), testDuration * 0.9)
             ex.fulfill()
         }
-        waitForExpectations(timeout: testDuration * 4, handler: nil)
+        wait(for: [ex], timeout: testDuration * 4)
     }
 
     func testCronIntervalChange() {
@@ -71,7 +71,7 @@ class CronJobTests: XCTestCase {
         }
         job.setFireAfter(newTestDuration)
 
-        waitForExpectations(timeout: newTestDuration * 1.1, handler: nil)
+        wait(for: [ex], timeout: newTestDuration * 1.1)
     }
 
     func testCronDateChange() {
@@ -85,7 +85,7 @@ class CronJobTests: XCTestCase {
         }
         job.setFireAt(Date(timeIntervalSinceNow: newTestDuration))
 
-        waitForExpectations(timeout: newTestDuration * 1.1, handler: nil)
+        wait(for: [ex], timeout: newTestDuration * 1.1)
     }
 
     func testCronDateInPast() {
@@ -94,7 +94,7 @@ class CronJobTests: XCTestCase {
             ex.fulfill()
         }
         XCTAssertEqual(job.name, "Test Cron")
-        waitForExpectations(timeout: 0.05, handler: nil)
+        wait(for: [ex], timeout: 0.05)
     }
 
     func testPause() {
@@ -109,7 +109,7 @@ class CronJobTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: testDuration * 2, handler: nil)
+        wait(for: [ex], timeout: testDuration * 2)
     }
 
     func testPauseAndResumeBeforeDeadline() {
@@ -126,7 +126,7 @@ class CronJobTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: testDuration * 1.1)
     }
 
     func testPauseAndResumeAfterDeadline() {
@@ -144,7 +144,7 @@ class CronJobTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testDeallocation() {
@@ -163,7 +163,7 @@ class CronJobTests: XCTestCase {
             ex.fulfill()
         }
         RunLoop.main.add(t, forMode: .common)
-        waitForExpectations(timeout: testDuration * 2, handler: nil)
+        wait(for: [ex], timeout: testDuration * 2)
     }
 
     func testPausedDeallocation() {
@@ -183,6 +183,6 @@ class CronJobTests: XCTestCase {
             ex.fulfill()
         }
         RunLoop.main.add(t, forMode: .common)
-        waitForExpectations(timeout: testDuration * 2, handler: nil)
+        wait(for: [ex], timeout: testDuration * 2)
     }
 }

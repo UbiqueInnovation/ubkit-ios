@@ -27,7 +27,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testGroupModifiersEmpty() {
@@ -42,7 +42,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testGroupModifiersFailure() {
@@ -60,7 +60,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testGroupModifiersCancel() {
@@ -75,7 +75,7 @@ class HTTPRequestModifierTests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testBasicAuthorization() {
@@ -92,7 +92,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testTokenAuthorization() {
@@ -109,7 +109,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testTokenFailure() {
@@ -124,7 +124,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testAcceptedLanguage() {
@@ -147,7 +147,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 }
 
@@ -157,7 +157,7 @@ private enum Err: Error {
 
 private struct SleeperModifier: UBURLRequestModifier {
     let duration: TimeInterval
-    func modifyRequest(_ request: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
+    func modifyRequest(_ request: UBURLRequest, completion: @escaping @Sendable (Result<UBURLRequest, Error>) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             completion(.success(request))
         }

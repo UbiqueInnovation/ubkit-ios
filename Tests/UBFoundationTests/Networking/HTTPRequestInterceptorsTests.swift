@@ -30,7 +30,7 @@ class HTTPRequestInterceptorsTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testInterceptor() {
@@ -53,12 +53,12 @@ class HTTPRequestInterceptorsTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 }
 
 private struct EmptyInterceptor: UBURLRequestInterceptor {
-    func interceptRequest(_: UBURLRequest, completion: @escaping (UBURLInterceptorResult?) -> Void) {
+    func interceptRequest(_: UBURLRequest, completion: @escaping @Sendable (UBURLInterceptorResult?) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             completion(nil)
         }
@@ -66,7 +66,7 @@ private struct EmptyInterceptor: UBURLRequestInterceptor {
 }
 
 private struct Interceptor: UBURLRequestInterceptor {
-    func interceptRequest(_ request: UBURLRequest, completion: @escaping (UBURLInterceptorResult?) -> Void) {
+    func interceptRequest(_ request: UBURLRequest, completion: @escaping @Sendable (UBURLInterceptorResult?) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             let response = HTTPURLResponse(url: request.url!, statusCode: 401, httpVersion: "1.1", headerFields: nil)
             completion(UBURLInterceptorResult(data: Data(repeating: 1, count: 15), response: response, error: nil, info: nil))

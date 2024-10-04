@@ -202,7 +202,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         // load request again, now request should return 302
         var dataTask3: UBURLDataTask? = UBURLDataTask(url: url, session: session)
-        var seenFetching = false
+        nonisolated(unsafe) var seenFetching = false
         dataTask3?.addStateTransitionObserver { _, to, _ in
             if to == .fetching {
                 seenFetching = true

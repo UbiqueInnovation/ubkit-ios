@@ -127,20 +127,20 @@ class LocalizationTests: XCTestCase {
 
     func testNotifications() {
         let localization = UBLocalization(locale: Locale(identifier: "en"), baseBundle: testBundle, notificationCenter: .default)
-        expectation(forNotification: UBLocalizationNotification.localeWillChange, object: localization) { notification -> Bool in
+        let ex1 = expectation(forNotification: UBLocalizationNotification.localeWillChange, object: localization) { notification -> Bool in
             let old = notification.userInfo?[UBLocalizationNotification.oldLocaleKey] as? Locale
             let new = notification.userInfo?[UBLocalizationNotification.newLocaleKey] as? Locale
             return old?.identifier == "en" && new?.identifier == "fr"
         }
 
-        expectation(forNotification: UBLocalizationNotification.localeDidChange, object: localization) { notification -> Bool in
+        let ex2 = expectation(forNotification: UBLocalizationNotification.localeDidChange, object: localization) { notification -> Bool in
             let old = notification.userInfo?[UBLocalizationNotification.oldLocaleKey] as? Locale
             let new = notification.userInfo?[UBLocalizationNotification.newLocaleKey] as? Locale
             return old?.identifier == "en" && new?.identifier == "fr"
         }
 
         XCTAssertNoThrow(try localization.setLanguage(languageCode: "fr", regionCode: nil, baseLocale: localization.locale, baseBundle: testBundle))
-        waitForExpectations(timeout: 0.1, handler: nil)
+        wait(for: [ex1, ex2], timeout: 0.1)
     }
 
     func testLocaleIsCurrent() {

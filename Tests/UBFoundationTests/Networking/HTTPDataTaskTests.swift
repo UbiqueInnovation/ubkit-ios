@@ -35,7 +35,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testManySynchronousCalls() {
@@ -68,7 +68,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testFailureWithRecoveryRestart() {
@@ -118,7 +118,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1, ex2], timeout: 30)
     }
 
     func testFailureWithRecoveryOptions() {
@@ -173,7 +173,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1, ex2], timeout: 30)
     }
 
     func testCompletionNoData() {
@@ -195,7 +195,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testCompletionRequestModifiers() {
@@ -213,7 +213,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testCompletionJSONData() {
@@ -240,7 +240,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testCompletion() {
@@ -287,7 +287,7 @@ class HTTPDataTaskTests: XCTestCase {
         })
         dataTask.start()
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1, ex2, ex3], timeout: 30)
     }
 
     func testValidation() {
@@ -309,7 +309,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testValidationBlock() {
@@ -334,7 +334,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testValidationList() {
@@ -360,7 +360,7 @@ class HTTPDataTaskTests: XCTestCase {
             ex1.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testStateChange() {
@@ -392,7 +392,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1, ex2, ex3, ex4], timeout: 30)
     }
 
     func testProgress() {
@@ -408,7 +408,7 @@ class HTTPDataTaskTests: XCTestCase {
         let dataTask = UBURLDataTask(request: request, session: mockSession)
         XCTAssertEqual(dataTask.progress.fractionCompleted, 0)
 
-        var progressTracker: Double = -1
+        nonisolated(unsafe) var progressTracker: Double = -1
         dataTask.addProgressObserver { _, progress in
             XCTAssertLessThan(progressTracker, progress)
             progressTracker = progress
@@ -417,7 +417,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1], timeout: 30)
     }
 
     func testCancelBeforeTaskExecute() {
@@ -465,7 +465,7 @@ class HTTPDataTaskTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1, ex2], timeout: 30)
         XCTAssertEqual(dataTask.state, .cancelled)
         XCTAssertEqual(dataTask.progress.fractionCompleted, 0)
     }
@@ -504,7 +504,7 @@ class HTTPDataTaskTests: XCTestCase {
             XCTFail()
         }
 
-        var pTracker: Double = -1
+        nonisolated(unsafe) var pTracker: Double = -1
         dataTask.addProgressObserver { _, progress in
             XCTAssertLessThan(pTracker, progress)
             pTracker = progress
@@ -530,7 +530,7 @@ class HTTPDataTaskTests: XCTestCase {
         }
         RunLoop.main.add(t, forMode: .common)
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [exProg, ex1, ex2, ex3], timeout: 30)
         XCTAssertEqual(dataTask.state, .cancelled)
         XCTAssertEqual(dataTask.progress.fractionCompleted, 0)
     }
@@ -557,6 +557,7 @@ class HTTPDataTaskTests: XCTestCase {
     }
 
     func testDeallocation() {
+        nonisolated(unsafe) var ex: XCTestExpectation!
         autoreleasepool {
             let request = UBURLRequest(url: url)
             let expectedResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
@@ -564,8 +565,8 @@ class HTTPDataTaskTests: XCTestCase {
                 URLSessionDataTaskMock.Configuration(data: nil, response: expectedResponse, error: nil, idleWaitTime: nil, latency: nil, transferDuration: 0.5, progressUpdateCount: 10)
             }
 
-            var dataTask: UBURLDataTask? = UBURLDataTask(request: request, session: mockSession)
-            weak var ref = dataTask
+            nonisolated(unsafe) var dataTask: UBURLDataTask? = UBURLDataTask(request: request, session: mockSession)
+            nonisolated(unsafe) weak var ref = dataTask
 
             dataTask!.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
                 XCTFail()
@@ -573,7 +574,7 @@ class HTTPDataTaskTests: XCTestCase {
 
             dataTask!.start()
 
-            let ex = expectation(description: "Waiting")
+            ex = expectation(description: "Waiting")
             let t = Timer(timeInterval: 0.25, repeats: false) { _ in
                 autoreleasepool {
                     XCTAssertNotEqual(dataTask!.state, .initial)
@@ -589,7 +590,7 @@ class HTTPDataTaskTests: XCTestCase {
             RunLoop.main.add(t, forMode: .common)
         }
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testOperatinoQueue() {
@@ -642,6 +643,6 @@ class HTTPDataTaskTests: XCTestCase {
 
         dataTask.start()
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex1, ex2, ex3, ex4, ex5], timeout: 30)
     }
 }
