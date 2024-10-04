@@ -1,6 +1,6 @@
 //
 //  UBMacroPlugin.swift
-//  
+//
 //
 //  Created by Matthias Felix on 20.09.2023.
 //
@@ -16,6 +16,6 @@ struct UBMacroPlugin: CompilerPlugin {
         PrintMacro.self,
         PrintErrorMacro.self,
         AssertMacro.self,
-        AssertionFailureMacro.self
+        AssertionFailureMacro.self,
     ]
 }

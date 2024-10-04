@@ -1,6 +1,6 @@
 //
 //  URLMacro.swift
-//  
+//
 //
 //  Created by Matthias Felix on 20.09.2023.
 //
@@ -11,12 +11,11 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 public struct URLMacro: ExpressionMacro {
-    public static func expansion<Node, Context>(of node: Node, in context: Context) throws -> ExprSyntax where Node : FreestandingMacroExpansionSyntax, Context : MacroExpansionContext {
-
+    public static func expansion(of node: some FreestandingMacroExpansionSyntax, in context: some MacroExpansionContext) throws -> ExprSyntax {
         guard let argument = node.argumentList.first?.expression,
               let segments = argument.as(StringLiteralExprSyntax.self)?.segments,
               segments.count == 1,
-              case .stringSegment(let literalSegment) = segments.first else {
+              case let .stringSegment(literalSegment) = segments.first else {
             throw CustomError.message("#URL requires a static string literal")
         }
 
@@ -27,5 +26,3 @@ public struct URLMacro: ExpressionMacro {
         return "URL(string: \(argument))!"
     }
 }
-
-

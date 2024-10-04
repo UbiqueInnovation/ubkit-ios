@@ -5,7 +5,6 @@
 //  Created by Nicolas Märki on 12.09.2024.
 //
 
-
 import UBFoundation
 import XCTest
 
@@ -52,14 +51,11 @@ class MacroTests: XCTestCase {
             exp.fulfill()
         }
 
-
         _PrintMacro.disableAssertionFailure = true
-        
+
         #assertionFailure("Failed")
         #assertionFailure()
 
         wait(for: [exp])
     }
 }
-
-

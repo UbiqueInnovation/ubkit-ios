@@ -1,5 +1,5 @@
 //
-//  Macros.swift
+//  PrintMacros.swift
 //  UBKit
 //
 //  Created by Nicolas Märki on 12.09.2024.
@@ -7,9 +7,9 @@
 
 // Uncomment the following line and copy this file to your project
 
-
 import Foundation
 import os
+
 // import UBFoundation
 
 // typealias _PrintMacro = UBFoundation._PrintMacro
@@ -56,4 +56,3 @@ public func assert(_ condition: @autoclosure () -> Bool, _ message: @autoclosure
 public func assertionFailure(_ message: @autoclosure () -> String = String(), file: StaticString = #file, line: UInt = #line) {
     Swift.assertionFailure(message(), file: file, line: line)
 }
-

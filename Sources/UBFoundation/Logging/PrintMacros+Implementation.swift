@@ -1,5 +1,5 @@
 //
-//  LoggingMacros+Shadowing.swift
+//  PrintMacros+Implementation.swift
 //  UBKit
 //
 //  Created by Nicolas Märki on 12.09.2024.
@@ -28,20 +28,19 @@ public struct _PrintMacro {
         return message // allows nesting sendError ins os_log statements
     }
 
-    public static func assert(_ condition: Bool, _ handler: ()->Void) {
+    public static func assert(_ condition: Bool, _ handler: () -> Void) {
         if !condition {
             handler()
-            if !Self.disableAssertionFailure {
+            if !disableAssertionFailure {
                 Swift.assertionFailure()
             }
         }
     }
 
-    public static func assertionFailure(_ handler: ()->Void) {
+    public static func assertionFailure(_ handler: () -> Void) {
         handler()
-        if !Self.disableAssertionFailure {
+        if !disableAssertionFailure {
             Swift.assertionFailure()
         }
     }
 }
-
