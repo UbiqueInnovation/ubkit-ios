@@ -139,8 +139,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// :nodoc:
     deinit {
-        dataTaskProgressObservation?.invalidate()
-        dataTaskProgressObservation = nil
+        dataTaskProgressObservationDispatchQueue.sync {
+            dataTaskProgressObservation?.invalidate()
+            dataTaskProgressObservation = nil
+        }
         dataTaskStateObservationQueue.sync {
             dataTaskStateObservation?.invalidate()
             dataTaskStateObservation = nil
@@ -242,13 +244,15 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         requestStartSemaphore.wait()
 
         // Observe the task progress
-        self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-            guard let self else {
-                return
-            }
+        dataTaskProgressObservationDispatchQueue.sync {
+            self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
+                guard let self else {
+                    return
+                }
 
-            self.notifyProgress(task.progress.fractionCompleted)
-        })
+                self.notifyProgress(task.progress.fractionCompleted)
+            })
+        }
 
         // Observe the task state
         let observation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
@@ -282,7 +286,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// Cancel the current request
     public func cancel(notifyCompletion: Bool) {
         requestStartSemaphore.wait()
-        dataTaskProgressObservation = nil
+        dataTaskProgressObservationDispatchQueue.sync {
+            dataTaskProgressObservation = nil
+        }
         dataTaskStateObservationQueue.sync {
             dataTaskStateObservation = nil
         }
@@ -463,7 +469,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 default:
                     let errorMessage = "Invalid state transition from \(_state) -> \(newValue)"
                     assertionFailure(errorMessage)
-                    UBNonFatalErrorReporter.report(NSError(domain: "UBURLDataTask", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
+                    UBNonFatalErrorReporter.shared.report(NSError(domain: "UBURLDataTask", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
             }
         }
         didSet {
@@ -510,6 +516,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// A progress observation block. The second paramter is the percentage of completion, between 0.00 and 1.00
     public typealias ProgressObservationBlock = @Sendable (UBURLDataTask, Double) -> Void
+    /// :nodoc:
+    private let dataTaskProgressObservationDispatchQueue = DispatchQueue(label: "Task Progress Observation")
     /// The progress observation holder
     private nonisolated(unsafe) var dataTaskProgressObservation: NSKeyValueObservation?
     /// :nodoc:
