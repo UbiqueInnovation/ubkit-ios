@@ -32,7 +32,7 @@ public final class UBFriendlyEvaluator: UBServerTrustEvaluator {
     }
 }
 
-public extension Networking {
+public extension UBURLSession {
     /// This is a copy of the sharedSession including the proxy and friendly trust settings
     @MainActor
     static let friendlySharedSession: UBURLSession = {
