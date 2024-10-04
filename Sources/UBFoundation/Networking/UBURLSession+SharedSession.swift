@@ -1,5 +1,5 @@
 //
-//  GlobalNetworking.swift
+//  UBURLSession+SharedSession.swift
 //  UBFoundation
 //
 //  Created by Joseph El Mallah on 31.03.19.
@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Network Activity
 
 /// A name space for networking
-public enum Networking {
+public extension UBURLSession {
     // MARK: - Shared sessions
 
     /// A shared session that has a priority of responsive data. Useful for user initiated requests.
