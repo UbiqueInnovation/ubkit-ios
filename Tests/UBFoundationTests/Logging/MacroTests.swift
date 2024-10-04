@@ -17,15 +17,15 @@ class MacroTests: XCTestCase {
         #print("Test = \(variable, privacy: .public)")
     }
 
-    func testError() {
+    func testError() async {
         let exp = expectation(description: "Failed")
-        UBNonFatalErrorReporter.handler = { _ in
+        await UBNonFatalErrorReporter.shared.setHandler { _ in
             exp.fulfill()
         }
 
         #printError("Failed to not fail")
 
-        wait(for: [exp])
+        await fulfillment(of: [exp])
     }
 
     func testAssertTrue() {
@@ -33,21 +33,21 @@ class MacroTests: XCTestCase {
         #assert(true)
     }
 
-    func testAssertFalse() {
+    func testAssertFalse() async {
         let exp = expectation(description: "Failed")
-        UBNonFatalErrorReporter.handler = { _ in
+        await UBNonFatalErrorReporter.shared.setHandler { _ in
             exp.fulfill()
         }
         _PrintMacro.disableAssertionFailure = true
         #assert(false, "Test")
 
-        wait(for: [exp])
+        await fulfillment(of: [exp])
     }
 
-    func testAssertionFailure() {
+    func testAssertionFailure() async {
         let exp = expectation(description: "Failed")
         exp.expectedFulfillmentCount = 2
-        UBNonFatalErrorReporter.handler = { _ in
+        await UBNonFatalErrorReporter.shared.setHandler { _ in
             exp.fulfill()
         }
 
@@ -56,6 +56,6 @@ class MacroTests: XCTestCase {
         #assertionFailure("Failed")
         #assertionFailure()
 
-        wait(for: [exp])
+        await fulfillment(of: [exp])
     }
 }

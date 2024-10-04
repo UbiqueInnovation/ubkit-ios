@@ -1,0 +1,26 @@
+name: Run SwiftFormat
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  swiftformat:
+    name: swiftformat
+    runs-on: ["self-hosted", "macOS"]
+    steps:
+      - name: Install Swiftformat
+        run: brew install swiftformat
+      - name: Run Swiftformat
+        run: swiftformat .
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "[Generated] SwiftFormat"
+          add-paths: |
+            *.swift
+          branch: "generated/swiftformat"
+          delete-branch: true
+          title: "[Generated] SwiftFormat"
+          body: "This action automatically runs [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) on the project. Check the changes and merge them!"

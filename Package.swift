@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import CompilerPluginSupport
@@ -8,9 +8,9 @@ let package = Package(
     name: "UBKit",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v13),
-        .watchOS(.v5),
-        .macOS(.v10_15),
+        .iOS(.v14),
+        .watchOS(.v7),
+		.macOS(.v10_15),
     ],
     products: [
         .library(name: "UBFoundation", targets: ["UBFoundation"]),
@@ -25,18 +25,51 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-syntax", .upToNextMajor(from: "509.0.0")),
     ],
     targets: [
-        .target(name: "UBFoundation", dependencies: ["UBMacros"]),
-        .target(name: "UBUserInterface", dependencies: ["UBFoundation"]),
-        .target(name: "UBLocation", dependencies: ["UBFoundation"]),
-        .target(name: "UBPush", dependencies: ["UBFoundation"]),
-        .target(name: "UBQRScanner"),
-        .target(name: "UBDevTools", dependencies: ["UBFoundation"]),
-
-        .macro(name: "UBMacros", dependencies: [
+        .target(
+            name: "UBFoundation",
+			dependencies: ["UBMacros"],
+            swiftSettings: [
+                .swiftLanguageVersion(.v6),
+            ]
+        ),
+        .target(
+            name: "UBUserInterface",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .swiftLanguageVersion(.v6),
+            ]
+        ),
+        .target(
+            name: "UBLocation",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .swiftLanguageVersion(.v6),
+            ]
+        ),
+        .target(
+            name: "UBPush",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .swiftLanguageVersion(.v6),
+            ]
+        ),
+        .target(
+            name: "UBQRScanner",
+            swiftSettings: [
+                .swiftLanguageVersion(.v6),
+            ]
+        ),
+        .target(
+            name: "UBDevTools",
+            dependencies: ["UBFoundation"],
+            swiftSettings: [
+                .swiftLanguageVersion(.v6),
+            ]
+        ),
+		.macro(name: "UBMacros", dependencies: [
             .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
             .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
         ]),
-
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
                     resources: [

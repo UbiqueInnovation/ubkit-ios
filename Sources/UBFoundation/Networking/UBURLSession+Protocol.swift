@@ -20,7 +20,7 @@ public protocol UBURLSessionProtocol {
     /// Empties all cookies, caches and credential stores, removes disk files, flushes in-progress downloads to disk, and ensures that future requests occur on a new socket.
     ///
     /// - Parameter completionHandler: The completion handler to call when the reset operation is complete. This handler is executed on the delegate queue.
-    func reset(completionHandler: @escaping () -> Void)
+    func reset(completionHandler: @Sendable @escaping () -> Void)
 }
 
 /// A data task capable session

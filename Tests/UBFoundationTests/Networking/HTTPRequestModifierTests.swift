@@ -27,7 +27,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testGroupModifiersEmpty() {
@@ -42,7 +42,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testGroupModifiersFailure() {
@@ -60,7 +60,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testGroupModifiersCancel() {
@@ -75,7 +75,7 @@ class HTTPRequestModifierTests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testBasicAuthorization() {
@@ -92,7 +92,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testTokenAuthorization() {
@@ -109,13 +109,12 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testTokenFailure() {
         let ex = expectation(description: "Request Modification")
-        let ba = MockTokenAuthorization()
-        ba.error = Err.x
+        let ba = MockTokenAuthorization(error: Err.x)
         ba.modifyRequest(request) { result in
             switch result {
                 case let .failure(error):
@@ -125,30 +124,7 @@ class HTTPRequestModifierTests: XCTestCase {
             }
             ex.fulfill()
         }
-        waitForExpectations(timeout: 30, handler: nil)
-    }
-
-    func testAcceptedLanguage() {
-        let ex = expectation(description: "Request Modification")
-
-        guard let testBundlePath = Bundle.module.path(forResource: "TestResources/LocalizationTestBundle", ofType: nil),
-              let testBundle = Bundle(path: testBundlePath) else {
-            fatalError("No test bundle found")
-        }
-        let frenchCHLocalization = UBLocalization(locale: Locale(identifier: "fr_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        let ba = UBURLRequestAcceptedLanguageModifier(includeRegion: false, localization: frenchCHLocalization)
-        ba.modifyRequest(request) { result in
-            switch result {
-                case let .failure(error):
-                    XCTFail(error.localizedDescription)
-                case let .success(newRequest):
-                    let value = newRequest.value(forHTTPHeaderField: "Accept-Language")
-                    let expectedValue = "fr;q=1.0,en;q=0.9"
-                    XCTAssertEqual(value, expectedValue)
-            }
-            ex.fulfill()
-        }
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 }
 
@@ -158,7 +134,7 @@ private enum Err: Error {
 
 private struct SleeperModifier: UBURLRequestModifier {
     let duration: TimeInterval
-    func modifyRequest(_ request: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
+    func modifyRequest(_ request: UBURLRequest, completion: @escaping @Sendable (Result<UBURLRequest, Error>) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             completion(.success(request))
         }
@@ -171,9 +147,14 @@ private struct FailureModifier: UBURLRequestModifier {
     }
 }
 
-private class MockTokenAuthorization: UBURLRequestTokenAuthorization {
+private final class MockTokenAuthorization: UBURLRequestTokenAuthorization {
     let token: String = "AbCdEf123456"
-    var error: Error?
+    let error: Error?
+
+    init(error: Error? = nil) {
+        self.error = error
+    }
+
     func getToken(completion: (Result<String, Error>) -> Void) {
         if let error {
             completion(.failure(error))

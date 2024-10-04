@@ -6,6 +6,7 @@
 --indentcase true
 --ifdef outdent
 --disable preferForLoop
+--disable preferKeyPath
 
 # Don't format generated files
 --exclude **/*Generated.swift

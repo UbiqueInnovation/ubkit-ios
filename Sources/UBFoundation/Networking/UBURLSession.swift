@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object that coordinates a group of related network data transfer tasks.
-public class UBURLSession: UBDataTaskURLSession {
+public final class UBURLSession: UBDataTaskURLSession, Sendable {
     /// The underlying session
     public let urlSession: URLSession
 
@@ -29,7 +29,7 @@ public class UBURLSession: UBDataTaskURLSession {
         let sessionDelegate = UBURLSessionDelegate(configuration: configuration)
         urlSession = URLSession(configuration: configuration.sessionConfiguration, delegate: sessionDelegate, delegateQueue: queue)
         self.sessionDelegate = sessionDelegate
-        sessionDelegate.urlSession = urlSession
+        sessionDelegate.setSession(urlSession)
     }
 
     /// :nodoc:
@@ -130,7 +130,7 @@ public class UBURLSession: UBDataTaskURLSession {
     }
 
     /// :nodoc:
-    public func reset(completionHandler: @escaping () -> Void) {
+    public func reset(completionHandler: @escaping @Sendable () -> Void) {
         urlSession.reset(completionHandler: completionHandler)
     }
 }

@@ -7,18 +7,19 @@
 
 import Foundation
 
+@MainActor
 public enum UBDeviceUUID {
     public static func getUUID() -> String {
-        if let uuid = keychainDeviecUUID {
+        if let uuid = keychainDeviceUUID {
             return uuid
         } else {
             let uuid = UUID().uuidString
-            keychainDeviecUUID = uuid
+            keychainDeviceUUID = uuid
             return uuid
         }
     }
 
     /// The push token UUID for this device stored in the Keychain
     @UBKeychainStored(key: "UBDeviceUUID", defaultValue: nil, accessibility: .whenUnlockedThisDeviceOnly)
-    private static var keychainDeviecUUID: String?
+    private static var keychainDeviceUUID: String?
 }

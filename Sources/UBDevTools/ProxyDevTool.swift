@@ -8,6 +8,7 @@
 import UBFoundation
 import UIKit
 
+@MainActor
 class UBDevToolsProxyHelper {
     static let shared = UBDevToolsProxyHelper()
 
@@ -25,17 +26,17 @@ class UBDevToolsProxyHelper {
     }
 }
 
-public class UBFriendlyEvaluator: UBServerTrustEvaluator {
+public final class UBFriendlyEvaluator: UBServerTrustEvaluator {
     public func evaluate(_ trust: SecTrust, forHost host: String) throws {
         // on purpose not throwing, we allow it all
     }
 }
 
-@available(iOS 14.0, *)
-public extension Networking {
+public extension UBURLSession {
     /// This is a copy of the sharedSession including the proxy and friendly trust settings
+    @MainActor
     static let friendlySharedSession: UBURLSession = {
-        guard DevToolsView.enableNetworkingProxySettings else { return Networking.sharedSession }
+        guard DevToolsView.enableNetworkingProxySettings else { return UBURLSession.sharedSession }
 
         let queue = OperationQueue()
         queue.name = "Friendly UBURLSession Shared"

@@ -19,10 +19,10 @@ public struct _PrintMacro {
 
     // Assertion Failure can be disabled
     // Useful for unit tests to avoid crash
-    public static var disableAssertionFailure = false
+    nonisolated(unsafe) public static var disableAssertionFailure = false
 
     public static func sendError(_ message: String, file: String = #file, line: Int = #line) -> String {
-        UBNonFatalErrorReporter.report(NSError(domain: (file as NSString).lastPathComponent,
+        UBNonFatalErrorReporter.shared.report(NSError(domain: (file as NSString).lastPathComponent,
                                                code: line,
                                                userInfo: [NSDebugDescriptionErrorKey: message]))
         return message // allows nesting sendError ins os_log statements

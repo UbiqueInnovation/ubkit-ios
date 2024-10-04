@@ -16,10 +16,12 @@ import AppKit
 import Foundation
 
 extension UBURLRequest {
+    @MainActor
     public mutating func setDefaultUserAgent() {
         setHTTPHeaderField(UBHTTPHeaderField(key: .userAgent, value: UBURLRequest.userAgent))
     }
 
+    @MainActor
     static var userAgent: String {
         let bundleId = Bundle.bundleId
         let appVersion = Bundle.appVersion

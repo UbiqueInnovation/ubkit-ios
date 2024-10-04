@@ -8,7 +8,6 @@
 import UBFoundation
 import UIKit
 
-@available(iOS 14.0, *)
 class FingerTipsDevTools: DevTool {
     private static var overlayWindow: FingerTipsWindow?
     private static var notificationHelper: NotificationHelper?
@@ -56,10 +55,9 @@ class FingerTipsDevTools: DevTool {
 }
 
 private class NotificationHelper {
+    @MainActor
     @objc public func setupFingerTips() {
-        if #available(iOS 14.0, *) {
-            FingerTipsDevTools.setupFingerTips()
-            NotificationCenter.default.removeObserver(self)
-        }
+        FingerTipsDevTools.setupFingerTips()
+        NotificationCenter.default.removeObserver(self)
     }
 }

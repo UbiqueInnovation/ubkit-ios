@@ -22,7 +22,7 @@ class HTTPResponseValidatorTests: XCTestCase {
         let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
         XCTAssertNoThrow(try validator.validateHTTPResponse(response))
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testBlockFail() {
@@ -36,7 +36,7 @@ class HTTPResponseValidatorTests: XCTestCase {
         let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)!
         XCTAssertThrowsError(try validator.validateHTTPResponse(response))
 
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testMIME() {

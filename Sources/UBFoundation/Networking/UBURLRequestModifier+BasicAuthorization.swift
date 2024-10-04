@@ -8,12 +8,12 @@
 import Foundation
 
 /// A basic authorization of login and password
-public class UBURLRequestBasicAuthorization: UBURLRequestModifier {
+public final class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     /// :nodoc:
     private let serial = DispatchQueue(label: "Basic Authorization")
 
     /// :nodoc:
-    private var _login: String
+    private nonisolated(unsafe) var _login: String
     /// The login details
     public var login: String {
         serial.sync {
@@ -22,7 +22,7 @@ public class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    private var _password: String
+    private nonisolated(unsafe) var _password: String
     /// The password
     public var password: String {
         serial.sync {

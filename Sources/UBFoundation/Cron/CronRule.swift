@@ -8,7 +8,7 @@
 import Foundation
 
 /// A rule for firing a cron job
-public protocol UBCronRule {
+public protocol UBCronRule: Sendable {
     /// The rule to apply for repetition
     var repeatRule: UBCronRepeatRule { get }
     /// The deadline at which the job should fire after
@@ -18,7 +18,7 @@ public protocol UBCronRule {
 }
 
 /// The rule for repeating jobs
-public enum UBCronRepeatRule: Equatable {
+public enum UBCronRepeatRule: Equatable, Sendable {
     /// Never repeat. This is a one time job
     case never
     /// Repeating job after a time interval
