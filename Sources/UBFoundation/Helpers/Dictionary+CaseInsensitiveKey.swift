@@ -74,7 +74,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
     }
 }
 
-extension Dictionary where Key == String, Value == String {
+extension [String: String] {
     /// Returns the value associated with the passed key by comparing using case insensitive option
     /// - Parameter key: The key to fetch it's value
     /// - Returns: The value associated with the passed key

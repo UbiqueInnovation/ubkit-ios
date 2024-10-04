@@ -36,7 +36,7 @@ class DevToolsLogExtractor: ObservableObject {
     }
 
     func fetchEntries() {
-        guard let store = store else {
+        guard let store else {
             return
         }
 

@@ -448,6 +448,7 @@ public class UBLocationManager: NSObject {
         switch authStatus {
             case .authorizedAlways:
                 callback(.success)
+
             case .authorizedWhenInUse:
                 guard minimumAuthorizationLevelRequired == .whenInUse else {
                     // can only ask once
@@ -463,6 +464,7 @@ public class UBLocationManager: NSObject {
                 }
 
                 callback(.success)
+
             case .denied, .restricted:
                 callback(.showSettings)
 
@@ -517,7 +519,7 @@ public class UBLocationManager: NSObject {
         locationTimer?.invalidate()
         locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] _ in
             MainActor.assumeIsolated {
-                guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
+                guard let self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
                 self.timedOut = true
 
                 self.notifyDelegates(withLocations: [location])
@@ -533,7 +535,7 @@ public class UBLocationManager: NSObject {
 
             return Timer.scheduledTimer(withTimeInterval: time, repeats: false, block: { [weak self, weak delegate] _ in
                 MainActor.assumeIsolated {
-                    guard let self = self, let delegate = delegate else { return }
+                    guard let self, let delegate else { return }
 
                     let lastState = self.lastDelegateFreshState[ObjectIdentifier(delegate), default: true]
                     if lastState != false {
@@ -566,7 +568,7 @@ public class UBLocationManager: NSObject {
 }
 
 extension UBLocationManager: CLLocationManagerDelegate {
-    nonisolated public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
+    public nonisolated func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
         MainActor.assumeIsolated {
             authorizationStatus = authorization
             logLocationPermissionChange?(authorization)
@@ -598,14 +600,14 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
-    nonisolated public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public nonisolated func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         MainActor.assumeIsolated {
             // remove invalid locations
             let results: [CLLocation] = locations.filter { location -> Bool in
                 // A negative value indicates that the latitude and longitude are invalid
                 location.horizontalAccuracy >= 0 &&
-                // GPS  may return 0 to indicate no location
-                location.coordinate.latitude != 0 && location.coordinate.longitude != 0
+                    // GPS  may return 0 to indicate no location
+                    location.coordinate.latitude != 0 && location.coordinate.longitude != 0
             }
 
             if !results.isEmpty {
@@ -644,7 +646,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
-    nonisolated public func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
+    public nonisolated func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
         MainActor.assumeIsolated {
             for delegate in delegates(onlyActive: true, usage: [.visits]) {
                 delegate.locationManager(self, didVisit: visit)
@@ -652,7 +654,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
-    nonisolated public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+    public nonisolated func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         MainActor.assumeIsolated {
             for delegate in regionDelegates {
                 delegate.locationManager(self, didEnterRegion: region)
@@ -660,7 +662,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
-    nonisolated public func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+    public nonisolated func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         MainActor.assumeIsolated {
             for delegate in regionDelegates {
                 delegate.locationManager(self, didExitRegion: region)
@@ -668,7 +670,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
-    nonisolated public func locationManager(_: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+    public nonisolated func locationManager(_: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         MainActor.assumeIsolated {
             lastHeading = newHeading
             for delegate in delegates(onlyActive: true, usage: [.foregroundHeading, .backgroundHeading]) {
@@ -677,7 +679,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
-    nonisolated public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
+    public nonisolated func locationManager(_: CLLocationManager, didFailWithError error: Error) {
         MainActor.assumeIsolated {
             // This might be some temporary error. Just report it but do not stop
             // monitoring as it could be some temporary error and we just have to
@@ -729,7 +731,7 @@ public extension UBLocationManager {
     }
 }
 
-extension Set where Element == UBLocationManager.LocationMonitoringUsage {
+extension Set<UBLocationManager.LocationMonitoringUsage> {
     /// :nodoc:
     var containsRegions: Bool {
         for element in self {
@@ -753,9 +755,9 @@ extension Set where Element == UBLocationManager.LocationMonitoringUsage {
     /// :nodoc:
     var minimumAuthorizationLevelRequired: UBLocationManager.AuthorizationLevel {
         if requiresBackgroundUpdates {
-            return .always
+            .always
         } else {
-            return .whenInUse
+            .whenInUse
         }
     }
 

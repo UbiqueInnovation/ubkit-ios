@@ -14,7 +14,7 @@ public final class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy 
     /// :nodoc:
     private let serialStrategies = DispatchQueue(label: "Failure Recovery Strategies")
     /// :nodoc:
-    nonisolated(unsafe) private var _strategies: [UBNetworkingTaskRecoveryStrategy]
+    private nonisolated(unsafe) var _strategies: [UBNetworkingTaskRecoveryStrategy]
     /// The list of recovery strategies in the group
     public var strategies: [UBNetworkingTaskRecoveryStrategy] {
         serialStrategies.sync {
@@ -48,7 +48,7 @@ public final class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy 
     /// :nodoc:
     private let serialOperation = DispatchQueue(label: "Failure Recovery Operation")
     /// :nodoc:
-    nonisolated(unsafe) private var currentRecovery: Recovery?
+    private nonisolated(unsafe) var currentRecovery: Recovery?
     /// Cancels the ongowing recovery
     public func cancelCurrentRecovery() {
         serialOperation.sync {

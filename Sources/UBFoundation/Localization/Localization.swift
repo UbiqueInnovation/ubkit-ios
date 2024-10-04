@@ -91,7 +91,7 @@ public extension UBLocalization {
         var localeComponents: [String: String] = Locale.components(fromIdentifier: baseLocale.identifier)
         localeComponents[NSLocale.Key.languageCode.rawValue] = languageCode
 
-        if let regionCode = regionCode {
+        if let regionCode {
             localeComponents[NSLocale.Key.countryCode.rawValue] = regionCode
         } else {
             localeComponents.removeValue(forKey: NSLocale.Key.countryCode.rawValue)

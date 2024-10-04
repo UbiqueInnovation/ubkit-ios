@@ -50,7 +50,7 @@ public struct UBCacheResponseDirective: Hashable {
     }
 }
 
-public extension Array where Element == UBCacheResponseDirective {
+public extension [UBCacheResponseDirective] {
     /// Initializes and array of cache control commands from a cache control header string
     ///
     /// - Parameter cacheControlHeader: The cache control header string

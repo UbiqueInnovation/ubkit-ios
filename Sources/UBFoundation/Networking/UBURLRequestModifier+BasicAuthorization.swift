@@ -13,7 +13,7 @@ public final class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     private let serial = DispatchQueue(label: "Basic Authorization")
 
     /// :nodoc:
-    nonisolated(unsafe) private var _login: String
+    private nonisolated(unsafe) var _login: String
     /// The login details
     public var login: String {
         serial.sync {
@@ -22,7 +22,7 @@ public final class UBURLRequestBasicAuthorization: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    nonisolated(unsafe) private var _password: String
+    private nonisolated(unsafe) var _password: String
     /// The password
     public var password: String {
         serial.sync {

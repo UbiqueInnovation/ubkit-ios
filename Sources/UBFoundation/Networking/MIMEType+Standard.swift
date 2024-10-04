@@ -138,11 +138,10 @@ public extension UBMIMEType {
     /// - Parameter charset: The charset of the text
     /// - Returns: A Text plain MIME
     static func text(encoding: String.Encoding? = nil) -> UBMIMEType {
-        let parameter: Parameter?
-        if let encoding = encoding {
-            parameter = Parameter(charsetForEncoding: encoding)
+        let parameter: Parameter? = if let encoding {
+            Parameter(charsetForEncoding: encoding)
         } else {
-            parameter = nil
+            nil
         }
         return UBMIMEType(type: .text, subtype: "plain", parameter: parameter)
     }

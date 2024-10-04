@@ -80,11 +80,11 @@ public final class UBURLSession: UBDataTaskURLSession, Sendable {
                  let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
                  let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
                  let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
-                #if os(watchOS)
-                    let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
-                #else
-                    let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
-                #endif
+#if os(watchOS)
+                let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
+#else
+                let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
+#endif
 
                 owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
                 owner.completionHandlersDispatchQueue.sync {

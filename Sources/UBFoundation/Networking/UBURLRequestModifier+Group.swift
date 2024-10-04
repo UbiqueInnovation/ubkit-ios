@@ -14,7 +14,7 @@ public final class UBURLRequestModifierGroup: UBURLRequestModifier {
     /// :nodoc:
     private let serialModifiers = DispatchQueue(label: "Group Modifiers")
     /// :nodoc:
-    nonisolated(unsafe) private var _modifiers: [UBURLRequestModifier]
+    private nonisolated(unsafe) var _modifiers: [UBURLRequestModifier]
     /// The list of modifier in the group
     public var modifiers: [UBURLRequestModifier] {
         serialModifiers.sync {
@@ -57,7 +57,7 @@ public final class UBURLRequestModifierGroup: UBURLRequestModifier {
     /// :nodoc:
     private let serialOperation = DispatchQueue(label: "Group Modifiers Operation")
     /// :nodoc:
-    nonisolated(unsafe) private var currentModification: Modification?
+    private nonisolated(unsafe) var currentModification: Modification?
     /// Cancels the ongowing modification
     public func cancelCurrentModification() {
         serialOperation.sync {
@@ -105,7 +105,7 @@ extension UBURLRequestModifierGroup {
         /// :nodoc
         private let serial = DispatchQueue(label: "Group Modifiers Modification Object")
         /// :nodoc
-        nonisolated(unsafe) private var _cancelled: Bool = false
+        private nonisolated(unsafe) var _cancelled: Bool = false
         /// :nodoc
         var cancelled: Bool {
             get {

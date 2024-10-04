@@ -29,13 +29,13 @@ public final class UBCronJob: Sendable {
         public var debugDescription: String {
             switch self {
                 case .initial:
-                    return "Initial"
+                    "Initial"
                 case .resumed:
-                    return "Resumed"
+                    "Resumed"
                 case .paused:
-                    return "Paused"
+                    "Paused"
                 case .finished:
-                    return "Finished"
+                    "Finished"
             }
         }
     }
@@ -49,11 +49,11 @@ public final class UBCronJob: Sendable {
     /// Syncronization
     private let serialQueue: DispatchQueue
     /// Internal GCD Timer with the corresponding fire mode
-    nonisolated(unsafe) private var timer: DispatchSourceTimer?
+    private nonisolated(unsafe) var timer: DispatchSourceTimer?
     /// Current rule
-    nonisolated(unsafe) private var rule: UBCronRule?
+    private nonisolated(unsafe) var rule: UBCronRule?
     /// The state of the Job
-    nonisolated(unsafe) public private(set) var state: State = .initial {
+    public private(set) nonisolated(unsafe) var state: State = .initial {
         willSet {
             assert(state != newValue)
         }
@@ -63,7 +63,7 @@ public final class UBCronJob: Sendable {
     public let name: String?
 
     /// The backing data for the callback queue
-    nonisolated(unsafe) private weak var _callbackQueue: OperationQueue?
+    private nonisolated(unsafe) weak var _callbackQueue: OperationQueue?
 
     /// The callback queue for the execution Block. If non is specified then it is executed on a secondary thread with the same Quality of service as the Cron Job.
     public var callbackQueue: OperationQueue? {
@@ -82,7 +82,7 @@ public final class UBCronJob: Sendable {
     }
 
     /// The backing execution block
-    nonisolated(unsafe) private var _executionBlock: ExecutionBlock
+    private nonisolated(unsafe) var _executionBlock: ExecutionBlock
 
     /// The block to be executed by the job when fired
     public var executionBlock: ExecutionBlock {
@@ -200,7 +200,7 @@ public final class UBCronJob: Sendable {
     /// Resume or start an initial or paused job
     public func resume() {
         serialQueue.sync {
-            guard let timer = timer else {
+            guard let timer else {
                 return
             }
             if state == .paused || state == .initial {
@@ -238,7 +238,7 @@ extension UBCronJob {
         }
 
         timer.setEventHandler { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
 

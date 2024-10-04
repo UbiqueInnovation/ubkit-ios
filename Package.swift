@@ -25,41 +25,41 @@ let package = Package(
         .target(
             name: "UBFoundation",
             swiftSettings: [
-                .swiftLanguageVersion(.v6)
+                .swiftLanguageVersion(.v6),
             ]
         ),
         .target(
             name: "UBUserInterface",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6)
+                .swiftLanguageVersion(.v6),
             ]
         ),
         .target(
             name: "UBLocation",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6)
+                .swiftLanguageVersion(.v6),
             ]
         ),
         .target(
             name: "UBPush",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6)
+                .swiftLanguageVersion(.v6),
             ]
         ),
         .target(
             name: "UBQRScanner",
             swiftSettings: [
-                .swiftLanguageVersion(.v6)
+                .swiftLanguageVersion(.v6),
             ]
         ),
         .target(
             name: "UBDevTools",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6)
+                .swiftLanguageVersion(.v6),
             ]
         ),
         .testTarget(name: "UBFoundationTests",

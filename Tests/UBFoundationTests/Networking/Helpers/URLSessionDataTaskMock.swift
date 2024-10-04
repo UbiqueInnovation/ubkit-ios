@@ -74,7 +74,7 @@ class URLSessionDataTaskMock: URLSessionDataTask, @unchecked Sendable {
         waiting = true
 
         let exec: @Sendable () -> Void = { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             self.waiting = false

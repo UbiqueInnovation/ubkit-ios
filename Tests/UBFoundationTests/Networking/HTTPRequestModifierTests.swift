@@ -179,7 +179,7 @@ private final class MockTokenAuthorization: UBURLRequestTokenAuthorization {
     }
 
     func getToken(completion: (Result<String, Error>) -> Void) {
-        if let error = error {
+        if let error {
             completion(.failure(error))
         } else {
             completion(.success(token))

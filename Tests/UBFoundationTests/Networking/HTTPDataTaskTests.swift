@@ -85,7 +85,7 @@ class HTTPDataTaskTests: XCTestCase {
         let dataTask = UBURLDataTask(request: request, session: mockSession)
 
         final class MockRecovery: UBNetworkingTaskRecoveryStrategy {
-            nonisolated(unsafe) private var counter = 1
+            private nonisolated(unsafe) var counter = 1
             private let queue = DispatchQueue(label: "counter")
             let ex: XCTestExpectation?
 

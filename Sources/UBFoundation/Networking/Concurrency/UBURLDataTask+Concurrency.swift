@@ -133,7 +133,7 @@ public extension UBURLDataTask {
                         case let .failure(e):
                             cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
                     }
-                    if let id = id {
+                    if let id {
                         task.removeCompletionHandler(identifier: id)
                     }
                 }
@@ -153,7 +153,7 @@ public extension UBURLDataTask {
     ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
-    static func loadOnce<T: Sendable, E: UBURLDataTaskErrorBody>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
+    static func loadOnce<T: Sendable>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
         let task = UBURLDataTask(request: request)
 
         for requestModifier in taskConfig.requestModifiers {
@@ -179,7 +179,7 @@ public extension UBURLDataTask {
                         case let .failure(e):
                             cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
                     }
-                    if let id = id {
+                    if let id {
                         task.removeCompletionHandler(identifier: id)
                     }
                 }
@@ -226,7 +226,7 @@ public extension UBURLDataTask {
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
     @discardableResult
-    static func loadOnce<T: Sendable, E: UBURLDataTaskErrorBody>(url: URL, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
+    static func loadOnce<T: Sendable>(url: URL, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
         await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: decoder, errorDecoder: errorDecoder, ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
 
@@ -272,7 +272,7 @@ public extension UBURLDataTask {
     ///   - decoder: The decoder to transform the data. The decoder is called on a secondary thread.
     ///   - errorDecoder: The decoder for the error in case of a failed request
     /// - Returns: A throwing stream of decoded result object with metadata
-    func startStream<T: Sendable, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>) -> AsyncThrowingStream<(T, MetaData), Error> {
+    func startStream<T: Sendable>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>) -> AsyncThrowingStream<(T, MetaData), Error> {
         AsyncThrowingStream { [self] cont in
             let id = self.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                 switch result {
@@ -320,7 +320,7 @@ public extension UBURLDataTask.TaskConfig {
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
     @discardableResult
-    func loadOnce<T: Sendable, E: UBURLDataTaskErrorBody>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<T> {
+    func loadOnce<T: Sendable>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<T> {
         await UBURLDataTask.loadOnce(request: request, decoder: decoder, errorDecoder: errorDecoder, ignoreCache: ignoreCache, taskConfig: self)
     }
 
@@ -357,7 +357,7 @@ public extension UBURLDataTask.TaskConfig {
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
     @discardableResult
-    func loadOnce<T: Sendable, E: UBURLDataTaskErrorBody>(url: URL, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<T> {
+    func loadOnce<T: Sendable>(url: URL, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, ignoreCache: Bool = false) async -> UBURLDataTask.TaskResult<T> {
         await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: decoder, errorDecoder: errorDecoder, ignoreCache: ignoreCache, taskConfig: self)
     }
 

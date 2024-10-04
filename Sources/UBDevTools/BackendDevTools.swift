@@ -21,12 +21,13 @@ public class BaseUrl: ObservableObject {
     }
 }
 
-class BackendDevTools: DevTool {
+public class BackendDevTools: DevTool {
     private static var didSwizzle = false
     public static var baseUrls: [BaseUrl] = []
 
-    class ViewModel: ObservableObject {
+    public class ViewModel: ObservableObject {
         @Published var urls: [BaseUrl] = []
+        var appSpecificView: AnyView = AnyView(EmptyView())
     }
 
     public static var viewModel = ViewModel()
@@ -44,6 +45,10 @@ class BackendDevTools: DevTool {
         }
 
         viewModel.urls = baseUrls
+    }
+
+    public static func setAppSettingsView(view: some View) {
+        viewModel.appSpecificView = AnyView(view)
     }
 
     public static func saveNewUrl(baseUrl: BaseUrl, newUrl: String) {

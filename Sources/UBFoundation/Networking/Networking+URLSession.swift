@@ -12,7 +12,7 @@ extension URLSession: UBDataTaskURLSession {
     /// :nodoc:
     public func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
         dataTask(with: request.getRequest(), completionHandler: { [weak owner] data, response, baseError in
-            guard let owner = owner else {
+            guard let owner else {
                 return
             }
             var error = baseError

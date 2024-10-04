@@ -101,7 +101,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
 
     /// :nodoc:
     func updateAttributed() {
-        guard let attributedText = attributedText else {
+        guard let attributedText else {
             // also triggers `attributedText = nil`
             super.text = nil
             return

@@ -19,7 +19,7 @@ struct KeyboardInfo {
 
     // :nodoc:
     init?(userInfo: [AnyHashable: Any]?) {
-        guard let userInfo = userInfo else {
+        guard let userInfo else {
             return nil
         }
         guard let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {

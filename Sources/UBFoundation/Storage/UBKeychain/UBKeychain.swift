@@ -144,7 +144,7 @@ public class UBKeychain: UBKeychainProtocol {
     /// - Parameter key: the key to delete
     /// - Returns: a result which either is successful or contains the error
     @discardableResult
-    public func delete<T>(for key: UBKeychainKey<T>) -> Result<Void, UBKeychainError> {
+    public func delete(for key: UBKeychainKey<some Any>) -> Result<Void, UBKeychainError> {
         let query = self.query(for: key.key)
 
         let status: OSStatus = SecItemDelete(query as CFDictionary)
@@ -165,11 +165,11 @@ public class UBKeychain: UBKeychainProtocol {
             kSecClass as String: kSecClassGenericPassword as String,
             kSecAttrAccount as String: key,
         ]
-        if let accessibility = accessibility {
+        if let accessibility {
             query[kSecAttrAccessible as String] = accessibility.rawValue
         }
 
-        if let accessGroup = accessGroup {
+        if let accessGroup {
             query[kSecAttrAccessGroup as String] = accessGroup
         }
 
@@ -194,7 +194,7 @@ public class UBKeychain: UBKeychainProtocol {
         let status: [OSStatus] = secClasses.compactMap { secClass in
             let query: NSMutableDictionary = [kSecClass as String: secClass]
 
-            if let accessGroup = accessGroup {
+            if let accessGroup {
                 query[kSecAttrAccessGroup as String] = accessGroup
             }
 

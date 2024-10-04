@@ -26,7 +26,7 @@ class DataTaskSessionMock: UBDataTaskURLSession {
 
     func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {
         let task = URLSessionDataTaskMock(config: dataTaskConfigurationBlock(request), timeoutInterval: request.timeoutInterval) { [weak owner] data, response, baseError in
-            guard let owner = owner else {
+            guard let owner else {
                 return
             }
             var error = baseError

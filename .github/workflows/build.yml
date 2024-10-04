@@ -21,4 +21,3 @@ jobs:
 
       - name: Fastlane
         run: fastlane tests
-

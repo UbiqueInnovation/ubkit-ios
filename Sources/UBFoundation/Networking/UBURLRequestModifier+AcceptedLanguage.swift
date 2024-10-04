@@ -13,7 +13,7 @@ public final class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
     private let serial = DispatchQueue(label: "Accepted Language")
 
     /// :nodoc:
-    nonisolated(unsafe) public var _localization: UBLocalization
+    public nonisolated(unsafe) var _localization: UBLocalization
     /// The localization to use for the language list.
     public var localization: UBLocalization {
         get {
@@ -29,7 +29,7 @@ public final class UBURLRequestAcceptedLanguageModifier: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    nonisolated(unsafe) public var _includeRegion: Bool
+    public nonisolated(unsafe) var _includeRegion: Bool
     /// If the region information (if present) should be appended to the language.
     public var includeRegion: Bool {
         get {

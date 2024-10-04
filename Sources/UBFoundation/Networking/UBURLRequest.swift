@@ -145,7 +145,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///   - object: The object to encode
     ///   - encoder: The encoder
     /// - Throws: incase the ecoder could not encode
-    public mutating func setHTTPJSONBody<T: Encodable>(_ object: T, encoder: JSONEncoder = JSONEncoder()) throws {
+    public mutating func setHTTPJSONBody(_ object: some Encodable, encoder: JSONEncoder = JSONEncoder()) throws {
         let body = try UBURLRequestBody(data: encoder.encode(object), mimeType: .json())
         setHTTPBody(body)
     }
@@ -242,7 +242,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     }
 
     private mutating func setQueryParameters(_ parameters: [URLQueryItem], percentEncoded: Bool) throws {
-        guard let url = url else {
+        guard let url else {
             throw UBInternalNetworkingError.missingURL
         }
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
@@ -266,7 +266,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// - Returns: All query parameters
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public func allQueryParameters() throws -> [URLQueryItem] {
-        guard let url = url else {
+        guard let url else {
             throw UBInternalNetworkingError.missingURL
         }
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {

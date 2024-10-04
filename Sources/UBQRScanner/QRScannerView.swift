@@ -43,7 +43,7 @@ public class QRScannerView: UIView {
         clipsToBounds = true
 
         NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             MainActor.assumeIsolated {
                 self.lastIsRunning = self.isRunning
                 self.lastIsTorchOn = self.isTorchOn
@@ -51,7 +51,7 @@ public class QRScannerView: UIView {
             }
         }
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             MainActor.assumeIsolated {
                 if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
                     self.startScanning()
@@ -152,7 +152,7 @@ public class QRScannerView: UIView {
     }
 
     private func startCapture() {
-        guard let videoCaptureDevice = videoCaptureDevice else {
+        guard let videoCaptureDevice else {
             return
         }
 
@@ -164,7 +164,7 @@ public class QRScannerView: UIView {
             return
         }
 
-        guard let captureSession = captureSession, captureSession.canAddInput(videoInput) else {
+        guard let captureSession, captureSession.canAddInput(videoInput) else {
             scanningDidFail(error: .captureSessionError(nil))
             return
         }
@@ -196,7 +196,7 @@ public class QRScannerView: UIView {
 }
 
 extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
-    nonisolated public func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
+    public nonisolated func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
         let stringValues: [String] = metadataObjects.compactMap {
             guard let object = $0 as? AVMetadataMachineReadableCodeObject else {
                 return nil
