@@ -166,15 +166,16 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// Start the task with the given request. It will cancel any ongoing request
     public func start(ignoreCache: Bool) {
-        flagsQueue.sync {
+        let f = flagsQueue.sync {
             if ignoreCache {
                 flags.insert(.ignoreCache)
             } else {
                 flags.remove(.ignoreCache)
             }
             flags.remove(.refresh)
+
+            return flags
         }
-        let f = flagsQueue.sync { flags }
         start(flags: f)
     }
 
