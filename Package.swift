@@ -10,7 +10,7 @@ let package = Package(
     platforms: [
         .iOS(.v14),
         .watchOS(.v7),
-		.macOS(.v10_15),
+        .macOS(.v10_15),
     ],
     products: [
         .library(name: "UBFoundation", targets: ["UBFoundation"]),
@@ -27,7 +27,7 @@ let package = Package(
     targets: [
         .target(
             name: "UBFoundation",
-			dependencies: ["UBMacros"],
+            dependencies: ["UBMacros"],
             swiftSettings: [
                 .swiftLanguageVersion(.v6),
             ]
@@ -66,7 +66,7 @@ let package = Package(
                 .swiftLanguageVersion(.v6),
             ]
         ),
-		.macro(name: "UBMacros", dependencies: [
+        .macro(name: "UBMacros", dependencies: [
             .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
             .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
         ]),
