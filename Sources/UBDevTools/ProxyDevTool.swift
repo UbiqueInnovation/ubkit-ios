@@ -36,7 +36,7 @@ public extension Networking {
     /// This is a copy of the sharedSession including the proxy and friendly trust settings
     @MainActor
     static let friendlySharedSession: UBURLSession = {
-        guard DevToolsView.enableNetworkingProxySettings else { return Networking.sharedSession }
+        guard DevToolsView.enableNetworkingProxySettings else { return UBURLSession.sharedSession }
 
         let queue = OperationQueue()
         queue.name = "Friendly UBURLSession Shared"
