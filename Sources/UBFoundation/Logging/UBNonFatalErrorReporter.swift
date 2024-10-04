@@ -7,8 +7,7 @@
 
 import Foundation
 
-@MainActor
-public enum UBNonFatalErrorReporter {
+public actor UBNonFatalErrorReporter {
     public static var handler: ((Error) -> Void)?
 
     static func report(_ error: Error) {

@@ -463,9 +463,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                 default:
                     let errorMessage = "Invalid state transition from \(_state) -> \(newValue)"
                     assertionFailure(errorMessage)
-                    Task { @MainActor in
-                        UBNonFatalErrorReporter.report(NSError(domain: "UBURLDataTask", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
-                    }
+                    UBNonFatalErrorReporter.report(NSError(domain: "UBURLDataTask", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
             }
         }
         didSet {
