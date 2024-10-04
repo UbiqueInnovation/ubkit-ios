@@ -100,7 +100,7 @@ public final class UBPinnedCertificatesTrustEvaluator: UBServerTrustEvaluator {
 
     /// :nodoc:
     public func evaluate(_ trust: SecTrust, forHost host: String) throws {
-        assert(certificates.isEmpty == false, "This should not have happened as we make sure to crash if there are no certificates found during initialization.")
+        #assert(certificates.isEmpty == false, "This should not have happened as we make sure to crash if there are no certificates found during initialization.")
 
         if acceptSelfSignedCertificates {
             try trust.setAnchorCertificates(certificates)

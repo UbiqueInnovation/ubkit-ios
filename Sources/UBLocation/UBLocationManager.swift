@@ -361,7 +361,7 @@ public class UBLocationManager: NSObject {
 
         self.startLocationMonitoringForAllDelegates()
 
-        assert(!delegateWrappers.isEmpty || allUsages == [])
+        #assert(!delegateWrappers.isEmpty || allUsages == [])
     }
 
     /// Stops monitoring all location service events

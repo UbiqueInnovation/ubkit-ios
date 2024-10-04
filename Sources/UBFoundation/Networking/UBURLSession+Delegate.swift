@@ -58,7 +58,7 @@ final class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDa
     /// :nodoc:
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         urlSessionQueue.sync {
-            assert(session == _urlSession, "The sessions are not matching")
+            #assert(session == self._urlSession, "The sessions are not matching")
         }
 
         var _ubDataTask: UBURLDataTask?
@@ -162,7 +162,7 @@ final class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDa
     /// :nodoc:
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         urlSessionQueue.sync {
-            assert(session == _urlSession, "The sessions are not matching")
+            #assert(session == self._urlSession, "The sessions are not matching")
         }
 
         var _collectedData: UBURLSessionDelegate.DataHolder?
@@ -179,7 +179,7 @@ final class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDa
     /// :nodoc:
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         urlSessionQueue.sync {
-            assert(session == _urlSession, "The sessions are not matching")
+            #assert(session == self._urlSession, "The sessions are not matching")
         }
 
         var _ubDataTask: UBURLDataTask?
@@ -214,7 +214,7 @@ final class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDa
     /// :nodoc:
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         urlSessionQueue.sync {
-            assert(session == _urlSession, "The sessions are not matching")
+            #assert(session == self._urlSession, "The sessions are not matching")
         }
 
         var _ubDataTask: UBURLDataTask?
@@ -237,7 +237,7 @@ final class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDa
     /// :nodoc:
     func urlSession(_ session: URLSession, dataTask _: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
         urlSessionQueue.sync {
-            assert(session == _urlSession, "The sessions are not matching")
+            #assert(session == self._urlSession, "The sessions are not matching")
         }
         guard cachingLogic == nil else {
             // If we have a caching logic, we will skip the default caching implementation
@@ -251,7 +251,7 @@ final class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDa
     /// :nodoc:
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         urlSessionQueue.sync {
-            assert(session == _urlSession, "The sessions are not matching")
+            #assert(session == self._urlSession, "The sessions are not matching")
         }
 
         var _ubDataTask: UBURLDataTask?
@@ -283,7 +283,7 @@ final class UBURLSessionDelegate: NSObject, URLSessionTaskDelegate, URLSessionDa
     /// :nodoc:
     func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         urlSessionQueue.sync {
-            assert(session == _urlSession, "The sessions are not matching")
+            #assert(session == self._urlSession, "The sessions are not matching")
         }
 
         var _ubDataTask: UBURLDataTask?

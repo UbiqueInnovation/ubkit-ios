@@ -55,7 +55,7 @@ public final class UBCronJob: Sendable {
     /// The state of the Job
     public private(set) nonisolated(unsafe) var state: State = .initial {
         willSet {
-            assert(state != newValue)
+            #assert(state != newValue)
         }
     }
 

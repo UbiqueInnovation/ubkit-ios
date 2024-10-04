@@ -29,46 +29,49 @@ let package = Package(
             name: "UBFoundation",
             dependencies: ["UBMacros"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6),
+                .swiftLanguageMode(.v6),
             ]
         ),
         .target(
             name: "UBUserInterface",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6),
+                .swiftLanguageMode(.v6),
             ]
         ),
         .target(
             name: "UBLocation",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6),
+                .swiftLanguageMode(.v6),
             ]
         ),
         .target(
             name: "UBPush",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6),
+                .swiftLanguageMode(.v6),
             ]
         ),
         .target(
             name: "UBQRScanner",
             swiftSettings: [
-                .swiftLanguageVersion(.v6),
+                .swiftLanguageMode(.v6),
             ]
         ),
         .target(
             name: "UBDevTools",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageVersion(.v6),
+                .swiftLanguageMode(.v6),
             ]
         ),
         .macro(name: "UBMacros", dependencies: [
             .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
             .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+        ],
+        swiftSettings: [
+            .swiftLanguageMode(.v6),
         ]),
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
