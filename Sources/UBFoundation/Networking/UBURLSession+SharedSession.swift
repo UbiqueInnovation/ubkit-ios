@@ -14,7 +14,7 @@ public extension UBURLSession {
     // MARK: - Shared sessions
 
     /// A shared session that has a priority of responsive data. Useful for user initiated requests.
-    public static let sharedSession: UBURLSession = {
+    static let sharedSession: UBURLSession = {
         let queue = OperationQueue()
         queue.name = "UBURLSession Shared"
         queue.qualityOfService = .userInitiated
@@ -24,7 +24,7 @@ public extension UBURLSession {
     }()
 
     /// A shared session that has a priority of background. Useful for low priority requests.
-    public static let sharedLowPrioritySession: UBURLSession = {
+    static let sharedLowPrioritySession: UBURLSession = {
         let queue = OperationQueue()
         queue.name = "UBURLSession Shared Background"
         queue.qualityOfService = .background

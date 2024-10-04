@@ -567,58 +567,54 @@ public class UBLocationManager: NSObject {
     }
 }
 
-extension UBLocationManager: CLLocationManagerDelegate {
-    public nonisolated func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
-        MainActor.assumeIsolated {
-            authorizationStatus = authorization
-            logLocationPermissionChange?(authorization)
+extension UBLocationManager: @preconcurrency CLLocationManagerDelegate {
+    public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
+        authorizationStatus = authorization
+        logLocationPermissionChange?(authorization)
 
-            self.startLocationMonitoringForAllDelegates()
+        self.startLocationMonitoringForAllDelegates()
 
-            if Self.hasRequiredAuthorizationLevel(forUsage: allUsages) {
-                let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
+        if Self.hasRequiredAuthorizationLevel(forUsage: allUsages) {
+            let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
 
-                for delegate in delegates() {
-                    delegate.locationManager(self, grantedPermission: permission, accuracy: accuracyLevel)
-                }
+            for delegate in delegates() {
+                delegate.locationManager(self, grantedPermission: permission, accuracy: accuracyLevel)
             }
-            if authorization == .denied {
-                for delegate in delegates() {
-                    delegate.locationManager(permissionDeniedFor: self)
-                }
+        }
+        if authorization == .denied {
+            for delegate in delegates() {
+                delegate.locationManager(permissionDeniedFor: self)
             }
+        }
 
-            // permission request callbacks
-            if let usage = self.permissionRequestUsage,
-               let callback = self.permissionRequestCallback {
-                let hasRequiredLevel = Self.hasRequiredAuthorizationLevel(forUsage: usage)
-                callback(hasRequiredLevel ? .success : .failure)
+        // permission request callbacks
+        if let usage = self.permissionRequestUsage,
+           let callback = self.permissionRequestCallback {
+            let hasRequiredLevel = Self.hasRequiredAuthorizationLevel(forUsage: usage)
+            callback(hasRequiredLevel ? .success : .failure)
 
-                self.permissionRequestCallback = nil
-                self.permissionRequestUsage = nil
-            }
+            self.permissionRequestCallback = nil
+            self.permissionRequestUsage = nil
         }
     }
 
-    public nonisolated func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        MainActor.assumeIsolated {
-            // remove invalid locations
-            let results: [CLLocation] = locations.filter { location -> Bool in
-                // A negative value indicates that the latitude and longitude are invalid
-                location.horizontalAccuracy >= 0 &&
-                    // GPS  may return 0 to indicate no location
-                    location.coordinate.latitude != 0 && location.coordinate.longitude != 0
-            }
-
-            if !results.isEmpty {
-                locationTimer?.invalidate()
-                locationTimer = nil
-            }
-
-            notifyDelegates(withLocations: results)
-
-            startLocationFreshTimers()
+    public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // remove invalid locations
+        let results: [CLLocation] = locations.filter { location -> Bool in
+            // A negative value indicates that the latitude and longitude are invalid
+            location.horizontalAccuracy >= 0 &&
+                // GPS  may return 0 to indicate no location
+                location.coordinate.latitude != 0 && location.coordinate.longitude != 0
         }
+
+        if !results.isEmpty {
+            locationTimer?.invalidate()
+            locationTimer = nil
+        }
+
+        notifyDelegates(withLocations: results)
+
+        startLocationFreshTimers()
     }
 
     private func notifyDelegates(withLocations locations: [CLLocation]) {
@@ -646,47 +642,37 @@ extension UBLocationManager: CLLocationManagerDelegate {
         }
     }
 
-    public nonisolated func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
-        MainActor.assumeIsolated {
-            for delegate in delegates(onlyActive: true, usage: [.visits]) {
-                delegate.locationManager(self, didVisit: visit)
-            }
+    public func locationManager(_: CLLocationManager, didVisit visit: CLVisit) {
+        for delegate in delegates(onlyActive: true, usage: [.visits]) {
+            delegate.locationManager(self, didVisit: visit)
         }
     }
 
-    public nonisolated func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        MainActor.assumeIsolated {
-            for delegate in regionDelegates {
-                delegate.locationManager(self, didEnterRegion: region)
-            }
+    public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        for delegate in regionDelegates {
+            delegate.locationManager(self, didEnterRegion: region)
         }
     }
 
-    public nonisolated func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        MainActor.assumeIsolated {
-            for delegate in regionDelegates {
-                delegate.locationManager(self, didExitRegion: region)
-            }
+    public func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        for delegate in regionDelegates {
+            delegate.locationManager(self, didExitRegion: region)
         }
     }
 
-    public nonisolated func locationManager(_: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        MainActor.assumeIsolated {
-            lastHeading = newHeading
-            for delegate in delegates(onlyActive: true, usage: [.foregroundHeading, .backgroundHeading]) {
-                delegate.locationManager(self, didUpdateHeading: newHeading)
-            }
+    public func locationManager(_: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        lastHeading = newHeading
+        for delegate in delegates(onlyActive: true, usage: [.foregroundHeading, .backgroundHeading]) {
+            delegate.locationManager(self, didUpdateHeading: newHeading)
         }
     }
 
-    public nonisolated func locationManager(_: CLLocationManager, didFailWithError error: Error) {
-        MainActor.assumeIsolated {
-            // This might be some temporary error. Just report it but do not stop
-            // monitoring as it could be some temporary error and we just have to
-            // wait for the next event
-            for delegate in delegates(onlyActive: true) {
-                delegate.locationManager(self, didFailWithError: error)
-            }
+    public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
+        // This might be some temporary error. Just report it but do not stop
+        // monitoring as it could be some temporary error and we just have to
+        // wait for the next event
+        for delegate in delegates(onlyActive: true) {
+            delegate.locationManager(self, didFailWithError: error)
         }
     }
 }
