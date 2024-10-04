@@ -24,7 +24,7 @@ open class UBPushRegistrationManager: NSObject {
 
     // The URL session to use, can be overwritten by the app
     open var session: UBURLSession {
-        Networking.sharedSession
+        .sharedSession
     }
 
     /// The url needed for the registration request

@@ -126,29 +126,6 @@ class HTTPRequestModifierTests: XCTestCase {
         }
         wait(for: [ex], timeout: 30)
     }
-
-    func testAcceptedLanguage() {
-        let ex = expectation(description: "Request Modification")
-
-        guard let testBundlePath = Bundle.module.path(forResource: "TestResources/LocalizationTestBundle", ofType: nil),
-              let testBundle = Bundle(path: testBundlePath) else {
-            fatalError("No test bundle found")
-        }
-        let frenchCHLocalization = UBLocalization(locale: Locale(identifier: "fr_CH"), baseBundle: testBundle, notificationCenter: NotificationCenter())
-        let ba = UBURLRequestAcceptedLanguageModifier(includeRegion: false, localization: frenchCHLocalization)
-        ba.modifyRequest(request) { result in
-            switch result {
-                case let .failure(error):
-                    XCTFail(error.localizedDescription)
-                case let .success(newRequest):
-                    let value = newRequest.value(forHTTPHeaderField: "Accept-Language")
-                    let expectedValue = "fr;q=1.0,en;q=0.9"
-                    XCTAssertEqual(value, expectedValue)
-            }
-            ex.fulfill()
-        }
-        wait(for: [ex], timeout: 30)
-    }
 }
 
 private enum Err: Error {

@@ -12,7 +12,7 @@ class UBSessionTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let ex = expectation(description: "a")
-        Networking.sharedSession.reset(completionHandler: {
+        UBURLSession.sharedSession.reset(completionHandler: {
             ex.fulfill()
         })
         wait(for: [ex], timeout: 30)
