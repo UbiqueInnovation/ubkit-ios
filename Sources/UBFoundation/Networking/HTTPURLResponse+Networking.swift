@@ -21,11 +21,7 @@ public extension HTTPURLResponse {
     /// - Parameter key: A standard key
     /// - Returns: The value associated with the key
     func ub_getHeaderField(key headerKey: String) -> String? {
-        if #available(iOS 13.0, watchOS 6.0, macOS 10.15, *) {
-            value(forHTTPHeaderField: headerKey)
-        } else {
-            allHeaderFields.getCaseInsensitiveValue(key: headerKey) as? String
-        }
+        value(forHTTPHeaderField: headerKey)
     }
 
     /// Returns the header field for the key

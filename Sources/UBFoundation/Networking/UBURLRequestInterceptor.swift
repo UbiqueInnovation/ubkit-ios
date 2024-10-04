@@ -46,5 +46,5 @@ public protocol UBURLRequestInterceptor {
     /// - Parameters:
     ///   - request: The request which would be executed by the URLSession
     ///   - completion: The completion handler to be called with a InterceptorResult
-    func interceptRequest(_ request: UBURLRequest, completion: @escaping (UBURLInterceptorResult?) -> Void)
+    func interceptRequest(_ request: UBURLRequest, completion: @escaping @Sendable (UBURLInterceptorResult?) -> Void)
 }

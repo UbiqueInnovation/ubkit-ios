@@ -20,7 +20,7 @@ public enum UBNetworkingTaskRecoveryResult {
 }
 
 /// Types that can recover a networking task failure. These objects are called after the validation process to allow for rectification. Once all strategies fails, then the completion block of the task fails. If one strategy finds a solution the no further strategies are called.
-public protocol UBNetworkingTaskRecoveryStrategy {
+public protocol UBNetworkingTaskRecoveryStrategy: Sendable {
     /// Attempts a recovery of the failed task.
     ///
     /// - Parameters:

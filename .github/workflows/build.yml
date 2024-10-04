@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCODE_VERSION: "Xcode_15.4"
+  XCODE_VERSION: "Xcode_16.0"
 
 on:
   push:

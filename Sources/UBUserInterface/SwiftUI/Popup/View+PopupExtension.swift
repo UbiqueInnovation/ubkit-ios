@@ -9,14 +9,12 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 public extension View {
     func ub_popup(isPresented: Binding<Bool>, customStyle: UBPopupStyle? = nil, @ViewBuilder content: @escaping () -> some View) -> some View {
         modifier(UBPopupViewModifier(isPresented: isPresented, customStyle: customStyle, popupContent: content))
     }
 }
 
-@available(iOS 14.0, *)
 struct UBPopupViewModifier<V: View>: ViewModifier {
     @State private var date: Date?
     @Binding var isPresented: Bool

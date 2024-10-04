@@ -7,7 +7,7 @@
 
 import Foundation
 
-class URLSessionDataTaskMock: URLSessionDataTask {
+class URLSessionDataTaskMock: URLSessionDataTask, @unchecked Sendable {
     var completionHandler: (Data?, URLResponse?, Error?) -> Void
     var config: Configuration
     var timeoutInterval: TimeInterval
@@ -73,7 +73,7 @@ class URLSessionDataTaskMock: URLSessionDataTask {
         }
         waiting = true
 
-        let exec: () -> Void = { [weak self] in
+        let exec: @Sendable () -> Void = { [weak self] in
             guard let self else {
                 return
             }
@@ -105,14 +105,14 @@ class URLSessionDataTaskMock: URLSessionDataTask {
     private func simulateNetworking(config: Configuration) {
         assert(_state == .running)
 
-        let exec: () -> Void = { [weak self] in
+        let exec: @Sendable () -> Void = { [weak self] in
             guard config.error == nil else {
                 self?.completionHandler(nil, config.response, config.error)
                 self?._state = .completed
                 return
             }
             let initialValue: Int64 = Int64(config.progressUpdateCount)
-            var counter: Int64 = 0
+            nonisolated(unsafe) var counter: Int64 = 0
             let m = Timer(timeInterval: TimeInterval(config.transferDuration / TimeInterval(initialValue)), repeats: true, block: { [weak self] timer in
                 counter += 1
                 if counter <= initialValue {

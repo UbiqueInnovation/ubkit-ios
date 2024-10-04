@@ -8,6 +8,7 @@
 import UBUserInterface
 import XCTest
 
+@MainActor
 class KeyboardLayoutGuideTests: XCTestCase {
     func testKeyboardReaction() {
         // Setup the hierarchy
