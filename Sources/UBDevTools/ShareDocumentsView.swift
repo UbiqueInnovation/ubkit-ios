@@ -81,8 +81,8 @@ private struct ShareView: UIViewControllerRepresentable {
                                 context: UIViewControllerRepresentableContext<ShareView>) {}
 }
 
-class CompressDocumentsDirectory {
-    func compress() -> URL? {
+enum CompressDocumentsDirectory {
+    static func compress() -> URL? {
 #if !targetEnvironment(simulator)
         let archiveDestination = NSTemporaryDirectory() + "documentDirectory.aar"
 
@@ -139,7 +139,7 @@ class CompressDocumentsDirectory {
 #endif
     }
 
-    func getDocumentsDirectory() -> URL {
+    private static func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
         return documentsDirectory
