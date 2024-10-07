@@ -52,7 +52,7 @@ open class UBPushManager: NSObject {
     static let logger = Logger(subsystem: "ch.ubique.ubkit", category: "PushManager")
 
     /// Closure to handle the permission request result
-    public typealias PermissionRequestCallback = (PermissionRequestResult) -> Void
+    public typealias PermissionRequestCallback = @Sendable (PermissionRequestResult) -> Void
 
     /// :nodoc:
     @MainActor
@@ -172,11 +172,10 @@ open class UBPushManager: NSObject {
     /// Requests APNS token (if .authorized)
     ///
     private func registerForPushNotification() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
+        UNUserNotificationCenter.current().getNotificationSettings { @Sendable settings in
             if settings.authorizationStatus == .authorized {
-                UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
-
-                DispatchQueue.main.async {
+                Task { @MainActor in
+                    UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
                     UIApplication.shared.registerForRemoteNotifications()
                 }
             }
@@ -202,7 +201,7 @@ open class UBPushManager: NSObject {
         let currentPushRequest = latestPushRequest
 
         let options = makeAuthorizationOptions(includingCritical: includingCritical, includingNotificationSettings: includingNotificationSettings)
-        UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, _ in
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { @Sendable granted, _ in
 
             guard granted else {
                 DispatchQueue.main.async {
@@ -223,9 +222,8 @@ open class UBPushManager: NSObject {
                 }
             }
 
-            UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
-
-            DispatchQueue.main.async {
+            Task { @MainActor in
+                UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
                 UIApplication.shared.registerForRemoteNotifications()
             }
         }
