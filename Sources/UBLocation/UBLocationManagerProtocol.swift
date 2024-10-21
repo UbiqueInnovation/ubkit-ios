@@ -42,7 +42,7 @@ public protocol UBLocationManagerProtocol {
 #if !os(visionOS)
     func requestAlwaysAuthorization()
 #endif
-    
+
     var authorizationStatus: CLAuthorizationStatus { get }
     func locationServicesEnabled() -> Bool
     func significantLocationChangeMonitoringAvailable() -> Bool

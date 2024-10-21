@@ -20,7 +20,7 @@ public extension UIView {
         layer.shouldRasterize = true
 #if !os(visionOS)
         layer.rasterizationScale = UIScreen.main.scale
-        #else
+#else
         layer.rasterizationScale = 3.0 // ?
 #endif
     }

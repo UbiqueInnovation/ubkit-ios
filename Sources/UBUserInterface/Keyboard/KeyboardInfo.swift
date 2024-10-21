@@ -50,7 +50,7 @@ struct KeyboardInfo {
             animations()
         }
 #else
-	animations()
+        animations()
 #endif
     }
 

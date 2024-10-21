@@ -31,7 +31,7 @@ public protocol UBLocationManagerDelegate: CLLocationManagerDelegate, Sendable {
     func locationManager(_ manager: UBLocationManager, didEnterRegion region: CLRegion)
     /// :nodoc:
     func locationManager(_ manager: UBLocationManager, didExitRegion region: CLRegion)
-    #endif
+#endif
 
     /// If set, the locations returned for this delegate will be filtered for the given accuracy
     var locationManagerFilterAccuracy: CLLocationAccuracy? { get }
@@ -52,7 +52,7 @@ public extension UBLocationManagerDelegate {
     func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
     func locationManager(_: UBLocationManager, didEnterRegion region: CLRegion) {}
     func locationManager(_: UBLocationManager, didExitRegion region: CLRegion) {}
-    #endif
+#endif
     var locationManagerMaxFreshAge: TimeInterval? { nil }
     func locationManager(_: UBLocationManager, locationIsFresh _: Bool) {}
 }
@@ -72,9 +72,9 @@ public class UBLocationManager: NSObject {
             if onlyActive {
 #if !os(visionOS)
                 wrapper.wantsUpdate(for: usage, isBackground: appIsInBackground, allowsBackgroundLocationUpdates: allowsBackgroundLocationUpdates) ? wrapper.delegate : nil
-                #else
+#else
                 wrapper.wantsUpdate(for: usage, isBackground: false, allowsBackgroundLocationUpdates: false) ? wrapper.delegate : nil
-                #endif
+#endif
 
             } else {
                 wrapper.delegate
@@ -438,6 +438,7 @@ public class UBLocationManager: NSObject {
             case .authorizedWhenInUse:
                 guard minimumAuthorizationLevelRequired == .whenInUse else {
                     // can only ask once
+
 #if !os(visionOS)
                     if minimumAuthorizationLevelRequired == .always, self.askedForAlwaysPermissionAtLeastOnce {
                         callback(.showSettings)
@@ -575,11 +576,11 @@ extension UBLocationManager: @preconcurrency CLLocationManagerDelegate {
         self.startLocationMonitoringForAllDelegates()
 
         if hasRequiredAuthorizationLevel(forUsage: allUsages) {
-            #if !os(visionOS)
+#if !os(visionOS)
             let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
-            #else
+#else
             let permission: AuthorizationLevel = .whenInUse
-            #endif
+#endif
 
             for delegate in delegates() {
                 delegate.locationManager(self, grantedPermission: permission, accuracy: accuracyLevel)
@@ -758,10 +759,9 @@ extension Set<UBLocationManager.LocationMonitoringUsage> {
         } else {
             .whenInUse
         }
-        #else
+#else
         return .whenInUse
 #endif
-
     }
 
 #if !os(visionOS)
