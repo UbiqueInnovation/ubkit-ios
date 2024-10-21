@@ -15,6 +15,7 @@ import UIKit
 ///
 /// or subclass `UBPushRegistrationManager`, overriding `pushRegistrationRequest` if they
 /// require a custom registration request.
+@MainActor
 open class UBPushRegistrationManager: NSObject {
     /// The push token for this device, if any
     public var pushToken: String? {
@@ -23,7 +24,7 @@ open class UBPushRegistrationManager: NSObject {
 
     // The URL session to use, can be overwritten by the app
     open var session: UBURLSession {
-        Networking.sharedSession
+        .sharedSession
     }
 
     /// The url needed for the registration request
@@ -72,13 +73,13 @@ open class UBPushRegistrationManager: NSObject {
     }
 
     /// :nodoc:
-    public func invalidate(completion: ((Error?) -> Void)? = nil) {
+    public func invalidate(completion: (@Sendable (Error?) -> Void)? = nil) {
         self.pushLocalStorage.isValid = false
         sendPushRegistration(completion: completion)
     }
 
     /// :nodoc:
-    private func sendPushRegistration(completion: ((Error?) -> Void)? = nil) {
+    private func sendPushRegistration(completion: (@Sendable (Error?) -> Void)? = nil) {
         guard let registrationRequest = pushRegistrationRequest else {
             completion?(UBPushManagerError.registrationRequestMissing)
             return
@@ -86,7 +87,7 @@ open class UBPushRegistrationManager: NSObject {
 
         if backgroundTask == .invalid {
             backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-                guard let self = self else {
+                guard let self else {
                     return
                 }
                 if self.backgroundTask != .invalid {
@@ -97,25 +98,27 @@ open class UBPushRegistrationManager: NSObject {
 
         task = UBURLDataTask(request: registrationRequest, session: session)
         task?.addCompletionHandler(decoder: UBHTTPStringDecoder()) { [weak self] result, _, _, _ in
-            guard let self = self else {
-                return
-            }
+            MainActor.assumeIsolated {
+                guard let self else {
+                    return
+                }
 
-            switch result {
-                case let .success(responseString):
-                    self.validate()
-                    completion?(nil)
+                switch result {
+                    case let .success(responseString):
+                        self.validate()
+                        completion?(nil)
 
-                    UBPushManager.logger.info("\(String(describing: self)) ended with result: \(responseString)")
+                        UBPushManager.logger.info("\(String(describing: self)) ended with result: \(responseString)")
 
-                case let .failure(error):
-                    completion?(error)
+                    case let .failure(error):
+                        completion?(error)
 
-                    UBPushManager.logger.info("\(String(describing: self)) ended with error: \(error.localizedDescription)")
-            }
+                        UBPushManager.logger.info("\(String(describing: self)) ended with error: \(error.localizedDescription)")
+                }
 
-            if self.backgroundTask != .invalid {
-                UIApplication.shared.endBackgroundTask(self.backgroundTask)
+                if self.backgroundTask != .invalid {
+                    UIApplication.shared.endBackgroundTask(self.backgroundTask)
+                }
             }
         }
 

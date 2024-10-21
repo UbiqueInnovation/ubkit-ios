@@ -8,13 +8,12 @@
 import Foundation
 import OSLog
 
-@available(iOS 14.0, watchOS 7.0, *)
-private struct Log {
+private enum Log {
     static let logger = Logger(subsystem: "UBKit", category: "AutoRefreshCacheLogic")
 }
 
 /// A caching logic that will launch and refresh the data automatically when the data expires
-open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
+open class UBAutoRefreshCacheLogic: UBBaseCachingLogic, @unchecked Sendable {
     /// The refresh cron jobs
     private let refreshJobs = NSMapTable<UBURLDataTask, UBCronJob>(keyOptions: .weakMemory, valueOptions: .strongMemory)
 
@@ -32,24 +31,18 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         cancelRefreshCronJob(for: task)
 
         guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics, referenceDate: referenceDate) else {
-            if #available(iOS 14.0, watchOS 7.0, *) {
-                Log.logger.trace("No refresh date for task \(task)")
-            }
+            Log.logger.trace("No refresh date for task \(task)")
             return
         }
 
-        if #available(iOS 14.0, watchOS 7.0, *) {
-            Log.logger.trace("Schedule refresh for \(task) at \(nextRefreshDate) (\(round(nextRefreshDate.timeIntervalSinceNow))s)")
-        }
+        Log.logger.trace("Schedule refresh for \(task) at \(nextRefreshDate) (\(round(nextRefreshDate.timeIntervalSinceNow))s)")
 
         // Schedule a new job
         let job = UBCronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
-            if #available(iOS 14.0, watchOS 7.0, *) {
-                if let task {
-                    Log.logger.trace("Start cron refresh for task \(task)")
-                } else {
-                    Log.logger.trace("Not start cron refresh, task doesn't exist anymore.")
-                }
+            if let task {
+                Log.logger.trace("Start cron refresh for task \(task)")
+            } else {
+                Log.logger.trace("Not start cron refresh, task doesn't exist anymore.")
             }
             task?.start(flags: [.systemTriggered, .refresh])
         }
@@ -73,27 +66,24 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic {
         }
 
         // This is the date that we are not allowed to make requests before.
-        let backoffInterval: TimeInterval
-        if let backoffHeader = allHeaderFields.getCaseInsensitiveValue(key: backoffIntervalHeaderFieldName) as? String, let interval = TimeInterval(backoffHeader) {
-            backoffInterval = interval
+        let backoffInterval: TimeInterval = if let backoffHeader = allHeaderFields.getCaseInsensitiveValue(key: backoffIntervalHeaderFieldName) as? String, let interval = TimeInterval(backoffHeader) {
+            interval
         } else {
-            backoffInterval = 60
+            60
         }
 
-        let age: TimeInterval
-        if let ageHeader = allHeaderFields.getCaseInsensitiveValue(key: ageHeaderFieldName) as? String, let interval = TimeInterval(ageHeader) {
-            age = interval
+        let age: TimeInterval = if let ageHeader = allHeaderFields.getCaseInsensitiveValue(key: ageHeaderFieldName) as? String, let interval = TimeInterval(ageHeader) {
+            interval
         } else {
-            age = 0
+            0
         }
         responseDate = referenceDate ?? responseDate + age
 
         // The backoff date is the response date added to the backoff interval
-        let backoffDate: Date
-        if let metrics = metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
-            backoffDate = max(responseDate + backoffInterval, date + backoffInterval)
+        let backoffDate: Date = if let metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
+            max(responseDate + backoffInterval, date + backoffInterval)
         } else {
-            backoffDate = responseDate + backoffInterval
+            responseDate + backoffInterval
         }
 
         // Return the date that is the most in the future.

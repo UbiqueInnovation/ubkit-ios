@@ -115,8 +115,17 @@ class ConcurrentNetworkTests: XCTestCase {
     func testTaskCancellation() throws {
         let exp1 = expectation(description: "After first result")
         let exp2 = expectation(description: "After cancel")
+
+        let cache = MeteoAutoRefreshCacheLogic()
+        let conf = UBURLSessionConfiguration(cachingLogic: cache)
+        let c = URLCache(memoryCapacity: 1024 * 1024 * 4, diskCapacity: 1024 * 1024 * 10, diskPath: "meteo")
+        c.removeAllCachedResponses()
+        conf.sessionConfiguration.urlCache = c
+        conf.sessionConfiguration.protocolClasses = [LocalServerURLProtocol.self]
+        let session = UBURLSession(configuration: conf)
+
         let t = Task.detached {
-            let task = UBURLDataTask(request: self.cronRequest, session: self.fastCronSession)
+            let task = UBURLDataTask(url: URL(string: "http://mock.ubique.ch/cron.json")!, session: session)
             for try await _ in task.startStream(decoder: .passthrough) {
                 exp1.fulfill()
             }
@@ -128,7 +137,7 @@ class ConcurrentNetworkTests: XCTestCase {
     }
 }
 
-private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
+private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic, @unchecked Sendable {
     override var nextRefreshHeaderFieldName: [String] {
         ["x-amz-meta-next-refresh"]
     }
@@ -152,9 +161,9 @@ private class MeteoAutoRefreshCacheLogic: UBAutoRefreshCacheLogic {
     // scale relative time for faster unit test
     override func cachedResponseNextRefreshDate(_ allHeaderFields: [AnyHashable: Any], metrics: URLSessionTaskMetrics?, referenceDate: Date?) -> Date? {
         if let date = super.cachedResponseNextRefreshDate(allHeaderFields, metrics: metrics, referenceDate: referenceDate) {
-            return Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
+            Date(timeIntervalSinceNow: date.timeIntervalSinceNow * 0.01)
         } else {
-            return nil
+            nil
         }
     }
 }

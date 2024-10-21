@@ -8,11 +8,11 @@
 import Foundation
 
 /// A object that can schedule an invocation at a point in time.
-public class UBCronJob {
+public final class UBCronJob: Sendable {
     // MARK: - Definitions
 
     /// A cron execution block
-    public typealias ExecutionBlock = () -> Void
+    public typealias ExecutionBlock = @Sendable () -> Void
 
     /// The state of the cron job
     public enum State: CustomDebugStringConvertible {
@@ -29,13 +29,13 @@ public class UBCronJob {
         public var debugDescription: String {
             switch self {
                 case .initial:
-                    return "Initial"
+                    "Initial"
                 case .resumed:
-                    return "Resumed"
+                    "Resumed"
                 case .paused:
-                    return "Paused"
+                    "Paused"
                 case .finished:
-                    return "Finished"
+                    "Finished"
             }
         }
     }
@@ -49,21 +49,21 @@ public class UBCronJob {
     /// Syncronization
     private let serialQueue: DispatchQueue
     /// Internal GCD Timer with the corresponding fire mode
-    private var timer: DispatchSourceTimer?
+    private nonisolated(unsafe) var timer: DispatchSourceTimer?
     /// Current rule
-    private var rule: UBCronRule?
+    private nonisolated(unsafe) var rule: UBCronRule?
     /// The state of the Job
-    public private(set) var state: State = .initial {
+    public private(set) nonisolated(unsafe) var state: State = .initial {
         willSet {
-            assert(state != newValue)
+            #assert(state != newValue)
         }
     }
 
     /// The name of the task
-    public var name: String?
+    public let name: String?
 
     /// The backing data for the callback queue
-    private weak var _callbackQueue: OperationQueue?
+    private nonisolated(unsafe) weak var _callbackQueue: OperationQueue?
 
     /// The callback queue for the execution Block. If non is specified then it is executed on a secondary thread with the same Quality of service as the Cron Job.
     public var callbackQueue: OperationQueue? {
@@ -82,7 +82,7 @@ public class UBCronJob {
     }
 
     /// The backing execution block
-    private var _executionBlock: ExecutionBlock
+    private nonisolated(unsafe) var _executionBlock: ExecutionBlock
 
     /// The block to be executed by the job when fired
     public var executionBlock: ExecutionBlock {
@@ -108,9 +108,10 @@ public class UBCronJob {
     ///   - interval: The time interval before the job fires
     ///   - isRepeating: If the job is repeating
     ///   - qos: The quality of service of the job
+    ///   - name: The name of the job
     ///   - executionBlock: The block to be executed by the job
-    public convenience init(fireAfter interval: TimeInterval, repeat isRepeating: Bool = false, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.init(rule: UBFireAtIntervalRule(interval, repeat: isRepeating), qos: qos, executionBlock: executionBlock)
+    public convenience init(fireAfter interval: TimeInterval, repeat isRepeating: Bool = false, qos: DispatchQoS = DispatchQoS.default, name: String? = nil, executionBlock: @escaping ExecutionBlock) {
+        self.init(rule: UBFireAtIntervalRule(interval, repeat: isRepeating), qos: qos, name: name, executionBlock: executionBlock)
     }
 
     /// Creates a cron job that will fire at the specified date. The job will start right away, no need to call resume.
@@ -118,9 +119,10 @@ public class UBCronJob {
     /// - Parameters:
     ///   - date: The date when the job will fire
     ///   - qos: The quality of service of the job
+    ///   - name: The name of the job
     ///   - executionBlock: The block to be executed by the job
-    public convenience init(fireAt date: Date, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.init(rule: UBFireAtDateRule(date), qos: qos, executionBlock: executionBlock)
+    public convenience init(fireAt date: Date, qos: DispatchQoS = DispatchQoS.default, name: String? = nil, executionBlock: @escaping ExecutionBlock) {
+        self.init(rule: UBFireAtDateRule(date), qos: qos, name: name, executionBlock: executionBlock)
     }
 
     /// Creates a cron job with a fire rule. The job will start right away, no need to call resume.
@@ -128,9 +130,10 @@ public class UBCronJob {
     /// - Parameters:
     ///   - rule: The rule of firing
     ///   - qos: The quality of service of the job
+    ///   - name: The name of the job
     ///   - executionBlock: The block to be executed by the job
-    public convenience init(rule: UBCronRule, qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
-        self.init(qos: qos, executionBlock: executionBlock)
+    public convenience init(rule: UBCronRule, qos: DispatchQoS = DispatchQoS.default, name: String? = nil, executionBlock: @escaping ExecutionBlock) {
+        self.init(qos: qos, name: name, executionBlock: executionBlock)
         setRule(rule)
         resume()
     }
@@ -139,8 +142,10 @@ public class UBCronJob {
     ///
     /// - Parameters:
     ///   - qos: The quality of service of the job
+    ///   - name: The name of the job
     ///   - executionBlock: The block to be executed by the job
-    public init(qos: DispatchQoS = DispatchQoS.default, executionBlock: @escaping ExecutionBlock) {
+    public init(qos: DispatchQoS = DispatchQoS.default, name: String? = nil, executionBlock: @escaping ExecutionBlock) {
+        self.name = name
         identifier = UUID()
         _executionBlock = executionBlock
         dispatchQueue = DispatchQueue(label: "Cron Job Timer \(identifier.uuidString)", qos: qos)
@@ -195,7 +200,7 @@ public class UBCronJob {
     /// Resume or start an initial or paused job
     public func resume() {
         serialQueue.sync {
-            guard let timer = timer else {
+            guard let timer else {
                 return
             }
             if state == .paused || state == .initial {
@@ -233,7 +238,7 @@ extension UBCronJob {
         }
 
         timer.setEventHandler { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
 

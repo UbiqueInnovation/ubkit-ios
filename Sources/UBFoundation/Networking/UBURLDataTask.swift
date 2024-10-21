@@ -8,14 +8,17 @@
 import Foundation
 
 /// A data task that returns downloaded data directly to the app in memory.
-public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, CustomDebugStringConvertible {
+public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, CustomDebugStringConvertible, Sendable {
     // MARK: - Properties
 
     /// The session used to create tasks
-    public private(set) var session: UBDataTaskURLSession
+    public private(set) nonisolated(unsafe) var session: UBDataTaskURLSession
+    private let sessionQueue = DispatchQueue(label: "UBURLDataTask.session")
 
     func setSession(_ session: UBDataTaskURLSession) {
-        self.session = session
+        sessionQueue.sync {
+            self.session = session
+        }
     }
 
     /// The request to execute.
@@ -25,7 +28,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     public let taskDescription: String?
 
     /// Flags that will dictate how the data task will behave
-    public struct Flags: OptionSet {
+    public struct Flags: OptionSet, Sendable {
         public let rawValue: Int
 
         public init(rawValue: Int) {
@@ -42,7 +45,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         public static let refresh = Flags(rawValue: 1 << 3)
     }
 
-    public private(set) var flags: Flags = []
+    public private(set) nonisolated(unsafe) var flags: Flags = []
+    private let flagsQueue = DispatchQueue(label: "UBURLDataTask.flags")
 
     /// The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     public let priority: Float
@@ -59,7 +63,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// A representation of the overall task progress.
     public var progress: Progress {
-        guard #available(iOS 11.0, *), let progress = dataTask?.progress else {
+        guard let progress = dataTask?.progress else {
             return Progress(totalUnitCount: 0)
         }
         return progress
@@ -71,12 +75,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// The underlaying data task
-    private(set) var dataTask: URLSessionDataTask?
+    private(set) nonisolated(unsafe) var dataTask: URLSessionDataTask?
+    private let dataTaskQueue = DispatchQueue(label: "UBURLDataTask.dataTask")
 
     /// The callback queue where all callbacks take place
-    private(set) var callbackQueue: OperationQueue
+    let callbackQueue: OperationQueue
 
-    private static var syncTasksCallbackQueue: OperationQueue = {
+    private static let syncTasksCallbackQueue: OperationQueue = {
         let q = OperationQueue()
         q.name = "UBURLDataTask Sync Callback Queue"
         q.qualityOfService = .userInitiated
@@ -84,10 +89,12 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }()
 
     private func getCallbackQueue() -> OperationQueue {
-        if flags.contains(.synchronous) {
-            return Self.syncTasksCallbackQueue
-        } else {
-            return callbackQueue
+        flagsQueue.sync {
+            if flags.contains(.synchronous) {
+                Self.syncTasksCallbackQueue
+            } else {
+                callbackQueue
+            }
         }
     }
 
@@ -105,16 +112,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - priority: The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     ///   - session: The session for the task creation
     ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue
-    public init(request: UBURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = Networking.sharedSession, callbackQueue: OperationQueue = .main) {
+    public init(request: UBURLRequest, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = UBURLSession.sharedSession, callbackQueue: OperationQueue = .main) {
         self.request = request
         self.session = session
         self.taskDescription = taskDescription
         self.priority = priority
         self.callbackQueue = callbackQueue
         _state = .initial
-
-        // Add the created task to the global network activity
-        Networking.addToGlobalNetworkActivity(self)
     }
 
     /// Initializes the data task.
@@ -129,17 +133,23 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - priority: The relative priority at which you’d like a host to handle the task, specified as a floating point value between 0.0 (lowest priority) and 1.0 (highest priority).
     ///   - session: The session for the task creation
     ///   - callbackQueue: An operation queue for scheduling the delegate calls and completion handlers. The queue should be a serial queue. If none is provided then the callbacks are made on the main queue. Ignored for synchronous tasks.
-    public convenience init(url: URL, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = Networking.sharedSession, callbackQueue: OperationQueue = .main) {
+    public convenience init(url: URL, taskDescription: String? = nil, priority: Float = URLSessionTask.defaultPriority, session: UBDataTaskURLSession = UBURLSession.sharedSession, callbackQueue: OperationQueue = .main) {
         self.init(request: UBURLRequest(url: url), taskDescription: taskDescription, priority: priority, session: session, callbackQueue: callbackQueue)
     }
 
     /// :nodoc:
     deinit {
-        dataTaskProgressObservation?.invalidate()
-        dataTaskProgressObservation = nil
-        dataTaskStateObservation?.invalidate()
-        dataTaskStateObservation = nil
-        dataTask?.cancel()
+        dataTaskProgressObservationDispatchQueue.sync {
+            dataTaskProgressObservation?.invalidate()
+            dataTaskProgressObservation = nil
+        }
+        dataTaskStateObservationQueue.sync {
+            dataTaskStateObservation?.invalidate()
+            dataTaskStateObservation = nil
+        }
+        dataTaskQueue.sync {
+            dataTask?.cancel()
+        }
         requestStartSemaphore.signal()
         synchronousStartSemaphore.signal()
     }
@@ -156,13 +166,17 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// Start the task with the given request. It will cancel any ongoing request
     public func start(ignoreCache: Bool) {
-        if ignoreCache {
-            flags.insert(.ignoreCache)
-        } else {
-            flags.remove(.ignoreCache)
+        let f = flagsQueue.sync {
+            if ignoreCache {
+                flags.insert(.ignoreCache)
+            } else {
+                flags.remove(.ignoreCache)
+            }
+            flags.remove(.refresh)
+
+            return flags
         }
-        flags.remove(.refresh)
-        start(flags: flags)
+        start(flags: f)
     }
 
     /// Start the task with the given request. It will cancel any ongoing request
@@ -176,7 +190,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         // Set the state to waiting execution and launch the task
         state = .waitingExecution
 
-        self.flags = flags
+        flagsQueue.sync {
+            self.flags = flags
+        }
 
         let modifier = requestModifier
 
@@ -186,7 +202,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         // Apply all modification
         modifier.modifyRequest(r) { [weak self] result in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             switch result {
@@ -194,9 +210,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                     self.attemptRecovery(data: nil, response: nil, error: error)
                 case let .success(modifiedRequest):
 
-                    if let interceptor = self.requestInterceptor {
+                    if let interceptor = self.requestInterceptorQueue.sync(execute: { self._requestInterceptor }) {
                         interceptor.interceptRequest(modifiedRequest) { [weak self] interceptorResult in
-                            guard let self = self else { return }
+                            guard let self else { return }
                             if let result = interceptorResult {
                                 self.dataTaskCompleted(data: result.data, response: result.response, error: result.error, info: result.info)
                             } else {
@@ -212,7 +228,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     private func startRequest(_ modifiedRequest: UBURLRequest) {
         // Create a new task from the preferences
-        guard let dataTask = self.session.dataTask(with: modifiedRequest, owner: self) else {
+        let dataTask = sessionQueue.sync {
+            self.session.dataTask(with: modifiedRequest, owner: self)
+        }
+        guard let dataTask else {
             if self.state == .cancelled {
                 self.state = .finished
             }
@@ -225,10 +244,10 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         requestStartSemaphore.wait()
 
-        if #available(iOS 11.0, *) {
-            // Observe the task progress
+        // Observe the task progress
+        dataTaskProgressObservationDispatchQueue.sync {
             self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-                guard let self = self else {
+                guard let self else {
                     return
                 }
 
@@ -237,7 +256,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         }
 
         // Observe the task state
-        self.dataTaskStateObservation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
+        let observation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
             switch task.state {
                 case .running:
                     if self?.state != .fetching, self?.state != .cancelled {
@@ -248,7 +267,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
             }
         })
 
-        self.dataTask = dataTask
+        dataTaskStateObservationQueue.sync {
+            self.dataTaskStateObservation = observation
+        }
+
+        dataTaskQueue.sync {
+            self.dataTask = dataTask
+        }
 
         requestStartSemaphore.signal()
 
@@ -262,14 +287,20 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// Cancel the current request
     public func cancel(notifyCompletion: Bool) {
         requestStartSemaphore.wait()
-        dataTaskProgressObservation = nil
-        dataTaskStateObservation = nil
+        dataTaskProgressObservationDispatchQueue.sync {
+            dataTaskProgressObservation = nil
+        }
+        dataTaskStateObservationQueue.sync {
+            dataTaskStateObservation = nil
+        }
         requestStartSemaphore.signal()
         requestModifier.cancelCurrentModification()
         failureRecoveryStrategy.cancelCurrentRecovery()
 
         requestStartSemaphore.wait()
-        dataTask?.cancel()
+        dataTaskQueue.sync {
+            dataTask?.cancel()
+        }
         requestStartSemaphore.signal()
 
         switch state {
@@ -345,7 +376,6 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// This modifier will be called everytime before the request is sent, and it gets a chance to modify the request.
     ///
     /// - Parameter modifier: The request modifier to add
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
     @discardableResult
     public func addRequestModifier(_ modifier: UBAsyncURLRequestModifier) -> Self {
         requestModifier.append(modifier)
@@ -356,18 +386,26 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
     /// The request interceptor
     /// This will be called everytime before the request is sent, if it returns a result the request will be skipped and the result will be forewarded to the completion block.
-    public var requestInterceptor: UBURLRequestInterceptor?
+    private nonisolated(unsafe) var _requestInterceptor: UBURLRequestInterceptor?
+    private let requestInterceptorQueue = DispatchQueue(label: "UBURLDataTask.requestInterceptor")
+
+    public func setRequestInterceptor(_ interceptor: UBURLRequestInterceptor?) {
+        requestInterceptorQueue.sync {
+            _requestInterceptor = interceptor
+        }
+    }
 
     // MARK: - State
 
     /// Called when the state of the task changed. First parameter is the old state, the second parameter is the new state
-    public typealias StateTransitionObservationBlock = (State, State, UBURLDataTask) -> Void
+    public typealias StateTransitionObservationBlock = @Sendable (State, State, UBURLDataTask) -> Void
     /// Holds the state observation
-    private var dataTaskStateObservation: NSKeyValueObservation?
+    private nonisolated(unsafe) var dataTaskStateObservation: NSKeyValueObservation?
+    private let dataTaskStateObservationQueue = DispatchQueue(label: "UBURLDataTask.dataTaskStateObservation")
     /// :nodoc:
     private let stateTransitionObserversQueue = DispatchQueue(label: "State Observers")
     /// :nodoc:
-    private var _stateTransitionObservers: [StateTransitionObservationBlock] = []
+    private nonisolated(unsafe) var _stateTransitionObservers: [StateTransitionObservationBlock] = []
     /// Holds the state observers
     private var stateTransitionObservers: [StateTransitionObservationBlock] {
         stateTransitionObserversQueue.sync {
@@ -376,7 +414,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     }
 
     /// The state of the task
-    public enum State: CustomDebugStringConvertible {
+    public enum State: CustomDebugStringConvertible, Sendable {
         /// Initial, the task was never run
         case initial
         /// The task is added and waiting for a spot to execute
@@ -394,17 +432,17 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         public var debugDescription: String {
             switch self {
                 case .initial:
-                    return "Initial"
+                    "Initial"
                 case .waitingExecution:
-                    return "Waiting Execution"
+                    "Waiting Execution"
                 case .fetching:
-                    return "Fetching"
+                    "Fetching"
                 case .parsing:
-                    return "Parsing"
+                    "Parsing"
                 case .finished:
-                    return "Finished"
+                    "Finished"
                 case .cancelled:
-                    return "Canceled"
+                    "Canceled"
             }
         }
     }
@@ -412,7 +450,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private let stateDispatchQueue = DispatchQueue(label: "State")
     /// :nodoc:
-    private var _state: State {
+    private nonisolated(unsafe) var _state: State {
         willSet {
             // Validate state machine
             switch (_state, newValue) {
@@ -431,8 +469,8 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
                     break
                 default:
                     let errorMessage = "Invalid state transition from \(_state) -> \(newValue)"
-                    assertionFailure(errorMessage)
-                    UBNonFatalErrorReporter.report(NSError(domain: "UBURLDataTask", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
+                    #assertionFailure(errorMessage)
+                    UBNonFatalErrorReporter.shared.report(NSError(domain: "UBURLDataTask", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
             }
         }
         didSet {
@@ -458,7 +496,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private func notifyStateTransition(old: State, new: State) {
         self.stateTransitionObservers.forEach { observer in
             getCallbackQueue().addOperation { [weak self] in
-                guard let self = self else {
+                guard let self else {
                     return
                 }
                 observer(old, new, self)
@@ -478,13 +516,15 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: Progress
 
     /// A progress observation block. The second paramter is the percentage of completion, between 0.00 and 1.00
-    public typealias ProgressObservationBlock = (UBURLDataTask, Double) -> Void
+    public typealias ProgressObservationBlock = @Sendable (UBURLDataTask, Double) -> Void
+    /// :nodoc:
+    private let dataTaskProgressObservationDispatchQueue = DispatchQueue(label: "Task Progress Observation")
     /// The progress observation holder
-    private var dataTaskProgressObservation: NSKeyValueObservation?
+    private nonisolated(unsafe) var dataTaskProgressObservation: NSKeyValueObservation?
     /// :nodoc:
     private let progressObserversDispatchQueue = DispatchQueue(label: "Progress Observers")
     /// :nodoc:
-    private var _progressObservers: [ProgressObservationBlock] = []
+    private nonisolated(unsafe) var _progressObservers: [ProgressObservationBlock] = []
     /// The progress observers
     private var progressObservers: [ProgressObservationBlock] {
         progressObserversDispatchQueue.sync {
@@ -496,7 +536,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     private func notifyProgress(_ progress: Double) {
         self.progressObservers.forEach { observer in
             getCallbackQueue().addOperation { [weak self] in
-                guard let self = self else {
+                guard let self else {
                     return
                 }
                 observer(self, progress)
@@ -516,9 +556,9 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     // MARK: - Completion
 
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingBlock<T> = (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingBlock<T> = @Sendable (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// A completion handling block called at the end of the task.
-    public typealias CompletionHandlingNullableDataBlock = (Result<Data?, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
+    public typealias CompletionHandlingNullableDataBlock = @Sendable (Result<Data?, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask) -> Void
     /// :nodoc:
     let completionHandlersDispatchQueue = DispatchQueue(label: "Completion Handlers")
 
@@ -526,7 +566,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     public typealias CompletionHandlerIdentifier = UUID
 
     /// The completion handlers
-    private var _completionHandlers: [CompletionHandlerIdentifier: CompletionHandlerWrapper] = [:]
+    private nonisolated(unsafe) var _completionHandlers: [CompletionHandlerIdentifier: CompletionHandlerWrapper] = [:]
 
     private var completionHandlers: [CompletionHandlerWrapper] {
         completionHandlersDispatchQueue.sync {
@@ -549,20 +589,40 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// A semaphore to ensure when starting a task in synchronous mode, to block the current thread
     private let synchronousStartSemaphore = DispatchSemaphore(value: 1)
 
+    private final class ResultHolder<T: Sendable>: Sendable {
+        var fetchedResult: (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)? {
+            get {
+                queue.sync {
+                    _fetchedResult
+                }
+            }
+            set {
+                queue.sync {
+                    _fetchedResult = newValue
+                }
+            }
+        }
+
+        private nonisolated(unsafe) var _fetchedResult: (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
+        private let queue = DispatchQueue(label: "ResultHolder")
+    }
+
     /// Starts the data task and blocks the current thread until a response or an error are returned
     ///
     /// - Parameter decoder: A decoder for the response
     /// - Returns: The result of the task
     @discardableResult
-    public func startSynchronous<T>(decoder: UBURLDataTaskDecoder<T>) -> (result: Result<T, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
+    public func startSynchronous<T: Sendable>(decoder: UBURLDataTaskDecoder<T>) -> (result: Result<T, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
 
-        flags.insert(.synchronous)
+        _ = flagsQueue.sync {
+            flags.insert(.synchronous)
+        }
 
-        var fetchedResult: (Result<T, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
+        let resultHolder = ResultHolder<T>()
 
         let completionBlockIdentifier = addCompletionHandler(decoder: decoder) { [weak self] result, response, taskInfo, dataTask in
-            fetchedResult = (result, response, taskInfo, dataTask)
+            resultHolder.fetchedResult = (result, response, taskInfo, dataTask)
             self?.synchronousStartSemaphore.signal()
         }
 
@@ -579,13 +639,15 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
-        guard let unwrappedResult = fetchedResult else {
+        guard let unwrappedResult = resultHolder.fetchedResult else {
             return (.failure(UBNetworkingError.internal(.unwrapError)), nil, nil, self)
         }
 
         synchronousStartSemaphore.signal()
 
-        flags.remove(.synchronous)
+        _ = flagsQueue.sync {
+            flags.remove(.synchronous)
+        }
 
         return unwrappedResult
     }
@@ -598,12 +660,14 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     public func startSynchronous() -> (result: Result<Data, UBNetworkingError>, response: HTTPURLResponse?, info: UBNetworkingTaskInfo?, dataTask: UBURLDataTask) {
         synchronousStartSemaphore.wait()
 
-        flags.insert(.synchronous)
+        _ = flagsQueue.sync {
+            flags.insert(.synchronous)
+        }
 
-        var fetchedResult: (Result<Data, UBNetworkingError>, HTTPURLResponse?, UBNetworkingTaskInfo?, UBURLDataTask)?
+        let resultHolder = ResultHolder<Data>()
 
         let completionBlockIdentifier = addCompletionHandler(decoder: .passthrough) { [weak self] result, response, taskInfo, dataTask in
-            fetchedResult = (result, response, taskInfo, dataTask)
+            resultHolder.fetchedResult = (result, response, taskInfo, dataTask)
             self?.synchronousStartSemaphore.signal()
         }
 
@@ -620,13 +684,15 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         removeCompletionHandler(identifier: completionBlockIdentifier)
 
-        guard let unwrappedResult = fetchedResult else {
+        guard let unwrappedResult = resultHolder.fetchedResult else {
             return (Result.failure(.internal(.unwrapError)), nil, nil, self)
         }
 
         synchronousStartSemaphore.signal()
 
-        flags.remove(.synchronous)
+        _ = flagsQueue.sync {
+            flags.remove(.synchronous)
+        }
 
         return unwrappedResult
     }
@@ -655,7 +721,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - Parameter callbackQueue: If not null, the queue where this specific handler will be called
     ///   - completionHandler: A completion handler
     @discardableResult
-    public func addCompletionHandler<T>(decoder: UBURLDataTaskDecoder<T>, callbackQueue: OperationQueue? = nil, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
+    public func addCompletionHandler<T: Sendable>(decoder: UBURLDataTaskDecoder<T>, callbackQueue: OperationQueue? = nil, completionHandler: @escaping @Sendable CompletionHandlingBlock<T>) -> UUID {
         let wrapper = CompletionHandlerWrapper(decoder: decoder, completion: completionHandler, callbackQueue: callbackQueue)
         let uuid = CompletionHandlerIdentifier()
         completionHandlersDispatchQueue.sync {
@@ -675,7 +741,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - completionHandler: A completion handler
     ///   - callbackQueue: If not null, where the callback will be executed
     @discardableResult
-    public func addCompletionHandler<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, callbackQueue: OperationQueue? = nil, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
+    public func addCompletionHandler<T: Sendable>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, callbackQueue: OperationQueue? = nil, completionHandler: @escaping CompletionHandlingBlock<T>) -> UUID {
         let wrapper = CompletionHandlerWrapper(decoder: decoder, errorDecoder: errorDecoder, completion: completionHandler, callbackQueue: callbackQueue)
         let uuid = CompletionHandlerIdentifier()
         completionHandlersDispatchQueue.sync {
@@ -698,7 +764,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private let responseValidatorsDispatchQueue = DispatchQueue(label: "Response validators")
     /// :nodoc:
-    private var _responseValidators: [UBHTTPURLResponseValidator] = []
+    private nonisolated(unsafe) var _responseValidators: [UBHTTPURLResponseValidator] = []
     /// The validators
     private var responseValidators: [UBHTTPURLResponseValidator] {
         responseValidatorsDispatchQueue.sync {
@@ -784,7 +850,7 @@ extension UBURLDataTask {
         let callbackQueue: OperationQueue?
 
         /// :nodoc:
-        init<T>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
+        init<T: Sendable>(decoder: UBURLDataTaskDecoder<T>, completion: @escaping @Sendable CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
             self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
@@ -809,7 +875,7 @@ extension UBURLDataTask {
         }
 
         /// :nodoc:
-        init<T, E: UBURLDataTaskErrorBody>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<E>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
+        init<T: Sendable>(decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, completion: @escaping CompletionHandlingBlock<T>, callbackQueue: OperationQueue?) {
             self.callbackQueue = callbackQueue
             // Create the block that gets called when decoding is ready
             executionBlock = { data, response, info, callbackQueue, caller in
@@ -828,7 +894,7 @@ extension UBURLDataTask {
             // Create a block to be called on failure
             failureBlock = { error, data, response, info, callbackQueue, caller in
                 let newError: Error
-                if let data = data, let response = response {
+                if let data, let response {
                     var decodedError = try? errorDecoder.decode(data: data, response: response)
                     decodedError?.baseError = error
                     newError = decodedError ?? error

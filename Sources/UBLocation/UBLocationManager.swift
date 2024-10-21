@@ -11,7 +11,8 @@ import UBFoundation
 import UIKit
 
 /// An object defining methods that handle events related to GPS location.
-public protocol UBLocationManagerDelegate: CLLocationManagerDelegate {
+@MainActor
+public protocol UBLocationManagerDelegate: CLLocationManagerDelegate, Sendable {
     /// Notifies the delegate that the permission level for the desired usage has been granted.
     func locationManager(_ manager: UBLocationManager, grantedPermission permission: UBLocationManager.AuthorizationLevel, accuracy: UBLocationManager.AccuracyLevel)
     func locationManager(permissionDeniedFor manager: UBLocationManager)
@@ -58,6 +59,7 @@ public extension UBLocationManagerDelegate {
 
 /// A convenience wrapper for `CLLocationManager` which facilitates obtaining the required authorization
 /// for the desired usage (defined as a set of `UBLocationManager.LocationMonitoringUsage`)
+@MainActor
 public class UBLocationManager: NSObject {
     /// The shared location manager.
     public static let shared = UBLocationManager()
@@ -113,26 +115,7 @@ public class UBLocationManager: NSObject {
 
     /// Allows logging all the changes in authorization status, separately from any delegates
     public var logLocationPermissionChange: ((CLAuthorizationStatus) -> Void)?
-    private var authorizationStatus: CLAuthorizationStatus? {
-        didSet {
-            DispatchQueue.main.async {
-                if let authorizationStatus = self.authorizationStatus {
-                    self.authorizationCallbackTimers.values.forEach {
-                        $0.invalidate()
-                    }
-                    self.authorizationCallbackTimers.removeAll()
-                    self.pendingAuthorizationStatusCallbacks.values.forEach {
-                        $0(authorizationStatus)
-                    }
-                    self.pendingAuthorizationStatusCallbacks.removeAll()
-                }
-            }
-        }
-    }
-
-    private var pendingAuthorizationStatusCallbacks: [UUID: (CLAuthorizationStatus) -> Void] = [:]
-    private var authorizationCallbackTimers: [UUID: Timer] = [:]
-    private let timeoutTime: TimeInterval = 4
+    public private(set) var authorizationStatus: CLAuthorizationStatus
 
     /// The desired location accuracy of the underlying `CLLocationManager`
     public var desiredAccuracy: CLLocationAccuracy {
@@ -154,11 +137,7 @@ public class UBLocationManager: NSObject {
     }
 
     public var accuracyLevel: UBLocationManager.AccuracyLevel {
-        if #available(iOS 14.0, *) {
-            return (locationManager as? CLLocationManager)?.accuracyAuthorization.accuracyLevel ?? .full
-        } else {
-            return .full
-        }
+        (locationManager as? CLLocationManager)?.accuracyAuthorization.accuracyLevel ?? .full
     }
 
 #if !os(visionOS)
@@ -226,8 +205,7 @@ public class UBLocationManager: NSObject {
     private var lastDelegateFreshState: [ObjectIdentifier: Bool] = [:]
 
     /// Does the location manager have the required authorization level for `usage`?
-    public static func hasRequiredAuthorizationLevel(forUsage usage: Set<LocationMonitoringUsage>) -> Bool {
-        let authorizationStatus = CLLocationManager.authorizationStatus()
+    public func hasRequiredAuthorizationLevel(forUsage usage: Set<LocationMonitoringUsage>) -> Bool {
         switch authorizationStatus {
             case .authorizedAlways:
                 return true
@@ -248,30 +226,8 @@ public class UBLocationManager: NSObject {
     }
 
     /// Does the location manager have the required authorization level for `usage`?
-    public static func hasRequiredAuthorizationLevel(forUsage usage: LocationMonitoringUsage) -> Bool {
+    public func hasRequiredAuthorizationLevel(forUsage usage: LocationMonitoringUsage) -> Bool {
         hasRequiredAuthorizationLevel(forUsage: Set([usage]))
-    }
-
-    public func getAuthorizationStatus(completion: @escaping (CLAuthorizationStatus) -> Void) {
-        if let authorizationStatus {
-            completion(authorizationStatus)
-        } else {
-            let id = UUID()
-            let timer = Timer.scheduledTimer(withTimeInterval: timeoutTime, repeats: false) { [weak self] _ in
-                guard let self else { return }
-                DispatchQueue.main.async {
-                    if let callback = self.pendingAuthorizationStatusCallbacks[id] {
-                        callback(.notDetermined)
-                        self.pendingAuthorizationStatusCallbacks.removeValue(forKey: id)
-                    }
-                    self.authorizationCallbackTimers.removeValue(forKey: id)
-                }
-            }
-            DispatchQueue.main.async {
-                self.authorizationCallbackTimers[id] = timer
-                self.pendingAuthorizationStatusCallbacks[id] = completion
-            }
-        }
     }
 
     /// The underlying location manager
@@ -293,6 +249,7 @@ public class UBLocationManager: NSObject {
     ///   - locationManager: The underlying location manager
     init(locationManager: UBLocationManagerProtocol = CLLocationManager()) {
         self.locationManager = locationManager
+        authorizationStatus = locationManager.authorizationStatus
         timeout = Self.defaultTimeout
 
         super.init()
@@ -351,9 +308,8 @@ public class UBLocationManager: NSObject {
         let id = ObjectIdentifier(delegate)
         delegateWrappers[id] = wrapper
 
-        let authStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
-        switch authStatus {
+        switch authorizationStatus {
             case .authorizedAlways:
                 startLocationMonitoringWithoutChecks(delegate, usage: usage)
             case .authorizedWhenInUse:
@@ -428,7 +384,7 @@ public class UBLocationManager: NSObject {
 
         self.startLocationMonitoringForAllDelegates()
 
-        assert(!delegateWrappers.isEmpty || allUsages == [])
+        #assert(!delegateWrappers.isEmpty || allUsages == [])
     }
 
     /// Stops monitoring all location service events
@@ -473,12 +429,12 @@ public class UBLocationManager: NSObject {
             self.permissionRequestUsage = nil
         }
 
-        let authStatus = locationManager.authorizationStatus()
         let minimumAuthorizationLevelRequired = usage.minimumAuthorizationLevelRequired
 
-        switch authStatus {
+        switch authorizationStatus {
             case .authorizedAlways:
                 callback(.success)
+
             case .authorizedWhenInUse:
                 guard minimumAuthorizationLevelRequired == .whenInUse else {
                     // can only ask once
@@ -496,6 +452,7 @@ public class UBLocationManager: NSObject {
                 }
 
                 callback(.success)
+
             case .denied, .restricted:
                 callback(.showSettings)
 
@@ -558,10 +515,12 @@ public class UBLocationManager: NSObject {
     private func startLocationTimer() {
         locationTimer?.invalidate()
         locationTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { [weak self] _ in
-            guard let self = self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
-            self.timedOut = true
+            MainActor.assumeIsolated {
+                guard let self, let location = self.locationManager.location, location.timestamp > Date(timeIntervalSinceNow: -Double(self.maximumLastLocationTimestampSeconds)) else { return }
+                self.timedOut = true
 
-            self.notifyDelegates(withLocations: [location])
+                self.notifyDelegates(withLocations: [location])
+            }
         })
     }
 
@@ -572,12 +531,14 @@ public class UBLocationManager: NSObject {
             guard let time = delegate.locationManagerMaxFreshAge else { return nil }
 
             return Timer.scheduledTimer(withTimeInterval: time, repeats: false, block: { [weak self, weak delegate] _ in
-                guard let self = self, let delegate = delegate else { return }
+                MainActor.assumeIsolated {
+                    guard let self, let delegate else { return }
 
-                let lastState = self.lastDelegateFreshState[ObjectIdentifier(delegate), default: true]
-                if lastState != false {
-                    delegate.locationManager(self, locationIsFresh: false)
-                    self.lastDelegateFreshState[ObjectIdentifier(delegate)] = false
+                    let lastState = self.lastDelegateFreshState[ObjectIdentifier(delegate), default: true]
+                    if lastState != false {
+                        delegate.locationManager(self, locationIsFresh: false)
+                        self.lastDelegateFreshState[ObjectIdentifier(delegate)] = false
+                    }
                 }
             })
         }
@@ -605,15 +566,15 @@ public class UBLocationManager: NSObject {
     }
 }
 
-extension UBLocationManager: CLLocationManagerDelegate {
-    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+extension UBLocationManager: @preconcurrency CLLocationManagerDelegate {
+    public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
         let authorization = manager.authorizationStatus
         authorizationStatus = authorization
         logLocationPermissionChange?(authorization)
 
         self.startLocationMonitoringForAllDelegates()
 
-        if Self.hasRequiredAuthorizationLevel(forUsage: allUsages) {
+        if hasRequiredAuthorizationLevel(forUsage: allUsages) {
             #if !os(visionOS)
             let permission: AuthorizationLevel = authorization == .authorizedAlways ? .always : .whenInUse
             #else
@@ -633,7 +594,7 @@ extension UBLocationManager: CLLocationManagerDelegate {
         // permission request callbacks
         if let usage = self.permissionRequestUsage,
            let callback = self.permissionRequestCallback {
-            let hasRequiredLevel = Self.hasRequiredAuthorizationLevel(forUsage: usage)
+            let hasRequiredLevel = hasRequiredAuthorizationLevel(forUsage: usage)
             callback(hasRequiredLevel ? .success : .failure)
 
             self.permissionRequestCallback = nil
@@ -722,6 +683,10 @@ extension UBLocationManager: CLLocationManagerDelegate {
     }
 }
 
+extension CLVisit: @unchecked @retroactive Sendable {}
+extension CLRegion: @unchecked @retroactive Sendable {}
+extension CLHeading: @unchecked @retroactive Sendable {}
+
 public extension UBLocationManager {
     /// An authorization level granted by the user which allows starting location services
     enum AuthorizationLevel: Int {
@@ -762,7 +727,7 @@ public extension UBLocationManager {
     }
 }
 
-extension Set where Element == UBLocationManager.LocationMonitoringUsage {
+extension Set<UBLocationManager.LocationMonitoringUsage> {
 #if !os(visionOS)
     /// :nodoc:
     var containsRegions: Bool {
@@ -789,9 +754,9 @@ extension Set where Element == UBLocationManager.LocationMonitoringUsage {
     var minimumAuthorizationLevelRequired: UBLocationManager.AuthorizationLevel {
 #if !os(visionOS)
         if requiresBackgroundUpdates {
-            return .always
+            .always
         } else {
-            return .whenInUse
+            .whenInUse
         }
         #else
         return .whenInUse

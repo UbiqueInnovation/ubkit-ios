@@ -8,13 +8,13 @@
 import Foundation
 
 /// A group of data task failure recovery strategies
-public class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy {
+public final class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy {
     // - MARK: Properties
 
     /// :nodoc:
     private let serialStrategies = DispatchQueue(label: "Failure Recovery Strategies")
     /// :nodoc:
-    private var _strategies: [UBNetworkingTaskRecoveryStrategy]
+    private nonisolated(unsafe) var _strategies: [UBNetworkingTaskRecoveryStrategy]
     /// The list of recovery strategies in the group
     public var strategies: [UBNetworkingTaskRecoveryStrategy] {
         serialStrategies.sync {
@@ -48,7 +48,7 @@ public class UBNetworkTaskRecoveryGroup: UBNetworkingTaskRecoveryStrategy {
     /// :nodoc:
     private let serialOperation = DispatchQueue(label: "Failure Recovery Operation")
     /// :nodoc:
-    private var currentRecovery: Recovery?
+    private nonisolated(unsafe) var currentRecovery: Recovery?
     /// Cancels the ongowing recovery
     public func cancelCurrentRecovery() {
         serialOperation.sync {

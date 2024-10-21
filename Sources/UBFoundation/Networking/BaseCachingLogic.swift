@@ -8,7 +8,7 @@
 import Foundation
 
 /// A class that provides auto refreshing caching logic
-open class UBBaseCachingLogic: UBCachingLogic {
+open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
     /// The date formatter to use
     open var dateFormatter: DateFormatter
 
@@ -214,7 +214,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
         // Get the content language from the cached response header. If no language header was stored, assume that the content was cached in the language of the accept header
         let contentLanguage = response.ub_getHeaderField(key: contentLanguageHeaderFieldName) ?? (cachedResponse.userInfo?[UserInfoKeyAcceptLanguage] as? String)
         // Check that the content language of the cached response is contained in the request accepted language
-        if let contentLanguage = contentLanguage,
+        if let contentLanguage,
            let acceptLanguage = request.value(forHTTPHeaderField: acceptedLanguageHeaderFieldName),
            acceptLanguage.lowercased().contains(contentLanguage.lowercased()) == false {
             return modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .contentLanguageNotAccepted(contentLanguage))
@@ -222,7 +222,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
 
         // Check Max Age
         if let cacheControlHeader = response.ub_getHeaderField(key: cacheControlHeaderFieldName),
-           let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), let maxAge = cacheControlDirectives.maxAge, let responseDateHearder = response.ub_getHeaderField(key: dateHeaderFieldName), let responseDate = dateFormatter.date(from: responseDateHearder) {
+           let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), let maxAge = cacheControlDirectives.maxAge, let responseDateHeader = response.ub_getHeaderField(key: dateHeaderFieldName), let responseDate = dateFormatter.date(from: responseDateHeader) {
             // cacheAge: Round up to next seconds
             // Rounding is important s.t. re-requests with interval < 1s are not
             // treated differently that requests after > 1s
@@ -246,7 +246,7 @@ open class UBBaseCachingLogic: UBCachingLogic {
             }
 
             // If there is no max age neither expires, don't cache
-        } else if let responseDateHearder = response.ub_getHeaderField(key: dateHeaderFieldName), let responseDate = dateFormatter.date(from: responseDateHearder) {
+        } else if let responseDateHeader = response.ub_getHeaderField(key: dateHeaderFieldName), let _ = dateFormatter.date(from: responseDateHeader) {
             // We could do heuristic caching, but behaviour could be unexpected
             return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders), possible: possibleResult, reason: .noCacheHeaders)
 

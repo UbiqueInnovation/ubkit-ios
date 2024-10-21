@@ -49,7 +49,6 @@ public enum UBKeychainAccessibility {
      without a passcode. Disabling the device passcode will cause all
      items in this class to be deleted.
      */
-    @available(iOS 8.0, OSX 10.10, *)
     case whenPasscodeSetThisDeviceOnly
 
     /**
@@ -92,20 +91,20 @@ extension UBKeychainAccessibility: RawRepresentable {
                     self = .whenUnlocked
                 case String(kSecAttrAccessibleAfterFirstUnlock):
                     self = .afterFirstUnlock
-                #if !targetEnvironment(macCatalyst)
-                    case String(kSecAttrAccessibleAlways):
-                        self = .always
-                #endif
+#if !targetEnvironment(macCatalyst)
+                case String(kSecAttrAccessibleAlways):
+                    self = .always
+#endif
                 case String(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly):
                     self = .whenPasscodeSetThisDeviceOnly
                 case String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly):
                     self = .whenUnlockedThisDeviceOnly
                 case String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly):
                     self = .afterFirstUnlockThisDeviceOnly
-                #if !targetEnvironment(macCatalyst)
-                    case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
-                        self = .alwaysThisDeviceOnly
-                #endif
+#if !targetEnvironment(macCatalyst)
+                case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
+                    self = .alwaysThisDeviceOnly
+#endif
                 default:
                     return nil
             }
@@ -115,18 +114,18 @@ extension UBKeychainAccessibility: RawRepresentable {
                     self = .whenUnlocked
                 case String(kSecAttrAccessibleAfterFirstUnlock):
                     self = .afterFirstUnlock
-                #if !targetEnvironment(macCatalyst)
-                    case String(kSecAttrAccessibleAlways):
-                        self = .always
-                #endif
+#if !targetEnvironment(macCatalyst)
+                case String(kSecAttrAccessibleAlways):
+                    self = .always
+#endif
                 case String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly):
                     self = .whenUnlockedThisDeviceOnly
                 case String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly):
                     self = .afterFirstUnlockThisDeviceOnly
-                #if !targetEnvironment(macCatalyst)
-                    case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
-                        self = .alwaysThisDeviceOnly
-                #endif
+#if !targetEnvironment(macCatalyst)
+                case String(kSecAttrAccessibleAlwaysThisDeviceOnly):
+                    self = .alwaysThisDeviceOnly
+#endif
                 default:
                     return nil
             }
@@ -139,10 +138,10 @@ extension UBKeychainAccessibility: RawRepresentable {
                 return String(kSecAttrAccessibleWhenUnlocked)
             case .afterFirstUnlock:
                 return String(kSecAttrAccessibleAfterFirstUnlock)
-            #if !targetEnvironment(macCatalyst)
-                case .always:
-                    return String(kSecAttrAccessibleAlways)
-            #endif
+#if !targetEnvironment(macCatalyst)
+            case .always:
+                return String(kSecAttrAccessibleAlways)
+#endif
             case .whenPasscodeSetThisDeviceOnly:
                 if #available(OSX 10.10, *) {
                     return String(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly)
@@ -153,10 +152,10 @@ extension UBKeychainAccessibility: RawRepresentable {
                 return String(kSecAttrAccessibleWhenUnlockedThisDeviceOnly)
             case .afterFirstUnlockThisDeviceOnly:
                 return String(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
-            #if !targetEnvironment(macCatalyst)
-                case .alwaysThisDeviceOnly:
-                    return String(kSecAttrAccessibleAlwaysThisDeviceOnly)
-            #endif
+#if !targetEnvironment(macCatalyst)
+            case .alwaysThisDeviceOnly:
+                return String(kSecAttrAccessibleAlwaysThisDeviceOnly)
+#endif
         }
     }
 }

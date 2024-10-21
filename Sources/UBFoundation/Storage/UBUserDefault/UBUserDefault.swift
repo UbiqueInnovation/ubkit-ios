@@ -91,12 +91,12 @@ public protocol UBCodable: Codable, UBUserDefaultValue {}
 
 public extension UBUserDefaultValue where Self: UBCodable {
     init?(with object: Any) {
-        guard let value = (object as? Data).flatMap({ try? UBJSONDecoder().decode(Self.self, from: $0) }) else { return nil }
+        guard let value = (object as? Data).flatMap({ try? JSONDecoder().decode(Self.self, from: $0) }) else { return nil }
         self = value
     }
 
     func object() -> Any? {
-        try? UBJSONEncoder().encode(self)
+        try? JSONEncoder().encode(self)
     }
 }
 
@@ -154,9 +154,9 @@ extension Optional: UBUserDefaultValue where Wrapped: UBUserDefaultValue {
     public func object() -> Any? {
         switch self {
             case let .some(value):
-                return value.object()
+                value.object()
             case .none:
-                return nil
+                nil
         }
     }
 }

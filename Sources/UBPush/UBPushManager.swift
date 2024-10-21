@@ -5,9 +5,10 @@
 //  Created by Zeno Koller on 23.03.20.
 //
 
+import os.log
 import UBFoundation
 import UIKit
-import UserNotifications
+@preconcurrency import UserNotifications
 
 /// Handles requesting push permissions. Clients should customize the following components specific to the client application:
 ///
@@ -46,13 +47,15 @@ import UserNotifications
 ///         }
 ///
 
+@MainActor
 open class UBPushManager: NSObject {
-    static let logger: UBLogger = UBPushLogging.frameworkLoggerFactory(category: "PushManager")
+    static let logger = Logger(subsystem: "ch.ubique.ubkit", category: "PushManager")
 
     /// Closure to handle the permission request result
-    public typealias PermissionRequestCallback = (PermissionRequestResult) -> Void
+    public typealias PermissionRequestCallback = @Sendable (PermissionRequestResult) -> Void
 
     /// :nodoc:
+    @MainActor
     public enum PermissionRequestResult {
         /// Push permission was obtained successfully
         case success
@@ -84,6 +87,7 @@ open class UBPushManager: NSObject {
         }
     }
 
+    @MainActor
     private struct UBPushTokenStorage {
         static var shared = UBPushTokenStorage()
 
@@ -168,11 +172,10 @@ open class UBPushManager: NSObject {
     /// Requests APNS token (if .authorized)
     ///
     private func registerForPushNotification() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
+        UNUserNotificationCenter.current().getNotificationSettings { @Sendable settings in
             if settings.authorizationStatus == .authorized {
-                UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
-
-                DispatchQueue.main.async {
+                Task { @MainActor in
+                    UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
                     UIApplication.shared.registerForRemoteNotifications()
                 }
             }
@@ -198,7 +201,7 @@ open class UBPushManager: NSObject {
         let currentPushRequest = latestPushRequest
 
         let options = makeAuthorizationOptions(includingCritical: includingCritical, includingNotificationSettings: includingNotificationSettings)
-        UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, _ in
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { @Sendable granted, _ in
 
             guard granted else {
                 DispatchQueue.main.async {
@@ -211,7 +214,7 @@ open class UBPushManager: NSObject {
             // If registering for remote notifications was not handled by the system within a short period,
             // assume the permission request failed
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 15) { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
 
                 if let callback = self.permissionRequestCallback, currentPushRequest == self.latestPushRequest {
                     callback(.failure)
@@ -219,9 +222,8 @@ open class UBPushManager: NSObject {
                 }
             }
 
-            UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
-
-            DispatchQueue.main.async {
+            Task { @MainActor in
+                UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
                 UIApplication.shared.registerForRemoteNotifications()
             }
         }
@@ -232,19 +234,11 @@ open class UBPushManager: NSObject {
         var options: UNAuthorizationOptions = [.alert, .badge, .sound]
 
         if includingCritical {
-            if #available(iOS 12.0, *) {
-                options.insert(.criticalAlert)
-            } else {
-                assertionFailure()
-            }
+            options.insert(.criticalAlert)
         }
 
         if includingNotificationSettings {
-            if #available(iOS 12.0, *) {
-                options.insert(.providesAppNotificationSettings)
-            } else {
-                assertionFailure()
-            }
+            options.insert(.providesAppNotificationSettings)
         }
 
         return options
@@ -283,7 +277,7 @@ open class UBPushManager: NSObject {
             permissionRequestCallback = nil
         }
 
-        Self.logger.error("didFailToRegisterForRemoteNotificationsWithError: \(error.localizedDescription)")
+        Self.logger.error("didFailToRegisterForRemoteNotificationsWithError: \(error.localizedDescription, privacy: .public)")
     }
 
     /// Querys the current push permissions from the system
@@ -307,7 +301,7 @@ open class UBPushManager: NSObject {
     }
 
     /// Invalidates the current push registration, forcing a new registration request
-    public func invalidateAndResendPushRegistration(completion: ((Error?) -> Void)? = nil) {
+    public func invalidateAndResendPushRegistration(completion: (@Sendable (Error?) -> Void)? = nil) {
         for prm in self.allPushRegistrationManagers {
             prm.invalidate(completion: completion)
         }
@@ -318,18 +312,30 @@ open class UBPushManager: NSObject {
 
 extension UBPushManager: UNUserNotificationCenterDelegate {
     /// :nodoc:
-    public func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        pushHandler.handleWillPresentNotification(notification, completionHandler: completionHandler)
+    public nonisolated func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping @Sendable (UNNotificationPresentationOptions) -> Void) {
+        Task { @MainActor in
+            pushHandler.handleWillPresentNotification(notification, completionHandler: completionHandler)
+        }
     }
 
     /// :nodoc:
-    public func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        pushHandler.handleDidReceiveResponse(response, completionHandler: completionHandler)
+    public nonisolated func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping @Sendable () -> Void) {
+        Task { @MainActor in
+            pushHandler.handleDidReceiveResponse(response, completionHandler: completionHandler)
+        }
     }
 
     /// :nodoc:
-    public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
-        pushHandler.openInAppSettings(notification)
+    public nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
+        if let notification {
+            Task { @MainActor in
+                pushHandler.openInAppSettings(notification)
+            }
+        } else {
+            Task { @MainActor in
+                pushHandler.openInAppSettings(nil)
+            }
+        }
     }
 }
 
@@ -341,9 +347,9 @@ private extension UBPushManager.PermissionRequestResult {
         if
             let settingsUrl = UIApplication.ub_appNotificationSettingsURL,
             UIApplication.shared.canOpenURL(settingsUrl) {
-            return .recoverableFailure(settingsURL: settingsUrl)
+            .recoverableFailure(settingsURL: settingsUrl)
         } else {
-            return .nonRecoverableFailure
+            .nonRecoverableFailure
         }
     }
 }

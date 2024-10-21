@@ -219,8 +219,8 @@ class UBUserDefaultTests: XCTestCase {
         var name: String
         var birthdate: Date
 
-        static var hansMeier = User(name: "HANS MEIER", birthdate: Date.testDate)
-        static var hansMeierReloaded = User(name: "HANS MEIER", birthdate: Date())
+        static let hansMeier = User(name: "HANS MEIER", birthdate: Date.testDate)
+        static let hansMeierReloaded = User(name: "HANS MEIER", birthdate: Date())
     }
 
     enum Color: String, UBRawRepresentable {

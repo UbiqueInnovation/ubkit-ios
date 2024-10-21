@@ -8,7 +8,7 @@
 import Foundation
 
 /// A URL load request that is independent of protocol or URL scheme.
-public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomStringConvertible, CustomDebugStringConvertible {
+public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomStringConvertible, CustomDebugStringConvertible, Sendable {
     // MARK: - Properties
 
     /// Underlaying data holder
@@ -145,7 +145,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///   - object: The object to encode
     ///   - encoder: The encoder
     /// - Throws: incase the ecoder could not encode
-    public mutating func setHTTPJSONBody<T: Encodable>(_ object: T, encoder: JSONEncoder = JSONEncoder()) throws {
+    public mutating func setHTTPJSONBody(_ object: some Encodable, encoder: JSONEncoder = JSONEncoder()) throws {
         let body = try UBURLRequestBody(data: encoder.encode(object), mimeType: .json())
         setHTTPBody(body)
     }
@@ -198,7 +198,6 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///
     /// - Parameter parameters: A dictionary containing the percent encoded query parameters
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
-    @available(iOS 11.0, *)
     public mutating func setPercentEncodedQueryParameters(_ parameters: [String: String?]) throws {
         try setQueryParameters(parameters.map { URLQueryItem(name: $0.key, value: $0.value) }, percentEncoded: true)
     }
@@ -222,7 +221,6 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///
     /// - Parameter parameter: A percent encoded query item
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
-    @available(iOS 11.0, *)
     public mutating func setPercentEncodedQueryParameter(_ parameter: URLQueryItem) throws {
         try setQueryParameters([parameter], percentEncoded: true)
     }
@@ -239,13 +237,12 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     ///
     /// - Parameter parameters: An array containing the percent encoded query parameters
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
-    @available(iOS 11.0, *)
     public mutating func setPercentEncodedQueryParameters(_ parameters: [URLQueryItem]) throws {
         try setQueryParameters(parameters, percentEncoded: true)
     }
 
     private mutating func setQueryParameters(_ parameters: [URLQueryItem], percentEncoded: Bool) throws {
-        guard let url = url else {
+        guard let url else {
             throw UBInternalNetworkingError.missingURL
         }
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
@@ -253,12 +250,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
         }
 
         if percentEncoded {
-            if #available(iOS 11.0, *) {
-                urlComponents.percentEncodedQueryItems = parameters
-            } else {
-                assertionFailure("It's not possible to call percentEncodedQueryItems before iOS 11")
-                urlComponents.queryItems = parameters
-            }
+            urlComponents.percentEncodedQueryItems = parameters
         } else {
             urlComponents.queryItems = parameters
         }
@@ -274,7 +266,7 @@ public struct UBURLRequest: Equatable, Hashable, CustomReflectable, CustomString
     /// - Returns: All query parameters
     /// - Throws: `UBNetworkingError` in case of missing or malformed URL
     public func allQueryParameters() throws -> [URLQueryItem] {
-        guard let url = url else {
+        guard let url else {
             throw UBInternalNetworkingError.missingURL
         }
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {

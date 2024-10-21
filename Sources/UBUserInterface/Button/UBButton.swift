@@ -58,7 +58,7 @@ open class UBButton: UIButton {
         titleLabel?.textAlignment = .center
 
         highlightView.alpha = 0
-        if let imageView = imageView {
+        if let imageView {
             insertSubview(highlightView, belowSubview: imageView)
         } else {
             insertSubview(highlightView, at: 0)

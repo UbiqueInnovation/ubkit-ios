@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-@available(iOS 13.0, *)
+@MainActor
 class ObservableUserDefaults: ObservableObject {
     let userDefaults: UserDefaults
 
@@ -76,9 +76,11 @@ class ObservableUserDefaults: ObservableObject {
     init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
         reload()
-        observer = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { [weak self] _ in
-            guard let self = self else { return }
-            self.reload()
+        observer = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            MainActor.assumeIsolated {
+                self.reload()
+            }
         }
     }
 
@@ -94,7 +96,6 @@ class ObservableUserDefaults: ObservableObject {
     }
 }
 
-@available(iOS 13.0, *)
 public struct UserDefaultsEditor: View {
     let userDefaults: UserDefaults
     let displayName: String

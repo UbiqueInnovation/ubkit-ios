@@ -5,7 +5,7 @@
 //  Created by Matthias Felix on 11.02.22.
 //
 
-import AVFoundation
+@preconcurrency import AVFoundation
 import Foundation
 import UIKit
 
@@ -44,21 +44,25 @@ public class QRScannerView: UIView {
         self.delegate = delegate
         clipsToBounds = true
 
-        NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { [weak self] _ in
-            guard let self = self else { return }
-            self.lastIsRunning = self.isRunning
-            self.lastIsTorchOn = self.isTorchOn
-            self.stopScanning()
-        }
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [weak self] _ in
-            guard let self = self else { return }
-            if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
-                self.startScanning()
-                if let lastIsTorchOn = self.lastIsTorchOn, lastIsTorchOn == true {
-                    self.setTorch(on: true)
-                }
+        NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            MainActor.assumeIsolated {
+                self.lastIsRunning = self.isRunning
+                self.lastIsTorchOn = self.isTorchOn
+                self.stopScanning()
             }
-            self.lastIsRunning = nil
+        }
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            MainActor.assumeIsolated {
+                if let lastIsRunning = self.lastIsRunning, lastIsRunning == true {
+                    self.startScanning()
+                    if let lastIsTorchOn = self.lastIsTorchOn, lastIsTorchOn == true {
+                        self.setTorch(on: true)
+                    }
+                }
+                self.lastIsRunning = nil
+            }
         }
     }
 
@@ -94,7 +98,7 @@ public class QRScannerView: UIView {
         setupCaptureSessionIfNeeded()
 
         if let c = captureSession, !c.isRunning {
-            DispatchQueue.global().async {
+            Task.detached {
                 c.startRunning()
             }
         }
@@ -150,7 +154,7 @@ public class QRScannerView: UIView {
     }
 
     private func startCapture() {
-        guard let videoCaptureDevice = videoCaptureDevice else {
+        guard let videoCaptureDevice else {
             return
         }
 
@@ -162,7 +166,7 @@ public class QRScannerView: UIView {
             return
         }
 
-        guard let captureSession = captureSession, captureSession.canAddInput(videoInput) else {
+        guard let captureSession, captureSession.canAddInput(videoInput) else {
             scanningDidFail(error: .captureSessionError(nil))
             return
         }
@@ -194,14 +198,19 @@ public class QRScannerView: UIView {
 }
 
 extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
-    public func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
-        guard !isScanningPaused else { return } // Don't process any input if scanning is paused
+    public nonisolated func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
+        let stringValues: [String] = metadataObjects.compactMap {
+            guard let object = $0 as? AVMetadataMachineReadableCodeObject else {
+                return nil
+            }
 
-        for metadataObject in metadataObjects {
-            guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { continue }
-            guard let stringValue = readableObject.stringValue else { continue }
-            if found(code: stringValue) {
-                return
+            return object.stringValue
+        }
+        Task { @MainActor in
+            for stringValue in stringValues {
+                if found(code: stringValue) {
+                    return
+                }
             }
         }
     }

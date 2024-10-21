@@ -22,7 +22,6 @@ public class UBURLSessionConfiguration {
     /// The proxy setting for the URLSessionConfiguration,
     public let proxy: UBURLSessionConfigurationProxy?
 
-
     /// Initializes a configuration object
     ///
     /// The configuration will include the "App-Version", "OS-Version" and Proxy-Authorization" headers in addition to all the headers you pass in the sessionConfiguration object. If a conflict occures then the header in the session configuration is preferred.
@@ -33,7 +32,7 @@ public class UBURLSessionConfiguration {
     ///   - defaultServerTrust: A evaluator to use in case no matche is found in the list of hosts. If no default is set and the host is not found then the default OS behaviour is executed.
     ///   - allowRedirections: Set this flag to `false` if you do not want any redirection. If response wants to redirect, and the flag is set to false, the redirection will not happpen and the data task will be called with the response that caused the redirection.
     ///   - cachingLogic: If set the caching will use the passed object. If not then the caching will be the default by the URLSession.
-    public init(sessionConfiguration: URLSessionConfiguration = .default, hostsServerTrusts: [String: UBServerTrustEvaluator] = [:], 
+    public init(sessionConfiguration: URLSessionConfiguration = .default, hostsServerTrusts: [String: UBServerTrustEvaluator] = [:],
                 defaultServerTrust: UBServerTrustEvaluator? = nil, allowRedirections: Bool = true, cachingLogic: UBCachingLogic? = nil,
                 proxy: UBURLSessionConfigurationProxy? = nil) {
         let sessionConfiguration = sessionConfiguration.copy() as! URLSessionConfiguration

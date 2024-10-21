@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object that coordinates a group of related network data transfer tasks.
-public class UBURLSession: UBDataTaskURLSession {
+public final class UBURLSession: UBDataTaskURLSession, Sendable {
     /// The underlying session
     public let urlSession: URLSession
 
@@ -29,7 +29,7 @@ public class UBURLSession: UBDataTaskURLSession {
         let sessionDelegate = UBURLSessionDelegate(configuration: configuration)
         urlSession = URLSession(configuration: configuration.sessionConfiguration, delegate: sessionDelegate, delegateQueue: queue)
         self.sessionDelegate = sessionDelegate
-        sessionDelegate.urlSession = urlSession
+        sessionDelegate.setSession(urlSession)
     }
 
     /// :nodoc:
@@ -80,11 +80,11 @@ public class UBURLSession: UBDataTaskURLSession {
                  let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
                  let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
                  let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
-                #if os(watchOS)
-                    let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
-                #else
-                    let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
-                #endif
+#if os(watchOS)
+                let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
+#else
+                let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
+#endif
 
                 owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
                 owner.completionHandlersDispatchQueue.sync {
@@ -130,7 +130,7 @@ public class UBURLSession: UBDataTaskURLSession {
     }
 
     /// :nodoc:
-    public func reset(completionHandler: @escaping () -> Void) {
+    public func reset(completionHandler: @escaping @Sendable () -> Void) {
         urlSession.reset(completionHandler: completionHandler)
     }
 }

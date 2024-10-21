@@ -15,6 +15,7 @@ import UserNotifications
 ///     UBPushManager.shared.pushHandler = SubclassedPushHanlder()
 ///
 /// to implement app-specific behaviour.
+@MainActor
 open class UBPushHandler: NSObject {
     /// Date of last push message. Override to modify app state after every push (e.g. wipe cache)
     public var lastPushed: Date? {
@@ -47,11 +48,7 @@ open class UBPushHandler: NSObject {
     /// arriving while the application is running.
     open func showInAppPushAlert(withTitle _: String, proposedMessage _: String, notification _: UBPushNotification, shouldPresentCompletionHandler: ((UNNotificationPresentationOptions) -> Void)? = nil) {
         // Show notification banner also when app is already in foreground
-        if #available(iOS 14.0, *) {
-            shouldPresentCompletionHandler?([.banner, .sound])
-        } else {
-            shouldPresentCompletionHandler?([.alert, .sound])
-        }
+        shouldPresentCompletionHandler?([.banner, .sound])
     }
 
     /// Override to present detail view after app is started when user responded to a push.
@@ -133,14 +130,13 @@ open class UBPushHandler: NSObject {
         if isActive {
             let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "App Name Missing"
 
-            let message: String
-            switch (notification.userInfo["aps"] as? [String: Any])?["alert"] {
+            let message: String = switch (notification.userInfo["aps"] as? [String: Any])?["alert"] {
                 case let stringAlert as String:
-                    message = stringAlert
+                    stringAlert
                 case let dictAlert as [String: Any]:
-                    message = (dictAlert["body"] as? String) ?? ""
+                    (dictAlert["body"] as? String) ?? ""
                 default:
-                    message = ""
+                    ""
             }
 
             showInAppPushAlert(withTitle: appName, proposedMessage: message, notification: notification, shouldPresentCompletionHandler: shouldPresentCompletionHandler)

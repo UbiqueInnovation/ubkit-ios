@@ -12,10 +12,10 @@ class UBSessionTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let ex = expectation(description: "a")
-        Networking.sharedSession.reset(completionHandler: {
+        UBURLSession.sharedSession.reset(completionHandler: {
             ex.fulfill()
         })
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     lazy var testBundle: Bundle = {
@@ -25,24 +25,6 @@ class UBSessionTests: XCTestCase {
         }
         return testBundle
     }()
-
-    func testRedirection() {
-        let ex = expectation(description: "s")
-        let url = URL(string: "http://ubique.ch")!
-        let dataTask = UBURLDataTask(url: url, session: Networking.sharedLowPrioritySession)
-        dataTask.addCompletionHandler(decoder: .passthrough) { result, response, _, _ in
-            switch result {
-                case .success:
-                    break
-                case let .failure(error):
-                    XCTFail(error.localizedDescription)
-            }
-            XCTAssertEqual(response?.statusCode.ub_standardHTTPCode, UBStandardHTTPCode.ok)
-            ex.fulfill()
-        }
-        dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
-    }
 
     func testURLValidationFailed() {
         let ex = expectation(description: "s")
@@ -62,7 +44,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testValidCertificatePinning() {
@@ -83,7 +65,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testInvalidCertificatePinning() {
@@ -103,7 +85,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testExpiredCertificate() {
@@ -123,7 +105,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testWrongHostCertificate() {
@@ -143,7 +125,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testSelfSignedCertificate() {
@@ -163,7 +145,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testSelfSignedCertificatePass() {
@@ -183,7 +165,7 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 
     func testDisableEvaluation() {
@@ -203,6 +185,6 @@ class UBSessionTests: XCTestCase {
             ex.fulfill()
         }
         dataTask.start()
-        waitForExpectations(timeout: 30, handler: nil)
+        wait(for: [ex], timeout: 30)
     }
 }

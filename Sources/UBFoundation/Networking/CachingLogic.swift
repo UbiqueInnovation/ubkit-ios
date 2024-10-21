@@ -20,23 +20,23 @@ public enum UBCacheResult {
 
     var reloadHeaders: [String: String] {
         switch self {
-            case .miss: return [:]
-            case .expired(cachedResponse: _, reloadHeaders: let h): return h
-            case .hit(cachedResponse: _, reloadHeaders: let h): return h
+            case .miss: [:]
+            case .expired(cachedResponse: _, reloadHeaders: let h): h
+            case .hit(cachedResponse: _, reloadHeaders: let h): h
         }
     }
 
     var cachedResponse: CachedURLResponse? {
         switch self {
-            case .miss: return nil
-            case .expired(cachedResponse: let r, reloadHeaders: _): return r
-            case .hit(cachedResponse: let r, reloadHeaders: _): return r
+            case .miss: nil
+            case .expired(cachedResponse: let r, reloadHeaders: _): r
+            case .hit(cachedResponse: let r, reloadHeaders: _): r
         }
     }
 }
 
 /// A caching logic object can provide decision when comes to requests and response that needs caching
-public protocol UBCachingLogic {
+public protocol UBCachingLogic: Sendable {
     /// Modify the request before starting
     /// Allows to change the cache policy
     func prepareRequest(_ request: inout URLRequest)

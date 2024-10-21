@@ -6,14 +6,16 @@
 //
 
 import Foundation
-import UIKit
+import SwiftUI
 import UBFoundation
+import UIKit
 
+@MainActor
 protocol DevTool {
     static func setup()
 }
 
-@available(iOS 14.0, *)
+@MainActor
 public enum UBDevTools {
     static var isActivated: Bool = false
 
@@ -29,6 +31,10 @@ public enum UBDevTools {
         for d in devTools {
             d.setup()
         }
+    }
+
+    public static func setAppSettingsView(view: some View) {
+        BackendDevTools.setAppSettingsView(view: view)
     }
 
     public static func setupBaseUrls(baseUrls: [BaseUrl]) {
@@ -76,7 +82,6 @@ public enum UBDevTools {
     }
 }
 
-@available(iOS 14.0, *)
 extension UIWindow {
     private static var initSwizzled = false
 
@@ -120,7 +125,7 @@ extension UIWindow {
         return window
     }
 
-    @objc private func openDevTools() {
+    @objc public func openDevTools() {
         if let rootVC = rootViewController, let devToolsVC = DevToolsViewController() {
             var vc = rootVC
             while let presented = vc.presentedViewController {

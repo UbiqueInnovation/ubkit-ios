@@ -5,10 +5,11 @@
 //  Created by Matthias Felix on 05.10.22.
 //
 
-import OSLog
+@preconcurrency import OSLog
 import SwiftUI
 
 @available(iOS 15.0, *)
+@MainActor
 class DevToolsLogExtractor: ObservableObject {
     private var store: OSLogStore?
 
@@ -35,7 +36,7 @@ class DevToolsLogExtractor: ObservableObject {
     }
 
     func fetchEntries() {
-        guard let store = store else {
+        guard let store else {
             return
         }
 

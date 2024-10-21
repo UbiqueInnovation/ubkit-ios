@@ -9,7 +9,6 @@ import SwiftUI
 import UBFoundation
 import UIKit
 
-@available(iOS 14.0, *)
 public class DevToolsViewController: UIHostingController<DevToolsView> {
     // MARK: - Init
 
@@ -25,12 +24,11 @@ public class DevToolsViewController: UIHostingController<DevToolsView> {
     }
 }
 
-@available(iOS 14.0, *)
 public struct DevToolsView: View {
     @State private var showingKeychainDeleteAlert = false
     @State private var showingUserDefaultsDeleteAlert = false
 
-    @StateObject private var backendUrls = BackendDevTools.viewModel
+    @StateObject private var viewModel = BackendDevTools.viewModel
 
     @State private var cacheUpdateValue = UUID()
 
@@ -42,6 +40,7 @@ public struct DevToolsView: View {
 
     private var contentView: some View {
         Form {
+            viewModel.appSpecificView
             Group {
                 Section(header: Text("UserDefaults.standard")) {
                     Button("Clear UserDefaults.standard") {
@@ -129,8 +128,8 @@ public struct DevToolsView: View {
                 Toggle("Show localization keys", isOn: Binding(get: { Self.showLocalizationKeys }, set: { Self.showLocalizationKeys = $0 }))
             }
             Section(header: Text("Backend URL Config")) {
-                if backendUrls.urls.count > 0 {
-                    List(backendUrls.urls, id: \.title) { bu in
+                if viewModel.urls.count > 0 {
+                    List(viewModel.urls, id: \.title) { bu in
                         BackendUrlEditor(url: bu)
                     }
                     Button {
@@ -168,9 +167,9 @@ public struct DevToolsView: View {
                 }))
             }
 
-            #if !targetEnvironment(simulator)
-                ShareDocumentsView()
-            #endif
+#if !targetEnvironment(simulator)
+            ShareDocumentsView()
+#endif
 
             if #available(iOS 15.0, *) {
                 LogDevToolsView()

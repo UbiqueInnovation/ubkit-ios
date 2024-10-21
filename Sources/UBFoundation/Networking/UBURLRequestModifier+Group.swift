@@ -8,13 +8,13 @@
 import Foundation
 
 /// A group of request modifiers
-public class UBURLRequestModifierGroup: UBURLRequestModifier {
+public final class UBURLRequestModifierGroup: UBURLRequestModifier {
     // - MARK: Properties
 
     /// :nodoc:
     private let serialModifiers = DispatchQueue(label: "Group Modifiers")
     /// :nodoc:
-    private var _modifiers: [UBURLRequestModifier]
+    private nonisolated(unsafe) var _modifiers: [UBURLRequestModifier]
     /// The list of modifier in the group
     public var modifiers: [UBURLRequestModifier] {
         serialModifiers.sync {
@@ -48,7 +48,6 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     /// Add a modifier to the group
     ///
     /// - Parameter modifier: The modifier to add
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
     public func append(_ modifier: UBAsyncURLRequestModifier) {
         serialModifiers.sync {
             _modifiers.append(modifier)
@@ -58,7 +57,7 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     /// :nodoc:
     private let serialOperation = DispatchQueue(label: "Group Modifiers Operation")
     /// :nodoc:
-    private var currentModification: Modification?
+    private nonisolated(unsafe) var currentModification: Modification?
     /// Cancels the ongowing modification
     public func cancelCurrentModification() {
         serialOperation.sync {
@@ -67,7 +66,7 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
+    public func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping @Sendable (Result<UBURLRequest, Error>) -> Void) {
         cancelCurrentModification()
 
         let newModification = Modification()
@@ -80,7 +79,7 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
     }
 
     /// :nodoc:
-    private func recursiveModifyRequest(_ originalRequest: UBURLRequest, modification: Modification, modifiers: ArraySlice<UBURLRequestModifier>, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
+    private func recursiveModifyRequest(_ originalRequest: UBURLRequest, modification: Modification, modifiers: ArraySlice<UBURLRequestModifier>, completion: @escaping @Sendable (Result<UBURLRequest, Error>) -> Void) {
         guard modification.cancelled == false else {
             return
         }
@@ -102,11 +101,11 @@ public class UBURLRequestModifierGroup: UBURLRequestModifier {
 
 extension UBURLRequestModifierGroup {
     /// This is used to convey cancellation information to the running task
-    private class Modification {
+    private final class Modification: Sendable {
         /// :nodoc
         private let serial = DispatchQueue(label: "Group Modifiers Modification Object")
         /// :nodoc
-        private var _cancelled: Bool = false
+        private nonisolated(unsafe) var _cancelled: Bool = false
         /// :nodoc
         var cancelled: Bool {
             get {

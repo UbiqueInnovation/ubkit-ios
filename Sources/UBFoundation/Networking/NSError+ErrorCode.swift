@@ -10,9 +10,9 @@ import Foundation
 extension NSError {
     public var errorCode: String {
         if let codedError = self as? UBCodedError {
-            return codedError.errorCode
+            codedError.errorCode
         } else {
-            return "[\(self.mapDomain(self.domain))\(self.code)]"
+            "[\(self.mapDomain(self.domain))\(self.code)]"
         }
     }
 

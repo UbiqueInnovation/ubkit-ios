@@ -32,14 +32,12 @@ public extension UBURLRequestTokenAuthorization {
 }
 
 /// A protocol describing a bearer token authorisation request modifier
-@available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
 public protocol UBAsyncURLRequestBearerTokenAuthorization: UBAsyncURLRequestModifier {
     /// Fetches the bearer token and returns it
     ///
     func getBearerToken() async throws -> String
 }
 
-@available(macOS 10.15, iOS 13.0, watchOS 6.0, *)
 public extension UBAsyncURLRequestBearerTokenAuthorization {
     /// :nodoc:
     func modifyRequest(_ request: inout UBURLRequest) async throws {

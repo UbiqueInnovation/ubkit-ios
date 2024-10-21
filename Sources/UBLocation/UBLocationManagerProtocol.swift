@@ -17,7 +17,6 @@ public protocol UBLocationManagerProtocol {
     var desiredAccuracy: CLLocationAccuracy { get set }
     var activityType: CLActivityType { get set }
     var pausesLocationUpdatesAutomatically: Bool { get set }
-    @available(iOS 11.0, *)
     var showsBackgroundLocationIndicator: Bool { get set }
     // Starting / stopping updates
     func startUpdatingLocation()
@@ -44,7 +43,7 @@ public protocol UBLocationManagerProtocol {
     func requestAlwaysAuthorization()
 #endif
     
-    func authorizationStatus() -> CLAuthorizationStatus
+    var authorizationStatus: CLAuthorizationStatus { get }
     func locationServicesEnabled() -> Bool
     func significantLocationChangeMonitoringAvailable() -> Bool
 #if !os(visionOS)
@@ -53,10 +52,6 @@ public protocol UBLocationManagerProtocol {
 }
 
 extension CLLocationManager: UBLocationManagerProtocol {
-    public func authorizationStatus() -> CLAuthorizationStatus {
-        CLLocationManager.authorizationStatus()
-    }
-
     @available(*, deprecated, message: "locationServicesEnabled() not exposed to avoid use on main thread. Use CLLocationManager.locationServicesEnabled() directly if needed.")
     public func locationServicesEnabled() -> Bool {
         CLLocationManager.locationServicesEnabled()

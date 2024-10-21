@@ -40,9 +40,9 @@ public struct UBKeychainStored<Value: Codable> {
         get {
             switch keychain.get(for: self.key) {
                 case let .success(value):
-                    return value
+                    value
                 case .failure:
-                    return defaultValue
+                    defaultValue
             }
         }
         set {
