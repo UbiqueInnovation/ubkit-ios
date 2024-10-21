@@ -8,7 +8,7 @@
 import Foundation
 
 public extension UBURLDataTask {
-    struct MetaData {
+    struct MetaData: Sendable {
         public let info: UBNetworkingTaskInfo?
         public let response: HTTPURLResponse?
     }
@@ -69,7 +69,7 @@ public extension UBURLDataTask {
         TaskConfig(session: session)
     }
 
-    struct TaskResult<T> {
+    struct TaskResult<T: Sendable>: Sendable {
         init(resultTuple: ResultTuple<T>) {
             self.resultTuple = resultTuple
         }

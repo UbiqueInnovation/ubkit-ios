@@ -12,12 +12,12 @@ public protocol UBURLRequestTokenAuthorization: UBURLRequestModifier {
     /// Fetches the token and returns it
     ///
     /// - Parameter completion: The completion should be called with success or failure
-    func getToken(completion: @escaping (Result<String, Error>) -> Void)
+    func getToken(completion: @escaping @Sendable (Result<String, Error>) -> Void)
 }
 
 public extension UBURLRequestTokenAuthorization {
     /// :nodoc:
-    func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping (Result<UBURLRequest, Error>) -> Void) {
+    func modifyRequest(_ originalRequest: UBURLRequest, completion: @escaping @Sendable (Result<UBURLRequest, Error>) -> Void) {
         getToken { result in
             var modifierRequest = originalRequest
             switch result {
