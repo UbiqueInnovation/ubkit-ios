@@ -12,7 +12,6 @@ let package = Package(
         .watchOS(.v7),
         .macOS(.v10_15),
         .visionOS(.v2),
-        .macOS(.v14)
     ],
     products: [
         .library(name: "UBFoundation", targets: ["UBFoundation"]),
