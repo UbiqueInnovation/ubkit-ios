@@ -36,6 +36,11 @@ class UBLocationManagerDelegateWrapper {
         // requires background updates or if 'allowsBackgroundLocationUpdates' is set to true,
         // in which case we can reveive updates even without background permissions.
         // If we're in the foreground, we always want the update.
+
+#if !os(visionOS)
         return isBackground ? usageToCheck.requiresBackgroundUpdates || allowsBackgroundLocationUpdates : true
+#else
+        return false
+#endif
     }
 }
