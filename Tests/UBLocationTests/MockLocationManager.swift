@@ -13,7 +13,7 @@ class MockLocationManager: UBLocationManagerProtocol {
     /// The sequence of authorizationStatues that is traversed when requesting Authorization
     var authorizationStatuses: [CLAuthorizationStatus] = [] {
         didSet {
-            delegate?.locationManager?(CLLocationManager(), didChangeAuthorization: _authorizationStatus)
+            delegate?.locationManagerDidChangeAuthorization?(CLLocationManager())
         }
     }
 

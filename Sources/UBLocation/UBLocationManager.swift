@@ -568,7 +568,9 @@ public class UBLocationManager: NSObject {
 }
 
 extension UBLocationManager: @preconcurrency CLLocationManagerDelegate {
-    public func locationManager(_: CLLocationManager, didChangeAuthorization authorization: CLAuthorizationStatus) {
+    public func locationManagerDidChangeAuthorization(
+        _ manager: CLLocationManager
+    ) {
         let authorization = manager.authorizationStatus
         authorizationStatus = authorization
         logLocationPermissionChange?(authorization)
@@ -684,9 +686,11 @@ extension UBLocationManager: @preconcurrency CLLocationManagerDelegate {
     }
 }
 
+#if !os(visionOS)
 extension CLVisit: @unchecked @retroactive Sendable {}
 extension CLRegion: @unchecked @retroactive Sendable {}
 extension CLHeading: @unchecked @retroactive Sendable {}
+#endif
 
 public extension UBLocationManager {
     /// An authorization level granted by the user which allows starting location services
