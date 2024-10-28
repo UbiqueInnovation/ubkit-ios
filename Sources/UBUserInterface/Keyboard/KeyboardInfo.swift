@@ -45,9 +45,13 @@ struct KeyboardInfo {
 
     // :nodoc:
     func animateAlongsideKeyboard(_ animations: @escaping () -> Void) {
+#if !os(visionOS)
         UIView.animate(withDuration: animationDuration, delay: 0, options: [.beginFromCurrentState, getAnimationOption(from: animationCurve)]) {
             animations()
         }
+#else
+        animations()
+#endif
     }
 
     private func getAnimationOption(from curve: UIView.AnimationCurve) -> UIView.AnimationOptions {

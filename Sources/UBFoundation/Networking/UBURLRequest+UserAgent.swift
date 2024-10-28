@@ -35,6 +35,9 @@ extension UBURLRequest {
 #elseif os(macOS)
         let osv = ProcessInfo.processInfo.operatingSystemVersion
         systemVersion = "macOS \(osv.majorVersion).\(osv.minorVersion).\(osv.patchVersion)"
+#elseif os(visionOS)
+        let osv = ProcessInfo.processInfo.operatingSystemVersion
+        systemVersion = "visionOS \(osv.majorVersion).\(osv.minorVersion).\(osv.patchVersion)"
 #endif
 
         let header = [bundleId, appVersion, os, systemVersion].joined(separator: ";")

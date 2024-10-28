@@ -32,6 +32,7 @@ class UBLocationManagerTests: XCTestCase {
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
+#if !os(visionOS)
     @MainActor
     func testAuthorizationForLocationOnNewInstall_AlwaysGranted() {
         let sut = makeSut()
@@ -41,6 +42,7 @@ class UBLocationManagerTests: XCTestCase {
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
+#endif
 
     @MainActor
     func testAuthorizationForLocationOnNewInstall_NotGranted() {
@@ -62,6 +64,7 @@ class UBLocationManagerTests: XCTestCase {
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
+#if !os(visionOS)
     @MainActor
     func testAuthorizationForLocationAfterRevoking_AlwaysGranted() {
         let sut = makeSut()
@@ -71,6 +74,7 @@ class UBLocationManagerTests: XCTestCase {
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
+#endif
 
     @MainActor
     func testAuthorizationForLocationAfterRevoking_NotGranted() {
@@ -112,6 +116,7 @@ class UBLocationManagerTests: XCTestCase {
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
 
+#if !os(visionOS)
     @MainActor
     func testNoAuthorizationForLocation_AlwaysGranted() {
         let sut = makeSut()
@@ -121,6 +126,7 @@ class UBLocationManagerTests: XCTestCase {
 
         XCTAssert(mockLocationManager.isUpdatingLocation)
     }
+#endif
 
     @MainActor
     func makeSut() -> UBLocationManager {
