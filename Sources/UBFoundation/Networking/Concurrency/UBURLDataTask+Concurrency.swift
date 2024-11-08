@@ -17,8 +17,7 @@ public extension UBURLDataTask {
 
     typealias ResultTuple<T> = (result: Result<T, UBNetworkingError>, metadata: UBURLDataTask.MetaData)
 
-    @MainActor
-    class TaskConfig {
+    actor TaskConfig {
         public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = [], session: UBDataTaskURLSession? = nil) {
             self.requestModifiers = requestModifiers
             self.requestInterceptor = requestInterceptor
@@ -56,22 +55,18 @@ public extension UBURLDataTask {
         }
     }
 
-    @MainActor
     static func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
         TaskConfig(requestModifiers: [requestModifier])
     }
 
-    @MainActor
     static func with(requestInterceptor: UBURLRequestInterceptor) -> TaskConfig {
         TaskConfig(requestInterceptor: requestInterceptor)
     }
 
-    @MainActor
     static func with(failureRecoveryStrategy: UBNetworkingTaskRecoveryStrategy) -> TaskConfig {
         TaskConfig(failureRecoveryStrategies: [failureRecoveryStrategy])
     }
 
-    @MainActor
     static func with(session: UBDataTaskURLSession) -> TaskConfig {
         TaskConfig(session: session)
     }
@@ -115,21 +110,20 @@ public extension UBURLDataTask {
     ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
-    @MainActor
     static func loadOnce<T: Sendable>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
         let task = UBURLDataTask(request: request)
 
-        for requestModifier in taskConfig.requestModifiers {
+        for requestModifier in await taskConfig.requestModifiers {
             task.addRequestModifier(requestModifier)
         }
 
-        task.setRequestInterceptor(taskConfig.requestInterceptor)
+        task.setRequestInterceptor(await taskConfig.requestInterceptor)
 
-        for strategy in taskConfig.failureRecoveryStrategies {
+        for strategy in await taskConfig.failureRecoveryStrategies {
             task.addFailureRecoveryStrategy(strategy)
         }
 
-        if let session = taskConfig.session {
+        if let session = await taskConfig.session {
             task.setSession(session)
         }
 
@@ -162,21 +156,20 @@ public extension UBURLDataTask {
     ///   - taskConfig: Optional task configurations, such as requestModifiers or requestInterceptors
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
-    @MainActor
     static func loadOnce<T: Sendable>(request: UBURLRequest, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
         let task = UBURLDataTask(request: request)
 
-        for requestModifier in taskConfig.requestModifiers {
+        for requestModifier in await taskConfig.requestModifiers {
             task.addRequestModifier(requestModifier)
         }
 
-        task.setRequestInterceptor(taskConfig.requestInterceptor)
+        task.setRequestInterceptor(await taskConfig.requestInterceptor)
 
-        for strategy in taskConfig.failureRecoveryStrategies {
+        for strategy in await taskConfig.failureRecoveryStrategies {
             task.addFailureRecoveryStrategy(strategy)
         }
 
-        if let session = taskConfig.session {
+        if let session = await taskConfig.session {
             task.setSession(session)
         }
 
@@ -209,7 +202,6 @@ public extension UBURLDataTask {
     ///
     @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
     @discardableResult
-    @MainActor
     static func loadOnce(request: UBURLRequest, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<Data> {
         await UBURLDataTask.loadOnce(request: request, decoder: .passthrough, ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
@@ -223,7 +215,6 @@ public extension UBURLDataTask {
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
     @discardableResult
-    @MainActor
     static func loadOnce<T: Sendable>(url: URL, decoder: UBURLDataTaskDecoder<T>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
         await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: decoder, ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
@@ -238,7 +229,6 @@ public extension UBURLDataTask {
     /// - Returns: `TaskResult`. Access data by result.data (throwing!)
     ///
     @discardableResult
-    @MainActor
     static func loadOnce<T: Sendable>(url: URL, decoder: UBURLDataTaskDecoder<T>, errorDecoder: UBURLDataTaskDecoder<some UBURLDataTaskErrorBody>, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<T> {
         await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: decoder, errorDecoder: errorDecoder, ignoreCache: ignoreCache, taskConfig: taskConfig)
     }
@@ -252,7 +242,6 @@ public extension UBURLDataTask {
     ///
     @available(*, deprecated, message: "Use a UBDataPassthroughDecoder instead")
     @discardableResult
-    @MainActor
     static func loadOnce(url: URL, ignoreCache: Bool = false, taskConfig: TaskConfig = TaskConfig()) async -> TaskResult<Data> {
         await UBURLDataTask.loadOnce(request: UBURLRequest(url: url), decoder: .passthrough, ignoreCache: ignoreCache, taskConfig: taskConfig)
     }

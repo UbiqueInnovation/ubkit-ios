@@ -40,7 +40,7 @@ public struct UBURLInterceptorResult {
 }
 
 /// A request interceptor is called before a HTTPDataTask starts. It can be used to intercept the networ call and directly return a Response
-public protocol UBURLRequestInterceptor {
+public protocol UBURLRequestInterceptor: Sendable {
     /// Intercepts the request before it will start.
     ///
     /// - Parameters:
