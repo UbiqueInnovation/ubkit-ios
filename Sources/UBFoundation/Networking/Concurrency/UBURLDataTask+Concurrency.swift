@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 public extension UBURLDataTask {
     struct MetaData: Sendable {
         public let info: UBNetworkingTaskInfo?

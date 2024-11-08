@@ -8,6 +8,8 @@
 import Foundation
 @testable import UBFoundation
 
+extension DataTaskSessionMock: @unchecked Sendable {}
+
 class DataTaskSessionMock: UBDataTaskURLSession {
     private var _allTasks: [URLSessionTask] = []
     var dataTaskConfigurationBlock: (UBURLRequest) -> URLSessionDataTaskMock.Configuration

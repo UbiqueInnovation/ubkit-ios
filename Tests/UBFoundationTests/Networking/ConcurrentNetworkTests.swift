@@ -10,7 +10,6 @@ import UBLocalNetworking
 import XCTest
 
 @available(iOS 15.0.0, *)
-@MainActor
 class ConcurrentNetworkTests: XCTestCase {
     private let sampleUrl = URL(string: "http://mock.ubique.ch/user.json")!
     private lazy var sampleRequest = UBURLRequest(url: sampleUrl)
