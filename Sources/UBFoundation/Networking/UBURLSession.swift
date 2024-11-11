@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object that coordinates a group of related network data transfer tasks.
-public final class UBURLSession: UBDataTaskURLSession, Sendable {
+public final class UBURLSession: UBDataTaskURLSession {
     /// The underlying session
     public let urlSession: URLSession
 

@@ -15,7 +15,7 @@ public extension UBURLDataTask {
 
     typealias ResultTuple<T> = (result: Result<T, UBNetworkingError>, metadata: UBURLDataTask.MetaData)
 
-    struct TaskConfig {
+    struct TaskConfig: Sendable {
         public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = [], session: UBDataTaskURLSession? = nil) {
             self.requestModifiers = requestModifiers
             self.requestInterceptor = requestInterceptor
