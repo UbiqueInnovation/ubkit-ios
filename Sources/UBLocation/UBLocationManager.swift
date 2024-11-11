@@ -247,7 +247,7 @@ public class UBLocationManager: NSObject {
     ///
     /// - Parameters:
     ///   - locationManager: The underlying location manager
-    init(locationManager: UBLocationManagerProtocol = CLLocationManager()) {
+    public init(locationManager: UBLocationManagerProtocol = CLLocationManager()) {
         self.locationManager = locationManager
         authorizationStatus = locationManager.authorizationStatus
         timeout = Self.defaultTimeout
