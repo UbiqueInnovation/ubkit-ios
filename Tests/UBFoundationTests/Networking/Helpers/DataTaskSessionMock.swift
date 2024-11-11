@@ -8,7 +8,7 @@
 import Foundation
 @testable import UBFoundation
 
-class DataTaskSessionMock: UBDataTaskURLSession {
+class DataTaskSessionMock: UBDataTaskURLSession, @unchecked Sendable {
     private var _allTasks: [URLSessionTask] = []
     var dataTaskConfigurationBlock: (UBURLRequest) -> URLSessionDataTaskMock.Configuration
 
@@ -17,11 +17,11 @@ class DataTaskSessionMock: UBDataTaskURLSession {
     }
 
     required init(configuration _: URLSessionConfiguration) {
-        fatalError("Not emplemented")
+        fatalError("Not implemented")
     }
 
     required init(configuration _: URLSessionConfiguration, delegate _: URLSessionDelegate?, delegateQueue _: OperationQueue?) {
-        fatalError("Not emplemented")
+        fatalError("Not implemented")
     }
 
     func dataTask(with request: UBURLRequest, owner: UBURLDataTask) -> URLSessionDataTask? {

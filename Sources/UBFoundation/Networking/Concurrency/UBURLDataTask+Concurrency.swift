@@ -15,7 +15,7 @@ public extension UBURLDataTask {
 
     typealias ResultTuple<T> = (result: Result<T, UBNetworkingError>, metadata: UBURLDataTask.MetaData)
 
-    class TaskConfig {
+    struct TaskConfig: Sendable {
         public init(requestModifiers: [UBURLRequestModifier] = [], requestInterceptor: UBURLRequestInterceptor? = nil, failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = [], session: UBDataTaskURLSession? = nil) {
             self.requestModifiers = requestModifiers
             self.requestInterceptor = requestInterceptor
@@ -28,28 +28,28 @@ public extension UBURLDataTask {
         public var failureRecoveryStrategies: [UBNetworkingTaskRecoveryStrategy] = []
         public var session: UBDataTaskURLSession?
 
-        @discardableResult
         public func with(requestModifier: UBURLRequestModifier) -> TaskConfig {
-            requestModifiers.append(requestModifier)
-            return self
+            var copy = self
+            copy.requestModifiers.append(requestModifier)
+            return copy
         }
 
-        @discardableResult
         public func with(requestInterceptor: UBURLRequestInterceptor) -> TaskConfig {
-            self.requestInterceptor = requestInterceptor
-            return self
+            var copy = self
+            copy.requestInterceptor = requestInterceptor
+            return copy
         }
 
-        @discardableResult
         public func with(failureRecoveryStrategy: UBNetworkingTaskRecoveryStrategy) -> TaskConfig {
-            failureRecoveryStrategies.append(failureRecoveryStrategy)
-            return self
+            var copy = self
+            copy.failureRecoveryStrategies.append(failureRecoveryStrategy)
+            return copy
         }
 
-        @discardableResult
         public func with(session: UBDataTaskURLSession) -> TaskConfig {
-            self.session = session
-            return self
+            var copy = self
+            copy.session = session
+            return copy
         }
     }
 

@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCODE_VERSION: "Xcode_16.0"
+  XCVERSION: "16.1"
 
 on:
   push:
@@ -16,8 +16,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Switch to ${{ env.XCODE_VERSION }}
-        run: sudo xcode-select --switch /Applications/${{ env.XCODE_VERSION }}.app
-
+      - name: Switch to ${{ env.XCVERSION }}
+        run: sudo xcodes select ${{ env.XCVERSION }}
+        
       - name: Fastlane
         run: fastlane tests
