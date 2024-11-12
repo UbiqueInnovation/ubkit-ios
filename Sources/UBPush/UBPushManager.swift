@@ -281,13 +281,20 @@ open class UBPushManager: NSObject {
     }
 
     /// Querys the current push permissions from the system
-    public func queryPushPermissions(callback: @escaping (Bool) -> Void) {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
+    public func queryPushPermissions(callback: @Sendable @escaping (Bool) -> Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { @Sendable settings in
             let isEnabled = settings.alertSetting == .enabled
             DispatchQueue.main.async {
                 callback(isEnabled)
             }
         }
+    }
+    
+    /// Querys the current push permissions from the system
+    public func queryPushPermissions() async -> Bool {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        let isEnabled = settings.alertSetting == .enabled
+        return isEnabled
     }
 
     // MARK: - Push Registration
