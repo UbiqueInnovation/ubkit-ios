@@ -29,8 +29,8 @@ class MacroTests: XCTestCase {
     }
 
     func testAssertTrue() {
-        #assert(true, "Test")
-        #assert(true)
+        assert(true, "Test")
+        assert(true)
     }
 
     func testAssertFalse() async {
@@ -39,7 +39,7 @@ class MacroTests: XCTestCase {
             exp.fulfill()
         }
         _PrintMacro.disableAssertionFailure = true
-        #assert(false, "Test")
+        assert(false, "Test")
 
         await fulfillment(of: [exp])
     }
@@ -53,8 +53,8 @@ class MacroTests: XCTestCase {
 
         _PrintMacro.disableAssertionFailure = true
 
-        #assertionFailure("Failed")
-        #assertionFailure()
+        assertionFailure("Failed")
+        assertionFailure()
 
         await fulfillment(of: [exp])
     }
