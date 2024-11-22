@@ -14,15 +14,18 @@ public actor UBNonFatalErrorReporter {
 
     private var handler: ((Error) -> Void)?
 
+    public var disableAssertionFailure = false
+
     public func setHandler(_ handler: ((Error) -> Void)?) {
         self.handler = handler
     }
 
-    nonisolated func report(_ error: Error) {
+    nonisolated public func report(_ error: Error) {
         Task {
             await _report(error)
         }
     }
+
 
     private func _report(_ error: Error) {
         handler?(error)

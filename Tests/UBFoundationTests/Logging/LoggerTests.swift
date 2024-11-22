@@ -9,12 +9,15 @@ import UBFoundation
 import XCTest
 
 @available(iOS 14.0, *)
-class MacroTests: XCTestCase {
+class LoggerTests: XCTestCase {
     func testMacro() {
-        #print("\(52.0)")
+        Log.debug("\(52.0)")
 
         let variable = "test"
-        #print("Test = \(variable, privacy: .public)")
+        let variable2 = "test2"
+        Log.debug(
+            "Test = \(variable, privacy: .public), ? = \(variable2, privacy: .private)"
+        )
     }
 
     func testError() async {
@@ -23,14 +26,14 @@ class MacroTests: XCTestCase {
             exp.fulfill()
         }
 
-        #printError("Failed to not fail")
+        Log.reportError("Failed to not fail")
 
         await fulfillment(of: [exp])
     }
 
     func testAssertTrue() {
-        #assert(true, "Test")
-        #assert(true)
+        assert(true, "Test")
+        assert(true)
     }
 
     func testAssertFalse() async {
@@ -38,8 +41,7 @@ class MacroTests: XCTestCase {
         await UBNonFatalErrorReporter.shared.setHandler { _ in
             exp.fulfill()
         }
-        _PrintMacro.disableAssertionFailure = true
-        #assert(false, "Test")
+        assert(false, "Test", swiftAssertionFailure: false)
 
         await fulfillment(of: [exp])
     }
@@ -51,10 +53,8 @@ class MacroTests: XCTestCase {
             exp.fulfill()
         }
 
-        _PrintMacro.disableAssertionFailure = true
-
-        #assertionFailure("Failed")
-        #assertionFailure()
+        assertionFailure("Failed", swiftAssertionFailure: false)
+        assertionFailure(swiftAssertionFailure: false)
 
         await fulfillment(of: [exp])
     }

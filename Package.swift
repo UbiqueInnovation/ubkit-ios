@@ -28,7 +28,7 @@ let package = Package(
     targets: [
         .target(
             name: "UBFoundation",
-            dependencies: ["UBMacros"],
+            dependencies: [],
             swiftSettings: [
                 .swiftLanguageMode(.v6),
             ]
@@ -67,13 +67,6 @@ let package = Package(
                 .swiftLanguageMode(.v6),
             ]
         ),
-        .macro(name: "UBMacros", dependencies: [
-            .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-            .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-        ],
-        swiftSettings: [
-            .swiftLanguageMode(.v6),
-        ]),
         .testTarget(name: "UBFoundationTests",
                     dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
                     resources: [
