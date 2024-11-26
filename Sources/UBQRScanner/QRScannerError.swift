@@ -16,18 +16,18 @@ public enum QRScannerError: Error {
 }
 
 extension QRScannerError: Equatable {
-     public static func == (lhs: QRScannerError, rhs: QRScannerError) -> Bool {
-         switch (lhs, rhs) {
-         case (.cameraPermissionDenied, .cameraPermissionDenied):
-             return true
-         case (.cameraPermissionRestricted, .cameraPermissionRestricted):
-             return true
-         case (.captureSessionError(let lhsError), .captureSessionError(let rhsError)):
-             return lhsError?.localizedDescription == rhsError?.localizedDescription
-         case (.torchError(let lhsError), .torchError(let rhsError)):
-             return lhsError?.localizedDescription == rhsError?.localizedDescription
-         default:
-             return false
-         }
-     }
+    public static func == (lhs: QRScannerError, rhs: QRScannerError) -> Bool {
+        switch (lhs, rhs) {
+            case (.cameraPermissionDenied, .cameraPermissionDenied):
+                true
+            case (.cameraPermissionRestricted, .cameraPermissionRestricted):
+                true
+            case let (.captureSessionError(lhsError), .captureSessionError(rhsError)):
+                lhsError?.localizedDescription == rhsError?.localizedDescription
+            case let (.torchError(lhsError), .torchError(rhsError)):
+                lhsError?.localizedDescription == rhsError?.localizedDescription
+            default:
+                false
+        }
+    }
 }

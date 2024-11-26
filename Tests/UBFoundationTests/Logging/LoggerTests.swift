@@ -1,5 +1,5 @@
 //
-//  MacroTests.swift
+//  LoggerTests.swift
 //  UBKit
 //
 //  Created by Nicolas Märki on 12.09.2024.
@@ -41,7 +41,9 @@ class LoggerTests: XCTestCase {
         await UBNonFatalErrorReporter.shared.setHandler { _ in
             exp.fulfill()
         }
+        // swiftformat:disable all
         assert(false, "Test", swiftAssertionFailure: false)
+        // swiftformat:enable all
 
         await fulfillment(of: [exp])
     }

@@ -1,5 +1,5 @@
 //
-//  PrintMacro.swift
+//  Logger.swift
 //  UBKit
 //
 //  Created by Nicolas Märki on 12.09.2024.
@@ -14,8 +14,8 @@ import os
 
 public let Log = os.Logger(subsystem: "UBKit", category: "Default")
 
-extension Logger {
-    public func reportError(
+public extension Logger {
+    func reportError(
         _ message: String, file: StaticString = #file, line: UInt = #line
     ) {
         UBNonFatalErrorReporter.shared
@@ -29,7 +29,7 @@ extension Logger {
         Log.error("\(message)")
     }
 
-    public func reportCritical(
+    func reportCritical(
         _ message: String, file: StaticString = #file, line: UInt = #line
     ) {
         UBNonFatalErrorReporter.shared
@@ -51,7 +51,6 @@ public func print(
     Log.debug("(\(items.map { "\($0)" }.joined(separator: separator)))")
 }
 
-
 public func assert(
     _ condition: @autoclosure () -> Bool,
     _ message: @autoclosure () -> String = String(),
@@ -59,7 +58,6 @@ public func assert(
     file: StaticString = #file,
     line: UInt = #line
 ) {
-
     if !condition() {
         Log.reportCritical(message(), file: file, line: line)
         if swiftAssertionFailure {

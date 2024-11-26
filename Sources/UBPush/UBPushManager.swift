@@ -289,7 +289,7 @@ open class UBPushManager: NSObject {
             }
         }
     }
-    
+
     /// Querys the current push permissions from the system
     public func queryPushPermissions() async -> Bool {
         let settings = await UNUserNotificationCenter.current().notificationSettings()

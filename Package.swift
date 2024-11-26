@@ -28,7 +28,6 @@ let package = Package(
     targets: [
         .target(
             name: "UBFoundation",
-            dependencies: [],
             swiftSettings: [
                 .swiftLanguageMode(.v6),
             ]

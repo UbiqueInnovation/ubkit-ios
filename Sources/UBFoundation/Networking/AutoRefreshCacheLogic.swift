@@ -8,7 +8,6 @@
 import Foundation
 import OSLog
 
-
 /// A caching logic that will launch and refresh the data automatically when the data expires
 open class UBAutoRefreshCacheLogic: UBBaseCachingLogic, @unchecked Sendable {
     /// The refresh cron jobs
