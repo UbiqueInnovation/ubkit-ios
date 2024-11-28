@@ -13,7 +13,7 @@ struct KeyboardInfo {
     // :nodoc:
     let endFrame: CGRect
     // :nodoc:
-    let animationCurve: UIView.AnimationCurve
+    let animationOptions: UIView.AnimationOptions
     // :nodoc:
     let animationDuration: TimeInterval
 
@@ -28,12 +28,11 @@ struct KeyboardInfo {
 
         self.endFrame = endFrame
 
-        // UIViewAnimationOption is shifted by 16 bit from UIViewAnimationCurve, which we get here:
-        // http://stackoverflow.com/questions/18870447/how-to-use-the-default-ios7-uianimation-curve
-        if let animationCurveRaw = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int, let animationCurve = UIView.AnimationCurve(rawValue: animationCurveRaw) {
-            self.animationCurve = animationCurve
+        // https://developer.apple.com/documentation/uikit/uikeyboardanimationcurveuserinfokey
+        if let animationCurveRaw = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt {
+            self.animationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw << 16)
         } else {
-            animationCurve = .linear
+            animationOptions = UIView.AnimationOptions.curveLinear
         }
 
         if let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double {
@@ -46,21 +45,11 @@ struct KeyboardInfo {
     // :nodoc:
     func animateAlongsideKeyboard(_ animations: @escaping () -> Void) {
 #if !os(visionOS)
-        UIView.animate(withDuration: animationDuration, delay: 0, options: [.beginFromCurrentState, getAnimationOption(from: animationCurve)]) {
+        UIView.animate(withDuration: animationDuration, delay: 0, options: [.beginFromCurrentState, animationOptions]) {
             animations()
         }
 #else
         animations()
 #endif
-    }
-
-    private func getAnimationOption(from curve: UIView.AnimationCurve) -> UIView.AnimationOptions {
-        switch curve {
-            case .easeInOut: .curveEaseInOut
-            case .easeIn: .curveEaseIn
-            case .easeOut: .curveEaseOut
-            case .linear: .curveLinear
-            @unknown default: fatalError()
-        }
     }
 }
