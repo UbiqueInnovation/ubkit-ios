@@ -14,8 +14,6 @@ public actor UBNonFatalErrorReporter {
 
     private var handler: ((Error) -> Void)?
 
-    public var disableAssertionFailure = false
-
     public func setHandler(_ handler: ((Error) -> Void)?) {
         self.handler = handler
     }

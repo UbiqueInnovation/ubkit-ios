@@ -54,7 +54,7 @@ public func print(
 public func assert(
     _ condition: @autoclosure () -> Bool,
     _ message: @autoclosure () -> String = String(),
-    swiftAssertionFailure: Bool = false,
+    swiftAssertionFailure: Bool = true,
     file: StaticString = #file,
     line: UInt = #line
 ) {
