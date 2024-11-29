@@ -8,10 +8,6 @@
 import Foundation
 import OSLog
 
-private enum Log {
-    static let logger = Logger(subsystem: "UBKit", category: "AutoRefreshCacheLogic")
-}
-
 /// A caching logic that will launch and refresh the data automatically when the data expires
 open class UBAutoRefreshCacheLogic: UBBaseCachingLogic, @unchecked Sendable {
     /// The refresh cron jobs
@@ -31,18 +27,18 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic, @unchecked Sendable {
         cancelRefreshCronJob(for: task)
 
         guard let nextRefreshDate = cachedResponseNextRefreshDate(headers, metrics: metrics, referenceDate: referenceDate) else {
-            Log.logger.trace("No refresh date for task \(task)")
+            Log.trace("No refresh date for task \(task)")
             return
         }
 
-        Log.logger.trace("Schedule refresh for \(task) at \(nextRefreshDate) (\(round(nextRefreshDate.timeIntervalSinceNow))s)")
+        Log.trace("Schedule refresh for \(task) at \(nextRefreshDate) (\(round(nextRefreshDate.timeIntervalSinceNow))s)")
 
         // Schedule a new job
         let job = UBCronJob(fireAt: nextRefreshDate, qos: qos) { [weak task] in
             if let task {
-                Log.logger.trace("Start cron refresh for task \(task)")
+                Log.trace("Start cron refresh for task \(task)")
             } else {
-                Log.logger.trace("Not start cron refresh, task doesn't exist anymore.")
+                Log.trace("Not start cron refresh, task doesn't exist anymore.")
             }
             task?.start(flags: [.systemTriggered, .refresh])
         }

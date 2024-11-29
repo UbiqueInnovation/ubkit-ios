@@ -18,7 +18,7 @@ public actor UBNonFatalErrorReporter {
         self.handler = handler
     }
 
-    nonisolated func report(_ error: Error) {
+    public nonisolated func report(_ error: Error) {
         Task {
             await _report(error)
         }
