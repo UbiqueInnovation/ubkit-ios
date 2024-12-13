@@ -20,6 +20,7 @@ struct UBPopupPreferenceKey: PreferenceKey {
     }
 }
 
+@MainActor
 struct UBPopupPreference: Equatable {
     let id = UUID()
     let isPresented: Binding<Bool>
@@ -36,7 +37,7 @@ struct UBPopupPreference: Equatable {
         self.content = content
     }
 
-    static func == (lhs: UBPopupPreference, rhs: UBPopupPreference) -> Bool {
+    nonisolated static func == (lhs: UBPopupPreference, rhs: UBPopupPreference) -> Bool {
         lhs.id == rhs.id
             && lhs.isPresented.wrappedValue == rhs.isPresented.wrappedValue
             && lhs.date == rhs.date

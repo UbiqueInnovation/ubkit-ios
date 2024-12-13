@@ -25,10 +25,12 @@ public struct UBPopupWrapper<V: View>: View {
                 UBPopupWindowManager.shared.setupWindow()
             }
             .onPreferenceChange(UBPopupPreferenceKey.self) { popupPreference in
-                if let popupPreference, popupPreference.isPresented.wrappedValue {
-                    UBPopupWindowManager.shared.showPopup(isPresented: popupPreference.isPresented, style: popupPreference.customStyle ?? style, content: popupPreference.content)
-                } else {
-                    UBPopupWindowManager.shared.hideWindow()
+                DispatchQueue.main.async {
+                    if let popupPreference, popupPreference.isPresented.wrappedValue {
+                        UBPopupWindowManager.shared.showPopup(isPresented: popupPreference.isPresented, style: popupPreference.customStyle ?? style, content: popupPreference.content)
+                    } else {
+                        UBPopupWindowManager.shared.hideWindow()
+                    }
                 }
             }
     }
