@@ -32,7 +32,7 @@ public struct UBPopupWrapper<V: View>: View {
                     }
                 } else {
                     Log.reportError("onPreferenceChange called on non-main thread")
-                    DispatchQueue.main.sync {
+                    DispatchQueue.main.async {
                         MainActor.assumeIsolated {
                             popupPreferenceChanged(popupPreference: popupPreference)
                         }
