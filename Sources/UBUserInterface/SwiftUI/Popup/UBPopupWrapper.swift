@@ -8,6 +8,7 @@
 #if arch(arm64) || arch(x86_64)
 
 import Foundation
+import UBFoundation
 import SwiftUI
 
 public struct UBPopupWrapper<V: View>: View {
@@ -25,12 +26,27 @@ public struct UBPopupWrapper<V: View>: View {
                 UBPopupWindowManager.shared.setupWindow()
             }
             .onPreferenceChange(UBPopupPreferenceKey.self) { popupPreference in
-                if let popupPreference, popupPreference.isPresented.wrappedValue {
-                    UBPopupWindowManager.shared.showPopup(isPresented: popupPreference.isPresented, style: popupPreference.customStyle ?? style, content: popupPreference.content)
+                if Thread.isMainThread {
+                    MainActor.assumeIsolated {
+                        popupPreferenceChanged(popupPreference: popupPreference)
+                    }
                 } else {
-                    UBPopupWindowManager.shared.hideWindow()
+                    Log.reportError("onPreferenceChange called on non-main thread")
+                    DispatchQueue.main.async {
+                        MainActor.assumeIsolated {
+                            popupPreferenceChanged(popupPreference: popupPreference)
+                        }
+                    }
                 }
             }
+    }
+
+    private func popupPreferenceChanged(popupPreference: UBPopupPreference?) {
+        if let popupPreference, popupPreference.isPresented.wrappedValue {
+            UBPopupWindowManager.shared.showPopup(isPresented: popupPreference.isPresented, style: popupPreference.customStyle ?? style, content: popupPreference.content)
+        } else {
+            UBPopupWindowManager.shared.hideWindow()
+        }
     }
 }
 

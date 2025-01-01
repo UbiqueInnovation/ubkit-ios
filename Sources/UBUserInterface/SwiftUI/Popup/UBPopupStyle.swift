@@ -9,7 +9,7 @@
 
 import SwiftUI
 
-public struct UBPopupStyle: Equatable {
+public struct UBPopupStyle: Equatable, Sendable {
     let extendsToEdges: Bool
     let backgroundColor: Color
     let backdropColor: Color
