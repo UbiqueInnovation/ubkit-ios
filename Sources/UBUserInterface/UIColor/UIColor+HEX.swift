@@ -58,23 +58,19 @@ extension UIColor {
     ///
     /// - Parameter hex: The raw hex string
     public convenience init?(ub_hexString hex: String) {
-        let input = hex.trimmingCharacters(in: .whitespaces)
-        // We want to crash if the regex cannot be formed. Error from the Framework that needs an update
-        let hexStringRegex = try! NSRegularExpression(pattern: "^\\#?([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$", options: .caseInsensitive)
+        let input = hex.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard let hexStringResult = hexStringRegex.firstMatch(in: input, range: NSRange(input.startIndex..., in: input)) else {
+        // Remove optional '#' prefix
+        let hexString = input.hasPrefix("#") ? String(input.dropFirst()) : input
+
+        // Validate length (3, 4, 6, or 8)
+        guard [3, 4, 6, 8].contains(hexString.count),
+              hexString.allSatisfy({ $0.isHexDigit }) else {
             return nil
         }
 
-        guard hexStringResult.numberOfRanges == 2,
-              let hexCapturedRange = Range(hexStringResult.range(at: 1), in: input) else {
-            return nil
-        }
-
-        let hexString = String(input[hexCapturedRange])
-        var hexValue: UInt32 = 0
-
-        guard Scanner(string: hexString).scanHexInt32(&hexValue) else {
+        var hexValue: UInt64 = 0
+        guard Scanner(string: hexString).scanHexInt64(&hexValue) else {
             return nil
         }
 
@@ -84,11 +80,11 @@ extension UIColor {
             case 4:
                 self.init(hex4: UInt16(hexValue))
             case 6:
-                self.init(hex6: hexValue)
+                self.init(hex6: UInt32(hexValue))
             case 8:
-                self.init(hex8: hexValue)
+                self.init(hex8: UInt32(hexValue))
             default:
-                fatalError("Should not be able to get other then 3-4-6-8 hex. Check regex")
+                fatalError("Unexpected hex string length. This should not occur.")
         }
     }
 
