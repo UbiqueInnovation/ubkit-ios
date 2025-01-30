@@ -189,6 +189,8 @@ open class UBPushManager: NSObject {
     ///     - callback: The callback for handling the result of the request
     public func requestPushPermissions(includingCritical: Bool = false,
                                        includingNotificationSettings: Bool = false,
+                                       provisional: Bool = false,
+                                       providesAppSettings: Bool = false,
                                        callback: @escaping PermissionRequestCallback) {
         if let previousCallback = permissionRequestCallback {
             Self.logger.error("Tried to request push permissions while other request pending")
@@ -200,7 +202,12 @@ open class UBPushManager: NSObject {
         latestPushRequest += 1
         let currentPushRequest = latestPushRequest
 
-        let options = makeAuthorizationOptions(includingCritical: includingCritical, includingNotificationSettings: includingNotificationSettings)
+        let options = makeAuthorizationOptions(
+            includingCritical: includingCritical,
+            includingNotificationSettings: includingNotificationSettings,
+            provisional: provisional,
+            providesAppSettings: providesAppSettings
+        )
         UNUserNotificationCenter.current().requestAuthorization(options: options) { @Sendable granted, _ in
 
             guard granted else {
@@ -230,7 +237,7 @@ open class UBPushManager: NSObject {
     }
 
     /// :nodoc:
-    private func makeAuthorizationOptions(includingCritical: Bool, includingNotificationSettings: Bool) -> UNAuthorizationOptions {
+    private func makeAuthorizationOptions(includingCritical: Bool, includingNotificationSettings: Bool, provisional: Bool, providesAppSettings: Bool) -> UNAuthorizationOptions {
         var options: UNAuthorizationOptions = [.alert, .badge, .sound]
 
         if includingCritical {
@@ -238,6 +245,14 @@ open class UBPushManager: NSObject {
         }
 
         if includingNotificationSettings {
+            options.insert(.providesAppNotificationSettings)
+        }
+
+        if provisional {
+            options.insert(.provisional)
+        }
+
+        if providesAppSettings {
             options.insert(.providesAppNotificationSettings)
         }
 
