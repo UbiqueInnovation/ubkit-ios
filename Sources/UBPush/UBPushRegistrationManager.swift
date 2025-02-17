@@ -78,13 +78,29 @@ open class UBPushRegistrationManager: NSObject {
         sendPushRegistration(completion: completion)
     }
 
-    /// :nodoc:
-    private func sendPushRegistration(completion: (@Sendable (Error?) -> Void)? = nil) {
+    open func sendPushRegistrationRequest(completion: (@escaping @Sendable (Result<String, Error>) -> Void)) {
         guard let registrationRequest = pushRegistrationRequest else {
-            completion?(UBPushManagerError.registrationRequestMissing)
+            completion(.failure(UBPushManagerError.registrationRequestMissing))
             return
         }
 
+        task = UBURLDataTask(request: registrationRequest, session: session)
+        task?.addCompletionHandler(decoder: UBHTTPStringDecoder()) { result, _, _, _ in
+            switch result {
+                case .success(let value): completion(.success(value))
+                case .failure(let error): completion(.failure(error))
+            }
+        }
+
+        if task != nil {
+            modifyRegistrationDataTask(&task!)
+        }
+
+        task?.start()
+    }
+
+    /// :nodoc:
+    private func sendPushRegistration(completion: (@Sendable (Error?) -> Void)? = nil) {
         if backgroundTask == .invalid {
             backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
                 guard let self else {
@@ -96,8 +112,7 @@ open class UBPushRegistrationManager: NSObject {
             }
         }
 
-        task = UBURLDataTask(request: registrationRequest, session: session)
-        task?.addCompletionHandler(decoder: UBHTTPStringDecoder()) { [weak self] result, _, _, _ in
+        sendPushRegistrationRequest { [weak self] result in
             MainActor.assumeIsolated {
                 guard let self else {
                     return
@@ -122,11 +137,7 @@ open class UBPushRegistrationManager: NSObject {
             }
         }
 
-        if task != nil {
-            modifyRegistrationDataTask(&task!)
-        }
 
-        task?.start()
         UBPushManager.logger.info("\(String(describing: self)) started")
     }
 
