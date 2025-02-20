@@ -92,12 +92,14 @@ public class BackendDevTools: DevTool {
 }
 
 private extension NSURL {
-    @MainActor
-    private static var didSwizzle = false
+    nonisolated(unsafe) private static var didSwizzle = false
+    private static let swizzleQueue = DispatchQueue(label: "NSURL.didSwizzle")
 
-    @MainActor
     static func initSwizzleWizzle() {
-        guard !self.didSwizzle else { return }
+        swizzleQueue.sync {
+            guard !self.didSwizzle else { return }
+            self.didSwizzle = true
+        }
 
         let initSelector = (#selector(NSURL.init(string:relativeTo:)), #selector(swizzled_init(string:relativeTo:)))
         let initSelector2 = (#selector(NSURL.init(string:)), #selector(swizzled_init(string:)))
@@ -108,17 +110,13 @@ private extension NSURL {
             else { return }
             method_exchangeImplementations(originalMethod, swizzledMethod)
         }
-
-        Self.didSwizzle = true
     }
 
-    @MainActor
     @objc func swizzled_init(string: String, relativeTo: NSURL?) -> NSURL? {
         let changed = changedUrl(string)
         return self.swizzled_init(string: changed ?? string, relativeTo: relativeTo)
     }
 
-    @MainActor
     @objc func swizzled_init(string: String) -> NSURL? {
         let changed = changedUrl(string)
         return self.swizzled_init(string: changed ?? string)
@@ -126,17 +124,18 @@ private extension NSURL {
 
     // MARK: - Exchange implementations
 
-    @MainActor
     private func changedUrl(_ string: String) -> String? {
-        for b in BackendDevTools.baseUrls {
-            let alternative = BackendDevTools.currentUrlString(url: b.url)
-            let rep = b.url.replacingOccurrences(of: "//", with: "/")
-
-            if string.contains(b.url) || string.contains(rep) {
-                return string.replacingOccurrences(of: b.url, with: alternative).replacingOccurrences(of: rep, with: alternative)
+        DispatchQueue.main.sync {
+            for b in BackendDevTools.baseUrls {
+                let alternative = BackendDevTools.currentUrlString(url: b.url)
+                let rep = b.url.replacingOccurrences(of: "//", with: "/")
+                
+                if string.contains(b.url) || string.contains(rep) {
+                    return string.replacingOccurrences(of: b.url, with: alternative).replacingOccurrences(of: rep, with: alternative)
+                }
             }
+            
+            return nil
         }
-
-        return nil
     }
 }
