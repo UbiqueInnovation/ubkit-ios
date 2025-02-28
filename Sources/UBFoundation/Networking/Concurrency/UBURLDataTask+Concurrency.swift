@@ -79,7 +79,7 @@ public extension UBURLDataTask {
         /// Data of a successful request
         /// - Throws: if Result is a failure
         public var data: T {
-            get throws {
+            get throws(UBNetworkingError) {
                 try resultTuple.result.get()
             }
         }
