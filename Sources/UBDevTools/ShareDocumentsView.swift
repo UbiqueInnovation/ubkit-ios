@@ -10,47 +10,56 @@ import SwiftUI
 import System
 
 struct ShareDocumentsView: View {
+    var body: some View {
+        Section(header: Text("Export")) {
+            ExportDirectoryView(directory: .documentDirectory)
+            ExportDirectoryView(directory: .applicationSupportDirectory)
+        }
+    }
+}
+
+struct ExportDirectoryView: View {
     @State private var archiveURL: URL?
     @State private var compressingDirectory = false
     @State private var showShareSheet = false
     @State private var showErrorAlert = false
 
+    var directory: CompressDocumentsDirectory.Directory
+
     var body: some View {
-        Section(header: Text("Export")) {
-            Button {
-                compressingDirectory = true
-                Task.detached(priority: .userInitiated) {
-                    if let path = CompressDocumentsDirectory.compress() {
-                        Task { @MainActor in
-                            archiveURL = path
-                            showShareSheet = true
-                            compressingDirectory = false
-                        }
-                    } else {
-                        Task { @MainActor in
-                            showErrorAlert = true
-                            compressingDirectory = false
-                        }
+        Button {
+            compressingDirectory = true
+            Task.detached(priority: .userInitiated) {
+                if let path = CompressDocumentsDirectory.compress(directory: directory) {
+                    Task { @MainActor in
+                        archiveURL = path
+                        showShareSheet = true
+                        compressingDirectory = false
+                    }
+                } else {
+                    Task { @MainActor in
+                        showErrorAlert = true
+                        compressingDirectory = false
                     }
                 }
-            } label: {
-                Label("Share .documentDirectory", systemImage: "square.and.arrow.up")
-                    .labelStyle(CustomLabelStyle())
             }
-            .disabled(compressingDirectory == true)
-            .sheet(isPresented: $showShareSheet) {
-                if let url = archiveURL {
-                    ShareView(url: url)
-                }
-            }.alert(isPresented: $showErrorAlert) {
-                Alert(
-                    title: Text("Error"),
-                    message: Text("Unable to export Documents Directory"),
-                    dismissButton: .cancel(Text("Ok"), action: {
-                        showErrorAlert = false
-                    })
-                )
+        } label: {
+            Label("Share .\(directory.rawValue)", systemImage: "square.and.arrow.up")
+                .labelStyle(CustomLabelStyle())
+        }
+        .disabled(compressingDirectory == true)
+        .sheet(isPresented: $showShareSheet) {
+            if let url = archiveURL {
+                ShareView(url: url)
             }
+        }.alert(isPresented: $showErrorAlert) {
+            Alert(
+                title: Text("Error"),
+                message: Text("Unable to export Documents Directory"),
+                dismissButton: .cancel(Text("Ok"), action: {
+                    showErrorAlert = false
+                })
+            )
         }
     }
 }
@@ -82,9 +91,28 @@ private struct ShareView: UIViewControllerRepresentable {
 }
 
 enum CompressDocumentsDirectory {
-    static func compress() -> URL? {
+    enum Directory: String {
+        case documentDirectory, applicationSupportDirectory
+
+        var path: FileManager.SearchPathDirectory {
+            switch self {
+                case .documentDirectory:
+                    return .documentDirectory
+                case .applicationSupportDirectory:
+                    return .applicationSupportDirectory
+            }
+        }
+
+        var url: URL {
+            let paths = FileManager.default.urls(for: path, in: .userDomainMask)
+            let documentsDirectory = paths[0]
+            return documentsDirectory
+        }
+    }
+
+    static func compress(directory: Directory) -> URL? {
 #if !targetEnvironment(simulator)
-        let archiveDestination = NSTemporaryDirectory() + "documentDirectory.aar"
+        let archiveDestination = NSTemporaryDirectory() + directory.rawValue + ".aar"
 
         let archiveFilePath = FilePath(archiveDestination)
 
@@ -121,7 +149,7 @@ enum CompressDocumentsDirectory {
             return nil
         }
 
-        let sourcePath = getDocumentsDirectory()
+        let sourcePath = directory.url
         let source = FilePath(sourcePath.path)
 
         do {
@@ -137,11 +165,5 @@ enum CompressDocumentsDirectory {
 #else
         fatalError("Apple Archive isn't supported on simulator https://developer.apple.com/forums/thread/665465")
 #endif
-    }
-
-    private static func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentsDirectory = paths[0]
-        return documentsDirectory
     }
 }
