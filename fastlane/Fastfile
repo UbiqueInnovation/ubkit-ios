@@ -3,27 +3,14 @@ default_platform(:ios)
 platform :ios do
   desc "Run the unit tests."
   lane :tests do
-    begin
-      scan(
+    scan(
         package_path: ".",
         scheme: "UBKit-Package",
         destination: "platform=iOS Simulator,name=iPhone 16 Pro",
         result_bundle: true,
-        output_directory: "./build/"
-      )
-    rescue => ex
-      # Do not fail directly but mark it for later
-      ENV["BUILD_RESULT"] = "FAILURE"
-    end
-    
-
-    trainer(
         output_directory: "./build/",
-        path: "./build/",
-        fail_build: false)
-    
-    if ENV["BUILD_RESULT"] == "FAILURE"
-      UI.crash!("Build or tests failed during xcodebuild step")
-    end
+        output_types: "junit",
+        buildlog_path: "test_output/logs"
+      )
   end
 end
