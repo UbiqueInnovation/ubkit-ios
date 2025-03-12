@@ -111,7 +111,7 @@ class MockLocationManager: UBLocationManagerProtocol {
 
     func requestAlwaysAuthorization() {
         _ = authorizationStatuses.removeFirst()
-        delegate?.locationManager?(CLLocationManager(), didChangeAuthorization: _authorizationStatus)
+        delegate?.locationManagerDidChangeAuthorization?(CLLocationManager())
     }
 
 #endif
