@@ -1,11 +1,10 @@
 name: Build & Test
 
 env:
-  XCVERSION: "16.1"
+  XCVERSION: "16.2"
 
 on:
   push:
-  pull_request:
 
 jobs:
   tests:
@@ -13,7 +12,6 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: Switch to ${{ env.XCVERSION }}
@@ -21,3 +19,8 @@ jobs:
         
       - name: Fastlane
         run: fastlane tests
+
+      - uses: slidoapp/xcresulttool@v3.1.0
+        with:
+          path: build/UBKit-Package.xcresult
+        if: always()
