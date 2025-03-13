@@ -20,8 +20,7 @@ jobs:
       - name: Fastlane
         run: fastlane tests
 
-      - name: Test Summary
-        uses: test-summary/action@v2
+      - uses: slidoapp/xcresulttool@v3.1.0
         with:
-          paths: "build/**.xml"
+          path: build/UBKit-Package.xcresult
         if: always()

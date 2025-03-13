@@ -8,7 +8,8 @@ platform :ios do
         scheme: "UBKit-Package",
         destination: "platform=iOS Simulator,name=iPhone 16 Pro",
         output_directory: "./build/",
-        output_types: "junit"
+        derived_data_path: "./build/",
+        result_bundle: "true"
       )
   end
 end
