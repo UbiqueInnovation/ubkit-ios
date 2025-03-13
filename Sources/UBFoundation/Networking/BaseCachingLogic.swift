@@ -59,7 +59,8 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
     /// :nodoc:
     public func proposeUpdatedCachedResponse(_ currentCachedResponse: CachedURLResponse, newResponse: HTTPURLResponse) -> CachedURLResponse? {
         guard let httpURLResponse = currentCachedResponse.response as? HTTPURLResponse,
-              let mutableResponse = HTTPMutableURLResponse(httpURLResponse) else {
+            let mutableResponse = HTTPMutableURLResponse(httpURLResponse)
+        else {
             return nil
         }
 
@@ -119,7 +120,9 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
     ///   - data: The data returned by the response
     ///   - metrics: The metrics collected by the session during the request
     /// - Returns: A possible caching response
-    open func proposedCacheResponseWhenSuccessfull(for _: URLSession, dataTask _: URLSessionDataTask, ubDataTask _: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> (response: HTTPURLResponse, data: Data, userInfo: [AnyHashable: Any])? {
+    open func proposedCacheResponseWhenSuccessfull(for _: URLSession, dataTask _: URLSessionDataTask, ubDataTask _: UBURLDataTask, request: URLRequest, response: HTTPURLResponse, data: Data?, metrics: URLSessionTaskMetrics?) -> (
+        response: HTTPURLResponse, data: Data, userInfo: [AnyHashable: Any]
+    )? {
         // Note: Data can be nil, if a successful response body was empty
         let data = data ?? Data()
 
@@ -138,7 +141,8 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
         // If successful then cache the data
         var userInfo = [AnyHashable: Any]()
         if let headers = request.allHTTPHeaderFields,
-           let acceptHeader = headers.getCaseInsensitiveValue(key: acceptedLanguageHeaderFieldName) {
+            let acceptHeader = headers.getCaseInsensitiveValue(key: acceptedLanguageHeaderFieldName)
+        {
             userInfo[UserInfoKeyAcceptLanguage] = acceptHeader
         }
         userInfo[UserInfoKeyMethod] = request.httpMethod
@@ -185,7 +189,8 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
 
         /// Make sure the cached response uses the same HTTP method
         if let httpMethod = cachedResponse.userInfo?[UserInfoKeyMethod] as? String,
-           httpMethod != request.httpMethod {
+            httpMethod != request.httpMethod
+        {
             return .miss
         }
 
@@ -201,7 +206,8 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
         let possibleResult = UBCacheResult.hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)
 
         if let cacheControlHeader = response.ub_getHeaderField(key: cacheControlHeaderFieldName),
-           let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader) {
+            let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader)
+        {
             guard cacheControlDirectives.cachingAllowed else {
                 let result = modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .cachingNotAllowed)
                 if case .miss = result {
@@ -215,14 +221,17 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
         let contentLanguage = response.ub_getHeaderField(key: contentLanguageHeaderFieldName) ?? (cachedResponse.userInfo?[UserInfoKeyAcceptLanguage] as? String)
         // Check that the content language of the cached response is contained in the request accepted language
         if let contentLanguage,
-           let acceptLanguage = request.value(forHTTPHeaderField: acceptedLanguageHeaderFieldName),
-           acceptLanguage.lowercased().contains(contentLanguage.lowercased()) == false {
+            let acceptLanguage = request.value(forHTTPHeaderField: acceptedLanguageHeaderFieldName),
+            acceptLanguage.lowercased().contains(contentLanguage.lowercased()) == false
+        {
             return modifyCacheResult(proposed: .miss, possible: possibleResult, reason: .contentLanguageNotAccepted(contentLanguage))
         }
 
         // Check Max Age
         if let cacheControlHeader = response.ub_getHeaderField(key: cacheControlHeaderFieldName),
-           let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), let maxAge = cacheControlDirectives.maxAge, let responseDateHeader = response.ub_getHeaderField(key: dateHeaderFieldName), let responseDate = dateFormatter.date(from: responseDateHeader) {
+            let cacheControlDirectives = UBCacheResponseDirectives(cacheControlHeader: cacheControlHeader), let maxAge = cacheControlDirectives.maxAge, let responseDateHeader = response.ub_getHeaderField(key: dateHeaderFieldName),
+            let responseDate = dateFormatter.date(from: responseDateHeader)
+        {
             // cacheAge: Round up to next seconds
             // Rounding is important s.t. re-requests with interval < 1s are not
             // treated differently that requests after > 1s
@@ -238,7 +247,8 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
 
             // If there are no max age then search for expire header
         } else if let expiresHeader = response.ub_getHeaderField(key: expiresHeaderFieldName),
-                  let expiresDate = dateFormatter.date(from: expiresHeader) {
+            let expiresDate = dateFormatter.date(from: expiresHeader)
+        {
             if expiresDate < Date() {
                 return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders), possible: possibleResult, reason: .expiredInPast(expiresDate: expiresDate))
             } else {
@@ -246,7 +256,7 @@ open class UBBaseCachingLogic: UBCachingLogic, @unchecked Sendable {
             }
 
             // If there is no max age neither expires, don't cache
-        } else if let responseDateHeader = response.ub_getHeaderField(key: dateHeaderFieldName), let _ = dateFormatter.date(from: responseDateHeader) {
+        } else if let responseDateHeader = response.ub_getHeaderField(key: dateHeaderFieldName), dateFormatter.date(from: responseDateHeader) != nil {
             // We could do heuristic caching, but behaviour could be unexpected
             return modifyCacheResult(proposed: .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders), possible: possibleResult, reason: .noCacheHeaders)
 

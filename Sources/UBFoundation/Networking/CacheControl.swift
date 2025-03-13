@@ -60,7 +60,8 @@ public extension [UBCacheResponseDirective] {
         var result: UBCacheResponseDirectives = []
         for match in matches {
             if match.numberOfRanges == 4, let range = Range(match.range(at: 0), in: cacheControlHeader) {
-                if let directiveRange = Range(match.range(at: 1), in: cacheControlHeader), let valueRange = Range(match.range(at: 3), in: cacheControlHeader), let command = UBCacheResponseDirective.Command(rawValue: String(cacheControlHeader[directiveRange])) {
+                if let directiveRange = Range(match.range(at: 1), in: cacheControlHeader), let valueRange = Range(match.range(at: 3), in: cacheControlHeader), let command = UBCacheResponseDirective.Command(rawValue: String(cacheControlHeader[directiveRange]))
+                {
                     result.append(UBCacheResponseDirective(command: command, value: Int(String(cacheControlHeader[valueRange]))))
                 } else if let command = UBCacheResponseDirective.Command(rawValue: String(cacheControlHeader[range])) {
                     result.append(UBCacheResponseDirective(command: command, value: nil))

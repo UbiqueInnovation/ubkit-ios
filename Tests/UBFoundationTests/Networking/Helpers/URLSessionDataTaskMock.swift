@@ -40,11 +40,13 @@ class URLSessionDataTaskMock: URLSessionDataTask, @unchecked Sendable {
         didSet {
             switch _state {
                 case .running:
-                    timeoutTimer = Timer(timeInterval: timeoutInterval, repeats: false, block: { [weak self] _ in
-                        self?.completionHandler(nil, nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: [NSLocalizedDescriptionKey: "Request Timedout"]))
-                        self?.activeTimer?.invalidate()
-                        self?._state = .completed
-                    })
+                    timeoutTimer = Timer(
+                        timeInterval: timeoutInterval, repeats: false,
+                        block: { [weak self] _ in
+                            self?.completionHandler(nil, nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: [NSLocalizedDescriptionKey: "Request Timedout"]))
+                            self?.activeTimer?.invalidate()
+                            self?._state = .completed
+                        })
                     RunLoop.main.add(timeoutTimer!, forMode: RunLoop.Mode.common)
                 case .canceling, .completed, .suspended:
                     timeoutTimer?.invalidate()
@@ -113,16 +115,18 @@ class URLSessionDataTaskMock: URLSessionDataTask, @unchecked Sendable {
             }
             let initialValue: Int64 = Int64(config.progressUpdateCount)
             nonisolated(unsafe) var counter: Int64 = 0
-            let m = Timer(timeInterval: TimeInterval(config.transferDuration / TimeInterval(initialValue)), repeats: true, block: { [weak self] timer in
-                counter += 1
-                if counter <= initialValue {
-                    self?._progress.completedUnitCount = Int64((Float(counter) / Float(initialValue)) * 100)
-                    return
-                }
-                timer.invalidate()
-                self?.completionHandler(config.data, config.response, nil)
-                self?._state = .completed
-            })
+            let m = Timer(
+                timeInterval: TimeInterval(config.transferDuration / TimeInterval(initialValue)), repeats: true,
+                block: { [weak self] timer in
+                    counter += 1
+                    if counter <= initialValue {
+                        self?._progress.completedUnitCount = Int64((Float(counter) / Float(initialValue)) * 100)
+                        return
+                    }
+                    timer.invalidate()
+                    self?.completionHandler(config.data, config.response, nil)
+                    self?._state = .completed
+                })
             self?.activeTimer = m
             RunLoop.main.add(m, forMode: RunLoop.Mode.common)
         }

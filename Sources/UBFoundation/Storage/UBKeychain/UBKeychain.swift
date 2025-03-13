@@ -25,9 +25,11 @@ public class UBKeychain: UBKeychainProtocol {
     ///   Starting with iOS 8 appgroups can be used as accessGroups
     ///   - encoder: a optional custom encoder
     ///   - decoder: a optional custom decoder
-    public init(accessGroup: String? = nil,
-                encoder: JSONEncoder = JSONEncoder(),
-                decoder: JSONDecoder = JSONDecoder()) {
+    public init(
+        accessGroup: String? = nil,
+        encoder: JSONEncoder = JSONEncoder(),
+        decoder: JSONDecoder = JSONDecoder()
+    ) {
         self.encoder = encoder
         self.decoder = decoder
         self.accessGroup = accessGroup
@@ -59,7 +61,8 @@ public class UBKeychain: UBKeychainProtocol {
                     // fallback for old installations since strings used to be stored utf8 encoded
                     // on next write the value will be written JSON encoded
                     if let stringOpt = String(data: item, encoding: .utf8),
-                       let string = stringOpt as? T {
+                        let string = stringOpt as? T
+                    {
                         return .success(string)
                     }
                     return .failure(.decodingError(error))

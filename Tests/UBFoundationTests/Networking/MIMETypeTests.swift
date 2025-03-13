@@ -43,21 +43,21 @@ class MIMETypeTests: XCTestCase {
         }
 
         let failureTestData: [String] = [
-            "image", // Only type
-            "image/", // Only type
-            "mix[tape", // Only type
-            "unknown/plain", // Unknow type
-            "application/.plain", // Invalid subtype
-            "application/+plain", // Invalid subtype
-            "image/; charset=utf-8", // Missing subtype
-            "image/ ; charset=utf-8", // Missing subtype
-            "", // Missing Type
-            "/", // Missing Type
-            ";", // Missing Type
-            "application/clue@info+xml", // Not allowed character
-            "application/json; charset", // Parameter malformatted
-            "application/json; charset=", // Parameter malformatted
-            "application/json; =utf-8", // Parameter malformatted
+            "image",  // Only type
+            "image/",  // Only type
+            "mix[tape",  // Only type
+            "unknown/plain",  // Unknow type
+            "application/.plain",  // Invalid subtype
+            "application/+plain",  // Invalid subtype
+            "image/; charset=utf-8",  // Missing subtype
+            "image/ ; charset=utf-8",  // Missing subtype
+            "",  // Missing Type
+            "/",  // Missing Type
+            ";",  // Missing Type
+            "application/clue@info+xml",  // Not allowed character
+            "application/json; charset",  // Parameter malformatted
+            "application/json; charset=",  // Parameter malformatted
+            "application/json; =utf-8",  // Parameter malformatted
         ]
         for test in failureTestData {
             XCTAssertNil(UBMIMEType(string: test))

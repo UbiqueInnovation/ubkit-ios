@@ -65,7 +65,8 @@ extension UIColor {
 
         // Validate length (3, 4, 6, or 8)
         guard [3, 4, 6, 8].contains(hexString.count),
-              hexString.allSatisfy({ $0.isHexDigit }) else {
+            hexString.allSatisfy({ $0.isHexDigit })
+        else {
             return nil
         }
 

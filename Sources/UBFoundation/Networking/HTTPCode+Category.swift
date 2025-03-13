@@ -27,15 +27,15 @@ public enum UBHTTPCodeCategory {
     /// - Parameter code: The HTTP code
     public init(code: Int) {
         switch code {
-            case 100 ..< 200:
+            case 100..<200:
                 self = .informational
-            case 200 ..< 300:
+            case 200..<300:
                 self = .success
-            case 300 ..< 400:
+            case 300..<400:
                 self = .redirection
-            case 400 ..< 500:
+            case 400..<500:
                 self = .clientError
-            case 500 ..< 600:
+            case 500..<600:
                 self = .serverError
             default:
                 self = .uncategorized

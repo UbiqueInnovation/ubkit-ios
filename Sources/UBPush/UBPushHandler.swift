@@ -79,26 +79,26 @@ open class UBPushHandler: NSObject {
         // Only reset badge number if user started the app by tapping on the app icon
         // or tapping on a notification (but not when started in background because of
         // a location change or some other event).
-        if launchOptions == nil ||
-            launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] != nil ||
-            launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] != nil {
+        if launchOptions == nil || launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] != nil || launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] != nil {
             UIApplication.shared.applicationIconBadgeNumber = 0
         }
     }
 
     /// Handles a notification that arrived while the app was running in the foreground.
     public func handleWillPresentNotification(_ notification: UNNotification, completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let ubNotification = UBPushNotification(notification.request.content.userInfo,
-                                                notificationRequestIdentifier: notification.request.identifier)
+        let ubNotification = UBPushNotification(
+            notification.request.content.userInfo,
+            notificationRequestIdentifier: notification.request.identifier)
         // Let app decide (by overriding) whether and how to show a banner or not
         didReceive(ubNotification, whileActive: true, shouldPresentCompletionHandler: completionHandler)
     }
 
     /// Handles the user's response to an incoming notification.
     public func handleDidReceiveResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
-        let ubNotification = UBPushNotification(response.notification.request.content.userInfo,
-                                                notificationRequestIdentifier: response.notification.request.identifier,
-                                                responseActionIdentifier: response.actionIdentifier)
+        let ubNotification = UBPushNotification(
+            response.notification.request.content.userInfo,
+            notificationRequestIdentifier: response.notification.request.identifier,
+            responseActionIdentifier: response.actionIdentifier)
         didReceive(ubNotification, whileActive: false)
         completionHandler()
     }
@@ -130,14 +130,15 @@ open class UBPushHandler: NSObject {
         if isActive {
             let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "App Name Missing"
 
-            let message: String = switch (notification.userInfo["aps"] as? [String: Any])?["alert"] {
-                case let stringAlert as String:
-                    stringAlert
-                case let dictAlert as [String: Any]:
-                    (dictAlert["body"] as? String) ?? ""
-                default:
-                    ""
-            }
+            let message: String =
+                switch (notification.userInfo["aps"] as? [String: Any])?["alert"] {
+                    case let stringAlert as String:
+                        stringAlert
+                    case let dictAlert as [String: Any]:
+                        (dictAlert["body"] as? String) ?? ""
+                    default:
+                        ""
+                }
 
             showInAppPushAlert(withTitle: appName, proposedMessage: message, notification: notification, shouldPresentCompletionHandler: shouldPresentCompletionHandler)
         }
@@ -164,10 +165,7 @@ public struct UBPushNotification {
             return false
         }
 
-        return aps["alert"] == nil &&
-            aps["sound"] == nil &&
-            aps["badge"] == nil &&
-            (aps["content-available"] as? Int) == 1
+        return aps["alert"] == nil && aps["sound"] == nil && aps["badge"] == nil && (aps["content-available"] as? Int) == 1
     }
 
     public init(_ userInfo: [AnyHashable: Any], notificationRequestIdentifier: String? = nil, responseActionIdentifier: String? = nil) {

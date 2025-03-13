@@ -42,14 +42,16 @@ public extension UBURLSession {
         queue.name = "Friendly UBURLSession Shared"
         queue.qualityOfService = .userInitiated
 
-        let proxy: UBDevToolsProxyHelper.Proxy? = if let host = DevToolsView.proxySettingsHost, host.isEmpty == false,
-                                                     let port = DevToolsView.proxySettingsPort {
-            UBDevToolsProxyHelper.Proxy(host: host, port: port)
-        } else if let devProy = UBDevToolsProxyHelper.shared.proxy {
-            devProy
-        } else {
-            nil
-        }
+        let proxy: UBDevToolsProxyHelper.Proxy? =
+            if let host = DevToolsView.proxySettingsHost, host.isEmpty == false,
+                let port = DevToolsView.proxySettingsPort
+            {
+                UBDevToolsProxyHelper.Proxy(host: host, port: port)
+            } else if let devProy = UBDevToolsProxyHelper.shared.proxy {
+                devProy
+            } else {
+                nil
+            }
 
         let configuration = UBURLSessionConfiguration(defaultServerTrust: UBFriendlyEvaluator(), proxy: proxy)
         configuration.sessionConfiguration.networkServiceType = .responsiveData

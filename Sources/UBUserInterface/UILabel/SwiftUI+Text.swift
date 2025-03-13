@@ -7,11 +7,11 @@
 
 #if arch(arm64) || arch(x86_64)
 
-import Foundation
-import SwiftUI
+    import Foundation
+    import SwiftUI
 
-public extension Text {
-    /**
+    public extension Text {
+        /**
      Styles a SwiftUI `Text` view with the values specified in a given `UBLabelType`, with the option to override specific style attributes.
 
      - Parameter labelType: The label type whose parameters should be applied to the text.
@@ -19,19 +19,21 @@ public extension Text {
      - Parameter numberOfLines: The maximum numer of lines the label is allowed to have. Specify `nil` to allow for an infinite number of lines.
      - Parameter textAlignment: The text alignment that should be used for the label. Default is `leading`.
      */
-    func ub_style(_ labelType: UBLabelType,
-                  color: Color? = nil,
-                  numberOfLines: Int? = nil,
-                  textAlignment: TextAlignment = .leading) -> some View {
-        self
-            .font(Font(labelType.font))
-            .tracking(labelType.letterSpacing ?? 0)
-            .lineSpacing(labelType.font.pointSize * (labelType.lineSpacing - 1))
-            .foregroundColor(color ?? Color(labelType.textColor))
-            .lineLimit(numberOfLines)
-            .multilineTextAlignment(textAlignment)
-            .textCase(labelType.isUppercased ? .uppercase : nil)
+        func ub_style(
+            _ labelType: UBLabelType,
+            color: Color? = nil,
+            numberOfLines: Int? = nil,
+            textAlignment: TextAlignment = .leading
+        ) -> some View {
+            self
+                .font(Font(labelType.font))
+                .tracking(labelType.letterSpacing ?? 0)
+                .lineSpacing(labelType.font.pointSize * (labelType.lineSpacing - 1))
+                .foregroundColor(color ?? Color(labelType.textColor))
+                .lineLimit(numberOfLines)
+                .multilineTextAlignment(textAlignment)
+                .textCase(labelType.isUppercased ? .uppercase : nil)
+        }
     }
-}
 
 #endif

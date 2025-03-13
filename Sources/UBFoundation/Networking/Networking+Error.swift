@@ -94,24 +94,25 @@ private let errorCodePrefix = "[NE]"
 
 extension UBNetworkingError: UBCodedError {
     public var errorCode: String {
-        let code: String = switch self {
-            case let .notConnected(error):
-                "[NOCONN]\(error.errorCode)"
-            case let .timedOut(error):
-                if let err = error {
-                    "[TMOUT]\(err.errorCode)"
-                } else {
-                    "[TMOUT]"
-                }
-            case let .certificateValidationFailed(error):
-                if let err = error {
-                    "[CVF]\(err.errorCode)"
-                } else {
-                    "[CVF]"
-                }
-            case let .internal(error):
-                "\(error.errorCode)"
-        }
+        let code: String =
+            switch self {
+                case let .notConnected(error):
+                    "[NOCONN]\(error.errorCode)"
+                case let .timedOut(error):
+                    if let err = error {
+                        "[TMOUT]\(err.errorCode)"
+                    } else {
+                        "[TMOUT]"
+                    }
+                case let .certificateValidationFailed(error):
+                    if let err = error {
+                        "[CVF]\(err.errorCode)"
+                    } else {
+                        "[CVF]"
+                    }
+                case let .internal(error):
+                    "\(error.errorCode)"
+            }
         return "\(errorCodePrefix)\(code)"
     }
 }
@@ -143,26 +144,27 @@ public extension UBNetworkingError {
 
 extension UBInternalNetworkingError: UBCodedError {
     public var errorCode: String {
-        let code: String = switch self {
-            case .couldNotCreateURL: "[CNCU]"
-            case .couldNotDecodeBody: "[CNDB]"
-            case .couldNotEncodeBody: "[CNEB]"
-            case .malformedURL: "[MALURL]"
-            case .missingURL: "[MIURL]"
-            case .noCachedData: "[NOCACHE]"
-            case .notHTTPResponse: "[NOHTTPR]"
-            case let .requestFailed(httpStatusCode: status): "[RF-\(status)]"
-            case .requestRedirected: "[RR]"
-            case .responseBodyIsEmpty: "[RBIE]"
-            case .responseBodyIsNotEmpty: "[RBINE]"
-            case .responseMIMETypeValidationFailed: "[RMIMETVF]"
-            case let .responseStatusValidationFailed(status: status): "[RSVF-\(status)]"
-            case .unwrapError: "[UNWRP]"
-            case .synchronousTimedOut: "[SEMTIMEOUT]"
-            case .canceled: "[CANCELLED]"
-            case .recoverableError: "[REC]"
-            case let .otherError(error): error.errorCode
-        }
+        let code: String =
+            switch self {
+                case .couldNotCreateURL: "[CNCU]"
+                case .couldNotDecodeBody: "[CNDB]"
+                case .couldNotEncodeBody: "[CNEB]"
+                case .malformedURL: "[MALURL]"
+                case .missingURL: "[MIURL]"
+                case .noCachedData: "[NOCACHE]"
+                case .notHTTPResponse: "[NOHTTPR]"
+                case let .requestFailed(httpStatusCode: status): "[RF-\(status)]"
+                case .requestRedirected: "[RR]"
+                case .responseBodyIsEmpty: "[RBIE]"
+                case .responseBodyIsNotEmpty: "[RBINE]"
+                case .responseMIMETypeValidationFailed: "[RMIMETVF]"
+                case let .responseStatusValidationFailed(status: status): "[RSVF-\(status)]"
+                case .unwrapError: "[UNWRP]"
+                case .synchronousTimedOut: "[SEMTIMEOUT]"
+                case .canceled: "[CANCELLED]"
+                case .recoverableError: "[REC]"
+                case let .otherError(error): error.errorCode
+            }
         return code
     }
 }

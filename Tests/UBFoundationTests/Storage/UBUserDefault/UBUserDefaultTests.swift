@@ -5,8 +5,9 @@
 //  Created by Zeno Koller on 02.02.20.
 //
 
-@testable import UBFoundation
 import XCTest
+
+@testable import UBFoundation
 
 class UBUserDefaultTests: XCTestCase {
     @UBUserDefault(key: "testString", defaultValue: "Ubique")
@@ -168,7 +169,8 @@ class UBUserDefaultTests: XCTestCase {
 
         testUsers = insertedUsers
 
-        guard let datas = userDefaults.object(forKey: "testUsers") as? [Data] else { XCTFail()
+        guard let datas = userDefaults.object(forKey: "testUsers") as? [Data] else {
+            XCTFail()
             return
         }
 
@@ -205,7 +207,8 @@ class UBUserDefaultTests: XCTestCase {
 
         testUserDictionary = insertedUsers
 
-        guard let datas = userDefaults.object(forKey: "testUserDictionary") as? [String: Data] else { XCTFail()
+        guard let datas = userDefaults.object(forKey: "testUserDictionary") as? [String: Data] else {
+            XCTFail()
             return
         }
 

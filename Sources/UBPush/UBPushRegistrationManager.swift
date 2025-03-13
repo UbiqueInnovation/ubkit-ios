@@ -35,7 +35,7 @@ open class UBPushRegistrationManager: NSObject {
 
     /// :nodoc:
     private var maxRegistrationAge: TimeInterval {
-        2 * 7 * 24 * 60 * 60 // enforce new push registration every two weeks
+        2 * 7 * 24 * 60 * 60  // enforce new push registration every two weeks
     }
 
     /// :nodoc:
@@ -60,7 +60,8 @@ open class UBPushRegistrationManager: NSObject {
         // only send registration if push token has changed
         if (oldToken == nil && pushToken != nil)
             || (oldToken != nil && oldToken != pushToken)
-            || (oldToken != nil && oldToken == pushToken && !self.pushLocalStorage.isValid) {
+            || (oldToken != nil && oldToken == pushToken && !self.pushLocalStorage.isValid)
+        {
             self.pushLocalStorage.pushToken = pushToken
             invalidate()
         }
@@ -85,12 +86,13 @@ open class UBPushRegistrationManager: NSObject {
         }
 
         task = UBURLDataTask(request: registrationRequest, session: session)
-        task?.addCompletionHandler(decoder: UBHTTPStringDecoder()) { result, _, _, _ in
-            switch result {
-                case .success(let value): completion(.success(value))
-                case .failure(let error): completion(.failure(error))
+        task?
+            .addCompletionHandler(decoder: UBHTTPStringDecoder()) { result, _, _, _ in
+                switch result {
+                    case .success(let value): completion(.success(value))
+                    case .failure(let error): completion(.failure(error))
+                }
             }
-        }
 
         if task != nil {
             modifyRegistrationDataTask(&task!)
@@ -137,7 +139,6 @@ open class UBPushRegistrationManager: NSObject {
             }
         }
 
-
         UBPushManager.logger.info("\(String(describing: self)) started")
     }
 
@@ -146,7 +147,8 @@ open class UBPushRegistrationManager: NSObject {
     open var pushRegistrationRequest: UBURLRequest? {
         guard
             let pushToken = self.pushLocalStorage.pushToken,
-            let registrationUrl = self.registrationUrl else {
+            let registrationUrl = self.registrationUrl
+        else {
             return nil
         }
 
@@ -170,10 +172,11 @@ open class UBPushRegistrationManager: NSObject {
         if !self.pushLocalStorage.isValid {
             sendPushRegistration()
         } else {
-            let justPushed = UBPushManager.shared.pushHandler.lastPushed.map { lastPushed in
-                let fifteenSecondsAgo = Date(timeIntervalSinceNow: -15 * 60)
-                return lastPushed > fifteenSecondsAgo
-            } ?? false
+            let justPushed =
+                UBPushManager.shared.pushHandler.lastPushed.map { lastPushed in
+                    let fifteenSecondsAgo = Date(timeIntervalSinceNow: -15 * 60)
+                    return lastPushed > fifteenSecondsAgo
+                } ?? false
 
             let outdated = -(self.pushLocalStorage.lastRegistrationDate?.timeIntervalSinceNow ?? 0) > maxRegistrationAge
 

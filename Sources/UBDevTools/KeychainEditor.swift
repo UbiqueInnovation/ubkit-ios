@@ -46,8 +46,9 @@ class ObservableKeychainEditor: ObservableObject {
 
             for item in array! {
                 if let key = item[kSecAttrAccount as String] as? String,
-                   let value = item[kSecValueData as String] as? Data,
-                   let object = try? JSONDecoder().decode(String.self, from: value) {
+                    let value = item[kSecValueData as String] as? Data,
+                    let object = try? JSONDecoder().decode(String.self, from: value)
+                {
                     values[key] = object
                 }
             }
@@ -67,24 +68,30 @@ public struct KeychainEditor: View {
                     VStack(alignment: .leading) {
                         Text("Key: \(key)").font(.caption)
                         if let value = store.dictionary[key] {
-                            TextField("", text: Binding(
-                                get: {
-                                    value
-                                },
-                                set: {
-                                    UBKeychain().set($0, for: UBKeychainKey<String>(key), accessibility: .whenUnlocked)
-                                    store.reload()
-                                }
-                            )).textFieldStyle(RoundedBorderTextFieldStyle())
+                            TextField(
+                                "",
+                                text: Binding(
+                                    get: {
+                                        value
+                                    },
+                                    set: {
+                                        UBKeychain().set($0, for: UBKeychainKey<String>(key), accessibility: .whenUnlocked)
+                                        store.reload()
+                                    }
+                                )
+                            )
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
                     }
-                }.onDelete { indexSet in
+                }
+                .onDelete { indexSet in
                     guard let firstIndex = indexSet.first else { return }
                     let key = store.keys[firstIndex]
                     UBKeychain().delete(for: UBKeychainKey<String>(key))
                     store.reload()
                 }
             }
-        }.navigationBarTitle(Text("Keychain Editor"))
+        }
+        .navigationBarTitle(Text("Keychain Editor"))
     }
 }

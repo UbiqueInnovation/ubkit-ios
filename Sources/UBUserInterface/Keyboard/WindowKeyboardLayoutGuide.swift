@@ -59,8 +59,9 @@ extension WindowKeyboardLayoutGuide {
     // :nodoc:
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
         guard let owningView,
-              let window = owningView as? UIWindow,
-              let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo) else {
+            let window = owningView as? UIWindow,
+            let keyboardInfo = KeyboardInfo(userInfo: notification.userInfo)
+        else {
             return
         }
 

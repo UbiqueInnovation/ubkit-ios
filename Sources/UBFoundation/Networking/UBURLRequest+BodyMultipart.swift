@@ -45,7 +45,8 @@ public struct UBURLRequestBodyMultipart: URLRequestBodyConvertible {
 
         for parameter in parameters {
             guard let header = "Content-Disposition: form-data; name=\"\(parameter.name)\"\r\n\r\n".data(using: encoding),
-                  let value = "\(parameter.value)\r\n".data(using: encoding) else {
+                let value = "\(parameter.value)\r\n".data(using: encoding)
+            else {
                 throw UBInternalNetworkingError.couldNotEncodeBody
             }
             data.append(boundaryPrefix)
@@ -54,7 +55,9 @@ public struct UBURLRequestBodyMultipart: URLRequestBodyConvertible {
         }
 
         for payload in payloads {
-            guard let header = "Content-Disposition: form-data; name=\"\(payload.name)\"; filename=\"\(payload.fileName)\"\r\n".data(using: encoding), let contentType = "Content-Type: \(payload.mimeType.stringValue)\r\n\r\n".data(using: encoding), let ending = "\r\n".data(using: encoding) else {
+            guard let header = "Content-Disposition: form-data; name=\"\(payload.name)\"; filename=\"\(payload.fileName)\"\r\n".data(using: encoding), let contentType = "Content-Type: \(payload.mimeType.stringValue)\r\n\r\n".data(using: encoding),
+                let ending = "\r\n".data(using: encoding)
+            else {
                 throw UBInternalNetworkingError.couldNotEncodeBody
             }
             data.append(boundaryPrefix)

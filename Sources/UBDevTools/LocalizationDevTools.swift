@@ -23,7 +23,8 @@ public extension Bundle {
 
     @MainActor
     static func localizationKeySwizzleWizzle() {
-        guard let originalMethod = class_getInstanceMethod(Bundle.self, #selector(localizedString(forKey:value:table:))), let swizzledMethod = class_getInstanceMethod(Bundle.self, #selector(specialLocalizedString(forKey:value:table:))), !Self.localizationKeySwizzled
+        guard let originalMethod = class_getInstanceMethod(Bundle.self, #selector(localizedString(forKey:value:table:))), let swizzledMethod = class_getInstanceMethod(Bundle.self, #selector(specialLocalizedString(forKey:value:table:))),
+            !Self.localizationKeySwizzled
         else { return }
         method_exchangeImplementations(originalMethod, swizzledMethod)
         Self.localizationKeySwizzled = true

@@ -62,25 +62,28 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic, @unchecked Sendable {
         }
 
         // This is the date that we are not allowed to make requests before.
-        let backoffInterval: TimeInterval = if let backoffHeader = allHeaderFields.getCaseInsensitiveValue(key: backoffIntervalHeaderFieldName) as? String, let interval = TimeInterval(backoffHeader) {
-            interval
-        } else {
-            60
-        }
+        let backoffInterval: TimeInterval =
+            if let backoffHeader = allHeaderFields.getCaseInsensitiveValue(key: backoffIntervalHeaderFieldName) as? String, let interval = TimeInterval(backoffHeader) {
+                interval
+            } else {
+                60
+            }
 
-        let age: TimeInterval = if let ageHeader = allHeaderFields.getCaseInsensitiveValue(key: ageHeaderFieldName) as? String, let interval = TimeInterval(ageHeader) {
-            interval
-        } else {
-            0
-        }
+        let age: TimeInterval =
+            if let ageHeader = allHeaderFields.getCaseInsensitiveValue(key: ageHeaderFieldName) as? String, let interval = TimeInterval(ageHeader) {
+                interval
+            } else {
+                0
+            }
         responseDate = referenceDate ?? responseDate + age
 
         // The backoff date is the response date added to the backoff interval
-        let backoffDate: Date = if let metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
-            max(responseDate + backoffInterval, date + backoffInterval)
-        } else {
-            responseDate + backoffInterval
-        }
+        let backoffDate: Date =
+            if let metrics, let date = metrics.transactionMetrics.last?.connectEndDate {
+                max(responseDate + backoffInterval, date + backoffInterval)
+            } else {
+                responseDate + backoffInterval
+            }
 
         // Return the date that is the most in the future.
         return max(nextRefreshDate, backoffDate)
@@ -98,8 +101,7 @@ open class UBAutoRefreshCacheLogic: UBBaseCachingLogic, @unchecked Sendable {
     /// :nodoc:
 
     override public func hasProposedCachedResponse(cachedURLResponse: CachedURLResponse?, response: HTTPURLResponse, session _: URLSession, request _: URLRequest, ubDataTask: UBURLDataTask, metrics: URLSessionTaskMetrics?) {
-        if cachedURLResponse != nil ||
-            response == UBStandardHTTPCode.notModified {
+        if cachedURLResponse != nil || response == UBStandardHTTPCode.notModified {
             // If there is a response or the response is not modified, reschedule the cron job
             let referenceDate = ubDataTask.flags.contains(.refresh) ? Date() : nil
             scheduleRefreshCronJob(for: ubDataTask, headers: response.allHeaderFields, metrics: metrics, referenceDate: referenceDate)

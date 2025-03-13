@@ -8,7 +8,7 @@
 import Foundation
 
 #if canImport(UIKit)
-import UIKit
+    import UIKit
 #endif
 
 /// An object that can decode data into the desired type
@@ -42,9 +42,10 @@ open class UBURLDataTaskDecoder<T>: @unchecked Sendable {
 public class UBDataPassthroughDecoder: UBURLDataTaskDecoder<Data>, @unchecked Sendable {
     /// Initializes the decoder
     public init() {
-        super.init { data, _ -> Data in
-            data
-        }
+        super
+            .init { data, _ -> Data in
+                data
+            }
     }
 }
 
@@ -58,12 +59,13 @@ public class UBHTTPStringDecoder: UBURLDataTaskDecoder<String>, @unchecked Senda
     ///
     /// - Parameter encoding: The string encoding
     public init(encoding: String.Encoding = .utf8) {
-        super.init { data, _ -> String in
-            guard let string = String(data: data, encoding: encoding) else {
-                throw UBInternalNetworkingError.couldNotDecodeBody
+        super
+            .init { data, _ -> String in
+                guard let string = String(data: data, encoding: encoding) else {
+                    throw UBInternalNetworkingError.couldNotDecodeBody
+                }
+                return string
             }
-            return string
-        }
     }
 }
 
@@ -89,9 +91,10 @@ public class UBHTTPJSONDecoder<T: Decodable>: UBURLDataTaskDecoder<T>, @unchecke
     ///
     /// - Parameter decoder: A JSON decoder
     public init(decoder: JSONDecoder = JSONDecoder()) {
-        super.init { data, _ -> T in
-            try decoder.decode(T.self, from: data)
-        }
+        super
+            .init { data, _ -> T in
+                try decoder.decode(T.self, from: data)
+            }
     }
 }
 
@@ -106,22 +109,23 @@ public extension UBURLDataTaskDecoder where T: Decodable {
 }
 
 #if canImport(UIKit)
-public class UBImageDecoder: UBURLDataTaskDecoder<UIImage>, @unchecked Sendable {
-    /// Initializes the decoder
-    ///
-    /// - Parameter scale: Use 2 or 3 to create images with more pixels than points
-    public init(scale: Double = 1) {
-        super.init { data, _ -> UIImage in
-            guard let image = UIImage(data: data, scale: scale) else {
-                throw UBInternalNetworkingError.couldNotDecodeBody
-            }
-            return image
+    public class UBImageDecoder: UBURLDataTaskDecoder<UIImage>, @unchecked Sendable {
+        /// Initializes the decoder
+        ///
+        /// - Parameter scale: Use 2 or 3 to create images with more pixels than points
+        public init(scale: Double = 1) {
+            super
+                .init { data, _ -> UIImage in
+                    guard let image = UIImage(data: data, scale: scale) else {
+                        throw UBInternalNetworkingError.couldNotDecodeBody
+                    }
+                    return image
+                }
         }
     }
-}
 
-public extension UBURLDataTaskDecoder where T == UIImage {
-    static let image = UBImageDecoder()
-}
+    public extension UBURLDataTaskDecoder where T == UIImage {
+        static let image = UBImageDecoder()
+    }
 
 #endif

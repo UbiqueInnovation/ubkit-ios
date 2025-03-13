@@ -5,8 +5,9 @@
 //  Created by Stefan Mitterrutzner on 09.11.20.
 //
 
-@testable import UBFoundation
 import XCTest
+
+@testable import UBFoundation
 
 class UBKeychainStoredTests: XCTestCase {
     func testDefaultValue() {

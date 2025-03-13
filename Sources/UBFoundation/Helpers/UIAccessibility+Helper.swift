@@ -18,9 +18,9 @@ public extension UIAccessibility {
             )
             AccessibilityNotification.Announcement(announcement).post()
         } else {
-#if os(iOS)
-            UIAccessibility.post(notification: .announcement, argument: message)
-#endif
+            #if os(iOS)
+                UIAccessibility.post(notification: .announcement, argument: message)
+            #endif
         }
     }
 }

@@ -76,8 +76,8 @@ class ViewKeyboardLayoutGuide: UILayoutGuide {
 
             // Setup the constraint
             NSLayoutConstraint.activate([
-                topAnchor.constraint(lessThanOrEqualTo: owningView.bottomAnchor), // The top should never be outside of the view
-                topAnchor.constraint(greaterThanOrEqualTo: owningView.topAnchor), // The top should never be outside of the view
+                topAnchor.constraint(lessThanOrEqualTo: owningView.bottomAnchor),  // The top should never be outside of the view
+                topAnchor.constraint(greaterThanOrEqualTo: owningView.topAnchor),  // The top should never be outside of the view
                 owningView.leadingAnchor.constraint(equalTo: leadingAnchor),
                 owningView.trailingAnchor.constraint(equalTo: trailingAnchor),
                 owningView.bottomAnchor.constraint(equalTo: bottomAnchor),

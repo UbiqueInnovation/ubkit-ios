@@ -77,10 +77,13 @@ private struct ShareView: UIViewControllerRepresentable {
     let activityItems: [Any]
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<ShareView>) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems,
-                                 applicationActivities: nil)
+        UIActivityViewController(
+            activityItems: activityItems,
+            applicationActivities: nil)
     }
 
-    func updateUIViewController(_ uiViewController: UIActivityViewController,
-                                context: UIViewControllerRepresentableContext<ShareView>) {}
+    func updateUIViewController(
+        _ uiViewController: UIActivityViewController,
+        context: UIViewControllerRepresentableContext<ShareView>
+    ) {}
 }

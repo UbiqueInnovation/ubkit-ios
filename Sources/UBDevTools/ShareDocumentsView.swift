@@ -52,13 +52,16 @@ struct ExportDirectoryView: View {
             if let url = archiveURL {
                 ShareView(url: url)
             }
-        }.alert(isPresented: $showErrorAlert) {
+        }
+        .alert(isPresented: $showErrorAlert) {
             Alert(
                 title: Text("Error"),
                 message: Text("Unable to export Documents Directory"),
-                dismissButton: .cancel(Text("Ok"), action: {
-                    showErrorAlert = false
-                })
+                dismissButton: .cancel(
+                    Text("Ok"),
+                    action: {
+                        showErrorAlert = false
+                    })
             )
         }
     }
@@ -78,16 +81,19 @@ private struct ShareView: UIViewControllerRepresentable {
     let url: URL
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<ShareView>) -> UIActivityViewController {
-        let vc = UIActivityViewController(activityItems: [url],
-                                          applicationActivities: nil)
+        let vc = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: nil)
         vc.completionWithItemsHandler = { _, _, _, _ in
             try? FileManager.default.removeItem(at: url)
         }
         return vc
     }
 
-    func updateUIViewController(_ uiViewController: UIActivityViewController,
-                                context: UIViewControllerRepresentableContext<ShareView>) {}
+    func updateUIViewController(
+        _ uiViewController: UIActivityViewController,
+        context: UIViewControllerRepresentableContext<ShareView>
+    ) {}
 }
 
 enum CompressDocumentsDirectory {
@@ -111,59 +117,63 @@ enum CompressDocumentsDirectory {
     }
 
     static func compress(directory: Directory) -> URL? {
-#if !targetEnvironment(simulator)
-        let archiveDestination = NSTemporaryDirectory() + directory.rawValue + ".aar"
+        #if !targetEnvironment(simulator)
+            let archiveDestination = NSTemporaryDirectory() + directory.rawValue + ".aar"
 
-        let archiveFilePath = FilePath(archiveDestination)
+            let archiveFilePath = FilePath(archiveDestination)
 
-        guard let writeFileStream = ArchiveByteStream.fileStream(
-            path: archiveFilePath,
-            mode: .writeOnly,
-            options: [.create],
-            permissions: FilePermissions(rawValue: 0o644)
-        ) else {
-            return nil
-        }
-        defer {
-            try? writeFileStream.close()
-        }
+            guard
+                let writeFileStream = ArchiveByteStream.fileStream(
+                    path: archiveFilePath,
+                    mode: .writeOnly,
+                    options: [.create],
+                    permissions: FilePermissions(rawValue: 0o644)
+                )
+            else {
+                return nil
+            }
+            defer {
+                try? writeFileStream.close()
+            }
 
-        guard let compressStream = ArchiveByteStream.compressionStream(
-            using: .lzfse,
-            writingTo: writeFileStream
-        ) else {
-            return nil
-        }
-        defer {
-            try? compressStream.close()
-        }
+            guard
+                let compressStream = ArchiveByteStream.compressionStream(
+                    using: .lzfse,
+                    writingTo: writeFileStream
+                )
+            else {
+                return nil
+            }
+            defer {
+                try? compressStream.close()
+            }
 
-        guard let encodeStream = ArchiveStream.encodeStream(writingTo: compressStream) else {
-            return nil
-        }
-        defer {
-            try? encodeStream.close()
-        }
+            guard let encodeStream = ArchiveStream.encodeStream(writingTo: compressStream) else {
+                return nil
+            }
+            defer {
+                try? encodeStream.close()
+            }
 
-        guard let keySet = ArchiveHeader.FieldKeySet("TYP,PAT,LNK,DEV,DAT,UID,GID,MOD,FLG,MTM,BTM,CTM") else {
-            return nil
-        }
+            guard let keySet = ArchiveHeader.FieldKeySet("TYP,PAT,LNK,DEV,DAT,UID,GID,MOD,FLG,MTM,BTM,CTM") else {
+                return nil
+            }
 
-        let sourcePath = directory.url
-        let source = FilePath(sourcePath.path)
+            let sourcePath = directory.url
+            let source = FilePath(sourcePath.path)
 
-        do {
-            try encodeStream.writeDirectoryContents(
-                archiveFrom: source,
-                keySet: keySet
-            )
-        } catch {
-            fatalError("Write directory contents failed.")
-        }
+            do {
+                try encodeStream.writeDirectoryContents(
+                    archiveFrom: source,
+                    keySet: keySet
+                )
+            } catch {
+                fatalError("Write directory contents failed.")
+            }
 
-        return NSURL(fileURLWithPath: archiveDestination) as URL
-#else
-        fatalError("Apple Archive isn't supported on simulator https://developer.apple.com/forums/thread/665465")
-#endif
+            return NSURL(fileURLWithPath: archiveDestination) as URL
+        #else
+            fatalError("Apple Archive isn't supported on simulator https://developer.apple.com/forums/thread/665465")
+        #endif
     }
 }

@@ -44,7 +44,6 @@ public struct UBNetworkTaskRecoveryOptions: RecoverableError, Equatable {
     }
 
     public static func == (lhs: UBNetworkTaskRecoveryOptions, rhs: UBNetworkTaskRecoveryOptions) -> Bool {
-        (lhs.originalError as NSError) == (rhs.originalError as NSError) &&
-            lhs.recoveryOptions == rhs.recoveryOptions
+        (lhs.originalError as NSError) == (rhs.originalError as NSError) && lhs.recoveryOptions == rhs.recoveryOptions
     }
 }

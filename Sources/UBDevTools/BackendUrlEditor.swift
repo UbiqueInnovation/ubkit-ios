@@ -13,11 +13,13 @@ struct BackendUrlEditor: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(url.title)
-            TextField(url.title, text: $url.currentUrl, onEditingChanged: { isEditing in
-                if !isEditing {
-                    BackendDevTools.saveNewUrl(baseUrl: url, newUrl: url.currentUrl)
-                }
-            })
+            TextField(
+                url.title, text: $url.currentUrl,
+                onEditingChanged: { isEditing in
+                    if !isEditing {
+                        BackendDevTools.saveNewUrl(baseUrl: url, newUrl: url.currentUrl)
+                    }
+                })
         }
     }
 }

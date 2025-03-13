@@ -21,21 +21,23 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask: UBURLDataTask? = UBURLDataTask(url: url)
 
         let res = expectation(description: "res")
-        dataTask?.session.reset {
-            res.fulfill()
-        }
+        dataTask?.session
+            .reset {
+                res.fulfill()
+            }
         wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
+        dataTask?
+            .addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
 
-            ex.fulfill()
-            dataTask?.cancel()
-        }
+                ex.fulfill()
+                dataTask?.cancel()
+            }
         dataTask?.start()
         wait(for: [ex], timeout: 10000)
 
-        dataTask?.cancel() // make sure that cron doesn't trigger
+        dataTask?.cancel()  // make sure that cron doesn't trigger
 
         // load request again
 
@@ -62,20 +64,22 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask: UBURLDataTask? = UBURLDataTask(url: url, session: session)
 
         let res = expectation(description: "res")
-        dataTask?.session.reset {
-            res.fulfill()
-        }
+        dataTask?.session
+            .reset {
+                res.fulfill()
+            }
         wait(for: [res], timeout: 10000)
 
         let ex = expectation(description: "s")
-        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
-            dataTask?.cancel() // make sure that cron doesn't trigger
-            ex.fulfill()
-        }
+        dataTask?
+            .addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
+                dataTask?.cancel()  // make sure that cron doesn't trigger
+                ex.fulfill()
+            }
         dataTask?.start()
         wait(for: [ex], timeout: 10000)
 
-        dataTask?.cancel() // make sure that cron doesn't trigger
+        dataTask?.cancel()  // make sure that cron doesn't trigger
 
         // load request again
 
@@ -124,7 +128,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         dataTask.start()
         wait(for: [ex], timeout: 10000)
 
-        dataTask.cancel() // make sure that cron doesn't trigger
+        dataTask.cancel()  // make sure that cron doesn't trigger
 
         // load request again immediately
 
@@ -146,11 +150,15 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         // Load Request that changes cached header
         let url = URL(string: "https://example.com/file.json")!
 
-        let initialResponse = try! BasicResponseProvider(rule: url.absoluteString, body: "Hello, World!", header: BasicResponseProvider.Header(statusCode: 200, headerFields: [
-            "cache-control": "max-age=5",
-            "etag": "0x8DB4542835F84A7",
-            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
-        ]))
+        let initialResponse = try! BasicResponseProvider(
+            rule: url.absoluteString, body: "Hello, World!",
+            header: BasicResponseProvider.Header(
+                statusCode: 200,
+                headerFields: [
+                    "cache-control": "max-age=5",
+                    "etag": "0x8DB4542835F84A7",
+                    "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
+                ]))
 
         initialResponse.addToLocalServer()
 
@@ -177,11 +185,11 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         // immediately load request again, should be cached
         let dataTask2 = UBURLDataTask(url: url, session: session)
         dataTask2.addStateTransitionObserver { _, to, _ in
-            XCTAssert(to != .fetching) // never make the request
+            XCTAssert(to != .fetching)  // never make the request
         }
         let (_, _, info, _) = dataTask2.startSynchronous(decoder: .passthrough)
         XCTAssert(info != nil)
-        XCTAssert(info!.cacheHit) // in cache
+        XCTAssert(info!.cacheHit)  // in cache
 
         initialResponse.removeFromLocalServer()
 
@@ -203,16 +211,17 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         // load request again, now request should return 302
         var dataTask3: UBURLDataTask? = UBURLDataTask(url: url, session: session)
         nonisolated(unsafe) var seenFetching = false
-        dataTask3?.addStateTransitionObserver { _, to, _ in
-            if to == .fetching {
-                seenFetching = true
+        dataTask3?
+            .addStateTransitionObserver { _, to, _ in
+                if to == .fetching {
+                    seenFetching = true
+                }
             }
-        }
         let (_, _, info3, _) = dataTask3!.startSynchronous(decoder: .passthrough)
 
         XCTAssert(info3 != nil)
         XCTAssert(info3!.cacheHit)
-        XCTAssert(seenFetching) // in cache, but request for 302
+        XCTAssert(seenFetching)  // in cache, but request for 302
         dataTask3?.cancel()
         dataTask3 = nil
 
@@ -220,7 +229,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         let dataTask4 = UBURLDataTask(url: url, session: session)
         let (_, _, info4, _) = dataTask4.startSynchronous(decoder: .passthrough)
         XCTAssert(info4 != nil)
-        XCTAssert(info4!.cacheHit) // in cache again
+        XCTAssert(info4!.cacheHit)  // in cache again
     }
 
     func testNoLanguageCaching() {
@@ -243,14 +252,15 @@ class TaskAutoRefreshLogicTests: XCTestCase {
 
         let ex = expectation(description: "s")
         ex.assertForOverFulfill = false
-        dataTask?.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
-            ex.fulfill()
-            dataTask?.cancel() // make sure that cron doesn't trigger
-        }
+        dataTask?
+            .addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
+                ex.fulfill()
+                dataTask?.cancel()  // make sure that cron doesn't trigger
+            }
         dataTask?.start()
         wait(for: [ex], timeout: 10000)
 
-        dataTask?.cancel() // make sure that cron doesn't trigger
+        dataTask?.cancel()  // make sure that cron doesn't trigger
 
         sleep(5)
 
@@ -289,11 +299,15 @@ class TaskAutoRefreshLogicTests: XCTestCase {
         // Load Request that changes cached header
         let url = URL(string: "https://example.com/file.json")!
 
-        let initialResponse = try! BasicResponseProvider(rule: url.absoluteString, body: "Hello, World!", header: BasicResponseProvider.Header(statusCode: 200, headerFields: [
-            "cache-control": "max-age=10000",
-            "etag": "0x8DB4542835F84A7",
-            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
-        ]), timing: .init(headerResponseDelay: 1, bodyResponseDelay: 1))
+        let initialResponse = try! BasicResponseProvider(
+            rule: url.absoluteString, body: "Hello, World!",
+            header: BasicResponseProvider.Header(
+                statusCode: 200,
+                headerFields: [
+                    "cache-control": "max-age=10000",
+                    "etag": "0x8DB4542835F84A7",
+                    "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
+                ]), timing: .init(headerResponseDelay: 1, bodyResponseDelay: 1))
 
         initialResponse.addToLocalServer()
 
@@ -332,7 +346,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
             ex2.fulfill()
         }
         dataTask2.start()
-        dataTask2.start() // start request again
+        dataTask2.start()  // start request again
         wait(for: [ex2], timeout: 60)
     }
 }

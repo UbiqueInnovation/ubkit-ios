@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 @testable import UBFoundation
 
 class DataTaskSessionMock: UBDataTaskURLSession, @unchecked Sendable {

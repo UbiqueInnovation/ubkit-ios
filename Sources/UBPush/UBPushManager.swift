@@ -5,10 +5,10 @@
 //  Created by Zeno Koller on 23.03.20.
 //
 
-import os.log
 import UBFoundation
 import UIKit
 @preconcurrency import UserNotifications
+import os.log
 
 /// Handles requesting push permissions. Clients should customize the following components specific to the client application:
 ///
@@ -128,10 +128,12 @@ open class UBPushManager: NSObject {
     // MARK: - App Delegate
 
     /// Needs to be called inside `applicationDidFinishLaunchingWithOptions(_:launchOptions:)`
-    public func didFinishLaunchingWithOptions(_ launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
-                                              pushHandler: UBPushHandler,
-                                              pushRegistrationManager: UBPushRegistrationManager,
-                                              additionalPushRegistrationManagers: [UBPushRegistrationManager] = []) {
+    public func didFinishLaunchingWithOptions(
+        _ launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
+        pushHandler: UBPushHandler,
+        pushRegistrationManager: UBPushRegistrationManager,
+        additionalPushRegistrationManagers: [UBPushRegistrationManager] = []
+    ) {
         self.pushHandler = pushHandler
         self.pushRegistrationManager = pushRegistrationManager
         self.additionalPushRegistrationManagers = additionalPushRegistrationManagers
@@ -172,14 +174,15 @@ open class UBPushManager: NSObject {
     /// Requests APNS token (if .authorized)
     ///
     private func registerForPushNotification() {
-        UNUserNotificationCenter.current().getNotificationSettings { @Sendable settings in
-            if settings.authorizationStatus == .authorized {
-                Task { @MainActor in
-                    UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
-                    UIApplication.shared.registerForRemoteNotifications()
+        UNUserNotificationCenter.current()
+            .getNotificationSettings { @Sendable settings in
+                if settings.authorizationStatus == .authorized {
+                    Task { @MainActor in
+                        UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
                 }
             }
-        }
     }
 
     /// Requests push permissions
@@ -187,11 +190,13 @@ open class UBPushManager: NSObject {
     /// - Parameters:
     ///     - includingCritical: Also requests permissions for critical alerts; requires iOS 12 and needs special authorization from Apple
     ///     - callback: The callback for handling the result of the request
-    public func requestPushPermissions(includingCritical: Bool = false,
-                                       includingNotificationSettings: Bool = false,
-                                       provisional: Bool = false,
-                                       providesAppSettings: Bool = false,
-                                       callback: @escaping PermissionRequestCallback) {
+    public func requestPushPermissions(
+        includingCritical: Bool = false,
+        includingNotificationSettings: Bool = false,
+        provisional: Bool = false,
+        providesAppSettings: Bool = false,
+        callback: @escaping PermissionRequestCallback
+    ) {
         if let previousCallback = permissionRequestCallback {
             Self.logger.error("Tried to request push permissions while other request pending")
             previousCallback(.nonRecoverableFailure)
@@ -208,32 +213,33 @@ open class UBPushManager: NSObject {
             provisional: provisional,
             providesAppSettings: providesAppSettings
         )
-        UNUserNotificationCenter.current().requestAuthorization(options: options) { @Sendable granted, _ in
+        UNUserNotificationCenter.current()
+            .requestAuthorization(options: options) { @Sendable granted, _ in
 
-            guard granted else {
-                DispatchQueue.main.async {
-                    callback(.failure)
-                    self.permissionRequestCallback = nil
+                guard granted else {
+                    DispatchQueue.main.async {
+                        callback(.failure)
+                        self.permissionRequestCallback = nil
+                    }
+                    return
                 }
-                return
-            }
 
-            // If registering for remote notifications was not handled by the system within a short period,
-            // assume the permission request failed
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 15) { [weak self] in
-                guard let self else { return }
+                // If registering for remote notifications was not handled by the system within a short period,
+                // assume the permission request failed
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 15) { [weak self] in
+                    guard let self else { return }
 
-                if let callback = self.permissionRequestCallback, currentPushRequest == self.latestPushRequest {
-                    callback(.failure)
-                    self.permissionRequestCallback = nil
+                    if let callback = self.permissionRequestCallback, currentPushRequest == self.latestPushRequest {
+                        callback(.failure)
+                        self.permissionRequestCallback = nil
+                    }
+                }
+
+                Task { @MainActor in
+                    UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
+                    UIApplication.shared.registerForRemoteNotifications()
                 }
             }
-
-            Task { @MainActor in
-                UNUserNotificationCenter.current().setNotificationCategories(self.pushHandler.notificationCategories)
-                UIApplication.shared.registerForRemoteNotifications()
-            }
-        }
     }
 
     /// :nodoc:
@@ -297,12 +303,13 @@ open class UBPushManager: NSObject {
 
     /// Querys the current push permissions from the system
     public func queryPushPermissions(callback: @Sendable @escaping (Bool) -> Void) {
-        UNUserNotificationCenter.current().getNotificationSettings { @Sendable settings in
-            let isEnabled = settings.alertSetting == .enabled
-            DispatchQueue.main.async {
-                callback(isEnabled)
+        UNUserNotificationCenter.current()
+            .getNotificationSettings { @Sendable settings in
+                let isEnabled = settings.alertSetting == .enabled
+                DispatchQueue.main.async {
+                    callback(isEnabled)
+                }
             }
-        }
     }
 
     /// Querys the current push permissions from the system
@@ -366,9 +373,9 @@ extension UBPushManager: UNUserNotificationCenterDelegate {
 private extension UBPushManager.PermissionRequestResult {
     /// :nodoc:
     static var failure: UBPushManager.PermissionRequestResult {
-        if
-            let settingsUrl = UIApplication.ub_appNotificationSettingsURL,
-            UIApplication.shared.canOpenURL(settingsUrl) {
+        if let settingsUrl = UIApplication.ub_appNotificationSettingsURL,
+            UIApplication.shared.canOpenURL(settingsUrl)
+        {
             .recoverableFailure(settingsURL: settingsUrl)
         } else {
             .nonRecoverableFailure

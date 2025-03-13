@@ -87,10 +87,12 @@ public final class UBPinnedCertificatesTrustEvaluator: UBServerTrustEvaluator {
     ///   - validateHost:                 Determines whether or not the evaluator should validate the host, in addition
     ///                                   to performing the default evaluation, even if `performDefaultValidation` is
     ///                                   `false`. Defaults to `true`.
-    public init(certificates: [SecCertificate] = Bundle.main.ub_certificates,
-                acceptSelfSignedCertificates: Bool = false,
-                performDefaultValidation: Bool = true,
-                validateHost: Bool = true) {
+    public init(
+        certificates: [SecCertificate] = Bundle.main.ub_certificates,
+        acceptSelfSignedCertificates: Bool = false,
+        performDefaultValidation: Bool = true,
+        validateHost: Bool = true
+    ) {
         precondition(certificates.isEmpty == false, "This is the case when the framework cannot find certificates in the main bundle of the application. Make sure you copy the certificates.")
         self.certificates = certificates
         self.acceptSelfSignedCertificates = acceptSelfSignedCertificates
@@ -137,13 +139,15 @@ public final class UBDisabledEvaluator: UBServerTrustEvaluator {
 extension Bundle {
     /// Returns all valid `cer`, `crt`, and `der` certificates in the bundle.
     public var ub_certificates: [SecCertificate] {
-        paths(forResourcesOfTypes: [".cer", ".CER", ".crt", ".CRT", ".der", ".DER"]).compactMap { path in
-            guard
-                let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
-                let certificate = SecCertificateCreateWithData(nil, certificateData) else { return nil }
+        paths(forResourcesOfTypes: [".cer", ".CER", ".crt", ".CRT", ".der", ".DER"])
+            .compactMap { path in
+                guard
+                    let certificateData = try? Data(contentsOf: URL(fileURLWithPath: path)) as CFData,
+                    let certificate = SecCertificateCreateWithData(nil, certificateData)
+                else { return nil }
 
-            return certificate
-        }
+                return certificate
+            }
     }
 
     /// Returns all pathnames for the resources identified by the provided file extensions.
@@ -215,9 +219,10 @@ extension SecTrust {
 
     /// The `SecCertificate`s contained i `self`.
     var certificates: [SecCertificate] {
-        (0 ..< SecTrustGetCertificateCount(self)).compactMap { index in
-            SecTrustGetCertificateAtIndex(self, index)
-        }
+        (0..<SecTrustGetCertificateCount(self))
+            .compactMap { index in
+                SecTrustGetCertificateAtIndex(self, index)
+            }
     }
 
     /// The `Data` values for all certificates contained in `self`.
