@@ -7,10 +7,7 @@ platform :ios do
         package_path: ".",
         scheme: "UBKit-Package",
         destination: "platform=iOS Simulator,name=iPhone 16 Pro",
-        result_bundle: true,
-        output_directory: "./build/",
-        output_types: "junit",
-        buildlog_path: "test_output/logs"
+        output_directory: "./build/"
       )
   end
 end
