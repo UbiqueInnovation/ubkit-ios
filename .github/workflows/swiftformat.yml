@@ -12,8 +12,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+      - name: Install swift-format
+        run: brew install swift-format
       - name: Run swift-format
-        run: swift format --in-place --parallel --recursive .
+        run: swift-format --in-place --parallel --recursive .
       - name: Create pull request
         uses: peter-evans/create-pull-request@v5
         with:
