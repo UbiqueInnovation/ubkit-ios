@@ -12,9 +12,10 @@ class UserDefaultsDevTools {
     static var sharedUserDefaults: UserDefaults?
 
     static func clearUserDefaults(_ defaults: UserDefaults) {
-        defaults.dictionaryRepresentation().keys.forEach { key in
-            defaults.removeObject(forKey: key)
-        }
+        defaults.dictionaryRepresentation().keys
+            .forEach { key in
+                defaults.removeObject(forKey: key)
+            }
     }
 
     static func setupSharedUserDefaults(_ userDefaults: UserDefaults) {

@@ -55,7 +55,8 @@ class HTTPRequestBodyProviderTests: XCTestCase {
             let boundaryPrefix = "--\(multipart.boundary)\r\n"
             let endPrefix = "--\(multipart.boundary)--\r\n"
 
-            let expectedString = "\(boundaryPrefix)Content-Disposition: form-data; name=\"p1\"\r\n\r\nparameter1\r\n\(boundaryPrefix)Content-Disposition: form-data; name=\"p2\"\r\n\r\nparameter2\r\n\(boundaryPrefix)Content-Disposition: form-data; name=\"d1\"; filename=\"f1\"\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nd1f1\r\n\(boundaryPrefix)Content-Disposition: form-data; name=\"d2\"; filename=\"f2\"\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nd2f2\r\n\(endPrefix)"
+            let expectedString =
+                "\(boundaryPrefix)Content-Disposition: form-data; name=\"p1\"\r\n\r\nparameter1\r\n\(boundaryPrefix)Content-Disposition: form-data; name=\"p2\"\r\n\r\nparameter2\r\n\(boundaryPrefix)Content-Disposition: form-data; name=\"d1\"; filename=\"f1\"\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nd1f1\r\n\(boundaryPrefix)Content-Disposition: form-data; name=\"d2\"; filename=\"f2\"\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nd2f2\r\n\(endPrefix)"
             let resultString = String(data: body.data, encoding: .utf8)
             XCTAssertEqual(resultString, expectedString)
         } catch {

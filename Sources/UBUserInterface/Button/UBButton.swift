@@ -88,9 +88,11 @@ open class UBButton: UIButton {
         if highlighted {
             highlightView.alpha = 1.0
         } else {
-            UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent], animations: {
-                self.highlightView.alpha = 0.0
-            }, completion: nil)
+            UIView.animate(
+                withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent],
+                animations: {
+                    self.highlightView.alpha = 0.0
+                }, completion: nil)
         }
     }
 

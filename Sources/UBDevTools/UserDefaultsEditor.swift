@@ -85,9 +85,10 @@ class ObservableUserDefaults: ObservableObject {
     }
 
     func reload() {
-        let temp = userDefaults.dictionaryRepresentation().filter { el in
-            !filterKeys || !Self.systemKeys.contains(el.key)
-        }
+        let temp = userDefaults.dictionaryRepresentation()
+            .filter { el in
+                !filterKeys || !Self.systemKeys.contains(el.key)
+            }
         self.dictionary = temp
         self.keys = Array(dictionary.keys).sorted()
         DispatchQueue.main.async {
@@ -116,57 +117,75 @@ public struct UserDefaultsEditor: View {
                         if let value = store.dictionary[key] {
                             switch value {
                                 case let value as Date:
-                                    DatePicker(selection: Binding(get: {
-                                        value
-                                    }, set: { newValue in
-                                        userDefaults.set(newValue, forKey: key)
-                                    })) {
+                                    DatePicker(
+                                        selection: Binding(
+                                            get: {
+                                                value
+                                            },
+                                            set: { newValue in
+                                                userDefaults.set(newValue, forKey: key)
+                                            })
+                                    ) {
                                         EmptyView()
                                     }
                                 case let value as Bool:
-                                    Toggle(isOn: Binding(get: {
-                                        value
-                                    }, set: { newValue in
-                                        userDefaults.set(newValue, forKey: key)
-                                    })) {
+                                    Toggle(
+                                        isOn: Binding(
+                                            get: {
+                                                value
+                                            },
+                                            set: { newValue in
+                                                userDefaults.set(newValue, forKey: key)
+                                            })
+                                    ) {
                                         EmptyView()
                                     }
                                 case let value as String:
-                                    TextField("", text: Binding(
-                                        get: {
-                                            value
-                                        },
-                                        set: {
-                                            userDefaults.set($0, forKey: key)
-                                        }
-                                    )).textFieldStyle(RoundedBorderTextFieldStyle())
+                                    TextField(
+                                        "",
+                                        text: Binding(
+                                            get: {
+                                                value
+                                            },
+                                            set: {
+                                                userDefaults.set($0, forKey: key)
+                                            }
+                                        )
+                                    )
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
                                 case let value as Double:
-                                    TextField("", text: Binding(
-                                        get: {
-                                            "\(value)"
-                                        },
-                                        set: {
-                                            userDefaults.setValue(Double($0), forKey: key)
-                                        }
-                                    ))
+                                    TextField(
+                                        "",
+                                        text: Binding(
+                                            get: {
+                                                "\(value)"
+                                            },
+                                            set: {
+                                                userDefaults.setValue(Double($0), forKey: key)
+                                            }
+                                        ))
                                 case let value as Int:
-                                    TextField("", text: Binding(
-                                        get: {
-                                            "\(value)"
-                                        },
-                                        set: {
-                                            userDefaults.setValue(Int($0), forKey: key)
-                                        }
-                                    ))
+                                    TextField(
+                                        "",
+                                        text: Binding(
+                                            get: {
+                                                "\(value)"
+                                            },
+                                            set: {
+                                                userDefaults.setValue(Int($0), forKey: key)
+                                            }
+                                        ))
                                 case let value as Data:
-                                    TextField("", text: Binding(
-                                        get: {
-                                            "\(value.base64EncodedString())"
-                                        },
-                                        set: {
-                                            userDefaults.setValue(Data(base64Encoded: $0), forKey: key)
-                                        }
-                                    ))
+                                    TextField(
+                                        "",
+                                        text: Binding(
+                                            get: {
+                                                "\(value.base64EncodedString())"
+                                            },
+                                            set: {
+                                                userDefaults.setValue(Data(base64Encoded: $0), forKey: key)
+                                            }
+                                        ))
                                 default:
                                     if let value = value as? CustomDebugStringConvertible {
                                         Text("unsupported Type \n\(value.debugDescription)")
@@ -176,12 +195,15 @@ public struct UserDefaultsEditor: View {
                             }
                         }
 
-                    }.deleteDisabled(ObservableUserDefaults.systemKeys.contains(key))
-                }.onDelete { indexSet in
+                    }
+                    .deleteDisabled(ObservableUserDefaults.systemKeys.contains(key))
+                }
+                .onDelete { indexSet in
                     guard let firstIndex = indexSet.first else { return }
                     userDefaults.removeObject(forKey: store.keys[firstIndex])
                 }
             }
-        }.navigationBarTitle(Text("UserDefaults Editor"))
+        }
+        .navigationBarTitle(Text("UserDefaults Editor"))
     }
 }

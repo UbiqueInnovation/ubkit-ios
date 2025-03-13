@@ -21,7 +21,8 @@ class DevToolsLogExtractor: ObservableObject {
     private var logEntries: [OSLogEntryLog] = [] {
         didSet {
             entries = logEntries.map { "[\($0.date.formatted(date: .complete, time: .complete))] [\($0.category)] \($0.composedMessage)" }
-            filteredEntries = logEntries
+            filteredEntries =
+                logEntries
                 .filter { $0.subsystem == Bundle.main.bundleIdentifier }
                 .map { "[\($0.date.formatted(date: .complete, time: .complete))] [\($0.category)] \($0.composedMessage)" }
         }
@@ -42,21 +43,22 @@ class DevToolsLogExtractor: ObservableObject {
 
         isFetching = true
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                let position = store.position(timeIntervalSinceLatestBoot: 1)
-                let entries = try store.getEntries(at: position).compactMap { $0 as? OSLogEntryLog }
+        DispatchQueue.global(qos: .userInitiated)
+            .async {
+                do {
+                    let position = store.position(timeIntervalSinceLatestBoot: 1)
+                    let entries = try store.getEntries(at: position).compactMap { $0 as? OSLogEntryLog }
 
-                DispatchQueue.main.async {
-                    self.logEntries = entries
-                    self.isFetching = false
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.isFetching = false
-                    self.error = error
+                    DispatchQueue.main.async {
+                        self.logEntries = entries
+                        self.isFetching = false
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self.isFetching = false
+                        self.error = error
+                    }
                 }
             }
-        }
     }
 }

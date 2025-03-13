@@ -16,11 +16,11 @@ class MockLocationManagerDelegate: NSObject, UBLocationManagerDelegate {
 
     func locationManager(_: UBLocationManager, didUpdateLocations _: [CLLocation]) {}
 
-#if !os(visionOS)
-    func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
+    #if !os(visionOS)
+        func locationManager(_: UBLocationManager, didUpdateHeading _: CLHeading) {}
 
-    func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
-#endif
+        func locationManager(_: UBLocationManager, didVisit _: CLVisit) {}
+    #endif
 
     func locationManager(_: UBLocationManager, didFailWithError _: Error) {}
 

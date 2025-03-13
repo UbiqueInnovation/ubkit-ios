@@ -59,7 +59,7 @@ public final class UBURLRequestBasicAuthorization: UBURLRequestModifier {
         serial.sync {
             loginString = "\(_login):\(_password)"
         }
-        let loginData = loginString.data(using: .utf8)! // Internally all strings are stored in utf8. This never fails
+        let loginData = loginString.data(using: .utf8)!  // Internally all strings are stored in utf8. This never fails
         let base64LoginString = loginData.base64EncodedString()
         var modifierRequest = originalRequest
         modifierRequest.setHTTPHeaderField(UBHTTPHeaderField(key: .authorization, value: "Basic \(base64LoginString)"))

@@ -22,57 +22,60 @@ let package = Package(
         .library(name: "UBDevTools", targets: ["UBDevTools"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/UbiqueInnovation/ios-local-networking.git", from: "1.0.2"),
+        .package(url: "https://github.com/UbiqueInnovation/ios-local-networking.git", from: "1.0.2")
     ],
     targets: [
         .target(
             name: "UBFoundation",
             swiftSettings: [
-                .swiftLanguageMode(.v6),
+                .swiftLanguageMode(.v6)
             ]
         ),
         .target(
             name: "UBUserInterface",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageMode(.v6),
+                .swiftLanguageMode(.v6)
             ]
         ),
         .target(
             name: "UBLocation",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageMode(.v6),
+                .swiftLanguageMode(.v6)
             ]
         ),
         .target(
             name: "UBPush",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageMode(.v6),
+                .swiftLanguageMode(.v6)
             ]
         ),
         .target(
             name: "UBQRScanner",
             swiftSettings: [
-                .swiftLanguageMode(.v6),
+                .swiftLanguageMode(.v6)
             ]
         ),
         .target(
             name: "UBDevTools",
             dependencies: ["UBFoundation"],
             swiftSettings: [
-                .swiftLanguageMode(.v6),
+                .swiftLanguageMode(.v6)
             ]
         ),
-        .testTarget(name: "UBFoundationTests",
-                    dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
-                    resources: [
-                        .copy("TestResources"),
-                    ]),
-        .testTarget(name: "UBUserInterfaceTests",
-                    dependencies: ["UBUserInterface"]),
-        .testTarget(name: "UBLocationTests",
-                    dependencies: ["UBLocation"]),
+        .testTarget(
+            name: "UBFoundationTests",
+            dependencies: ["UBFoundation", .product(name: "UBLocalNetworking", package: "ios-local-networking")],
+            resources: [
+                .copy("TestResources")
+            ]),
+        .testTarget(
+            name: "UBUserInterfaceTests",
+            dependencies: ["UBUserInterface"]),
+        .testTarget(
+            name: "UBLocationTests",
+            dependencies: ["UBLocation"]),
     ]
 )

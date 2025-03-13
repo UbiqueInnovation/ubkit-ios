@@ -160,10 +160,12 @@ class HTTPDataTaskTests: XCTestCase {
                 case let .failure(error):
                     if case let UBNetworkingError.internal(.recoverableError(recovery)) = error {
                         XCTAssertFalse(recovery.recoveryOptions.isEmpty)
-                        recovery.attemptRecovery(optionIndex: 0, resultHandler: { success in
-                            XCTAssertTrue(success)
-                            ex2.fulfill()
-                        })
+                        recovery.attemptRecovery(
+                            optionIndex: 0,
+                            resultHandler: { success in
+                                XCTAssertTrue(success)
+                                ex2.fulfill()
+                            })
                     } else {
                         XCTFail()
                     }
@@ -267,24 +269,28 @@ class HTTPDataTaskTests: XCTestCase {
             XCTAssertEqual(response?.statusCode, expectedResponse?.statusCode)
             ex1.fulfill()
         }
-        dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(), completionHandler: { result, _, _, _ in
-            switch result {
-                case .failure:
-                    break
-                default:
-                    XCTFail("Should have failed parsing")
-            }
-            ex2.fulfill()
-        })
-        dataTask.addCompletionHandler(decoder: UBHTTPStringDecoder(encoding: .utf16), completionHandler: { result, _, _, _ in
-            switch result {
-                case let .success(data):
-                    XCTAssertEqual(data, "Hello")
-                default:
-                    XCTFail("Should have returned a string")
-            }
-            ex3.fulfill()
-        })
+        dataTask.addCompletionHandler(
+            decoder: UBHTTPStringDecoder(),
+            completionHandler: { result, _, _, _ in
+                switch result {
+                    case .failure:
+                        break
+                    default:
+                        XCTFail("Should have failed parsing")
+                }
+                ex2.fulfill()
+            })
+        dataTask.addCompletionHandler(
+            decoder: UBHTTPStringDecoder(encoding: .utf16),
+            completionHandler: { result, _, _, _ in
+                switch result {
+                    case let .success(data):
+                        XCTAssertEqual(data, "Hello")
+                    default:
+                        XCTFail("Should have returned a string")
+                }
+                ex3.fulfill()
+            })
         dataTask.start()
 
         wait(for: [ex1, ex2, ex3], timeout: 30)
@@ -545,7 +551,7 @@ class HTTPDataTaskTests: XCTestCase {
             }
         }
 
-        for i in 0 ..< 100 {
+        for i in 0..<100 {
             let t = Task {
                 _ = await UBURLDataTask.with(requestModifier: Modifier(i: i)).loadOnce(url: URL(string: "http://ubique.ch")!, decoder: .passthrough)
             }
@@ -568,9 +574,10 @@ class HTTPDataTaskTests: XCTestCase {
             nonisolated(unsafe) var dataTask: UBURLDataTask? = UBURLDataTask(request: request, session: mockSession)
             nonisolated(unsafe) weak var ref = dataTask
 
-            dataTask!.addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
-                XCTFail()
-            }
+            dataTask!
+                .addCompletionHandler(decoder: .passthrough) { _, _, _, _ in
+                    XCTFail()
+                }
 
             dataTask!.start()
 
@@ -582,9 +589,11 @@ class HTTPDataTaskTests: XCTestCase {
                     XCTAssertNil(ref)
                 }
 
-                let m = Timer(timeInterval: 0.5, repeats: false, block: { _ in
-                    ex.fulfill()
-                })
+                let m = Timer(
+                    timeInterval: 0.5, repeats: false,
+                    block: { _ in
+                        ex.fulfill()
+                    })
                 RunLoop.main.add(m, forMode: .common)
             }
             RunLoop.main.add(t, forMode: .common)

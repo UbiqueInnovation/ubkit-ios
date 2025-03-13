@@ -72,10 +72,10 @@ public enum UBDevTools {
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = .white
         appearance.titleTextAttributes = [
-            .foregroundColor: UIColor.black,
+            .foregroundColor: UIColor.black
         ]
         appearance.largeTitleTextAttributes = [
-            .foregroundColor: UIColor.black,
+            .foregroundColor: UIColor.black
         ]
         UINavigationBar.appearance(whenContainedInInstancesOf: [DevToolsViewController.self]).standardAppearance = appearance
         UINavigationBar.appearance(whenContainedInInstancesOf: [DevToolsViewController.self]).scrollEdgeAppearance = appearance
@@ -89,12 +89,14 @@ extension UIWindow {
         guard !initSwizzled else { return }
 
         if let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.init(windowScene:))),
-           let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzled_windowSceneInit)) {
+            let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzled_windowSceneInit))
+        {
             method_exchangeImplementations(originalMethod, swizzledMethod)
         }
 
         if let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.init(frame:))),
-           let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzed_frameInit(frame:))) {
+            let swizzledMethod = class_getInstanceMethod(UIWindow.self, #selector(UIWindow.swizzed_frameInit(frame:)))
+        {
             method_exchangeImplementations(originalMethod, swizzledMethod)
         }
 
@@ -132,7 +134,7 @@ extension UIWindow {
                 vc = presented
             }
 
-            guard !(vc is DevToolsViewController) else { return } // Prevent multiple presented DevTools
+            guard !(vc is DevToolsViewController) else { return }  // Prevent multiple presented DevTools
 
             vc.present(devToolsVC, animated: true)
         }

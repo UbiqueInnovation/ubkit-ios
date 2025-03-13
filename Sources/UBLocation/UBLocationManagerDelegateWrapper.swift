@@ -21,11 +21,12 @@ class UBLocationManagerDelegateWrapper {
         // First, determine which usage we are checking against:
         // If a usage is given, we check whether we want an update for a specific usage set
         // If no usage is given, we just answer whether we want updates at the moment, given our usage set and app state (background or foreground)
-        let usageToCheck = if let usg {
-            usage.intersection(usg)
-        } else {
-            usage
-        }
+        let usageToCheck =
+            if let usg {
+                usage.intersection(usg)
+            } else {
+                usage
+            }
 
         // If the usage set is empty, we are not interested in this update, regardless of app state
         if usageToCheck.isEmpty {
@@ -37,10 +38,10 @@ class UBLocationManagerDelegateWrapper {
         // in which case we can reveive updates even without background permissions.
         // If we're in the foreground, we always want the update.
 
-#if !os(visionOS)
-        return isBackground ? usageToCheck.requiresBackgroundUpdates || allowsBackgroundLocationUpdates : true
-#else
-        return false
-#endif
+        #if !os(visionOS)
+            return isBackground ? usageToCheck.requiresBackgroundUpdates || allowsBackgroundLocationUpdates : true
+        #else
+            return false
+        #endif
     }
 }

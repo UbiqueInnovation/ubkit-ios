@@ -27,15 +27,16 @@ public struct UBURLInterceptorResult {
 
     /// this initializer creates the HTTPURLResponse internally
     public init(data: Data?, url: URL) {
-#if !os(watchOS)
-        let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
-#else
-        let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
-#endif
-        self.init(data: data,
-                  response: HTTPURLResponse(url: url, statusCode: 200, httpVersion: "2.0", headerFields: [:]),
-                  error: nil,
-                  info: info)
+        #if !os(watchOS)
+            let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
+        #else
+            let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
+        #endif
+        self.init(
+            data: data,
+            response: HTTPURLResponse(url: url, statusCode: 200, httpVersion: "2.0", headerFields: [:]),
+            error: nil,
+            info: info)
     }
 }
 

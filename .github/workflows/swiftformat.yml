@@ -7,13 +7,13 @@ on:
 
 jobs:
   swiftformat:
-    name: swiftformat
+    name: swift-format
     runs-on: ["self-hosted", "macOS"]
     steps:
-      - name: Install Swiftformat
-        run: brew install swiftformat
-      - name: Run Swiftformat
-        run: swiftformat .
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Run swift-format
+        run: swift format --in-place --parallel --recursive .
       - name: Create pull request
         uses: peter-evans/create-pull-request@v5
         with:
@@ -22,5 +22,5 @@ jobs:
             *.swift
           branch: "generated/swiftformat"
           delete-branch: true
-          title: "[Generated] SwiftFormat"
-          body: "This action automatically runs [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) on the project. Check the changes and merge them!"
+          title: "[Generated] swift-format"
+          body: "This action automatically runs [swift-format](https://github.com/swiftlang/swift-format) on the project. Check the changes and merge them!"

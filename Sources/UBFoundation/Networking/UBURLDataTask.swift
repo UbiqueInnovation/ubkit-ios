@@ -246,26 +246,30 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
 
         // Observe the task progress
         dataTaskProgressObservationDispatchQueue.sync {
-            self.dataTaskProgressObservation = dataTask.observe(\.progress.fractionCompleted, options: [.initial, .new], changeHandler: { [weak self] task, _ in
-                guard let self else {
-                    return
-                }
+            self.dataTaskProgressObservation = dataTask.observe(
+                \.progress.fractionCompleted, options: [.initial, .new],
+                changeHandler: { [weak self] task, _ in
+                    guard let self else {
+                        return
+                    }
 
-                self.notifyProgress(task.progress.fractionCompleted)
-            })
+                    self.notifyProgress(task.progress.fractionCompleted)
+                })
         }
 
         // Observe the task state
-        let observation = dataTask.observe(\URLSessionDataTask.state, options: [.new], changeHandler: { [weak self] task, _ in
-            switch task.state {
-                case .running:
-                    if self?.state != .fetching, self?.state != .cancelled {
-                        self?.state = .fetching
-                    }
-                default:
-                    break
-            }
-        })
+        let observation = dataTask.observe(
+            \URLSessionDataTask.state, options: [.new],
+            changeHandler: { [weak self] task, _ in
+                switch task.state {
+                    case .running:
+                        if self?.state != .fetching, self?.state != .cancelled {
+                            self?.state = .fetching
+                        }
+                    default:
+                        break
+                }
+            })
 
         dataTaskStateObservationQueue.sync {
             self.dataTaskStateObservation = observation
@@ -326,7 +330,7 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     ///   - error: The error in case of failure
     func dataTaskCompleted(data: Data?, response: HTTPURLResponse?, error: Error?, info: UBNetworkingTaskInfo?) {
         guard state != .cancelled else {
-            return // don't parse response after cancellation
+            return  // don't parse response after cancellation
         }
 
         // Check for Task error
@@ -454,18 +458,18 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
         willSet {
             // Validate state machine
             switch (_state, newValue) {
-                case (.initial, .waitingExecution), // Put the task in the queue
-                     (.waitingExecution, .fetching), // Start task
-                     (.waitingExecution, .cancelled), // Cancel task
-                     (.waitingExecution, .parsing), // Returned from cache
-                     (.waitingExecution, .finished), // RecoverStrategy cannotRecover a RequestModifier
-                     (.fetching, .parsing), // Data received
-                     (.fetching, .finished), // Error received
-                     (.fetching, .cancelled), // Cancel task
-                     (.parsing, .finished), // Data parsed
-                     (.finished, .waitingExecution), // Restart task
-                     (.cancelled, .cancelled), // Cancelled
-                     (.cancelled, .waitingExecution): // Restart task
+                case (.initial, .waitingExecution),  // Put the task in the queue
+                    (.waitingExecution, .fetching),  // Start task
+                    (.waitingExecution, .cancelled),  // Cancel task
+                    (.waitingExecution, .parsing),  // Returned from cache
+                    (.waitingExecution, .finished),  // RecoverStrategy cannotRecover a RequestModifier
+                    (.fetching, .parsing),  // Data received
+                    (.fetching, .finished),  // Error received
+                    (.fetching, .cancelled),  // Cancel task
+                    (.parsing, .finished),  // Data parsed
+                    (.finished, .waitingExecution),  // Restart task
+                    (.cancelled, .cancelled),  // Cancelled
+                    (.cancelled, .waitingExecution):  // Restart task
                     break
                 default:
                     let errorMessage = "Invalid state transition from \(_state) -> \(newValue)"
@@ -495,12 +499,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private func notifyStateTransition(old: State, new: State) {
         self.stateTransitionObservers.forEach { observer in
-            getCallbackQueue().addOperation { [weak self] in
-                guard let self else {
-                    return
+            getCallbackQueue()
+                .addOperation { [weak self] in
+                    guard let self else {
+                        return
+                    }
+                    observer(old, new, self)
                 }
-                observer(old, new, self)
-            }
         }
     }
 
@@ -535,12 +540,13 @@ public final class UBURLDataTask: UBURLSessionTask, CustomStringConvertible, Cus
     /// :nodoc:
     private func notifyProgress(_ progress: Double) {
         self.progressObservers.forEach { observer in
-            getCallbackQueue().addOperation { [weak self] in
-                guard let self else {
-                    return
+            getCallbackQueue()
+                .addOperation { [weak self] in
+                    guard let self else {
+                        return
+                    }
+                    observer(self, progress)
                 }
-                observer(self, progress)
-            }
         }
     }
 

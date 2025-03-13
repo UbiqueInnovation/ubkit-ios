@@ -48,13 +48,17 @@ class ConcurrentNetworkTests: XCTestCase {
         let responseProvider = try! BasicResponseProvider(rule: sampleUrl.absoluteString, encodable: sampleResponse)
         responseProvider.addToLocalServer()
 
-        let cronResponseProvider = try! BasicResponseProvider(rule: cronUrl.absoluteString, body: "Hello, World!", header: BasicResponseProvider.Header(statusCode: 200, headerFields: [
-            "x-amz-meta-backoff": "60",
-            "x-amz-meta-cache": "max-age=300",
-            "x-amz-version-id": "qSojcs_cgESN8uLviKqiyCiFauZY0kxw",
-            "x-amz-meta-next-refresh": "Mon, 06 Feb 2023 14:06:01 GMT",
-            "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
-        ]))
+        let cronResponseProvider = try! BasicResponseProvider(
+            rule: cronUrl.absoluteString, body: "Hello, World!",
+            header: BasicResponseProvider.Header(
+                statusCode: 200,
+                headerFields: [
+                    "x-amz-meta-backoff": "60",
+                    "x-amz-meta-cache": "max-age=300",
+                    "x-amz-version-id": "qSojcs_cgESN8uLviKqiyCiFauZY0kxw",
+                    "x-amz-meta-next-refresh": "Mon, 06 Feb 2023 14:06:01 GMT",
+                    "Date": UBBaseCachingLogic().dateFormatter.string(from: Date()),
+                ]))
         cronResponseProvider.addToLocalServer()
     }
 

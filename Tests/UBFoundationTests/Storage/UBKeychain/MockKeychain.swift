@@ -5,8 +5,9 @@
 //  Created by Stefan Mitterrutzner on 09.11.20.
 //
 
-@testable import UBFoundation
 import XCTest
+
+@testable import UBFoundation
 
 class MockKeychain: UBKeychainProtocol {
     var store: [String: Any] = [:]
@@ -15,7 +16,8 @@ class MockKeychain: UBKeychainProtocol {
 
     func get<T: Codable>(for key: UBKeychainKey<T>) -> Result<T, UBKeychainError> {
         if store.keys.contains(key.key),
-           let i = store[key.key] as? T {
+            let i = store[key.key] as? T
+        {
             return .success(i)
         }
         return .failure(.notFound)

@@ -22,33 +22,33 @@ public protocol UBLocationManagerProtocol {
     func startUpdatingLocation()
     func stopUpdatingLocation()
 
-#if !os(visionOS)
-    var headingFilter: CLLocationDegrees { get set }
-    var allowsBackgroundLocationUpdates: Bool { get set }
-    var monitoredRegions: Set<CLRegion> { get }
-    var maximumRegionMonitoringDistance: CLLocationDistance { get }
-    func startMonitoringSignificantLocationChanges()
-    func stopMonitoringSignificantLocationChanges()
-    func startMonitoringVisits()
-    func stopMonitoringVisits()
-    func startMonitoring(for region: CLRegion)
-    func stopMonitoring(for region: CLRegion)
-    func startUpdatingHeading()
-    func stopUpdatingHeading()
-#endif
+    #if !os(visionOS)
+        var headingFilter: CLLocationDegrees { get set }
+        var allowsBackgroundLocationUpdates: Bool { get set }
+        var monitoredRegions: Set<CLRegion> { get }
+        var maximumRegionMonitoringDistance: CLLocationDistance { get }
+        func startMonitoringSignificantLocationChanges()
+        func stopMonitoringSignificantLocationChanges()
+        func startMonitoringVisits()
+        func stopMonitoringVisits()
+        func startMonitoring(for region: CLRegion)
+        func stopMonitoring(for region: CLRegion)
+        func startUpdatingHeading()
+        func stopUpdatingHeading()
+    #endif
 
     // Authorization
     func requestWhenInUseAuthorization()
-#if !os(visionOS)
-    func requestAlwaysAuthorization()
-#endif
+    #if !os(visionOS)
+        func requestAlwaysAuthorization()
+    #endif
 
     var authorizationStatus: CLAuthorizationStatus { get }
     func locationServicesEnabled() -> Bool
     func significantLocationChangeMonitoringAvailable() -> Bool
-#if !os(visionOS)
-    func isMonitoringAvailable(for regionClass: AnyClass) -> Bool
-#endif
+    #if !os(visionOS)
+        func isMonitoringAvailable(for regionClass: AnyClass) -> Bool
+    #endif
 }
 
 extension CLLocationManager: UBLocationManagerProtocol {

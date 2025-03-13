@@ -106,7 +106,7 @@ private extension NSURL {
 
         for i in [initSelector, initSelector2] {
             guard let originalMethod = class_getInstanceMethod(NSURL.self, i.0),
-                  let swizzledMethod = class_getInstanceMethod(NSURL.self, i.1)
+                let swizzledMethod = class_getInstanceMethod(NSURL.self, i.1)
             else { return }
             method_exchangeImplementations(originalMethod, swizzledMethod)
         }
@@ -129,12 +129,12 @@ private extension NSURL {
             for b in BackendDevTools.baseUrls {
                 let alternative = BackendDevTools.currentUrlString(url: b.url)
                 let rep = b.url.replacingOccurrences(of: "//", with: "/")
-                
+
                 if string.contains(b.url) || string.contains(rep) {
                     return string.replacingOccurrences(of: b.url, with: alternative).replacingOccurrences(of: rep, with: alternative)
                 }
             }
-            
+
             return nil
         }
     }

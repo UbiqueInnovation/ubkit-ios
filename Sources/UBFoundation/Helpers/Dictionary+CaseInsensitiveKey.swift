@@ -1,4 +1,3 @@
-
 import Foundation
 
 extension Dictionary where Key == AnyHashable, Value: Any {
@@ -19,13 +18,15 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         }
 
         for key in keys {
-            guard let caseInsensitiveElement = self.first(where: { dictionarykey, _ in
-                guard let string = dictionarykey as? String else {
-                    return false
-                }
-                let result = string.compare(key, options: .caseInsensitive)
-                return result == .orderedSame
-            }) else { continue }
+            guard
+                let caseInsensitiveElement = self.first(where: { dictionarykey, _ in
+                    guard let string = dictionarykey as? String else {
+                        return false
+                    }
+                    let result = string.compare(key, options: .caseInsensitive)
+                    return result == .orderedSame
+                })
+            else { continue }
 
             return caseInsensitiveElement.value
         }
@@ -62,7 +63,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         for key in keys {
             for element in self {
                 guard let string = element.key as? String,
-                      string.compare(key, options: .caseInsensitive) == .orderedSame
+                    string.compare(key, options: .caseInsensitive) == .orderedSame
                 else {
                     continue
                 }

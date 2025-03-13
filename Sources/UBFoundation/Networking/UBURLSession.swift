@@ -66,10 +66,10 @@ public final class UBURLSession: UBDataTaskURLSession {
 
         switch (urlSession.configuration.requestCachePolicy, cacheResult) {
             case (.reloadIgnoringLocalAndRemoteCacheData, _),
-                 (.reloadIgnoringLocalCacheData, _),
-                 (.reloadRevalidatingCacheData, .miss),
-                 (.useProtocolCachePolicy, .miss),
-                 (.returnCacheDataElseLoad, .miss):
+                (.reloadIgnoringLocalCacheData, _),
+                (.reloadRevalidatingCacheData, .miss),
+                (.useProtocolCachePolicy, .miss),
+                (.returnCacheDataElseLoad, .miss):
 
                 owner.completionHandlersDispatchQueue.sync {
                     sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
@@ -77,14 +77,14 @@ public final class UBURLSession: UBDataTaskURLSession {
                 return createTask(request.getRequest())
 
             case let (.useProtocolCachePolicy, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
-                 let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
-                 let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
-                 let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
-#if os(watchOS)
-                let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
-#else
-                let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
-#endif
+                let (.returnCacheDataDontLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
+                let (.returnCacheDataElseLoad, .hit(cachedResponse: cachedResponse, reloadHeaders: _)),
+                let (.returnCacheDataElseLoad, .expired(cachedResponse: cachedResponse, reloadHeaders: _)):
+                #if os(watchOS)
+                    let info = UBNetworkingTaskInfo(cacheHit: true, refresh: false)
+                #else
+                    let info = UBNetworkingTaskInfo(metrics: nil, cacheHit: true, refresh: false)
+                #endif
 
                 owner.dataTaskCompleted(data: cachedResponse.data, response: cachedResponse.response as? HTTPURLResponse, error: nil, info: info)
                 owner.completionHandlersDispatchQueue.sync {
@@ -95,7 +95,7 @@ public final class UBURLSession: UBDataTaskURLSession {
                 return nil
 
             case (.returnCacheDataDontLoad, .expired(cachedResponse: _, reloadHeaders: _)),
-                 (.returnCacheDataDontLoad, .miss):
+                (.returnCacheDataDontLoad, .miss):
                 sessionDelegate.cachingLogic?.hasMissedCache(dataTask: owner)
                 owner.completionHandlersDispatchQueue.sync {
                     owner.dataTaskCompleted(data: nil, response: nil, error: UBInternalNetworkingError.noCachedData, info: nil)
@@ -103,8 +103,8 @@ public final class UBURLSession: UBDataTaskURLSession {
                 return nil
 
             case let (.useProtocolCachePolicy, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
-                 let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
-                 let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)):
+                let (.reloadRevalidatingCacheData, .expired(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)),
+                let (.reloadRevalidatingCacheData, .hit(cachedResponse: cachedResponse, reloadHeaders: reloadHeaders)):
                 var reloadRequest = request.getRequest()
                 for header in reloadHeaders {
                     reloadRequest.setValue(header.value, forHTTPHeaderField: header.key)

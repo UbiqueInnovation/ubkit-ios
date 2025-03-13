@@ -45,13 +45,16 @@ public struct DevToolsView: View {
                 Section(header: Text("UserDefaults.standard")) {
                     Button("Clear UserDefaults.standard") {
                         showingUserDefaultsDeleteAlert = true
-                    }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
+                    }
+                    .alert(isPresented: $showingUserDefaultsDeleteAlert) {
                         Alert(
                             title: Text("Delete"),
                             message: Text("Are you sure?"),
-                            primaryButton: .destructive(Text("Delete"), action: {
-                                UserDefaultsDevTools.clearUserDefaults(.standard)
-                            }),
+                            primaryButton: .destructive(
+                                Text("Delete"),
+                                action: {
+                                    UserDefaultsDevTools.clearUserDefaults(.standard)
+                                }),
                             secondaryButton: .cancel(Text("Cancel"), action: {})
                         )
                     }
@@ -64,13 +67,16 @@ public struct DevToolsView: View {
                     if let shared = UserDefaultsDevTools.sharedUserDefaults {
                         Button("Clear Shared UserDefaults") {
                             showingUserDefaultsDeleteAlert = true
-                        }.alert(isPresented: $showingUserDefaultsDeleteAlert) {
+                        }
+                        .alert(isPresented: $showingUserDefaultsDeleteAlert) {
                             Alert(
                                 title: Text("Delete"),
                                 message: Text("Are you sure?"),
-                                primaryButton: .destructive(Text("Delete"), action: {
-                                    UserDefaultsDevTools.clearUserDefaults(shared)
-                                }),
+                                primaryButton: .destructive(
+                                    Text("Delete"),
+                                    action: {
+                                        UserDefaultsDevTools.clearUserDefaults(shared)
+                                    }),
                                 secondaryButton: .cancel(Text("Cancel"), action: {})
                             )
                         }
@@ -85,13 +91,16 @@ public struct DevToolsView: View {
                 Section(header: Text("Keychain")) {
                     Button("Clear Keychain") {
                         showingKeychainDeleteAlert = true
-                    }.alert(isPresented: $showingKeychainDeleteAlert) {
+                    }
+                    .alert(isPresented: $showingKeychainDeleteAlert) {
                         Alert(
                             title: Text("Delete"),
                             message: Text("Are you sure?"),
-                            primaryButton: .destructive(Text("Delete"), action: {
-                                UBKeychain().deleteAllItems()
-                            }),
+                            primaryButton: .destructive(
+                                Text("Delete"),
+                                action: {
+                                    UBKeychain().deleteAllItems()
+                                }),
                             secondaryButton: .cancel(Text("Cancel"), action: {})
                         )
                     }
@@ -150,26 +159,33 @@ public struct DevToolsView: View {
                 }
             }
             Section(header: Text("Proxy settings")) {
-                Toggle("Start Proxy for today", isOn: Binding(
-                    get: {
-                        guard Self.enableNetworkingProxySettings, let enabledDate = Self.proxyEnabledDate else { return false }
-                        return Calendar.current.isDateInToday(enabledDate)
-                    }, set: {
-                        Self.enableNetworkingProxySettings = $0
-                        Self.proxyEnabledDate = $0 ? Date() : nil
-                    }
-                ))
+                Toggle(
+                    "Start Proxy for today",
+                    isOn: Binding(
+                        get: {
+                            guard Self.enableNetworkingProxySettings, let enabledDate = Self.proxyEnabledDate else { return false }
+                            return Calendar.current.isDateInToday(enabledDate)
+                        },
+                        set: {
+                            Self.enableNetworkingProxySettings = $0
+                            Self.proxyEnabledDate = $0 ? Date() : nil
+                        }
+                    ))
                 TextField("Host", text: Binding(get: { Self.proxySettingsHost ?? "" }, set: { Self.proxySettingsHost = $0 }))
-                TextField("Port", text: Binding(get: {
-                    Self.proxySettingsPort != nil ? String(Self.proxySettingsPort!) : ""
-                }, set: {
-                    Self.proxySettingsPort = Int($0)
-                }))
+                TextField(
+                    "Port",
+                    text: Binding(
+                        get: {
+                            Self.proxySettingsPort != nil ? String(Self.proxySettingsPort!) : ""
+                        },
+                        set: {
+                            Self.proxySettingsPort = Int($0)
+                        }))
             }
 
-#if !targetEnvironment(simulator)
-            ShareDocumentsView()
-#endif
+            #if !targetEnvironment(simulator)
+                ShareDocumentsView()
+            #endif
 
             if #available(iOS 15.0, *) {
                 LogDevToolsView()

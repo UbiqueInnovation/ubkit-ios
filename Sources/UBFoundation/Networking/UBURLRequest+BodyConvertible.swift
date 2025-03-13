@@ -60,9 +60,11 @@ public struct UBHTTPRequestBodyURLEncoder: URLRequestBodyConvertible {
     /// :nodoc:
     public func httpRequestBody() throws -> UBURLRequestBody {
         var urlComponents = URLComponents()
-        urlComponents.queryItems = payload.sorted(by: { left, right -> Bool in
-            left.key < right.key
-        }).map { URLQueryItem(name: $0, value: $1) }
+        urlComponents.queryItems =
+            payload.sorted(by: { left, right -> Bool in
+                left.key < right.key
+            })
+            .map { URLQueryItem(name: $0, value: $1) }
         guard let query = urlComponents.query, let data = query.data(using: encoding) else {
             throw UBInternalNetworkingError.couldNotEncodeBody
         }

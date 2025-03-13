@@ -109,7 +109,7 @@ open class UBLabel<T: UBLabelType>: UILabel {
 
         super.attributedText =
             NSMutableAttributedString(attributedString: attributedText)
-                .ub_addAttributes(forLabelType: type, textAlignment: textAlignment, numberOfLines: numberOfLines)
+            .ub_addAttributes(forLabelType: type, textAlignment: textAlignment, numberOfLines: numberOfLines)
     }
 }
 
@@ -121,7 +121,8 @@ extension NSMutableAttributedString {
 
         enumerateAttribute(.font, in: NSRange(location: 0, length: length), options: []) { foundFont, range, _ in
             if let htmlTraits = (foundFont as? UIFont)?.fontDescriptor.symbolicTraits,
-               let adjustedDescriptor = baseFontDescriptor.withSymbolicTraits(htmlTraits) {
+                let adjustedDescriptor = baseFontDescriptor.withSymbolicTraits(htmlTraits)
+            {
                 let newFont = UIFont(descriptor: adjustedDescriptor, size: font.pointSize)
                 changes[range] = newFont
             }
