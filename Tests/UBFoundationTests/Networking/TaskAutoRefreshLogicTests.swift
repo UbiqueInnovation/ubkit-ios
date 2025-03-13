@@ -108,7 +108,7 @@ class TaskAutoRefreshLogicTests: XCTestCase {
     func testMaxAge0() {
         // Load Request with default headers and max-age=0 directive
 
-        let url = URL(string: "http://worldtimeapi.org/api/timezone/Europe/Zurich.txt")!
+        let url = URL(string: "https://httpbin.org/cache/0")!
 
         // load request to fill cache
 
