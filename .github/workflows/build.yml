@@ -26,3 +26,9 @@ jobs:
         with:
           name: test-results
           path: test_output
+        if: always()
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "test_output/**.xml"
+        if: always()
