@@ -20,7 +20,7 @@ import UIKit
         /// The delegate that should receive events like successfully scanned codes or errors
         public weak var delegate: QRScannerViewDelegate?
 
-        private lazy var videoCaptureDevice: AVCaptureDevice? = AVCaptureDevice.default(for: .video)
+        private var videoCaptureDevice: AVCaptureDevice?
 
         /// capture session which allows us to start and stop scanning.
         private var captureSession: AVCaptureSession?
@@ -36,8 +36,9 @@ import UIKit
 
         private let metadataObjectTypes: [AVMetadataObject.ObjectType]
 
-        public init(delegate: QRScannerViewDelegate, metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr, .ean8, .ean13, .pdf417, .aztec]) {
+        public init(delegate: QRScannerViewDelegate, metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr, .ean8, .ean13, .pdf417, .aztec], captureDevice: AVCaptureDevice? = AVCaptureDevice.default(for: .video)) {
             self.metadataObjectTypes = metadataObjectTypes
+            self.videoCaptureDevice = captureDevice
 
             super.init(frame: .zero)
 
