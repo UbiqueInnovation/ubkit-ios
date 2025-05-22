@@ -114,6 +114,9 @@ open class UBPushManager: NSObject {
     /// Counter to identify the latest push request
     private var latestPushRequest = 0
 
+    /// To check whether it's the first UIApplication.didBecomeActiveNotification
+    private var isFirstBecomeActive = true
+
     // MARK: - Initialization
 
     /// :nodoc:
@@ -151,8 +154,13 @@ open class UBPushManager: NSObject {
     /// Needs to be called upon `applicationDidBecomeActiveNotification`
     @objc
     private func applicationDidBecomeActive() {
-        for aprm in self.allPushRegistrationManagers {
-            aprm.sendPushRegistrationIfOutdated()
+        // We ignore the first UIApplication.didBecomeActiveNotification, since this is already handled in the init
+        if isFirstBecomeActive {
+            isFirstBecomeActive = false
+        } else {
+            for aprm in self.allPushRegistrationManagers {
+                aprm.sendPushRegistrationIfOutdated()
+            }
         }
     }
 
