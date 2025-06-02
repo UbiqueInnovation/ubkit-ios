@@ -778,7 +778,6 @@ extension Set<UBLocationManager.LocationMonitoringUsage> {
         /// :nodoc:
         var requiresBackgroundUpdates: Bool {
             contains(.significantChange) || contains(.visits) || containsRegions || contains(.backgroundLocation) || contains(.backgroundHeading)
-            return false
         }
     #endif
 
