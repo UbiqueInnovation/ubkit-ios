@@ -76,7 +76,12 @@ open class UBPushRegistrationManager: NSObject {
 
     /// :nodoc:
     public func invalidate(completion: (@Sendable (Error?) -> Void)? = nil) {
-        self.pushLocalStorage.isValid = false
+        // Serialize invalidation to avoid race-conditions with already running requests
+        registrationQueue.async {
+            DispatchQueue.main.sync {
+                self.pushLocalStorage.isValid = false
+            }
+        }
         sendPushRegistrationIfOutdated(completion: completion)
     }
 
