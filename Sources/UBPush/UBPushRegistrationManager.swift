@@ -41,6 +41,7 @@ open class UBPushRegistrationManager: NSObject {
     /// :nodoc:
     private var task: UBURLDataTask?
     private var backgroundTask = UIBackgroundTaskIdentifier.invalid
+    private let registrationQueue = DispatchQueue(label: "UBPushRegistrationManager.registrationQueue")
 
     // MARK: - Initialization
 
@@ -76,7 +77,7 @@ open class UBPushRegistrationManager: NSObject {
     /// :nodoc:
     public func invalidate(completion: (@Sendable (Error?) -> Void)? = nil) {
         self.pushLocalStorage.isValid = false
-        sendPushRegistration(completion: completion)
+        sendPushRegistrationIfOutdated(completion: completion)
     }
 
     open func sendPushRegistrationRequest(completion: (@escaping @Sendable (Result<String, Error>) -> Void)) {
@@ -168,22 +169,60 @@ open class UBPushRegistrationManager: NSObject {
     open func modifyRegistrationDataTask(_ task: inout UBURLDataTask) {}
 
     /// :nodoc:
-    func sendPushRegistrationIfOutdated() {
-        if !self.pushLocalStorage.isValid {
-            sendPushRegistration()
-        } else {
-            let justPushed =
-                UBPushManager.shared.pushHandler.lastPushed.map { lastPushed in
-                    let fifteenSecondsAgo = Date(timeIntervalSinceNow: -15 * 60)
-                    return lastPushed > fifteenSecondsAgo
-                } ?? false
+    func sendPushRegistrationIfOutdated(completion: (@Sendable (Error?) -> Void)? = nil) {
+        DispatchQueue.global(qos: .utility)
+            .async { [weak self] in
+                guard let self else { return }
 
-            let outdated = -(self.pushLocalStorage.lastRegistrationDate?.timeIntervalSinceNow ?? 0) > maxRegistrationAge
+                // Serialize registration to avoid running multiple requests in parallel
+                registrationQueue.sync {
 
-            if outdated, !justPushed {
-                invalidate()
+                    var lastPushed: Date?
+                    var lastRegistrationDate: Date?
+                    var maxRegistrationAge: TimeInterval?
+                    var isValid = false
+
+                    DispatchQueue.main.sync {
+                        lastPushed = UBPushManager.shared.pushHandler.lastPushed
+                        lastRegistrationDate = self.pushLocalStorage.lastRegistrationDate
+                        maxRegistrationAge = self.maxRegistrationAge
+                        isValid = self.pushLocalStorage.isValid
+                    }
+
+                    let justPushed =
+                        lastPushed.map { lastPushed in
+                            let fifteenSecondsAgo = Date(timeIntervalSinceNow: -15 * 60)
+                            return lastPushed > fifteenSecondsAgo
+                        } ?? false
+
+                    let outdated = -(lastRegistrationDate?.timeIntervalSinceNow ?? 0) > maxRegistrationAge!
+
+                    // Only act if registration is invalid or needs to be refreshed (which we ignore if we just received a push recently)
+                    if !isValid || outdated, !justPushed {
+
+                        let done = DispatchSemaphore(value: 0)
+
+                        DispatchQueue.main.async {
+                            self.sendPushRegistration { error in
+                                DispatchQueue.main.async {
+                                    completion?(error)
+                                }
+
+                                done.signal()
+                            }
+                        }
+  
+                        // Wait until push registration request has finished
+                        done.wait()
+                    } else {
+                        // Everything up to date, nothing to do
+                        DispatchQueue.main.async {
+                            completion?(nil)
+                        }
+                    }
+
+                }
             }
-        }
     }
 
     // MARK: - UUID
