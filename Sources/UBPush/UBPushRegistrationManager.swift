@@ -61,10 +61,11 @@ open class UBPushRegistrationManager: NSObject {
         // only send registration if push token has changed
         if (oldToken == nil && pushToken != nil)
             || (oldToken != nil && oldToken != pushToken)
-            || (oldToken != nil && oldToken == pushToken && !self.pushLocalStorage.isValid)
         {
             self.pushLocalStorage.pushToken = pushToken
             invalidate()
+        } else {
+            sendPushRegistrationIfOutdated()
         }
     }
 
