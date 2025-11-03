@@ -36,9 +36,9 @@ import UIKit
 
         private let metadataObjectTypes: [AVMetadataObject.ObjectType]
 
-        public init(delegate: QRScannerViewDelegate, metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr, .ean8, .ean13, .pdf417, .aztec], captureDevice: AVCaptureDevice? = AVCaptureDevice.default(for: .video)) {
+        public init(delegate: QRScannerViewDelegate, metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr, .ean8, .ean13, .pdf417, .aztec], captureDevice: AVCaptureDevice? = nil) {
             self.metadataObjectTypes = metadataObjectTypes
-            self.videoCaptureDevice = captureDevice
+            self.videoCaptureDevice = captureDevice ?? AVCaptureDevice.default(for: .video)
 
             super.init(frame: .zero)
 
