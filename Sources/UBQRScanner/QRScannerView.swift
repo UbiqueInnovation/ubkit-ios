@@ -36,9 +36,16 @@ import UIKit
 
         private let metadataObjectTypes: [AVMetadataObject.ObjectType]
 
-        public init(delegate: QRScannerViewDelegate, metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr, .ean8, .ean13, .pdf417, .aztec], captureDevice: AVCaptureDevice? = AVCaptureDevice.default(for: .video)) {
+        /**
+        Initializes a new QRScannerView with the given delegate and optional parameters.
+        - Parameters:
+          - delegate: The delegate that will receive scanning events.
+          - metadataObjectTypes: An array of metadata object types to scan for. Defaults to QR, EAN-8, EAN-13, PDF417, and Aztec codes.
+          - preferredCaptureDevice: An optional AVCaptureDevice to use for video capture. If nil, the default video capture device will be used.
+         */
+        public init(delegate: QRScannerViewDelegate, metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr, .ean8, .ean13, .pdf417, .aztec], preferredCaptureDevice: AVCaptureDevice? = nil) {
             self.metadataObjectTypes = metadataObjectTypes
-            self.videoCaptureDevice = captureDevice
+            self.videoCaptureDevice = preferredCaptureDevice ?? AVCaptureDevice.default(for: .video)
 
             super.init(frame: .zero)
 
