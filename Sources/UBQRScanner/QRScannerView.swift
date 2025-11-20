@@ -207,6 +207,7 @@ import UIKit
 
     extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
         public nonisolated func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
+
             let stringValues: [String] = metadataObjects.compactMap {
                 guard let object = $0 as? AVMetadataMachineReadableCodeObject else {
                     return nil
@@ -214,12 +215,16 @@ import UIKit
 
                 return object.stringValue
             }
-            Task { @MainActor in
+
+            MainActor.assumeIsolated {
+                guard isScanningPaused == false else { return }
+
                 for stringValue in stringValues {
                     if found(code: stringValue) {
                         return
                     }
                 }
+
             }
         }
     }
