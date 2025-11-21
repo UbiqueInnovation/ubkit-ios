@@ -187,6 +187,7 @@ import UIKit
                 return
             }
             captureSession.addOutput(metadataOutput)
+            //DO NOT CHANGE THE QUEUE, in the delegate method we assume that we are on the main queue
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
             metadataOutput.metadataObjectTypes = metadataObjectTypes
 
@@ -207,6 +208,7 @@ import UIKit
 
     extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
         public nonisolated func metadataOutput(_: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from _: AVCaptureConnection) {
+
             let stringValues: [String] = metadataObjects.compactMap {
                 guard let object = $0 as? AVMetadataMachineReadableCodeObject else {
                     return nil
@@ -214,12 +216,17 @@ import UIKit
 
                 return object.stringValue
             }
-            Task { @MainActor in
+
+            //We can assume that we are on the main queue because the queue is set above
+            MainActor.assumeIsolated {
+                guard isScanningPaused == false else { return }
+
                 for stringValue in stringValues {
                     if found(code: stringValue) {
                         return
                     }
                 }
+
             }
         }
     }
