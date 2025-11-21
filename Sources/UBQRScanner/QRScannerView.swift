@@ -187,6 +187,7 @@ import UIKit
                 return
             }
             captureSession.addOutput(metadataOutput)
+            //DO NOT CHANGE THE QUEUE, in the delegate method we assume that we are on the main queue
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
             metadataOutput.metadataObjectTypes = metadataObjectTypes
 
@@ -216,6 +217,7 @@ import UIKit
                 return object.stringValue
             }
 
+            //We can assume that we are on the main queue because the queue is set above
             MainActor.assumeIsolated {
                 guard isScanningPaused == false else { return }
 
