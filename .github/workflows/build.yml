@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCVERSION: "26.1"
+  XCVERSION: "26.0.1"
 
 on:
   push:
