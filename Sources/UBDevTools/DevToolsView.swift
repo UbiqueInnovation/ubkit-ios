@@ -59,7 +59,7 @@ public struct DevToolsView: View {
                         )
                     }
                     NavigationLink("Editor") {
-                        UserDefaultsEditor(userDefaults: .standard, displayName: "UserDefaults.standard", store: ObservableUserDefaults(userDefaults: .standard))
+                        UserDefaultsEditor(userDefaults: .standard, displayName: "UserDefaults.standard")
                     }
                 }
 
@@ -81,7 +81,7 @@ public struct DevToolsView: View {
                             )
                         }
                         NavigationLink("Editor") {
-                            UserDefaultsEditor(userDefaults: shared, displayName: "Shared UserDefaults", store: ObservableUserDefaults(userDefaults: shared))
+                            UserDefaultsEditor(userDefaults: shared, displayName: "Shared UserDefaults")
                         }
                     } else {
                         Text("No Shared UserDefaults configured.")

@@ -17,6 +17,12 @@ class ObservableUserDefaults: ObservableObject {
     var dictionary: [String: Any] = [:]
     var keys: [String] = []
 
+    @Published var searchText: String = "" {
+        didSet {
+            reload()
+        }
+    }
+
     var filterKeys: Bool = true {
         didSet {
             reload()
@@ -71,6 +77,28 @@ class ObservableUserDefaults: ObservableObject {
         "com.apple.content-rating.ExplicitMusicPodcastsAllowed",
         "com.apple.content-rating.MovieRating",
         "com.apple.content-rating.TVShowRating",
+        "ActivePrototypingEnabled",
+        "ClearPrototypeCachesForMigration",
+        "ClearSettingsArchivesForMigration",
+        "MultiWindowEnabled",
+        "PrototypeSettingsEnabled",
+        "RemotePrototypingEnabled",
+        "RingerButtonShowsUI",
+        "RingerSwitchShowsUI",
+        "VolumeDownShowsUI",
+        "VolumeUpShowsUI",
+    ]
+
+    static let systemKeyPrefixes: [String] = [
+        "Apple",
+        "NS",
+        "PK",
+        "Web",
+        "com.apple",
+        "INNext",
+        "METAL",
+        "AK",
+        "TestRecipe",
     ]
 
     init(userDefaults: UserDefaults) {
@@ -87,7 +115,16 @@ class ObservableUserDefaults: ObservableObject {
     func reload() {
         let temp = userDefaults.dictionaryRepresentation()
             .filter { el in
-                !filterKeys || !Self.systemKeys.contains(el.key)
+                if filterKeys {
+                    if Self.systemKeys.contains(el.key) { return false }
+                    for prefix in Self.systemKeyPrefixes {
+                        if el.key.hasPrefix(prefix) { return false }
+                    }
+                }
+                if !searchText.isEmpty {
+                    return el.key.localizedCaseInsensitiveContains(searchText)
+                }
+                return true
             }
         self.dictionary = temp
         self.keys = Array(dictionary.keys).sorted()
@@ -102,101 +139,28 @@ public struct UserDefaultsEditor: View {
     let displayName: String
     @ObservedObject var store: ObservableUserDefaults
 
+    public init(userDefaults: UserDefaults, displayName: String = "UserDefaults Editor") {
+        self.userDefaults = userDefaults
+        self.displayName = displayName
+        self.store = ObservableUserDefaults(userDefaults: userDefaults)
+    }
+
     public var body: some View {
         Form {
             Section(header: Text(displayName)) {
+                if #available(iOS 15.0, *) {
+                    // Search is handled by .searchable modifier
+                } else {
+                    TextField("Search", text: $store.searchText)
+                }
                 Toggle(isOn: $store.filterKeys) {
                     Text("Filter System Defaults")
                 }
             }
             Section {
                 ForEach(store.keys, id: \.self) { key in
-                    VStack(alignment: .leading) {
-                        Text("Key: \(key)").font(.caption)
-
-                        if let value = store.dictionary[key] {
-                            switch value {
-                                case let value as Date:
-                                    DatePicker(
-                                        selection: Binding(
-                                            get: {
-                                                value
-                                            },
-                                            set: { newValue in
-                                                userDefaults.set(newValue, forKey: key)
-                                            })
-                                    ) {
-                                        EmptyView()
-                                    }
-                                case let value as Bool:
-                                    Toggle(
-                                        isOn: Binding(
-                                            get: {
-                                                value
-                                            },
-                                            set: { newValue in
-                                                userDefaults.set(newValue, forKey: key)
-                                            })
-                                    ) {
-                                        EmptyView()
-                                    }
-                                case let value as String:
-                                    TextField(
-                                        "",
-                                        text: Binding(
-                                            get: {
-                                                value
-                                            },
-                                            set: {
-                                                userDefaults.set($0, forKey: key)
-                                            }
-                                        )
-                                    )
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                case let value as Double:
-                                    TextField(
-                                        "",
-                                        text: Binding(
-                                            get: {
-                                                "\(value)"
-                                            },
-                                            set: {
-                                                userDefaults.setValue(Double($0), forKey: key)
-                                            }
-                                        ))
-                                case let value as Int:
-                                    TextField(
-                                        "",
-                                        text: Binding(
-                                            get: {
-                                                "\(value)"
-                                            },
-                                            set: {
-                                                userDefaults.setValue(Int($0), forKey: key)
-                                            }
-                                        ))
-                                case let value as Data:
-                                    TextField(
-                                        "",
-                                        text: Binding(
-                                            get: {
-                                                "\(value.base64EncodedString())"
-                                            },
-                                            set: {
-                                                userDefaults.setValue(Data(base64Encoded: $0), forKey: key)
-                                            }
-                                        ))
-                                default:
-                                    if let value = value as? CustomDebugStringConvertible {
-                                        Text("unsupported Type \n\(value.debugDescription)")
-                                    } else {
-                                        Text("unsupported Type")
-                                    }
-                            }
-                        }
-
-                    }
-                    .deleteDisabled(ObservableUserDefaults.systemKeys.contains(key))
+                    UserDefaultsRowView(key: key, value: store.dictionary[key], userDefaults: userDefaults)
+                        .deleteDisabled(ObservableUserDefaults.systemKeys.contains(key))
                 }
                 .onDelete { indexSet in
                     guard let firstIndex = indexSet.first else { return }
@@ -204,6 +168,158 @@ public struct UserDefaultsEditor: View {
                 }
             }
         }
-        .navigationBarTitle(Text("UserDefaults Editor"))
+        .navigationBarTitle(Text(displayName))
+        .modifier(SearchableModifier(text: $store.searchText))
+    }
+}
+
+struct SearchableModifier: ViewModifier {
+    @Binding var text: String
+
+    func body(content: Content) -> some View {
+        if #available(iOS 15.0, *) {
+            content.searchable(text: $text)
+        } else {
+            content
+        }
+    }
+}
+
+struct UserDefaultsRowView: View {
+    let key: String
+    let value: Any?
+    let userDefaults: UserDefaults
+
+    private var typeInfo: (icon: String, color: Color, typeName: String) {
+        switch value {
+            case is String: return ("text.quote", .blue, "String")
+            case is Bool: return ("switch.2", .green, "Bool")
+            case is Int: return ("number", .orange, "Int")
+            case is Double: return ("number.circle", .orange, "Double")
+            case is Date: return ("calendar", .red, "Date")
+            case is Data: return ("doc.text.fill", .purple, "Data")
+            default: return ("questionmark.circle", .gray, "Unknown")
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: typeInfo.icon)
+                    .foregroundColor(typeInfo.color)
+                    .font(.system(size: 14, weight: .semibold))
+                    .frame(width: 20)
+
+                Text(key)
+                    .font(.system(.subheadline, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+
+                Spacer()
+
+                Text(typeInfo.typeName)
+                    .font(.caption2)
+                    .fontWeight(.bold)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(typeInfo.color.opacity(0.1))
+                    .foregroundColor(typeInfo.color)
+                    .cornerRadius(4)
+            }
+
+            if let value = value {
+                Group {
+                    switch value {
+                        case let value as Date:
+                            DatePicker(
+                                selection: Binding(
+                                    get: { value },
+                                    set: { userDefaults.set($0, forKey: key) }
+                                )
+                            ) {
+                                EmptyView()
+                            }
+                            .labelsHidden()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                        case let value as Bool:
+                            Toggle(
+                                isOn: Binding(
+                                    get: { value },
+                                    set: { userDefaults.set($0, forKey: key) }
+                                )
+                            ) {
+                                Text(value ? "True" : "False")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+
+                        case let value as String:
+                            TextField(
+                                "Value",
+                                text: Binding(
+                                    get: { value },
+                                    set: { userDefaults.set($0, forKey: key) }
+                                )
+                            )
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .font(.system(.body, design: .monospaced))
+
+                        case let value as Double:
+                            TextField(
+                                "Value",
+                                text: Binding(
+                                    get: { "\(value)" },
+                                    set: { userDefaults.setValue(Double($0), forKey: key) }
+                                )
+                            )
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .keyboardType(.decimalPad)
+                            .font(.system(.body, design: .monospaced))
+
+                        case let value as Int:
+                            TextField(
+                                "Value",
+                                text: Binding(
+                                    get: { "\(value)" },
+                                    set: { userDefaults.setValue(Int($0), forKey: key) }
+                                )
+                            )
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .keyboardType(.numberPad)
+                            .font(.system(.body, design: .monospaced))
+
+                        case let value as Data:
+                            TextField(
+                                "Value",
+                                text: Binding(
+                                    get: { value.base64EncodedString() },
+                                    set: { userDefaults.setValue(Data(base64Encoded: $0), forKey: key) }
+                                )
+                            )
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .font(.system(.caption, design: .monospaced))
+                            .foregroundColor(.secondary)
+
+                        default:
+                            if let value = value as? CustomDebugStringConvertible {
+                                Text(value.debugDescription)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Text("Unsupported Type")
+                                    .font(.caption)
+                                    .foregroundColor(.red)
+                            }
+                    }
+                }
+                .padding(10)
+                .background(Color.primary.opacity(0.05))
+                .cornerRadius(8)
+            }
+        }
+        .padding(.vertical, 6)
     }
 }
