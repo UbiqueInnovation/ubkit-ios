@@ -127,14 +127,15 @@ public extension UBURLDataTask {
         return await withTaskCancellationHandler(
             operation: {
                 await withCheckedContinuation { cont in
-                    let id: UUID? = task.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
+                    let idWrapper = CompletionHandlerIdWrapper()
+                    idWrapper.id = task.addCompletionHandler(decoder: decoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                         switch result {
                             case let .success(res):
                                 cont.resume(returning: TaskResult(resultTuple: (.success(res), MetaData(info: info, response: response))))
                             case let .failure(e):
                                 cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
                         }
-                        if let id {
+                        if let id = idWrapper.id {
                             task.removeCompletionHandler(identifier: id)
                         }
                     }
@@ -175,14 +176,15 @@ public extension UBURLDataTask {
         return await withTaskCancellationHandler(
             operation: {
                 await withCheckedContinuation { cont in
-                    let id: UUID? = task.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
+                    let idWrapper = CompletionHandlerIdWrapper()
+                    idWrapper.id = task.addCompletionHandler(decoder: decoder, errorDecoder: errorDecoder, callbackQueue: Self.concurrencyCallbackQueue) { result, response, info, task in
                         switch result {
                             case let .success(res):
                                 cont.resume(returning: TaskResult(resultTuple: (.success(res), MetaData(info: info, response: response))))
                             case let .failure(e):
                                 cont.resume(returning: TaskResult(resultTuple: (.failure(e), MetaData(info: info, response: response))))
                         }
-                        if let id {
+                        if let id = idWrapper.id {
                             task.removeCompletionHandler(identifier: id)
                         }
                     }
@@ -301,6 +303,10 @@ public extension UBURLDataTask {
     func startStream() -> AsyncThrowingStream<(Data, MetaData), Error> {
         self.startStream(decoder: .passthrough)
     }
+}
+
+private final class CompletionHandlerIdWrapper: @unchecked Sendable {
+    var id: UUID?
 }
 
 public extension UBURLDataTask.TaskConfig {
