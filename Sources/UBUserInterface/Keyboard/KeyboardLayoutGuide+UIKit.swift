@@ -12,6 +12,7 @@ public extension UIView {
     ///
     /// When the view is visible onscreen, this guide reflects the portion of the view that is covered by the keyboard. If the view is not currently installed in a view hierarchy, or is not yet visible onscreen, the layout guide edges are equal to the edges of the view.
     /// - Note: It is necessary to call `initializeForKeyboardLayoutGuide()` on `UIWindow` at the launch of the app in order to instanciate the listening correctly. Failing to do so will crash the app.
+    @available(iOS, deprecated: 15.0, message: "Use UIView.keyboardLayoutGuide on iOS 15 and later.")
     var ub_keyboardLayoutGuide: UILayoutGuide {
         if let existingGuide = layoutGuides.first(where: { $0 is ViewKeyboardLayoutGuide }) {
             return existingGuide
@@ -26,6 +27,7 @@ public extension UIView {
 
 extension UIWindow {
     /// Call this function at the launch of the app in order to setup the monitoring of the keyboard on the Window/
+    @available(iOS, deprecated: 15.0, message: "Use UIView.keyboardLayoutGuide on iOS 15 and later.")
     public func initializeForKeyboardLayoutGuide() {
         guard layoutGuides.contains(where: { $0 is WindowKeyboardLayoutGuide }) == false else {
             return
