@@ -88,7 +88,7 @@ GEM
       google-cloud-storage (~> 1.31)
       highline (~> 2.0)
       json (< 3.0.0)
-      jwt (>= 2.1.0, < 3)
+      jwt (>= 2.10.3, < 3)
       mini_magick (>= 4.9.4, < 5.0.0)
       multipart-post (~> 2.0.0)
       naturally (~> 2.2)
