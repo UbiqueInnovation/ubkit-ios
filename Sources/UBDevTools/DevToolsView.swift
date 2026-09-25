@@ -127,6 +127,31 @@ public struct DevToolsView: View {
                     }
                 }
             }
+            Section(header: Text("Location override")) {
+                Picker("Location", selection: $locationSelection) {
+                    Text("Off").tag("off")
+                    Text("UB-Office").tag("ub-office")
+                    Text("Bern").tag("bern")
+                    Text("Lugano").tag("lugano")
+                    ForEach(LocationOverrideDevTools.additionalLocations.map { $0.name }, id: \.self) { name in
+                        Text(name).tag("app:\(name)")
+                    }
+                    Text("Custom").tag("custom")
+                }
+                if locationSelection == "custom" {
+                    TextField("Latitude (-90 to 90)", text: $customLatitude)
+                        .keyboardType(.numbersAndPunctuation)
+                    TextField("Longitude (-180 to 180)", text: $customLongitude)
+                        .keyboardType(.numbersAndPunctuation)
+                    NavigationLink("Pick on map") {
+                        LocationOverrideMapView(latitude: $customLatitude, longitude: $customLongitude)
+                    }
+                    if LocationOverrideDevTools.location == nil {
+                        Text("Enter valid decimal coordinates to activate the override.")
+                            .foregroundColor(.red)
+                    }
+                }
+            }
             Section(header: Text("UIView")) {
                 Toggle("Show debug border", isOn: Binding(get: { Self.showViewBorders }, set: { Self.showViewBorders = $0 }))
             }
@@ -214,6 +239,10 @@ public struct DevToolsView: View {
 
     @UBUserDefault(key: "ubkit.devtools.showlocalizationkeys.key", defaultValue: false)
     public static var showLocalizationKeys: Bool
+
+    @AppStorage(LocationOverrideDevTools.selectionKey) private var locationSelection = "off"
+    @AppStorage(LocationOverrideDevTools.latitudeKey) private var customLatitude = ""
+    @AppStorage(LocationOverrideDevTools.longitudeKey) private var customLongitude = ""
 
     @UBUserDefault(key: "ubkit.devtools.uiviewbordertools.key", defaultValue: false)
     public static var showViewBorders: Bool

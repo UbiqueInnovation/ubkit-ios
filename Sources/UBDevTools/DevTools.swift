@@ -19,7 +19,7 @@ protocol DevTool {
 public enum UBDevTools {
     static var isActivated: Bool = false
 
-    private static let devTools: [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self, UIViewDevTools.self]
+    private static let devTools: [DevTool.Type] = [FingerTipsDevTools.self, LocalizationDevTools.self, UIViewDevTools.self, LocationOverrideDevTools.self]
 
     public static func setup() {
         isActivated = true
@@ -39,6 +39,10 @@ public enum UBDevTools {
 
     public static func setupBaseUrls(baseUrls: [BaseUrl]) {
         BackendDevTools.setup(baseUrls: baseUrls)
+    }
+
+    public static func setCustomLocationOverrides(_ locations: [(name: String, latitude: Double, longitude: Double)]) {
+        LocationOverrideDevTools.setCustomLocationOverrides(locations)
     }
 
     public static func setupSharedUserDefaults(_ userDefaults: UserDefaults) {
