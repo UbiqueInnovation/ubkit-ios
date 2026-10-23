@@ -111,7 +111,12 @@ extension UIWindow {
         let window = swizzled_windowSceneInit(windowScene: windowScene)
         let gr = UITapGestureRecognizer(target: self, action: #selector(openDevTools))
         gr.numberOfTapsRequired = 5
-        gr.numberOfTouchesRequired = 2
+        // Device Hub cannot send two-finger touches to Simulator.
+        #if targetEnvironment(simulator)
+            gr.numberOfTouchesRequired = 1
+        #else
+            gr.numberOfTouchesRequired = 2
+        #endif
         gr.cancelsTouchesInView = false
         gr.delaysTouchesBegan = false
         gr.delaysTouchesEnded = false
@@ -123,7 +128,12 @@ extension UIWindow {
         let window = swizzed_frameInit(frame: frame)
         let gr = UITapGestureRecognizer(target: self, action: #selector(openDevTools))
         gr.numberOfTapsRequired = 5
-        gr.numberOfTouchesRequired = 2
+        // Device Hub cannot send two-finger touches to Simulator.
+        #if targetEnvironment(simulator)
+            gr.numberOfTouchesRequired = 1
+        #else
+            gr.numberOfTouchesRequired = 2
+        #endif
         gr.cancelsTouchesInView = false
         gr.delaysTouchesBegan = false
         gr.delaysTouchesEnded = false
