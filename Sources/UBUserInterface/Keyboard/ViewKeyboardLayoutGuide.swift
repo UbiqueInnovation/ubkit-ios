@@ -99,8 +99,9 @@ extension ViewKeyboardLayoutGuide {
         defer {
             // Animate alongside the keyboard
             owningView.setNeedsLayout()
-            keyboardInfo.animateAlongsideKeyboard {
-                owningView.layoutIfNeeded()
+            keyboardInfo.animateAlongsideKeyboard { [weak owningView] in
+                owningView?.setNeedsLayout()
+                owningView?.layoutIfNeeded()
             }
         }
 

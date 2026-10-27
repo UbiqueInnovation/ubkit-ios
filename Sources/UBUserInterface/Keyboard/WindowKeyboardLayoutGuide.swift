@@ -65,16 +65,13 @@ extension WindowKeyboardLayoutGuide {
             return
         }
 
-        // convert own frame to window coordinates, frame is in superview's coordinates
-        let owningViewFrame = window.convert(owningView.frame, from: owningView.superview)
-        // calculate the area of own frame that is covered by keyboard
-        var coveredFrame = owningViewFrame.intersection(keyboardInfo.endFrame)
-        // might be rotated, so convert it back
-        coveredFrame = window.convert(coveredFrame, to: owningView.superview)
+        // The owning view is the window itself, so stay in window coordinates.
+        let coveredFrame = window.bounds.intersection(keyboardInfo.endFrame)
 
         topConstraint?.constant = coveredFrame.height
-        keyboardInfo.animateAlongsideKeyboard {
-            owningView.layoutIfNeeded()
+        keyboardInfo.animateAlongsideKeyboard { [weak owningView] in
+            owningView?.setNeedsLayout()
+            owningView?.layoutIfNeeded()
         }
     }
 
