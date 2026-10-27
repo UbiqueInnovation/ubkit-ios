@@ -1,26 +1,77 @@
 name: Build & Test
 
-env:
-  XCVERSION: "27.0"
-
 on:
   push:
+
+permissions:
+  contents: read
 
 jobs:
   tests:
     name: Tests
-    runs-on: macos-latest
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 30
+    env:
+      # Use the same Xcode installation as the other self-hosted iOS builds.
+      DEVELOPER_DIR: /Applications/Xcode_27.0.app/Contents/Developer
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
-      - name: Switch to ${{ env.XCVERSION }}
-        run: sudo xcodes select ${{ env.XCVERSION }}
+      - name: Check Xcode and choose simulator
+        shell: bash
+        run: |
+          xcodebuild -version
+          xcrun simctl list devices available
+          simulator_id="$(xcrun simctl list devices available --json | jq -er '
+            [
+              .devices | to_entries[]
+              | select(.key | startswith("com.apple.CoreSimulator.SimRuntime.iOS-27-"))
+              | .value[]
+              | select(.name | startswith("iPhone"))
+            ] | first | .udid // error("No available iPhone simulator with iOS 27 installed on this runner")
+          ')"
+          echo "TEST_DESTINATION=platform=iOS Simulator,id=$simulator_id" >> "$GITHUB_ENV"
 
-      - name: Fastlane
-        run: fastlane tests
+      - name: Build and test
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build
+          xcodebuild test \
+            -scheme UBKit-Package \
+            -destination "$TEST_DESTINATION" \
+            -derivedDataPath build/DerivedData \
+            -resultBundlePath build/UBKit-Package.xcresult \
+            2>&1 | tee build/xcodebuild.log
 
-      - uses: slidoapp/xcresulttool@v3.1.0
+      - name: Test summary
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          if [ -d build/UBKit-Package.xcresult ]; then
+            xcrun xcresulttool get test-results summary \
+              --path build/UBKit-Package.xcresult > build/test-summary.json
+            jq -r '
+              "## UBKit test results",
+              "",
+              "Result: \(.result)",
+              "",
+              "| Passed | Failed | Skipped |",
+              "| --- | --- | --- |",
+              "| \(.passedTests) | \(.failedTests) | \(.skippedTests) |"
+            ' build/test-summary.json >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No test result bundle was produced. Check the preceding setup or build failure." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload test results and logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
         with:
-          path: build/UBKit-Package.xcresult
-        if: always()
+          name: UBKit-test-results
+          path: |
+            build/UBKit-Package.xcresult
+            build/test-summary.json
+            build/xcodebuild.log
+          if-no-files-found: ignore
