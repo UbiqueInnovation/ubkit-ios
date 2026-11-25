@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCVERSION: "16.2"
+  XCVERSION: "27.0"
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
 
       - name: Switch to ${{ env.XCVERSION }}
         run: sudo xcodes select ${{ env.XCVERSION }}
-        
+
       - name: Fastlane
         run: fastlane tests
 
