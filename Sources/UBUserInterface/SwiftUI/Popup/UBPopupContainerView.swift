@@ -18,44 +18,38 @@
             ZStack {
                 if isPresented {
                     GeometryReader { proxy in
-                        let frame = contentFrame(in: proxy)
+                        if #available(iOS 27.1, macOS 27.1, tvOS 27.1, watchOS 27.1, visionOS 27.1, *) {
+                            let division = proxy.reservedRegions(kind: .division).first?.frame
+                            let pane = Self.contentFrame(size: proxy.size, division: division)
 
-                        VStack(alignment: .center) {
-                            Spacer()
-                            if style.extendsToEdges {
-                                HStack {
-                                    Spacer()
-                                    content()
-                                        .padding(style.insets)
-                                    Spacer()
+                            ScrollView([.horizontal, .vertical]) {
+                                PopupPaneLayout(size: pane.size, isDivided: pane.size != proxy.size) {
+                                    popup
                                 }
-                                .background(style.backgroundColor)
-                                .cornerRadius(style.cornerRadius)
-                                .padding(style.horizontalPadding)
-                            } else {
-                                HStack {
-                                    Spacer()
-                                    content()
-                                        .padding(style.insets)
-                                        .background(style.backgroundColor)
-                                        .cornerRadius(style.cornerRadius)
-                                        .padding(style.horizontalPadding)
-                                    Spacer()
+                                .background {
+                                    Color.clear
+                                        .contentShape(Rectangle())
+                                        .onTapGesture { dismissFromBackdrop() }
                                 }
                             }
-                            Spacer()
+                            .scrollBounceBehavior(.basedOnSize, axes: [.horizontal, .vertical])
+                            .frame(width: pane.width, height: pane.height)
+                            .clipped()
+                            .position(x: pane.midX, y: pane.midY)
+                        } else {
+                            VStack {
+                                Spacer()
+                                popup
+                                Spacer()
+                            }
+                            .frame(width: proxy.size.width, height: proxy.size.height)
+                            .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
                         }
-                        .frame(width: frame.width, height: frame.height)
-                        .position(x: frame.midX, y: frame.midY)
                     }
                     .background(
                         style.backdropColor
                             .ignoresSafeArea()
-                            .onTapGesture {
-                                if style.tapOutsideToDismiss {
-                                    isPresented = false
-                                }
-                            }
+                            .onTapGesture { dismissFromBackdrop() }
                     )
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .edgesIgnoringSafeArea(.vertical)
@@ -65,12 +59,35 @@
             .animation(.default, value: isPresented)
         }
 
-        private func contentFrame(in proxy: GeometryProxy) -> CGRect {
-            var division: CGRect?
-            if #available(iOS 27.1, macOS 27.1, tvOS 27.1, watchOS 27.1, visionOS 27.1, *) {
-                division = proxy.reservedRegions(kind: .division, layoutDirectionBehavior: .fixed).first?.frame
+        @ViewBuilder
+        private var popup: some View {
+            if style.extendsToEdges {
+                HStack {
+                    Spacer()
+                    content()
+                        .padding(style.insets)
+                    Spacer()
+                }
+                .background(style.backgroundColor)
+                .cornerRadius(style.cornerRadius)
+                .padding(style.horizontalPadding)
+            } else {
+                HStack {
+                    Spacer()
+                    content()
+                        .padding(style.insets)
+                        .background(style.backgroundColor)
+                        .cornerRadius(style.cornerRadius)
+                        .padding(style.horizontalPadding)
+                    Spacer()
+                }
             }
-            return Self.contentFrame(size: proxy.size, division: division)
+        }
+
+        private func dismissFromBackdrop() {
+            if style.tapOutsideToDismiss {
+                isPresented = false
+            }
         }
 
         static func contentFrame(size: CGSize, division: CGRect?) -> CGRect {
@@ -87,6 +104,26 @@
                 let bottom = CGRect(x: 0, y: intersection.maxY, width: size.width, height: size.height - intersection.maxY)
                 return top.height >= bottom.height ? top : bottom
             }
+        }
+    }
+
+    @available(iOS 27.1, macOS 27.1, tvOS 27.1, watchOS 27.1, visionOS 27.1, *)
+    private struct PopupPaneLayout: Layout {
+        let size: CGSize
+        let isDivided: Bool
+
+        private var popupProposal: ProposedViewSize {
+            ProposedViewSize(width: size.width, height: isDivided ? nil : size.height)
+        }
+
+        func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+            guard isDivided else { return size }
+            let popupSize = subviews[0].sizeThatFits(popupProposal)
+            return CGSize(width: max(size.width, popupSize.width), height: max(size.height, popupSize.height))
+        }
+
+        func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+            subviews[0].place(at: CGPoint(x: bounds.midX, y: bounds.midY), anchor: .center, proposal: popupProposal)
         }
     }
 

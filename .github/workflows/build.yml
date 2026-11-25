@@ -1,7 +1,7 @@
 name: Build & Test
 
 env:
-  XCVERSION: "27.0"
+  XCVERSION: "27.2"
 
 on:
   push:
@@ -9,10 +9,10 @@ on:
 jobs:
   tests:
     name: Tests
-    runs-on: macos-latest
+    runs-on: xcode-27
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
       - name: Switch to ${{ env.XCVERSION }}
         run: sudo xcodes select ${{ env.XCVERSION }}
