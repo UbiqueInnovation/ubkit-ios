@@ -12,6 +12,8 @@ public extension UIView {
     ///
     /// When the view is visible onscreen, this guide reflects the portion of the view that is covered by the keyboard. If the view is not currently installed in a view hierarchy, or is not yet visible onscreen, the layout guide edges are equal to the edges of the view.
     /// - Note: It is necessary to call `initializeForKeyboardLayoutGuide()` on `UIWindow` at the launch of the app in order to instanciate the listening correctly. Failing to do so will crash the app.
+    /// - Note: Unlike `UIView.keyboardLayoutGuide`, this guide collapses to the full bottom edge of the view when the keyboard is hidden. Apple's guide defaults to the bottom safe area unless `usesBottomSafeArea` is set to `false`.
+    @available(iOS, deprecated: 15.0, message: "Use UIView.keyboardLayoutGuide. Note: hidden keyboard falls back to safe-area bottom unless usesBottomSafeArea = false.")
     var ub_keyboardLayoutGuide: UILayoutGuide {
         if let existingGuide = layoutGuides.first(where: { $0 is ViewKeyboardLayoutGuide }) {
             return existingGuide
@@ -26,6 +28,8 @@ public extension UIView {
 
 extension UIWindow {
     /// Call this function at the launch of the app in order to setup the monitoring of the keyboard on the Window/
+    /// - Note: This powers `ub_keyboardLayoutGuide`, whose hidden-keyboard behavior differs from `UIView.keyboardLayoutGuide`: UBKit falls back to the full view bottom, while Apple's guide falls back to the safe-area bottom by default.
+    @available(iOS, deprecated: 15.0, message: "Use UIView.keyboardLayoutGuide. Note: hidden keyboard falls back to safe-area bottom unless usesBottomSafeArea = false.")
     public func initializeForKeyboardLayoutGuide() {
         guard layoutGuides.contains(where: { $0 is WindowKeyboardLayoutGuide }) == false else {
             return
